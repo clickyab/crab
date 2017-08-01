@@ -1,6 +1,6 @@
 package cmd
 
-import _ "github.com/clickyab/services/mysql/connection/mysql"
+import _ "github.com/clickyab/services/mysql/connection/mysql" // import mysql
 
 const (
 	// Organization is the organization name
