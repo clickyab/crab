@@ -38,15 +38,18 @@ include $(wildcard $(ROOT)/modules/*/module.mk)
 
 # codegen target as wildcard target
 # TODO : remove "| true" when the rotes are added
-codegen: $(wildcard $(ROOT)/modules/*)-codegen
+codegen: $(addsuffix -codegen,$(wildcard $(ROOT)/modules/*))
 	cp $(ROOT)/tmp/swagger/out.json $(ROOT)/swagger-ui/index.json | true
 	cp $(ROOT)/tmp/swagger/out.yaml $(ROOT)/swagger-ui/index.yaml | true
 
 # Migration as a wildcard target
-migration: $(wildcard $(ROOT)/modules/*)-migration
+migration: $(addsuffix -migration,$(wildcard $(ROOT)/modules/*))
 
 build-webserver:
 	$(BUILD) clickyab.com/crab/cmd/webserver
 
 run-webserver: build-webserver
 	$(BIN)/webserver
+
+test: $(addsuffix -test,$(wildcard $(ROOT)/modules/*))
+	echo "Done"
