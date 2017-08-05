@@ -5,7 +5,6 @@ package user
 import (
 	"sync"
 
-	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
 	"github.com/rs/xmux"

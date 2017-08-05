@@ -42,6 +42,8 @@ codegen: $(addsuffix -codegen,$(wildcard $(ROOT)/modules/*))
 	cp $(ROOT)/tmp/swagger/out.json $(ROOT)/swagger-ui/index.json | true
 	cp $(ROOT)/tmp/swagger/out.yaml $(ROOT)/swagger-ui/index.yaml | true
 
+test: $(addsuffix -test,$(wildcard $(ROOT)/modules/*))
+
 # Migration as a wildcard target
 migration: $(addsuffix -migration,$(wildcard $(ROOT)/modules/*))
 
@@ -50,6 +52,3 @@ build-webserver:
 
 run-webserver: build-webserver
 	$(BIN)/webserver
-
-test: $(addsuffix -test,$(wildcard $(ROOT)/modules/*))
-	echo "Done"

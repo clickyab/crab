@@ -1,5 +1,5 @@
 package user
 
 import (
-	_ "clickyab.com/crab/modules/controllers"
+	_ "clickyab.com/crab/modules/misc/controllers"
 )
