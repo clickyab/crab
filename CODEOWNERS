@@ -1,0 +1,15 @@
+# TODO : talk about each part and everyone must accept one part
+*           @fzerorubigd
+
+*.mk        @fzerorubigd
+Makefile    @fzerorubigd
+
+*.sql       @fzerorubigd
+scripts/*   @fzerorubigd
+bin/*       @fzerorubigd
+
+vendor/     @fzerorubigd
+
+
+# User module is the user system and anything related to that
+modules/user/*  @fzerorubigd
