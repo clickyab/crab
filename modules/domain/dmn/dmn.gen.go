@@ -10,6 +10,9 @@ import (
 // AUTO GENERATED CODE. DO NOT EDIT!
 
 const (
+	// DomainUserTableFull is the DomainUser table name
+	DomainUserTableFull = "domain_user"
+
 	// DomainTableFull is the Domain table name
 	DomainTableFull = "domains"
 )
@@ -37,6 +40,11 @@ func NewDmnManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 
 // Initialize dmn package
 func (m *Manager) Initialize() {
+
+	m.AddTableWithName(
+		DomainUser{},
+		DomainUserTableFull,
+	)
 
 	m.AddTableWithName(
 		Domain{},

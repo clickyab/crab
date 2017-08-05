@@ -6,3 +6,6 @@ mig-up: tools-migration
 
 mig-down: tools-migration
 	$(BIN)/migration --action=down
+
+migcreate:
+	@/bin/bash $(ROOT)/scripts/create_migration.sh

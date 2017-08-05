@@ -37,6 +37,15 @@ type Domain struct {
 	UpdatedAt   *time.Time       `json:"updated_at" db:"uop"`
 }
 
+// DomainUser domain_user model in database
+// @Model {
+//		table = domain_user
+// }
+type DomainUser struct {
+	DomainID int64  `json:"domain_id" db:"domain_id"`
+	UserID   string `json:"user_id" db:"user_id"`
+}
+
 // FindActiveDomainByName find active domain by name
 func (m *Manager) FindActiveDomainByName(name string) (*Domain, error) {
 	var res *Domain
