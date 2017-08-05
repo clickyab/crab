@@ -306,7 +306,6 @@ func (m *Manager) FindUserByEmail(e string) (*User, error) {
 
 	return &res, nil
 }
-<<<<<<< fa3abc7160a3f63575262da5d189787bdb93a99c
 
 // FindUserByAccessToken return the User base on its access_token
 func (m *Manager) FindUserByAccessToken(at string) (*User, error) {
@@ -323,5 +322,3 @@ func (m *Manager) FindUserByAccessToken(at string) (*User, error) {
 
 	return &res, nil
 }
-=======
->>>>>>> fix migration script in make file

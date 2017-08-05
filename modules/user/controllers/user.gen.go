@@ -45,6 +45,28 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		group.GET("/session/close", xhandler.HandlerFuncC(framework.Mix(c.closeSession, m0...)))
 		// End route with key 0
 
+		/* Route {
+			"Route": "/session/closeother",
+			"Method": "GET",
+			"Function": "Controller.closeAllOtherSession",
+			"RoutePkg": "user",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "",
+			"Scope": ""
+		} with key 1 */
+		m1 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		group.GET("/session/closeother", xhandler.HandlerFuncC(framework.Mix(c.closeAllOtherSession, m1...)))
+		// End route with key 1
+
 		initializer.DoInitialize(c)
 	})
 }

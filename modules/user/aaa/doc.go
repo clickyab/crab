@@ -72,7 +72,7 @@ const (
 // @Model {
 //		table = users
 //		primary = true, id
-//		find_by = id,email
+//		find_by = id,email,access_token
 //		list = yes
 // }
 type User struct {
