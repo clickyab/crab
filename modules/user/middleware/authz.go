@@ -25,7 +25,7 @@ func Authenticate(next framework.Handler) framework.Handler {
 			val := eav.NewEavStore(token).SubKey("token")
 			if val != "" {
 				// TODO : Write me
-				usr, err := aaa.NewAaaManager().FindUserByToken(val)
+				usr, err := aaa.NewAaaManager().FindUserByAccessToken(val)
 				if err == nil {
 					ctx = context.WithValue(ctx, dataKey, usr)
 					ctx = context.WithValue(ctx, tokenKey, token)

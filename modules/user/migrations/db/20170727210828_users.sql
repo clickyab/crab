@@ -10,15 +10,13 @@ create table users
 	access_token varchar(60) not null,
 	avatar varchar(255) null,
 	user_type enum('personal', 'corporation') not null,
-	email_confirmed enum('yes', 'no') default 'no' not null,
-	mobile_confirmed enum('yes', 'no') default 'no' not null,
 	status enum('registered', 'blocked') default 'registered' not null,
-	created_at timestamp default CURRENT_TIMESTAMP not null,
-	updated_at timestamp default CURRENT_TIMESTAMP not null,
+	created_at timestamp not null,
+	updated_at timestamp not null,
 	constraint users_email_uindex
 		unique (email),
-	constraint users_users_id_fk
-		foreign key (parent_id) references users (id)
+	constraint users_token_uindex
+	unique (access_token)
 )
 ;
 
@@ -34,8 +32,8 @@ create table user_personal
 	phone varchar(20) null,
 	address varchar(255) null,
 	city_id int null,
-	created_at timestamp default CURRENT_TIMESTAMP not null,
-	updated_at timestamp default CURRENT_TIMESTAMP not null,
+	created_at timestamp not null,
+	updated_at timestamp not null,
 	constraint user_personal_user_id_uindex
 		unique (user_id),
 	constraint user_personal_users_id_fk
@@ -55,43 +53,13 @@ create table user_corporation
 	economic_code varchar(40) null,
 	register_code varchar(40) null,
 	city_id int null,
-	created_at timestamp default CURRENT_TIMESTAMP not null,
-	updated_at timestamp default CURRENT_TIMESTAMP not null,
+	created_at timestamp not null,
+	updated_at timestamp not null,
 	constraint user_corporation_user_id_uindex
 	unique (user_id),
 	constraint user_corporation_users_id_fk
 	foreign key (user_id) references users (id)
 )
-;
-
-create table domains
-(
-	id int auto_increment
-		primary key,
-	name varchar(40) not null,
-	description varchar(255) null,
-	active enum('yes', 'no') default 'yes' not null,
-	created_at timestamp default CURRENT_TIMESTAMP not null,
-	updated_at timestamp default CURRENT_TIMESTAMP not null,
-	constraint domains_name_uindex
-	unique (name)
-)
-;
-
-create table domain_user
-(
-	domain_id int not null,
-	user_id int not null,
-	primary key (domain_id, user_id),
-	constraint domain_user_domains_id_fk
-	foreign key (domain_id) references domains (id),
-	constraint domain_user_users_id_fk
-	foreign key (user_id) references users (id)
-)
-;
-
-create index domain_user_users_id_fk
-	on domain_user (user_id)
 ;
 
 create table roles
@@ -101,12 +69,10 @@ create table roles
 	name varchar(40) not null,
 	description varchar(255) null,
 	domain_id int not null,
-	created_at timestamp default CURRENT_TIMESTAMP not null,
-	updated_at timestamp default CURRENT_TIMESTAMP not null,
+	created_at timestamp not null,
+	updated_at timestamp not null,
 	constraint roles_name_uindex
-	unique (name),
-	constraint roles_domains_id_fk
-	foreign key (domain_id) references domains (id)
+	unique (name)
 )
 ;
 
@@ -120,7 +86,7 @@ create table role_user
 (
 	user_id int not null,
 	role_id int not null,
-	created_at timestamp default CURRENT_TIMESTAMP not null,
+	created_at timestamp not null,
 	primary key (user_id, role_id),
 	constraint role_user_users_id_fk
 	foreign key (user_id) references users (id),
@@ -140,8 +106,8 @@ create table role_permission
 	role_id int not null,
 	perm varchar(60) not null,
 	scope enum('self', 'parent', 'global') not null,
-	created_at timestamp default CURRENT_TIMESTAMP not null,
-	updated_at timestamp default CURRENT_TIMESTAMP not null,
+	created_at timestamp not null,
+	updated_at timestamp not null,
 	constraint role_permission_roles_id_fk
 	foreign key (role_id) references roles (id)
 )

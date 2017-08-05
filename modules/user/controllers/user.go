@@ -18,10 +18,6 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 )
 
-// Controller is the controller for the user package
-// @Route {
-//		group = /user
-// }
 type Controller struct {
 	controller.Base
 }

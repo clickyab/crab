@@ -1,4 +1,4 @@
-DOMAIN_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+export DOMAIN_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(DOMAIN_ROOT)-codegen: tools-codegen
 	$(BIN)/codegen -p clickyab.com/crab/modules/domain/dmn

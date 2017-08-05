@@ -1,4 +1,4 @@
-USER_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+export USER_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(USER_ROOT)-codegen: tools-codegen
 	$(BIN)/codegen -p clickyab.com/crab/modules/user/aaa

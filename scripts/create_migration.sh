@@ -3,17 +3,21 @@ set -euo pipefail
 
 
 if [ "$#" -ne 1 ]; then
-    echo "Name for this migration : "
+    echo "Name for this module : "
     read NAME
+    echo "Name for this migration : "
+    read MIG
 else
     NAME=${1}
+    MIG=${2}
 fi
 
 SCRIPT_DIR=$(readlink -f $(dirname ${BASH_SOURCE[0]}))
 cd ${SCRIPT_DIR}/..
-
+mkdir -p modules/${NAME}/migrations/db
+cd modules/${NAME}/migrations/db
 DATE=`date +%Y%m%d%H%M%S`
-FILE="${DATE}_${NAME}.sql"
+FILE="${DATE}_${MIG}.sql"
 
 cat >>$FILE <<-EOGO
 
