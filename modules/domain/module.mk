@@ -1,4 +1,4 @@
-export DOMAIN_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+export DOMAIN_ROOT=$(dir $(realpath $(dir $(lastword $(MAKEFILE_LIST)))))domain
 
 $(DOMAIN_ROOT)-codegen: tools-codegen
 	$(BIN)/codegen -p clickyab.com/crab/modules/domain/dmn
@@ -7,8 +7,6 @@ $(DOMAIN_ROOT)-codegen: tools-codegen
 $(DOMAIN_ROOT)-migration: tools-go-bindata
 	cd $(DOMAIN_ROOT)/migrations && $(BIN)/go-bindata -nometadata -o $(DOMAIN_ROOT)/migrations/migration.gen.go -nomemcopy=true -pkg=migrations ./db/...
 
-$(DOMAIN_ROOT)-test:
-	cd $(DOMAIN_ROOT)/ && $(GO) test ./...
-
+	echo $(DOMAIN_ROOT)
 .PHONY: $(DOMAIN_ROOT)-codegen $(DOMAIN_ROOT)-migration
 
