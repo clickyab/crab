@@ -24,7 +24,7 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 	if !swaggerRoute.Bool() {
 		return
 	}
-	assetHandler := http.FileServer(rice.MustFindBox("../../../../swagger-ui").HTTPBox())
+	assetHandler := http.FileServer(rice.MustFindBox("../../../swagger-ui").HTTPBox())
 	framework.Any(r, "/swagger/*filename", func(_ context.Context, w http.ResponseWriter, r *http.Request) {
 		http.StripPrefix("/swagger/", assetHandler).ServeHTTP(w, r)
 	})
