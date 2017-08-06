@@ -20,7 +20,7 @@ export BUILD_DATE=$(shell date "+%D/%H/%I/%S"| sed -e "s/\//-/g")
 export FLAGS="-X version.hash=$(LONG_HASH) -X version.short=$(SHORT_HASH) -X version.date=$(COMMIT_DATE) -X version.count=$(COMMIT_COUNT) -X version.build=$(BUILD_DATE)"
 export LD_ARGS=-ldflags $(FLAGS)
 export BUILD=cd $(ROOT) && $(GO) install -v $(LD_ARGS)
-export DATABASE_URL=postgres://$(DB_USER):$(DB_PASS)@localhost/$(DB_NAME)
+export DATABASE_URL=mysql://$(DB_USER):$(DB_PASS)@127.0.0.1:3306/$(DB_NAME)
 export SWAGGER_TITLE=The clickyab.com/crab API
 export SWAGGER_DESCRIPTION=The crab api, auto generated
 export SWAGGER_VERSION=$(COMMIT_COUNT)
@@ -51,4 +51,5 @@ build-webserver:
 	$(BUILD) clickyab.com/crab/cmd/webserver
 
 run-webserver: build-webserver
+	echo $(DATABASE_URL)
 	$(BIN)/webserver
