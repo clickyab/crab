@@ -31,6 +31,13 @@ type auditData struct {
 	Data     interface{} `json:"data"`
 }
 
+type responseLoginOK struct {
+	ID       int64       `json:"id"`
+	Email    string      `json:"email"`
+	Token    string      `json:"token"`
+	UserType aaa.UserTyp `json:"user_type"`
+}
+
 var (
 	_ = controller.ErrorResponseMap{}
 	_ = controller.ErrorResponseSimple{}
@@ -91,4 +98,13 @@ func audit(username, action, class string, data interface{}) {
 			Data:     data,
 		},
 	)
+}
+
+func (c Controller) responseLoginOKStatus(w http.ResponseWriter, id int64, email, token string, typ aaa.UserTyp) {
+	c.OKResponse(w, responseLoginOK{
+		ID:       id,
+		UserType: typ,
+		Token:    token,
+		Email:    email,
+	})
 }

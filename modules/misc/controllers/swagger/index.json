@@ -139,6 +139,23 @@
 			},
 			"type": "object"
 		},
+		"user_responseLoginOK": {
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"token": {
+					"type": "string"
+				},
+				"user_type": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
 		"user_responseRegister": {
 			"properties": {
 				"email": {
@@ -161,7 +178,7 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "17"
+		"version": "19"
 	},
 	"paths": {
 		"/user/mail/check": {
@@ -183,6 +200,77 @@
 						"description": "",
 						"schema": {
 							"$ref": "#/definitions/user_checkMailResponse"
+						}
+					}
+				},
+				"tags": [
+					"user"
+				]
+			}
+		},
+		"/user/ping": {
+			"get": {
+				"description": "logout is for the logout from the system",
+				"parameters": [
+					{
+						"description": "the security token, get it from login route",
+						"in": "header",
+						"name": "token",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/user_responseLoginOK"
+						}
+					},
+					"401": {
+						"description": "you are not authorized",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "not_authorized",
+							"type": "object"
+						}
+					},
+					"403": {
+						"description": "forbidden, you have no access here",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "forbidden",
+							"type": "object"
 						}
 					}
 				},
