@@ -1,6 +1,9 @@
 package cmd
 
-import _ "github.com/clickyab/services/mysql/connection/mysql" // import mysql
+import (
+	_ "github.com/clickyab/services/mysql/connection/mysql" // import mysql
+	_ "github.com/clickyab/services/redis"                  // the redis must be there
+)
 
 const (
 	// Organization is the organization name

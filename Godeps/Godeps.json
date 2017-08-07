@@ -112,6 +112,10 @@
 			"Rev": "b740d215c2165ef313cad7e99c62887ff6a03a29"
 		},
 		{
+			"ImportPath": "github.com/clickyab/services/redis",
+			"Rev": "b740d215c2165ef313cad7e99c62887ff6a03a29"
+		},
+		{
 			"ImportPath": "github.com/clickyab/services/safe",
 			"Rev": "b740d215c2165ef313cad7e99c62887ff6a03a29"
 		},
@@ -210,6 +214,36 @@
 			"ImportPath": "gopkg.in/gorp.v2",
 			"Comment": "v2.0.0",
 			"Rev": "4deece61034873cb5b5416e81abe4cea7bd0da72"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5/internal",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5/internal/consistenthash",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5/internal/hashtag",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5/internal/pool",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
+		},
+		{
+			"ImportPath": "gopkg.in/redis.v5/internal/proto",
+			"Comment": "v5.2.9",
+			"Rev": "a16aeec10ff407b1e7be6dd35797ccf5426ef0f0"
 		},
 		{
 			"ImportPath": "gopkg.in/yaml.v2",
