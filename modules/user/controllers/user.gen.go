@@ -116,6 +116,26 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		// End route with key 3
 
 		/* Route {
+			"Route": "/password/forget",
+			"Method": "POST",
+			"Function": "Controller.forgetPassword",
+			"RoutePkg": "user",
+			"RouteMiddleware": null,
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "forget",
+			"Resource": "",
+			"Scope": ""
+		} with key 4 */
+		m4 := append(groupMiddleware, []framework.Middleware{}...)
+
+		// Make sure payload is the last middleware
+		m4 = append(m4, middleware.PayloadUnMarshallerGenerator(forget{}))
+		group.POST("/password/forget", xhandler.HandlerFuncC(framework.Mix(u.forgetPassword, m4...)))
+		// End route with key 4
+
+		/* Route {
 			"Route": "/ping",
 			"Method": "GET",
 			"Function": "Controller.ping",
@@ -129,13 +149,13 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"Payload": "",
 			"Resource": "",
 			"Scope": ""
-		} with key 4 */
-		m4 := append(groupMiddleware, []framework.Middleware{
+		} with key 5 */
+		m5 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		group.GET("/ping", xhandler.HandlerFuncC(framework.Mix(u.ping, m4...)))
-		// End route with key 4
+		group.GET("/ping", xhandler.HandlerFuncC(framework.Mix(u.ping, m5...)))
+		// End route with key 5
 
 		/* Route {
 			"Route": "/register",
@@ -149,13 +169,13 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"Payload": "registerPayload",
 			"Resource": "",
 			"Scope": ""
-		} with key 5 */
-		m5 := append(groupMiddleware, []framework.Middleware{}...)
+		} with key 6 */
+		m6 := append(groupMiddleware, []framework.Middleware{}...)
 
 		// Make sure payload is the last middleware
-		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(registerPayload{}))
-		group.POST("/register", xhandler.HandlerFuncC(framework.Mix(u.Register, m5...)))
-		// End route with key 5
+		m6 = append(m6, middleware.PayloadUnMarshallerGenerator(registerPayload{}))
+		group.POST("/register", xhandler.HandlerFuncC(framework.Mix(u.Register, m6...)))
+		// End route with key 6
 
 		initializer.DoInitialize(u)
 	})
