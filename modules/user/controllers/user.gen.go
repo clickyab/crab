@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
@@ -47,6 +48,28 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		// End route with key 0
 
 		/* Route {
+			"Route": "/ping",
+			"Method": "GET",
+			"Function": "Controller.ping",
+			"RoutePkg": "user",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "",
+			"Scope": ""
+		} with key 1 */
+		m1 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		group.GET("/ping", xhandler.HandlerFuncC(framework.Mix(u.ping, m1...)))
+		// End route with key 1
+
+		/* Route {
 			"Route": "/register",
 			"Method": "POST",
 			"Function": "Controller.Register",
@@ -60,15 +83,15 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"Payload": "registerPayload",
 			"Resource": "",
 			"Scope": ""
-		} with key 1 */
-		m1 := append(groupMiddleware, []framework.Middleware{
+		} with key 2 */
+		m2 := append(groupMiddleware, []framework.Middleware{
 			domain.Access,
 		}...)
 
 		// Make sure payload is the last middleware
-		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(registerPayload{}))
-		group.POST("/register", xhandler.HandlerFuncC(framework.Mix(u.Register, m1...)))
-		// End route with key 1
+		m2 = append(m2, middleware.PayloadUnMarshallerGenerator(registerPayload{}))
+		group.POST("/register", xhandler.HandlerFuncC(framework.Mix(u.Register, m2...)))
+		// End route with key 2
 
 		initializer.DoInitialize(u)
 	})
