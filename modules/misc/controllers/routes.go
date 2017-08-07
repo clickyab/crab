@@ -1,14 +1,19 @@
-package controllers
+package misc
 
 import (
+	"path/filepath"
+
 	"context"
 	"net/http"
 
-	"github.com/GeertJohan/go.rice"
+	"encoding/json"
+
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/framework/router"
+	"github.com/rs/xhandler"
 	"github.com/rs/xmux"
 )
 
@@ -24,10 +29,20 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 	if !swaggerRoute.Bool() {
 		return
 	}
-	assetHandler := http.FileServer(rice.MustFindBox("../../../swagger-ui").HTTPBox())
-	framework.Any(r, "/swagger/*filename", func(_ context.Context, w http.ResponseWriter, r *http.Request) {
-		http.StripPrefix("/swagger/", assetHandler).ServeHTTP(w, r)
-	})
+
+	b, err := Asset("swagger/index.json")
+	assert.Nil(err)
+
+	var data = make(map[string]interface{})
+	err = json.Unmarshal(b, &data)
+	assert.Nil(err)
+
+	r.GET(filepath.Join(mountPoint, "/misc/swagger/index.json"),
+		xhandler.HandlerFuncC(func(_ context.Context, w http.ResponseWriter, r *http.Request) {
+			tmp := data
+			tmp["host"] = r.Host
+			framework.JSON(w, http.StatusOK, data)
+		}))
 }
 
 func init() {

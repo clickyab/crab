@@ -10,19 +10,23 @@ import (
 
 	"context"
 
-	"clickyab.com/crab/modules/user/config"
-	"clickyab.com/crab/modules/user/middleware"
-
 	"net/http"
+
+	"clickyab.com/crab/modules/user/config"
+	"clickyab.com/crab/modules/user/middleware/authz"
 
 	"clickyab.com/crab/modules/user/aaa"
 )
 
+// Controller is the controller for the user package
+// @Route {
+//		group = /user
+// }
 type Controller struct {
 	controller.Base
 }
 
-type userAudit struct {
+type auditData struct {
 	Username string      `json:"username"`
 	Action   string      `json:"action"`
 	Class    string      `json:"class"`
@@ -72,7 +76,7 @@ func (u Controller) storeData(r *http.Request, token string) error {
 //}
 
 // String make this one a stringer
-func (u userAudit) String() string {
+func (u auditData) String() string {
 	r, _ := json.Marshal(u)
 
 	return string(r)
@@ -81,7 +85,7 @@ func (u userAudit) String() string {
 func audit(username, action, class string, data interface{}) {
 	hub.Publish(
 		"audit",
-		userAudit{
+		auditData{
 			Username: username,
 			Action:   action,
 			Class:    class,

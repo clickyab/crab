@@ -7,14 +7,6 @@
 	],
 	"Deps": [
 		{
-			"ImportPath": "github.com/GeertJohan/go.rice",
-			"Rev": "c02ca9a983da5807ddf7d796784928f5be4afd09"
-		},
-		{
-			"ImportPath": "github.com/GeertJohan/go.rice/embedded",
-			"Rev": "c02ca9a983da5807ddf7d796784928f5be4afd09"
-		},
-		{
 			"ImportPath": "github.com/Sirupsen/logrus",
 			"Comment": "v0.11.5-46-g5e5dc89",
 			"Rev": "5e5dc898656f695e2a086b8e12559febbfc01562"
@@ -132,10 +124,6 @@
 			"Rev": "b740d215c2165ef313cad7e99c62887ff6a03a29"
 		},
 		{
-			"ImportPath": "github.com/daaku/go.zipexe",
-			"Rev": "a5fe2436ffcb3236e175e5149162b41cd28bd27d"
-		},
-		{
 			"ImportPath": "github.com/fzerorubigd/sql-migrate",
 			"Rev": "9442fb9c36cbacedcc66511437a4836429fc552c"
 		},
@@ -151,10 +139,6 @@
 		{
 			"ImportPath": "github.com/jinzhu/inflection",
 			"Rev": "1c35d901db3da928c72a72d8458480cc9ade058f"
-		},
-		{
-			"ImportPath": "github.com/kardianos/osext",
-			"Rev": "ae77be60afb1dcacde03767a8c37337fad28ac14"
 		},
 		{
 			"ImportPath": "github.com/ogier/pflag",
@@ -189,11 +173,11 @@
 		},
 		{
 			"ImportPath": "golang.org/x/tools/go/ast/astutil",
-			"Rev": "bf4b54dc687c73b6ef63de8b8abf0ad3951e3edc"
+			"Rev": "0f5d61c4c19cce89dd1354f5d5a97e14bb02d3d2"
 		},
 		{
 			"ImportPath": "golang.org/x/tools/imports",
-			"Rev": "bf4b54dc687c73b6ef63de8b8abf0ad3951e3edc"
+			"Rev": "0f5d61c4c19cce89dd1354f5d5a97e14bb02d3d2"
 		},
 		{
 			"ImportPath": "gopkg.in/fzerorubigd/onion.v3",

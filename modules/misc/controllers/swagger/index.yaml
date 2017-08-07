@@ -1,0 +1,53 @@
+swagger: "2.0"
+info:
+  version: "11"
+  title: The clickyab.com/crab API
+  description: The crab api, auto generated
+host: 127.0.0.1
+basePath: /api
+schemes:
+- http
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /user/dummy:
+    get:
+      description: dummy route. Remove it when the real routes are ready
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/controller_NormalResponse'
+        "400":
+          description: ""
+          schema:
+            $ref: '#/definitions/controller_ErrorResponseSimple'
+      tags:
+      - user
+definitions:
+  controller_ErrorResponseSimple:
+    properties:
+      error:
+        properties:
+          params:
+            items:
+              type: string
+            type: array
+          text:
+            type: string
+        type: object
+    type: object
+  controller_NormalResponse:
+    properties: {}
+    type: object
+  trans_t9Base:
+    properties:
+      params:
+        items:
+          type: string
+        type: array
+      text:
+        type: string
+    type: object
