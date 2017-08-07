@@ -76,15 +76,17 @@ const (
 //		list = yes
 // }
 type User struct {
-	ID          int64            `json:"id" db:"id"`
-	Email       string           `json:"email" db:"email"`
-	Password    string           `json:"password" db:"password"`
-	AccessToken string           `json:"-" db:"access_token"`
-	Avatar      mysql.NullString `json:"avatar" db:"avatar"`
-	UserType    UserTyp          `json:"user_type" db:"user_type"`
-	Status      UserValidStatus  `json:"status" db:"status"`
-	CreatedAt   time.Time        `json:"created_at"`
-	UpdatedAt   time.Time        `json:"updated_at"`
+	ID              int64            `json:"id" db:"id"`
+	Email           string           `json:"email" db:"email"`
+	Password        string           `json:"password" db:"password"`
+	AccessToken     string           `json:"-" db:"access_token"`
+	Avatar          mysql.NullString `json:"avatar" db:"avatar"`
+	UserType        UserTyp          `json:"user_type" db:"user_type"`
+	EmailConfirmed  ActiveStatus     `json:"email_confirmed" db:"email_confirmed"`
+	MobileConfirmed ActiveStatus     `json:"mobile_confirmed" db:"mobile_confirmed"`
+	Status          UserValidStatus  `json:"status" db:"status"`
+	CreatedAt       *time.Time       `json:"created_at"`
+	UpdatedAt       *time.Time       `json:"updated_at"`
 }
 
 // Role role model in database
@@ -99,8 +101,8 @@ type Role struct {
 	Name        string           `json:"name" db:"name"`
 	Description mysql.NullString `json:"description" db:"description"`
 	DomainID    int64            `json:"domain_id" db:"domain_id"`
-	CreatedAt   time.Time        `json:"created_at"`
-	UpdatedAt   time.Time        `json:"updated_at"`
+	CreatedAt   *time.Time       `json:"created_at"`
+	UpdatedAt   *time.Time       `json:"updated_at"`
 }
 
 // RoleUser RoleUser model in database
@@ -108,9 +110,9 @@ type Role struct {
 //		table = role_user
 // }
 type RoleUser struct {
-	UserID    int64     `json:"user_id" db:"user_id"`
-	RoleID    int64     `json:"role_id" db:"role_id"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
+	UserID    int64      `json:"user_id" db:"user_id"`
+	RoleID    int64      `json:"role_id" db:"role_id"`
+	CreatedAt *time.Time `json:"created_at" db:"created_at"`
 }
 
 // RolePermission RolePermission model in database
@@ -120,10 +122,10 @@ type RoleUser struct {
 //		find_by = id
 // }
 type RolePermission struct {
-	ID        int64     `json:"id" db:"id"`
-	RoleID    int64     `json:"role_id" db:"role_id"`
-	Scope     UserScope `json:"scope" db:"scope"`
-	Perm      string    `json:"perm" db:"perm"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        int64      `json:"id" db:"id"`
+	RoleID    int64      `json:"role_id" db:"role_id"`
+	Scope     UserScope  `json:"scope" db:"scope"`
+	Perm      string     `json:"perm" db:"perm"`
+	CreatedAt *time.Time `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
 }

@@ -14,9 +14,13 @@ create table users
 	created_at timestamp not null,
 	updated_at timestamp not null,
 	constraint users_email_uindex
+<<<<<<< fa3abc7160a3f63575262da5d189787bdb93a99c
 		unique (email),
 	constraint users_token_uindex
 	unique (access_token)
+=======
+		unique (email)
+>>>>>>> fix migration script in make file
 )
 ;
 

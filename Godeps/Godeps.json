@@ -3,9 +3,13 @@
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
 	"Packages": [
-		"./cmd/..."
+		"./..."
 	],
 	"Deps": [
+		{
+			"ImportPath": "github.com/GeertJohan/go.incremental",
+			"Rev": "1172aab965109e2a70720a0f144b2a5dfeb92fa5"
+		},
 		{
 			"ImportPath": "github.com/GeertJohan/go.rice",
 			"Rev": "c02ca9a983da5807ddf7d796784928f5be4afd09"
@@ -18,6 +22,16 @@
 			"ImportPath": "github.com/Sirupsen/logrus",
 			"Comment": "v0.11.5-46-g5e5dc89",
 			"Rev": "5e5dc898656f695e2a086b8e12559febbfc01562"
+		},
+		{
+			"ImportPath": "github.com/akavel/rsrc/binutil",
+			"Comment": "v2-6-gba14da1",
+			"Rev": "ba14da1f827188454a4591717fff29999010887f"
+		},
+		{
+			"ImportPath": "github.com/akavel/rsrc/coff",
+			"Comment": "v2-6-gba14da1",
+			"Rev": "ba14da1f827188454a4591717fff29999010887f"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/array",
@@ -112,6 +126,10 @@
 			"Rev": "b740d215c2165ef313cad7e99c62887ff6a03a29"
 		},
 		{
+			"ImportPath": "github.com/clickyab/services/random",
+			"Rev": "b740d215c2165ef313cad7e99c62887ff6a03a29"
+		},
+		{
 			"ImportPath": "github.com/clickyab/services/redis",
 			"Rev": "b740d215c2165ef313cad7e99c62887ff6a03a29"
 		},
@@ -147,6 +165,11 @@
 		{
 			"ImportPath": "github.com/goraz/humanize",
 			"Rev": "6849f069204f0400d32f0fdccb440f38132761b6"
+		},
+		{
+			"ImportPath": "github.com/jessevdk/go-flags",
+			"Comment": "v1.3.0-3-g6cf8f02",
+			"Rev": "6cf8f02b4ae8ba723ddc64dcfd403e530c06d927"
 		},
 		{
 			"ImportPath": "github.com/jinzhu/inflection",

@@ -8,8 +8,8 @@ create table domains
 	name varchar(40) not null,
 	description varchar(255) null,
 	active enum('yes', 'no') default 'yes' not null,
-	created_at timestamp not null,
-	updated_at timestamp not null,
+	created_at timestamp default CURRENT_TIMESTAMP not null,
+	updated_at timestamp default CURRENT_TIMESTAMP not null,
 	constraint domains_name_uindex
 	unique (name)
 )
