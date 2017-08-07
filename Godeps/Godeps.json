@@ -3,13 +3,23 @@
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
 	"Packages": [
-		"./cmd/..."
+		"./..."
 	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
 			"Comment": "v0.11.5-46-g5e5dc89",
 			"Rev": "5e5dc898656f695e2a086b8e12559febbfc01562"
+		},
+		{
+			"ImportPath": "github.com/akavel/rsrc/binutil",
+			"Comment": "v2-6-gba14da1",
+			"Rev": "ba14da1f827188454a4591717fff29999010887f"
+		},
+		{
+			"ImportPath": "github.com/akavel/rsrc/coff",
+			"Comment": "v2-6-gba14da1",
+			"Rev": "ba14da1f827188454a4591717fff29999010887f"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/array",
@@ -104,6 +114,10 @@
 			"Rev": "28a1aeefcdc373140feaa8bf77ae2da402caa788"
 		},
 		{
+			"ImportPath": "github.com/clickyab/services/random",
+			"Rev": "b740d215c2165ef313cad7e99c62887ff6a03a29"
+		},
+		{
 			"ImportPath": "github.com/clickyab/services/redis",
 			"Rev": "28a1aeefcdc373140feaa8bf77ae2da402caa788"
 		},
@@ -128,6 +142,21 @@
 			"Rev": "9442fb9c36cbacedcc66511437a4836429fc552c"
 		},
 		{
+			"ImportPath": "github.com/go-playground/locales",
+			"Comment": "v0.11.1-2-g1e5f116",
+			"Rev": "1e5f1161c6416a5ff48840eb8724a394e48cc534"
+		},
+		{
+			"ImportPath": "github.com/go-playground/locales/currency",
+			"Comment": "v0.11.1-2-g1e5f116",
+			"Rev": "1e5f1161c6416a5ff48840eb8724a394e48cc534"
+		},
+		{
+			"ImportPath": "github.com/go-playground/universal-translator",
+			"Comment": "v0.16.0-1-g7120149",
+			"Rev": "71201497bace774495daed26a3874fd339e0b538"
+		},
+		{
 			"ImportPath": "github.com/go-sql-driver/mysql",
 			"Comment": "v1.3-18-g382e13d",
 			"Rev": "382e13d099fcf5f5994290892ab258fbebbdc5e3"
@@ -135,6 +164,11 @@
 		{
 			"ImportPath": "github.com/goraz/humanize",
 			"Rev": "6849f069204f0400d32f0fdccb440f38132761b6"
+		},
+		{
+			"ImportPath": "github.com/jessevdk/go-flags",
+			"Comment": "v1.3.0-3-g6cf8f02",
+			"Rev": "6cf8f02b4ae8ba723ddc64dcfd403e530c06d927"
 		},
 		{
 			"ImportPath": "github.com/jinzhu/inflection",
@@ -168,6 +202,14 @@
 			"Rev": "42c30aabf72921b83678a3d0680fd6cd46682f1b"
 		},
 		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Rev": "adbae1b6b6fb4b02448a0fc0dbbc9ba2b95b294d"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Rev": "adbae1b6b6fb4b02448a0fc0dbbc9ba2b95b294d"
+		},
+		{
 			"ImportPath": "golang.org/x/sys/unix",
 			"Rev": "dbc2be9168a660ef302e04b6ff6406de6f967473"
 		},
@@ -193,6 +235,11 @@
 			"ImportPath": "gopkg.in/fzerorubigd/onion.v3/yamlloader",
 			"Comment": "v1.0.0-17-g21ad47e",
 			"Rev": "21ad47ed240a3d9e517c900435b371ed2c4bbd94"
+		},
+		{
+			"ImportPath": "gopkg.in/go-playground/validator.v9",
+			"Comment": "v9.4.0",
+			"Rev": "fb68f39656d7ebf8aa339ad4917aa0c260ecc237"
 		},
 		{
 			"ImportPath": "gopkg.in/gorp.v2",
