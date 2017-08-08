@@ -3,23 +3,13 @@
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
 	"Packages": [
-		"./..."
+		"./cmd/..."
 	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
 			"Comment": "v0.11.5-46-g5e5dc89",
 			"Rev": "5e5dc898656f695e2a086b8e12559febbfc01562"
-		},
-		{
-			"ImportPath": "github.com/akavel/rsrc/binutil",
-			"Comment": "v2-6-gba14da1",
-			"Rev": "ba14da1f827188454a4591717fff29999010887f"
-		},
-		{
-			"ImportPath": "github.com/akavel/rsrc/coff",
-			"Comment": "v2-6-gba14da1",
-			"Rev": "ba14da1f827188454a4591717fff29999010887f"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/array",
@@ -115,7 +105,7 @@
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/random",
-			"Rev": "b740d215c2165ef313cad7e99c62887ff6a03a29"
+			"Rev": "28a1aeefcdc373140feaa8bf77ae2da402caa788"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/redis",
@@ -143,12 +133,12 @@
 		},
 		{
 			"ImportPath": "github.com/go-playground/locales",
-			"Comment": "v0.11.1-2-g1e5f116",
+			"Comment": "v0.11.1-2-g1e5f1161",
 			"Rev": "1e5f1161c6416a5ff48840eb8724a394e48cc534"
 		},
 		{
 			"ImportPath": "github.com/go-playground/locales/currency",
-			"Comment": "v0.11.1-2-g1e5f116",
+			"Comment": "v0.11.1-2-g1e5f1161",
 			"Rev": "1e5f1161c6416a5ff48840eb8724a394e48cc534"
 		},
 		{
@@ -164,11 +154,6 @@
 		{
 			"ImportPath": "github.com/goraz/humanize",
 			"Rev": "6849f069204f0400d32f0fdccb440f38132761b6"
-		},
-		{
-			"ImportPath": "github.com/jessevdk/go-flags",
-			"Comment": "v1.3.0-3-g6cf8f02",
-			"Rev": "6cf8f02b4ae8ba723ddc64dcfd403e530c06d927"
 		},
 		{
 			"ImportPath": "github.com/jinzhu/inflection",
@@ -203,11 +188,11 @@
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/bcrypt",
-			"Rev": "adbae1b6b6fb4b02448a0fc0dbbc9ba2b95b294d"
+			"Rev": "7e9105388ebff089b3f99f0ef676ea55a6da3a7e"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/blowfish",
-			"Rev": "adbae1b6b6fb4b02448a0fc0dbbc9ba2b95b294d"
+			"Rev": "7e9105388ebff089b3f99f0ef676ea55a6da3a7e"
 		},
 		{
 			"ImportPath": "golang.org/x/sys/unix",
@@ -238,8 +223,8 @@
 		},
 		{
 			"ImportPath": "gopkg.in/go-playground/validator.v9",
-			"Comment": "v9.4.0",
-			"Rev": "fb68f39656d7ebf8aa339ad4917aa0c260ecc237"
+			"Comment": "v9.6.0",
+			"Rev": "d529ee1b0f30352444f507cc6cdac96bfd12decc"
 		},
 		{
 			"ImportPath": "gopkg.in/gorp.v2",
