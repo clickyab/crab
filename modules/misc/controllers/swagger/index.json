@@ -66,62 +66,6 @@
 			},
 			"type": "object"
 		},
-		"location_Country": {
-			"properties": {
-				"id": {
-					"type": "integer"
-				},
-				"name": {
-					"type": "string"
-				}
-			},
-			"type": "object"
-		},
-		"location_Province": {
-			"properties": {
-				"country_id": {
-					"type": "integer"
-				},
-				"id": {
-					"type": "integer"
-				},
-				"name": {
-					"type": "string"
-				}
-			},
-			"type": "object"
-		},
-		"location_countries": {
-			"items": {
-				"properties": {
-					"id": {
-						"type": "integer"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"type": "object"
-			},
-			"type": "array"
-		},
-		"location_provinces": {
-			"items": {
-				"properties": {
-					"country_id": {
-						"type": "integer"
-					},
-					"id": {
-						"type": "integer"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"type": "object"
-			},
-			"type": "array"
-		},
 		"trans_t9Base": {
 			"properties": {
 				"params": {
@@ -131,6 +75,17 @@
 					"type": "array"
 				},
 				"text": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"user_callBack": {
+			"properties": {
+				"new_password": {
+					"type": "string"
+				},
+				"token": {
 					"type": "string"
 				}
 			},
@@ -446,99 +401,9 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "31"
+		"version": "33"
 	},
 	"paths": {
-		"/location/cities/{provinces_id}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"description": "",
-						"in": "path",
-						"name": "provinces_id",
-						"required": true,
-						"type": "string"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/location_provinces"
-						}
-					},
-					"400": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/controller_ErrorResponseSimple"
-						}
-					},
-					"404": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/controller_ErrorResponseSimple"
-						}
-					}
-				},
-				"tags": [
-					"location"
-				]
-			}
-		},
-		"/location/countries": {
-			"get": {
-				"description": "",
-				"responses": {
-					"200": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/location_countries"
-						}
-					}
-				},
-				"tags": [
-					"location"
-				]
-			}
-		},
-		"/location/provinces/{country_id}": {
-			"get": {
-				"description": "",
-				"parameters": [
-					{
-						"description": "",
-						"in": "path",
-						"name": "country_id",
-						"required": true,
-						"type": "string"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/location_provinces"
-						}
-					},
-					"400": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/controller_ErrorResponseSimple"
-						}
-					},
-					"404": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/controller_ErrorResponseSimple"
-						}
-					}
-				},
-				"tags": [
-					"location"
-				]
-			}
-		},
 		"/upload/{module}": {
 			"post": {
 				"description": "Upload into the system",
@@ -811,6 +676,39 @@
 						"description": "",
 						"schema": {
 							"$ref": "#/definitions/user_checkMailResponse"
+						}
+					}
+				},
+				"tags": [
+					"user"
+				]
+			}
+		},
+		"/user/password/callback": {
+			"put": {
+				"description": "forgetCallBack is the url coming from sent email \t\t@Route { \t\turl = /password/callback \t\tmethod = put payload = callBack \t\t200 = controller.NormalResponse \t\t400 = controller.ErrorResponseSimple }",
+				"parameters": [
+					{
+						"description": "",
+						"in": "body",
+						"name": "payload_data",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/user_callBack"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_NormalResponse"
+						}
+					},
+					"400": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
 						}
 					}
 				},
