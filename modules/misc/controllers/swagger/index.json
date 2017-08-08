@@ -27,6 +27,39 @@
 			"properties": {},
 			"type": "object"
 		},
+		"dmn_Domain": {
+			"properties": {
+				"active": {
+					"type": "integer"
+				},
+				"created_at": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"description": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"updated_at": {
+					"format": "dateTime",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
 		"trans_t9Base": {
 			"properties": {
 				"params": {
@@ -40,13 +73,65 @@
 				}
 			},
 			"type": "object"
+		},
+		"user_checkMailPayload": {
+			"properties": {
+				"email": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"user_checkMailResponse": {
+			"properties": {
+				"current_domain": {
+					"type": "boolean"
+				},
+				"domains": {
+					"items": {
+						"properties": {
+							"active": {
+								"type": "integer"
+							},
+							"created_at": {
+								"format": "dateTime",
+								"type": "string"
+							},
+							"description": {
+								"properties": {
+									"String": {
+										"type": "string"
+									},
+									"Valid": {
+										"type": "boolean"
+									}
+								},
+								"type": "object"
+							},
+							"id": {
+								"type": "integer"
+							},
+							"name": {
+								"type": "string"
+							},
+							"updated_at": {
+								"format": "dateTime",
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					"type": "array"
+				}
+			},
+			"type": "object"
 		}
 	},
 	"host": "127.0.0.1",
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "11"
+		"version": "12"
 	},
 	"paths": {
 		"/user/dummy": {
@@ -60,6 +145,39 @@
 						}
 					},
 					"400": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					}
+				},
+				"tags": [
+					"user"
+				]
+			}
+		},
+		"/user/mail/check": {
+			"post": {
+				"description": "checkMail check mail in system",
+				"parameters": [
+					{
+						"description": "",
+						"in": "body",
+						"name": "payload_data",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/user_checkMailPayload"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/user_checkMailResponse"
+						}
+					},
+					"404": {
 						"description": "",
 						"schema": {
 							"$ref": "#/definitions/controller_ErrorResponseSimple"

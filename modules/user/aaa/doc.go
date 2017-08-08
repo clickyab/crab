@@ -3,6 +3,10 @@ package aaa
 import (
 	"time"
 
+	"fmt"
+
+	"clickyab.com/crab/modules/domain/dmn"
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
 )
 
@@ -126,4 +130,36 @@ type RolePermission struct {
 	Perm      string    `json:"perm" db:"perm"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// FindUserByEmailDomain return the User base on its email and domain
+func (m *Manager) FindUserByEmailDomain(e string, domain *dmn.Domain) (*User, error) {
+	var res User
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT * FROM %s AS u  "+
+			"INNER JOIN domain_user AS dm ON dm.user_id=u.id "+
+			"INNER JOIN domains AS d ON d.id=dm.domain_id "+
+			"WHERE u.email=? AND d.name=?", UserTableFull),
+		e,
+		domain.Name,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+// FindUserDomainsByEmail find active user domain based on its email
+func (m *Manager) FindUserDomainsByEmail(e string) []dmn.Domain {
+	var res []dmn.Domain
+	q := "SELECT d.* FROM domains AS d " +
+		"INNER JOIN domain_user AS dm ON dm.domain_id=d.id " +
+		"INNER JOIN users AS u ON u.id=dm.user_id " +
+		"WHERE u.email=? AND d.active=?"
+	_, err := m.GetRDbMap().Select(&res, q, e, dmn.ActiveStatusYes)
+	assert.Nil(err)
+	return res
 }

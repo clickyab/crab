@@ -128,6 +128,21 @@
 			"Rev": "9442fb9c36cbacedcc66511437a4836429fc552c"
 		},
 		{
+			"ImportPath": "github.com/go-playground/locales",
+			"Comment": "v0.11.1-2-g1e5f116",
+			"Rev": "1e5f1161c6416a5ff48840eb8724a394e48cc534"
+		},
+		{
+			"ImportPath": "github.com/go-playground/locales/currency",
+			"Comment": "v0.11.1-2-g1e5f116",
+			"Rev": "1e5f1161c6416a5ff48840eb8724a394e48cc534"
+		},
+		{
+			"ImportPath": "github.com/go-playground/universal-translator",
+			"Comment": "v0.16.0-1-g7120149",
+			"Rev": "71201497bace774495daed26a3874fd339e0b538"
+		},
+		{
 			"ImportPath": "github.com/go-sql-driver/mysql",
 			"Comment": "v1.3-18-g382e13d",
 			"Rev": "382e13d099fcf5f5994290892ab258fbebbdc5e3"
@@ -193,6 +208,11 @@
 			"ImportPath": "gopkg.in/fzerorubigd/onion.v3/yamlloader",
 			"Comment": "v1.0.0-17-g21ad47e",
 			"Rev": "21ad47ed240a3d9e517c900435b371ed2c4bbd94"
+		},
+		{
+			"ImportPath": "gopkg.in/go-playground/validator.v9",
+			"Comment": "v9.4.0",
+			"Rev": "fb68f39656d7ebf8aa339ad4917aa0c260ecc237"
 		},
 		{
 			"ImportPath": "gopkg.in/gorp.v2",
