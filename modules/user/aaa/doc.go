@@ -21,6 +21,20 @@ const (
 	ActiveStatusNo ActiveStatus = "no"
 )
 
+type (
+	// Confirm is the enum for checking if its confirmed
+	// @Enum{
+	// }
+	Confirm string
+)
+
+const (
+	// Yes it's confirmed
+	Yes Confirm = "yes"
+	// No it's not confirmed
+	No Confirm = "no"
+)
+
 // UserTyp is the user type status
 type (
 	// UserTyp is the user type status
@@ -76,15 +90,17 @@ const (
 //		list = yes
 // }
 type User struct {
-	ID          int64            `json:"id" db:"id"`
-	Email       string           `json:"email" db:"email"`
-	Password    string           `json:"password" db:"password"`
-	AccessToken string           `json:"-" db:"access_token"`
-	Avatar      mysql.NullString `json:"avatar" db:"avatar"`
-	UserType    UserTyp          `json:"user_type" db:"user_type"`
-	Status      UserValidStatus  `json:"status" db:"status"`
-	CreatedAt   time.Time        `json:"created_at"`
-	UpdatedAt   time.Time        `json:"updated_at"`
+	ID              int64            `json:"id" db:"id"`
+	Email           string           `json:"email" db:"email"`
+	Password        string           `json:"password" db:"password"`
+	AccessToken     string           `json:"-" db:"access_token"`
+	Avatar          mysql.NullString `json:"avatar" db:"avatar"`
+	UserType        UserTyp          `json:"user_type" db:"user_type"`
+	EmailConfirmed  Confirm          `json:"email_confirmed" db:"email_confirmed"`
+	MobileConfirmed Confirm          `json:"mobile_confirmed" db:"mobile_confirmed"`
+	Status          UserValidStatus  `json:"status" db:"status"`
+	CreatedAt       time.Time        `json:"created_at"`
+	UpdatedAt       time.Time        `json:"updated_at"`
 }
 
 // Role role model in database
