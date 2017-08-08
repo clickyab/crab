@@ -66,6 +66,62 @@
 			},
 			"type": "object"
 		},
+		"location_Country": {
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"location_Province": {
+			"properties": {
+				"country_id": {
+					"type": "integer"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"location_countries": {
+			"items": {
+				"properties": {
+					"id": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"location_provinces": {
+			"items": {
+				"properties": {
+					"country_id": {
+						"type": "integer"
+					},
+					"id": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
 		"trans_t9Base": {
 			"properties": {
 				"params": {
@@ -401,9 +457,99 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "33"
+		"version": "34"
 	},
 	"paths": {
+		"/location/cities/{provinces_id}": {
+			"get": {
+				"description": "",
+				"parameters": [
+					{
+						"description": "",
+						"in": "path",
+						"name": "provinces_id",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/location_provinces"
+						}
+					},
+					"400": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					},
+					"404": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					}
+				},
+				"tags": [
+					"location"
+				]
+			}
+		},
+		"/location/countries": {
+			"get": {
+				"description": "",
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/location_countries"
+						}
+					}
+				},
+				"tags": [
+					"location"
+				]
+			}
+		},
+		"/location/provinces/{country_id}": {
+			"get": {
+				"description": "",
+				"parameters": [
+					{
+						"description": "",
+						"in": "path",
+						"name": "country_id",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/location_provinces"
+						}
+					},
+					"400": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					},
+					"404": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					}
+				},
+				"tags": [
+					"location"
+				]
+			}
+		},
 		"/upload/{module}": {
 			"post": {
 				"description": "Upload into the system",
