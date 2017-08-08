@@ -5,6 +5,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/initializer"
+	_ "github.com/clickyab/services/kv/redis"
 	"github.com/clickyab/services/shell"
 )
 
