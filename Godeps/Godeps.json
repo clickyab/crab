@@ -129,12 +129,12 @@
 		},
 		{
 			"ImportPath": "github.com/go-playground/locales",
-			"Comment": "v0.11.1-2-g1e5f116",
+			"Comment": "v0.11.1-2-g1e5f1161",
 			"Rev": "1e5f1161c6416a5ff48840eb8724a394e48cc534"
 		},
 		{
 			"ImportPath": "github.com/go-playground/locales/currency",
-			"Comment": "v0.11.1-2-g1e5f116",
+			"Comment": "v0.11.1-2-g1e5f1161",
 			"Rev": "1e5f1161c6416a5ff48840eb8724a394e48cc534"
 		},
 		{
@@ -211,8 +211,8 @@
 		},
 		{
 			"ImportPath": "gopkg.in/go-playground/validator.v9",
-			"Comment": "v9.4.0",
-			"Rev": "fb68f39656d7ebf8aa339ad4917aa0c260ecc237"
+			"Comment": "v9.6.0",
+			"Rev": "d529ee1b0f30352444f507cc6cdac96bfd12decc"
 		},
 		{
 			"ImportPath": "gopkg.in/gorp.v2",

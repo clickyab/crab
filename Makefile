@@ -39,7 +39,7 @@ include $(wildcard $(ROOT)/modules/*/module.mk)
 # codegen target as wildcard target
 codegen: tools-go-bindata $(addsuffix -codegen,$(wildcard $(ROOT)/modules/*))
 	cp $(ROOT)/tmp/swagger/out.json $(ROOT)/modules/misc/controllers/swagger/index.json
-	cp $(ROOT)/tmp/swagger/out.yaml $(ROOT)/modules/misc/controllers/swagger/index.yaml
+	#cp $(ROOT)/tmp/swagger/out.yaml $(ROOT)/modules/misc/controllers/swagger/index.yaml
 	cd $(ROOT)/modules/misc/controllers/ && $(BIN)/go-bindata -nometadata -o swagger.gen.go -nomemcopy=true -pkg=misc ./swagger/...
 
 

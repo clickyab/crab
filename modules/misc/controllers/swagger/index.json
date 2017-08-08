@@ -131,7 +131,7 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "12"
+		"version": "13"
 	},
 	"paths": {
 		"/user/dummy": {
