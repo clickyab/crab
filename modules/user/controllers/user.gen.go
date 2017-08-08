@@ -24,24 +24,6 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		group := r.NewGroup(mountPoint + "/user")
 
 		/* Route {
-			"Route": "/dummy",
-			"Method": "GET",
-			"Function": "Controller.dummy",
-			"RoutePkg": "user",
-			"RouteMiddleware": null,
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "u",
-			"Payload": "",
-			"Resource": "",
-			"Scope": ""
-		} with key 0 */
-		m0 := append(groupMiddleware, []framework.Middleware{}...)
-
-		group.GET("/dummy", xhandler.HandlerFuncC(framework.Mix(u.dummy, m0...)))
-		// End route with key 0
-
-		/* Route {
 			"Route": "/mail/check",
 			"Method": "POST",
 			"Function": "Controller.checkMail",
@@ -53,13 +35,13 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"Payload": "checkMailPayload",
 			"Resource": "",
 			"Scope": ""
-		} with key 1 */
-		m1 := append(groupMiddleware, []framework.Middleware{}...)
+		} with key 0 */
+		m0 := append(groupMiddleware, []framework.Middleware{}...)
 
 		// Make sure payload is the last middleware
-		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(checkMailPayload{}))
-		group.POST("/mail/check", xhandler.HandlerFuncC(framework.Mix(u.checkMail, m1...)))
-		// End route with key 1
+		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(checkMailPayload{}))
+		group.POST("/mail/check", xhandler.HandlerFuncC(framework.Mix(u.checkMail, m0...)))
+		// End route with key 0
 
 		initializer.DoInitialize(u)
 	})
