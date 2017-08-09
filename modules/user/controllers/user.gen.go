@@ -5,7 +5,7 @@ package user
 import (
 	"sync"
 
-	middleware2 "clickyab.com/crab/modules/domain/middleware"
+	"clickyab.com/crab/modules/domain/middleware/domain"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
@@ -20,7 +20,9 @@ var once = sync.Once{}
 func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 	once.Do(func() {
 
-		groupMiddleware := []framework.Middleware{}
+		groupMiddleware := []framework.Middleware{
+			domain.Access,
+		}
 
 		group := r.NewGroup(mountPoint + "/user")
 
@@ -50,7 +52,7 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"Function": "Controller.Register",
 			"RoutePkg": "user",
 			"RouteMiddleware": [
-				"middleware2.Access"
+				"domain.Access"
 			],
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
@@ -60,7 +62,7 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"Scope": ""
 		} with key 1 */
 		m1 := append(groupMiddleware, []framework.Middleware{
-			middleware2.Access,
+			domain.Access,
 		}...)
 
 		// Make sure payload is the last middleware
