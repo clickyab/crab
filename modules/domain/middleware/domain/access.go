@@ -1,4 +1,4 @@
-package middleware
+package domain
 
 import (
 	"context"
@@ -21,13 +21,13 @@ const (
 // Access is a middleware used for domain access
 func Access(next framework.Handler) framework.Handler {
 	return func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-		// check if domain is valid
-		domain, err := dmn.NewDmnManager().FindActiveDomainByName(r.Host)
+		// check if d is valid
+		d, err := dmn.NewDmnManager().FindActiveDomainByName(r.Host)
 		if err != nil {
-			framework.JSON(w, http.StatusUnauthorized, controller.ErrorResponseSimple{Error: trans.E("Unauthorized")})
+			framework.JSON(w, http.StatusNotFound, controller.ErrorResponseSimple{Error: trans.E(http.StatusText(http.StatusNotFound))})
 			return
 		}
-		ctx = context.WithValue(ctx, ContextDomain, domain)
+		ctx = context.WithValue(ctx, ContextDomain, d)
 		next(ctx, w, r)
 	}
 }

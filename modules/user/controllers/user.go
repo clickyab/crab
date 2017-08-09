@@ -1,26 +1,24 @@
 package user
 
 import (
+	"context"
 	"encoding/json"
+	"net/http"
 
+	"clickyab.com/crab/modules/domain/middleware/domain"
+	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/config"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/eav"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/hub"
-
-	"context"
-
-	"net/http"
-
-	"clickyab.com/crab/modules/user/config"
-	"clickyab.com/crab/modules/user/middleware/authz"
-
-	"clickyab.com/crab/modules/user/aaa"
 )
 
 // Controller is the controller for the user package
 // @Route {
 //		group = /user
+//		middleware = domain.Access
 // }
 type Controller struct {
 	controller.Base
@@ -36,6 +34,7 @@ type auditData struct {
 var (
 	_ = controller.ErrorResponseMap{}
 	_ = controller.ErrorResponseSimple{}
+	_ = domain.Access
 )
 
 // MustGetUser try to get back the user to system

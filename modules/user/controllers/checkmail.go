@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"clickyab.com/crab/modules/domain/dmn"
-	middleware2 "clickyab.com/crab/modules/domain/middleware"
+	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 )
 
@@ -25,13 +25,13 @@ type checkMailResponse struct {
 // @Route {
 // 		url = /mail/check
 //		method = post
-//      payload = checkMailPayload
+//		payload = checkMailPayload
 //		200 = checkMailResponse
 //		404 = controller.ErrorResponseSimple
 // }
 func (u Controller) checkMail(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := u.MustGetPayload(ctx).(*checkMailPayload)
-	currentDomain := middleware2.MustGetDomain(ctx)
+	currentDomain := domain.MustGetDomain(ctx)
 	m := aaa.NewAaaManager()
 	// find user domains
 	domains := m.FindUserDomainsByEmail(pl.Email)

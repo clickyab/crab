@@ -81,12 +81,10 @@ RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
 
 RUN /bin/herokuish buildpack build
 EXPORT /app/bin /app
-RUN git clone --depth 1 https://github.com/fzerorubigd/swagger-ui.git /swagger-ui
-EXPORT /swagger-ui
+
 
 FROM ubuntu:16.04
 IMPORT /app
-IMPORT /swagger-ui /app
 
 ENV TZ=Asia/Tehran
 RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone

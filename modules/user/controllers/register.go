@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	middleware2 "clickyab.com/crab/modules/domain/middleware"
+	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/trans"
@@ -26,8 +26,8 @@ type responseRegister struct {
 // @Route {
 // 		url = /register
 //		method = post
-//      payload = registerPayload
-//		middleware = middleware2.Access
+//		payload = registerPayload
+//		middleware = domain.Access
 //		200 = responseRegister
 //		400 = controller.ErrorResponseSimple
 // }
@@ -40,18 +40,18 @@ func (u *Controller) Register(ctx context.Context, w http.ResponseWriter, r *htt
 		return
 	}
 	m := aaa.NewAaaManager()
-	domain := middleware2.MustGetDomain(ctx)
-	user, err := m.RegisterUser(pl.Email, pl.Password, pl.UserType, domain.ID)
+	d := domain.MustGetDomain(ctx)
+	usr, err := m.RegisterUser(pl.Email, pl.Password, pl.UserType, d.ID)
 	if err != nil {
 		u.BadResponse(w, trans.E("error registering user"))
 		return
 	}
-	token := aaa.GetNewToken(user)
+	token := aaa.GetNewToken(usr)
 	u.OKResponse(w, responseRegister{
-		ID:       user.ID,
-		Email:    user.Email,
+		ID:       usr.ID,
+		Email:    usr.Email,
 		Token:    token,
-		UserType: user.UserType,
+		UserType: usr.UserType,
 	})
 
 }
