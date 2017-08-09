@@ -44,6 +44,10 @@ func (m *Manager) Initialize() {
 	m.AddTableWithName(
 		DomainUser{},
 		DomainUserTableFull,
+	).SetKeys(
+		false,
+		"UserID",
+		"DomainID",
 	)
 
 	m.AddTableWithName(

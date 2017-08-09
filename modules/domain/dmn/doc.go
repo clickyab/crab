@@ -3,6 +3,8 @@ package dmn
 import (
 	"time"
 
+	"fmt"
+
 	"github.com/clickyab/services/mysql"
 )
 
@@ -32,28 +34,29 @@ type Domain struct {
 	ID          int64            `json:"id" db:"id"`
 	Name        string           `json:"name" db:"name"`
 	Description mysql.NullString `json:"description" db:"description"`
-	Active      int64            `json:"active" db:"active"`
-	CreatedAt   *time.Time       `json:"created_at" db:"created_at"`
-	UpdatedAt   *time.Time       `json:"updated_at" db:"uop"`
+	Active      ActiveStatus     `json:"active" db:"active"`
+	CreatedAt   time.Time        `json:"created_at" db:"created_at"`
+	UpdatedAt   time.Time        `json:"updated_at" db:"updated_at"`
 }
 
 // DomainUser domain_user model in database
 // @Model {
 //		table = domain_user
+//		primary = false, user_id, domain_id
 // }
 type DomainUser struct {
-	DomainID int64  `json:"domain_id" db:"domain_id"`
-	UserID   string `json:"user_id" db:"user_id"`
+	DomainID int64 `json:"domain_id" db:"domain_id"`
+	UserID   int64 `json:"user_id" db:"user_id"`
 }
 
 // FindActiveDomainByName find active domain by name
 func (m *Manager) FindActiveDomainByName(name string) (*Domain, error) {
-	var res *Domain
-	q := "SELECT * FROM domains WHERE name=? AND active=?"
-	err := m.GetRDbMap().SelectOne(res, q, name, ActiveStatusYes)
+	var res Domain
+	q := fmt.Sprintf("SELECT * FROM %s WHERE name=? AND active=?", DomainTableFull)
+	err := m.GetRDbMap().SelectOne(&res, q, name, ActiveStatusYes)
 	if err != nil {
 		return nil, err
 	}
-	return res, nil
+	return &res, nil
 
 }

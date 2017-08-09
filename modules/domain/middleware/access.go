@@ -21,9 +21,8 @@ const (
 // Access is a middleware used for domain access
 func Access(next framework.Handler) framework.Handler {
 	return func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-		rUrl := r.URL
 		// check if domain is valid
-		domain, err := dmn.NewDmnManager().FindActiveDomainByName(rUrl.Host)
+		domain, err := dmn.NewDmnManager().FindActiveDomainByName(r.Host)
 		if err != nil {
 			framework.JSON(w, http.StatusUnauthorized, controller.ErrorResponseSimple{Error: trans.E("Unauthorized")})
 			return

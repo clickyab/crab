@@ -5,6 +5,7 @@ package user
 import (
 	"sync"
 
+	middleware2 "clickyab.com/crab/modules/domain/middleware"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
@@ -42,6 +43,30 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(checkMailPayload{}))
 		group.POST("/mail/check", xhandler.HandlerFuncC(framework.Mix(u.checkMail, m0...)))
 		// End route with key 0
+
+		/* Route {
+			"Route": "/register",
+			"Method": "POST",
+			"Function": "Controller.Register",
+			"RoutePkg": "user",
+			"RouteMiddleware": [
+				"middleware2.Access"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "u",
+			"Payload": "registerPayload",
+			"Resource": "",
+			"Scope": ""
+		} with key 1 */
+		m1 := append(groupMiddleware, []framework.Middleware{
+			middleware2.Access,
+		}...)
+
+		// Make sure payload is the last middleware
+		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(registerPayload{}))
+		group.POST("/register", xhandler.HandlerFuncC(framework.Mix(u.Register, m1...)))
+		// End route with key 1
 
 		initializer.DoInitialize(u)
 	})
