@@ -125,8 +125,6 @@ create index role_permission_roles_id_fk
 -- SQL section 'Down' is executed when this migration is rolled back
 DROP TABLE role_permission;
 DROP TABLE roles;
-DROP TABLE domain_user;
-DROP TABLE domains;
 DROP TABLE user_corporation;
 DROP TABLE user_personal;
 DROP TABLE users;

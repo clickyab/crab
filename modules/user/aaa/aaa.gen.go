@@ -58,6 +58,10 @@ func (m *Manager) Initialize() {
 	m.AddTableWithName(
 		RoleUser{},
 		RoleUserTableFull,
+	).SetKeys(
+		false,
+		"UserID",
+		"RoleID",
 	)
 
 	m.AddTableWithName(

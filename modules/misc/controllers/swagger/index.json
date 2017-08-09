@@ -23,14 +23,13 @@
 			},
 			"type": "object"
 		},
-		"controller_NormalResponse": {
-			"properties": {},
-			"type": "object"
+		"dmn_ActiveStatus": {
+			"type": "string"
 		},
 		"dmn_Domain": {
 			"properties": {
 				"active": {
-					"type": "integer"
+					"type": "string"
 				},
 				"created_at": {
 					"format": "dateTime",
@@ -91,7 +90,7 @@
 					"items": {
 						"properties": {
 							"active": {
-								"type": "integer"
+								"type": "string"
 							},
 							"created_at": {
 								"format": "dateTime",
@@ -125,37 +124,46 @@
 				}
 			},
 			"type": "object"
+		},
+		"user_registerPayload": {
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				},
+				"user_type": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"user_responseRegister": {
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"token": {
+					"type": "string"
+				},
+				"user_type": {
+					"type": "string"
+				}
+			},
+			"type": "object"
 		}
 	},
 	"host": "127.0.0.1",
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "13"
+		"version": "15"
 	},
 	"paths": {
-		"/user/dummy": {
-			"get": {
-				"description": "dummy route. Remove it when the real routes are ready",
-				"responses": {
-					"200": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/controller_NormalResponse"
-						}
-					},
-					"400": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/controller_ErrorResponseSimple"
-						}
-					}
-				},
-				"tags": [
-					"user"
-				]
-			}
-		},
 		"/user/mail/check": {
 			"post": {
 				"description": "checkMail check mail in system",
@@ -178,6 +186,39 @@
 						}
 					},
 					"404": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					}
+				},
+				"tags": [
+					"user"
+				]
+			}
+		},
+		"/user/register": {
+			"post": {
+				"description": "",
+				"parameters": [
+					{
+						"description": "",
+						"in": "body",
+						"name": "payload_data",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/user_registerPayload"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/user_responseRegister"
+						}
+					},
+					"400": {
 						"description": "",
 						"schema": {
 							"$ref": "#/definitions/controller_ErrorResponseSimple"

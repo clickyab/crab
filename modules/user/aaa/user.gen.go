@@ -5,6 +5,7 @@ package aaa
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/initializer"
@@ -14,7 +15,9 @@ import (
 
 // CreateRolePermission try to save a new RolePermission in database
 func (m *Manager) CreateRolePermission(rp *RolePermission) error {
-
+	now := time.Now()
+	rp.CreatedAt = now
+	rp.UpdatedAt = now
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -26,7 +29,8 @@ func (m *Manager) CreateRolePermission(rp *RolePermission) error {
 
 // UpdateRolePermission try to update RolePermission in database
 func (m *Manager) UpdateRolePermission(rp *RolePermission) error {
-
+	now := time.Now()
+	rp.UpdatedAt = now
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -53,9 +57,38 @@ func (m *Manager) FindRolePermissionByID(id int64) (*RolePermission, error) {
 	return &res, nil
 }
 
+// CreateRoleUser try to save a new RoleUser in database
+func (m *Manager) CreateRoleUser(ru *RoleUser) error {
+	now := time.Now()
+	ru.CreatedAt = now
+
+	func(in interface{}) {
+		if ii, ok := in.(initializer.Simple); ok {
+			ii.Initialize()
+		}
+	}(ru)
+
+	return m.GetWDbMap().Insert(ru)
+}
+
+// UpdateRoleUser try to update RoleUser in database
+func (m *Manager) UpdateRoleUser(ru *RoleUser) error {
+
+	func(in interface{}) {
+		if ii, ok := in.(initializer.Simple); ok {
+			ii.Initialize()
+		}
+	}(ru)
+
+	_, err := m.GetWDbMap().Update(ru)
+	return err
+}
+
 // CreateRole try to save a new Role in database
 func (m *Manager) CreateRole(r *Role) error {
-
+	now := time.Now()
+	r.CreatedAt = now
+	r.UpdatedAt = now
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -67,7 +100,8 @@ func (m *Manager) CreateRole(r *Role) error {
 
 // UpdateRole try to update Role in database
 func (m *Manager) UpdateRole(r *Role) error {
-
+	now := time.Now()
+	r.UpdatedAt = now
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -164,25 +198,11 @@ func (m *Manager) FindRoleByID(id int64) (*Role, error) {
 	return &res, nil
 }
 
-// FindRoleByName return the Role base on its name
-func (m *Manager) FindRoleByName(n string) (*Role, error) {
-	var res Role
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE name=?", RoleTableFull),
-		n,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
 // CreateUser try to save a new User in database
 func (m *Manager) CreateUser(u *User) error {
-
+	now := time.Now()
+	u.CreatedAt = now
+	u.UpdatedAt = now
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -194,7 +214,8 @@ func (m *Manager) CreateUser(u *User) error {
 
 // UpdateUser try to update User in database
 func (m *Manager) UpdateUser(u *User) error {
-
+	now := time.Now()
+	u.UpdatedAt = now
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

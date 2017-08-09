@@ -60,6 +60,10 @@
 			"Rev": "065af362b4de12300418a4351ce92ceec69c765f"
 		},
 		{
+			"ImportPath": "github.com/clickyab/services/eav/redis",
+			"Rev": "065af362b4de12300418a4351ce92ceec69c765f"
+		},
+		{
 			"ImportPath": "github.com/clickyab/services/framework",
 			"Rev": "065af362b4de12300418a4351ce92ceec69c765f"
 		},
@@ -104,6 +108,10 @@
 			"Rev": "065af362b4de12300418a4351ce92ceec69c765f"
 		},
 		{
+			"ImportPath": "github.com/clickyab/services/random",
+			"Rev": "065af362b4de12300418a4351ce92ceec69c765f"
+		},
+		{
 			"ImportPath": "github.com/clickyab/services/redis",
 			"Rev": "065af362b4de12300418a4351ce92ceec69c765f"
 		},
@@ -113,6 +121,14 @@
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/shell",
+			"Rev": "065af362b4de12300418a4351ce92ceec69c765f"
+		},
+		{
+			"ImportPath": "github.com/clickyab/services/store",
+			"Rev": "065af362b4de12300418a4351ce92ceec69c765f"
+		},
+		{
+			"ImportPath": "github.com/clickyab/services/store/redis",
 			"Rev": "065af362b4de12300418a4351ce92ceec69c765f"
 		},
 		{
@@ -129,12 +145,12 @@
 		},
 		{
 			"ImportPath": "github.com/go-playground/locales",
-			"Comment": "v0.11.1-2-g1e5f1161",
+			"Comment": "v0.11.1-2-g1e5f116",
 			"Rev": "1e5f1161c6416a5ff48840eb8724a394e48cc534"
 		},
 		{
 			"ImportPath": "github.com/go-playground/locales/currency",
-			"Comment": "v0.11.1-2-g1e5f1161",
+			"Comment": "v0.11.1-2-g1e5f116",
 			"Rev": "1e5f1161c6416a5ff48840eb8724a394e48cc534"
 		},
 		{
@@ -166,7 +182,7 @@
 		},
 		{
 			"ImportPath": "github.com/rs/cors",
-			"Comment": "v1.0-5-g8dd4211",
+			"Comment": "v.1.1",
 			"Rev": "8dd4211afb5d08dbb39a533b9bb9e4b486351df6"
 		},
 		{
@@ -181,6 +197,14 @@
 		{
 			"ImportPath": "github.com/rubenv/sql-migrate/sqlparse",
 			"Rev": "42c30aabf72921b83678a3d0680fd6cd46682f1b"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/bcrypt",
+			"Rev": "adbae1b6b6fb4b02448a0fc0dbbc9ba2b95b294d"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/blowfish",
+			"Rev": "adbae1b6b6fb4b02448a0fc0dbbc9ba2b95b294d"
 		},
 		{
 			"ImportPath": "golang.org/x/sys/unix",
