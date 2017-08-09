@@ -23,10 +23,6 @@
 			},
 			"type": "object"
 		},
-		"controller_NormalResponse": {
-			"properties": {},
-			"type": "object"
-		},
 		"dmn_ActiveStatus": {
 			"type": "string"
 		},
@@ -165,31 +161,9 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "16"
+		"version": "17"
 	},
 	"paths": {
-		"/user/dummy": {
-			"get": {
-				"description": "dummy route. Remove it when the real routes are ready",
-				"responses": {
-					"200": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/controller_NormalResponse"
-						}
-					},
-					"400": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/controller_ErrorResponseSimple"
-						}
-					}
-				},
-				"tags": [
-					"user"
-				]
-			}
-		},
 		"/user/mail/check": {
 			"post": {
 				"description": "checkMail check mail in system",
@@ -209,12 +183,6 @@
 						"description": "",
 						"schema": {
 							"$ref": "#/definitions/user_checkMailResponse"
-						}
-					},
-					"404": {
-						"description": "",
-						"schema": {
-							"$ref": "#/definitions/controller_ErrorResponseSimple"
 						}
 					}
 				},

@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"clickyab.com/crab/modules/domain/dmn"
@@ -27,7 +26,6 @@ type checkMailResponse struct {
 //		method = post
 //		payload = checkMailPayload
 //		200 = checkMailResponse
-//		404 = controller.ErrorResponseSimple
 // }
 func (u Controller) checkMail(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := u.MustGetPayload(ctx).(*checkMailPayload)
@@ -35,11 +33,6 @@ func (u Controller) checkMail(ctx context.Context, w http.ResponseWriter, r *htt
 	m := aaa.NewAaaManager()
 	// find user domains
 	domains := m.FindUserDomainsByEmail(pl.Email)
-	if len(domains) == 0 {
-		// no active domain found
-		u.NotFoundResponse(w, errors.New("domain not found"))
-		return
-	}
 	var currentDomainFound bool
 	for i := range domains {
 		if domains[i].Name == currentDomain.Name {
