@@ -19,6 +19,9 @@ const (
 	// RoleTableFull is the Role table name
 	RoleTableFull = "roles"
 
+	// UserCorporationTableFull is the UserCorporation table name
+	UserCorporationTableFull = "user_corporation"
+
 	// UserPersonalTableFull is the UserPersonal table name
 	UserPersonalTableFull = "user_personal"
 
@@ -73,6 +76,14 @@ func (m *Manager) Initialize() {
 	).SetKeys(
 		true,
 		"ID",
+	)
+
+	m.AddTableWithName(
+		UserCorporation{},
+		UserCorporationTableFull,
+	).SetKeys(
+		false,
+		"UserID",
 	)
 
 	m.AddTableWithName(

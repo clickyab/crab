@@ -13,8 +13,8 @@ import (
 // @Validate {
 // }
 type personalPayload struct {
-	FirstName string         `json:"first_name" validate:"omitempty,gt=2"`
-	LastName  string         `json:"last_name" validate:"omitempty,gt=2"`
+	FirstName string         `json:"first_name" validate:"gt=2"`
+	LastName  string         `json:"last_name" validate:"gt=2"`
 	Gender    aaa.GenderType `json:"gender" validate:"required"`
 	CellPhone string         `json:"cellphone" validate:"omitempty,numeric"`
 	Phone     string         `json:"phone" validate:"omitempty,numeric"`
@@ -33,7 +33,7 @@ type personalPayload struct {
 // }
 func (u *Controller) EditPersonal(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := u.MustGetPayload(ctx).(*personalPayload)
-	if !pl.Gender.IsValid() {
+	if !pl.Gender.IsValid() || pl.Gender == aaa.NotSpecifiedGender {
 		u.BadResponse(w, middleware.GroupError{
 			string(pl.Gender): trans.E("gender is invalid"),
 		})
@@ -49,8 +49,8 @@ func (u *Controller) EditPersonal(ctx context.Context, w http.ResponseWriter, r 
 	m := aaa.NewAaaManager()
 	up := &aaa.UserPersonal{
 		UserID:    currentUser.ID,
-		FirstName: mysql.NullString{String: pl.FirstName, Valid: pl.FirstName != ""},
-		LastName:  mysql.NullString{String: pl.LastName, Valid: pl.LastName != ""},
+		FirstName: pl.FirstName,
+		LastName:  pl.LastName,
 		Gender:    pl.Gender,
 		Cellphone: mysql.NullString{String: pl.CellPhone, Valid: pl.CellPhone != ""},
 		Phone:     mysql.NullString{String: pl.Phone, Valid: pl.Phone != ""},

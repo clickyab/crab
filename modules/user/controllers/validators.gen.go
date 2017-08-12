@@ -94,3 +94,47 @@ func (pl *personalPayload) Validate(ctx context.Context, w http.ResponseWriter, 
 	}
 	return nil
 }
+
+func (pl *registerPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	err := func(in interface{}) error {
+		if v, ok := in.(interface {
+			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
+		}); ok {
+			return v.ValidateExtra(ctx, w, r)
+		}
+		return nil
+	}(pl)
+	if err != nil {
+		return err
+	}
+	errs := validator.New().Struct(pl)
+	if errs == nil {
+		return nil
+	}
+	res := middleware.GroupError{}
+	for _, i := range errs.(validator.ValidationErrors) {
+		switch i.Field() {
+		case "Email":
+			res["email"] = trans.E("email is invalid")
+
+		case "Password":
+			res["password"] = trans.E("password is too short")
+
+		case "FirstName":
+			res["first_name"] = trans.E("first name is invalid")
+
+		case "LastName":
+			res["last_name"] = trans.E("last name is invalid")
+
+		case "UserType":
+			res["user_type"] = trans.E("invalid value")
+
+		default:
+			logrus.Panicf("the field %s is not translated", i)
+		}
+	}
+	if len(res) > 0 {
+		return res
+	}
+	return nil
+}
