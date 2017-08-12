@@ -1,25 +1,24 @@
 package aredis
 
 import (
-	"github.com/clickyab/services/assert"
-
 	"context"
-
-	"github.com/clickyab/services/initializer"
-
-	"strings"
-
 	"fmt"
+	"strings"
+	"sync"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/healthz"
+	"github.com/clickyab/services/initializer"
 	"github.com/clickyab/services/safe"
-	redis "gopkg.in/redis.v5"
+	"gopkg.in/redis.v5"
 )
 
 var (
 	// Client the actual pool to use with redis
 	Client *redis.Client
+	all    []initializer.Simple
+	lock   sync.RWMutex
 )
 
 type initRedis struct {
@@ -39,7 +38,7 @@ func (initRedis) Healthy(context.Context) error {
 func (i *initRedis) Initialize(ctx context.Context) {
 	Client = redis.NewClient(
 		&redis.Options{
-			Network:  network.String(),
+			Network:  networkType.String(),
 			Addr:     address.String(),
 			Password: password.String(),
 			PoolSize: poolsize.Int(),
@@ -50,6 +49,10 @@ func (i *initRedis) Initialize(ctx context.Context) {
 	safe.Try(func() error { return Client.Ping().Err() }, tryLimit.Duration())
 
 	healthz.Register(i)
+
+	for i := range all {
+		all[i].Initialize()
+	}
 	logrus.Debug("redis is ready.")
 	go func() {
 		c := ctx.Done()
@@ -58,6 +61,14 @@ func (i *initRedis) Initialize(ctx context.Context) {
 		assert.Nil(Client.Close())
 		logrus.Debug("redis finalized.")
 	}()
+}
+
+// Register a new object to inform it after redis is loaded
+func Register(in initializer.Simple) {
+	lock.Lock()
+	defer lock.Unlock()
+
+	all = append(all, in)
 }
 
 func init() {

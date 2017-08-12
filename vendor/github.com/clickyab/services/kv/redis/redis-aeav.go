@@ -6,9 +6,9 @@ import (
 
 	"strconv"
 
+	"github.com/clickyab/services/aredis"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/eav"
-	"github.com/clickyab/services/redis"
+	"github.com/clickyab/services/kv"
 )
 
 type atomicKiwiRedis struct {
@@ -39,7 +39,7 @@ func (kr *atomicKiwiRedis) Key() string {
 }
 
 // IncSubKey for increasing sub key
-func (kr *atomicKiwiRedis) IncSubKey(key string, value int64) eav.AKiwi {
+func (kr *atomicKiwiRedis) IncSubKey(key string, value int64) kv.AKiwi {
 	res := aredis.Client.HIncrBy(kr.key, key, value)
 	if res.Err() != nil {
 		kr.v[key] = value
@@ -55,7 +55,7 @@ func (kr *atomicKiwiRedis) IncSubKey(key string, value int64) eav.AKiwi {
 }
 
 // IncSubKey for decreasing sub key
-func (kr *atomicKiwiRedis) DecSubKey(key string, value int64) eav.AKiwi {
+func (kr *atomicKiwiRedis) DecSubKey(key string, value int64) kv.AKiwi {
 	return kr.IncSubKey(key, -value)
 }
 
@@ -110,14 +110,10 @@ func (kr *atomicKiwiRedis) Save(t time.Duration) error {
 }
 
 // NewRedisAEAVStore return a redis store for eav
-func newRedisAEAVStore(key string) eav.AKiwi {
+func newRedisAEAVStore(key string) kv.AKiwi {
 	return &atomicKiwiRedis{
 		key:  key,
 		v:    make(map[string]int64),
 		lock: sync.Mutex{},
 	}
-}
-
-func init() {
-	eav.RegisterAeav(newRedisAEAVStore)
 }

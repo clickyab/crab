@@ -7,12 +7,12 @@ import (
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
-	"clickyab.com/crab/modules/user/config"
 	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/eav"
+	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/hub"
+	"github.com/clickyab/services/kv"
 )
 
 // Controller is the controller for the user package
@@ -60,11 +60,11 @@ func (u Controller) MustGetUser(ctx context.Context) *aaa.User {
 //}
 
 func (u Controller) storeData(r *http.Request, token string) error {
-	err := eav.NewEavStore(token).SetSubKey("ua", r.UserAgent()).Save(ucfg.TokenTimeout.Duration())
+	err := kv.NewEavStore(token).SetSubKey("ua", r.UserAgent()).Save(ucfg.TokenTimeout.Duration())
 	if err != nil {
 		return err
 	}
-	return eav.NewEavStore(token).SetSubKey("ip", framework.RealIP(r)).Save(ucfg.TokenTimeout.Duration())
+	return kv.NewEavStore(token).SetSubKey("ip", framework.RealIP(r)).Save(ucfg.TokenTimeout.Duration())
 }
 
 //// PermDoubleCheck try to double check perm on the object base on its owner id

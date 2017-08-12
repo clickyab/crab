@@ -1,4 +1,4 @@
-package eav
+package kv
 
 import (
 	"time"
@@ -24,20 +24,18 @@ type Kiwi interface {
 	TTL() time.Duration
 }
 
-// StoreFactory is a function to create store
-type StoreFactory func(string) Kiwi
+// KiwiFactory is a function to create store
+type KiwiFactory func(string) Kiwi
 
 var (
-	factory StoreFactory
+	kiwiFactory KiwiFactory
 )
-
-// RegisterEav is a function to register store factory
-func RegisterEav(s StoreFactory) {
-	factory = s
-}
 
 // NewEavStore return a new eav store
 func NewEavStore(key string) Kiwi {
-	assert.NotNil(factory, "[BUG] factory is not registered")
-	return factory(key)
+	regLock.RLock()
+	defer regLock.RUnlock()
+
+	assert.NotNil(kiwiFactory, "[BUG] factory is not registered")
+	return kiwiFactory(key)
 }
