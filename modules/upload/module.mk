@@ -1,4 +1,4 @@
-UPLOAD_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+export UPLOAD_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(UPLOAD_ROOT)-codegen: tools-codegen
 	$(BIN)/codegen -p clickyab.com/crab/modules/upload/model

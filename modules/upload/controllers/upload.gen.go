@@ -5,8 +5,9 @@ package controllers
 import (
 	"sync"
 
+	"clickyab.com/crab/modules/domain/middleware/domain"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework"
-	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
 	"github.com/rs/xhandler"
@@ -19,7 +20,9 @@ var once = sync.Once{}
 func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 	once.Do(func() {
 
-		groupMiddleware := []framework.Middleware{}
+		groupMiddleware := []framework.Middleware{
+			domain.Access,
+		}
 
 		group := r.NewGroup(mountPoint + "/upload")
 
