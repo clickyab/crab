@@ -2,37 +2,36 @@ package controllers
 
 import (
 	"context"
-	"net/http"
-
-	"github.com/clickyab/services/assert"
-
 	"fmt"
-	"net/textproto"
-	"sync"
-
-	"strings"
-
-	"os"
-
 	"io"
-
+	"net/http"
+	"net/textproto"
+	"os"
+	"path/filepath"
+	"sync"
 	"time"
 
 	"clickyab.com/crab/modules/upload/config"
+	"clickyab.com/crab/modules/upload/model"
+	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
 )
 
 var routes = make(map[string]kind)
-var lock = sync.Mutex{}
+var lock = sync.RWMutex{}
 
 type kind struct {
 	maxSize int64
-	accept  []string
+	mimes   []string
 }
 
-func Register(name string, maxSize int64, accept ...string) {
+// Register add a route and settings for uploads
+// name will be the route, maxsize is maximum allowed size for file upload file and the mimes is alloed mime types
+func Register(name string, maxSize int64, mimes ...string) {
+	assert.True(len(mimes) > 0)
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -40,13 +39,14 @@ func Register(name string, maxSize int64, accept ...string) {
 	assert.False(ok)
 	routes[name] = kind{
 		maxSize: maxSize,
-		accept:  accept,
+		mimes:   mimes,
 	}
 }
 
 // Controller is the controller for the user package
 // @Route {
 //		group = /upload
+//		middleware = domain.Access
 // }
 type Controller struct {
 	controller.Base
@@ -60,44 +60,68 @@ type Controller struct {
 // }
 func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	m := xmux.Param(ctx, "module")
+	u := authz.MustGetUser(ctx)
+	lock.RLock()
+	defer lock.RUnlock()
 	s, ok := routes[m]
 	if !ok {
 		c.NotFoundResponse(w, fmt.Errorf("Not found"))
+		return
 	}
 	r.ParseMultipartForm(s.maxSize)
 	file, handler, err := r.FormFile("file")
 	if err != nil {
 		c.BadResponse(w, fmt.Errorf(`file not found, the key for file should be "file"`))
-	}
-	ac, _ := validMIME(handler.Header, s.accept)
-	if !ac {
-		c.BadResponse(w, fmt.Errorf("The file type is not valid"))
+		return
 	}
 	defer file.Close()
-	ext := ""
-	if tx := strings.Split(handler.Filename, ","); len(tx) > 1 {
-		ext = tx[len(tx)-1]
+	ac, mime := validMIME(handler.Header, s.mimes)
+	if !ac {
+		c.BadResponse(w, fmt.Errorf("The file type is not valid"))
+		return
 	}
+
+	ext := filepath.Ext(handler.Filename)
+
 	now := time.Now()
-	fn := ""
-	for {
-		fn := fmt.Sprintf("%s/%s/%s.%s", m, now.Format("2006/01/02"), <-random.ID, ext)
-		if _, err := os.Stat(fn); os.IsNotExist(err) {
-			break
+	fp := fmt.Sprintf("%s/%s/", m, now.Format("2006/01/02"))
+	os.MkdirAll(fp, os.ModeDir)
+
+	fn := func() string {
+		for {
+			tmp := fmt.Sprintf("%s_%s.%s", u.ID, <-random.ID, ext)
+			if _, err := os.Stat(fp + tmp); os.IsNotExist(err) {
+				return tmp
+			}
 		}
-	}
-	f, err := os.OpenFile(fmt.Sprintf("%s/%s", ucfg.Path, fn), os.O_WRONLY|os.O_CREATE, 0666)
+	}()
+
+	f, err := os.Create(fmt.Sprintf("%s/%s", config.Path, fn))
 	assert.Nil(err)
 	defer f.Close()
 
-	_, er := io.Copy(f, file)
+	size, er := io.Copy(f, file)
 	assert.Nil(er)
-	// TODO save into database
+
+	e := model.NewModelManager().CreateUpload(&model.Upload{
+		Path:    fn,
+		MIME:    mime,
+		Size:    size,
+		UserID:  u.ID,
+		Section: m,
+	})
+	assert.Nil(e)
+
 	c.JSON(w, http.StatusOK, fn)
 }
 
 func validMIME(a textproto.MIMEHeader, b []string) (bool, string) {
-	for ak := range a {
+	ct := make([]string, 0)
+	var ok bool
+	if ct, ok = a["Content-Type"]; !ok {
+		return false, ""
+	}
+	for _, ak := range ct {
 		for _, bv := range b {
 			if ak == bv {
 				return true, ak
