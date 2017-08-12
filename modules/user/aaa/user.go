@@ -75,6 +75,21 @@ const (
 	GlobalPerm UserScope = "global"
 )
 
+// GenderType is the user gender
+type (
+	// GenderType is the user gender
+	// @Enum{
+	// }
+	GenderType string
+)
+
+const (
+	// MaleGender male
+	MaleGender GenderType = "male"
+	// FemaleGender female
+	FemaleGender GenderType = "female"
+)
+
 // User user model in database
 // @Model {
 //		table = users
@@ -134,6 +149,25 @@ type RolePermission struct {
 	Perm      string    `json:"perm" db:"perm"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+}
+
+// UserPersonal user personal model
+// @Model {
+//		table = user_personal
+//		primary = false, user_id
+//		find_by = user_id
+// }
+type UserPersonal struct {
+	UserID    int64            `json:"user_id" db:"user_id"`
+	FirstName mysql.NullString `json:"first_name" db:"first_name"`
+	LastName  mysql.NullString `json:"last_name" db:"last_name"`
+	Gender    GenderType       `json:"gender" db:"gender"`
+	Cellphone mysql.NullString `json:"cellphone" db:"cellphone"`
+	Phone     mysql.NullString `json:"phone" db:"phone"`
+	Address   mysql.NullString `json:"address" db:"address"`
+	CityID    mysql.NullInt64  `json:"city_id" db:"city_id"`
+	CreatedAt time.Time        `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time        `json:"updated_at" db:"updated_at"`
 }
 
 // RegisterUser try to register user
@@ -216,4 +250,23 @@ func (m *Manager) FindUserDomainsByEmail(e string) []dmn.Domain {
 	_, err := m.GetRDbMap().Select(&res, q, e, dmn.ActiveStatusYes)
 	assert.Nil(err)
 	return res
+}
+
+// FindUserByAccessTokenDomain return the User base on its access_token and domain
+func (m *Manager) FindUserByAccessTokenDomain(at string, domainID int64) (*User, error) {
+	var res User
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT u.* FROM %s AS u "+
+			"INNER JOIN %s AS dm ON dm.user_id=u.id "+
+			"WHERE u.access_token=? AND dm.domain_id=?", UserTableFull, dmn.DomainUserTableFull),
+		at,
+		domainID,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
 }

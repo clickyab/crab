@@ -198,6 +198,50 @@ func (m *Manager) FindRoleByID(id int64) (*Role, error) {
 	return &res, nil
 }
 
+// CreateUserPersonal try to save a new UserPersonal in database
+func (m *Manager) CreateUserPersonal(up *UserPersonal) error {
+	now := time.Now()
+	up.CreatedAt = now
+	up.UpdatedAt = now
+	func(in interface{}) {
+		if ii, ok := in.(initializer.Simple); ok {
+			ii.Initialize()
+		}
+	}(up)
+
+	return m.GetWDbMap().Insert(up)
+}
+
+// UpdateUserPersonal try to update UserPersonal in database
+func (m *Manager) UpdateUserPersonal(up *UserPersonal) error {
+	now := time.Now()
+	up.UpdatedAt = now
+	func(in interface{}) {
+		if ii, ok := in.(initializer.Simple); ok {
+			ii.Initialize()
+		}
+	}(up)
+
+	_, err := m.GetWDbMap().Update(up)
+	return err
+}
+
+// FindUserPersonalByUserID return the UserPersonal base on its user_id
+func (m *Manager) FindUserPersonalByUserID(ui int64) (*UserPersonal, error) {
+	var res UserPersonal
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT * FROM %s WHERE user_id=?", UserPersonalTableFull),
+		ui,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
 // CreateUser try to save a new User in database
 func (m *Manager) CreateUser(u *User) error {
 	now := time.Now()

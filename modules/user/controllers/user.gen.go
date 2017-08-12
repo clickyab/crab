@@ -48,6 +48,30 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		// End route with key 0
 
 		/* Route {
+			"Route": "/personal",
+			"Method": "PUT",
+			"Function": "Controller.EditPersonal",
+			"RoutePkg": "user",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "u",
+			"Payload": "personalPayload",
+			"Resource": "",
+			"Scope": ""
+		} with key 1 */
+		m1 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		// Make sure payload is the last middleware
+		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(personalPayload{}))
+		group.PUT("/personal", xhandler.HandlerFuncC(framework.Mix(u.EditPersonal, m1...)))
+		// End route with key 1
+
+		/* Route {
 			"Route": "/ping",
 			"Method": "GET",
 			"Function": "Controller.ping",
@@ -61,37 +85,33 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"Payload": "",
 			"Resource": "",
 			"Scope": ""
-		} with key 1 */
-		m1 := append(groupMiddleware, []framework.Middleware{
+		} with key 2 */
+		m2 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		group.GET("/ping", xhandler.HandlerFuncC(framework.Mix(u.ping, m1...)))
-		// End route with key 1
+		group.GET("/ping", xhandler.HandlerFuncC(framework.Mix(u.ping, m2...)))
+		// End route with key 2
 
 		/* Route {
 			"Route": "/register",
 			"Method": "POST",
 			"Function": "Controller.Register",
 			"RoutePkg": "user",
-			"RouteMiddleware": [
-				"domain.Access"
-			],
+			"RouteMiddleware": null,
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
 			"RecName": "u",
 			"Payload": "registerPayload",
 			"Resource": "",
 			"Scope": ""
-		} with key 2 */
-		m2 := append(groupMiddleware, []framework.Middleware{
-			domain.Access,
-		}...)
+		} with key 3 */
+		m3 := append(groupMiddleware, []framework.Middleware{}...)
 
 		// Make sure payload is the last middleware
-		m2 = append(m2, middleware.PayloadUnMarshallerGenerator(registerPayload{}))
-		group.POST("/register", xhandler.HandlerFuncC(framework.Mix(u.Register, m2...)))
-		// End route with key 2
+		m3 = append(m3, middleware.PayloadUnMarshallerGenerator(registerPayload{}))
+		group.POST("/register", xhandler.HandlerFuncC(framework.Mix(u.Register, m3...)))
+		// End route with key 3
 
 		initializer.DoInitialize(u)
 	})

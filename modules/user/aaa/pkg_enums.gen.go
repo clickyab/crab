@@ -157,3 +157,40 @@ func (e UserScope) Value() (driver.Value, error) {
 	}
 	return string(e), nil
 }
+
+// IsValid try to validate enum value on ths type
+func (e GenderType) IsValid() bool {
+	return array.StringInArray(
+		string(e),
+		string(MaleGender),
+		string(FemaleGender),
+	)
+}
+
+// Scan convert the json array ino string slice
+func (e *GenderType) Scan(src interface{}) error {
+	var b []byte
+	switch src.(type) {
+	case []byte:
+		b = src.([]byte)
+	case string:
+		b = []byte(src.(string))
+	case nil:
+		b = make([]byte, 0)
+	default:
+		return trans.E("unsupported type")
+	}
+	if !GenderType(b).IsValid() {
+		return trans.E("invaid value")
+	}
+	*e = GenderType(b)
+	return nil
+}
+
+// Value try to get the string slice representation in database
+func (e GenderType) Value() (driver.Value, error) {
+	if !e.IsValid() {
+		return nil, trans.E("invalid status")
+	}
+	return string(e), nil
+}
