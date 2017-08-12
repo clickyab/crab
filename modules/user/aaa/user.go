@@ -100,15 +100,16 @@ const (
 //		list = yes
 // }
 type User struct {
-	ID          int64            `json:"id" db:"id"`
-	Email       string           `json:"email" db:"email"`
-	Password    string           `json:"password" db:"password"`
-	AccessToken string           `json:"-" db:"access_token"`
-	Avatar      mysql.NullString `json:"avatar" db:"avatar"`
-	UserType    UserTyp          `json:"user_type" db:"user_type"`
-	Status      UserValidStatus  `json:"status" db:"status"`
-	CreatedAt   time.Time        `json:"created_at" db:"created_at"`
-	UpdatedAt   time.Time        `json:"updated_at" db:"updated_at"`
+	ID          int64                 `json:"id" db:"id"`
+	Email       string                `json:"email" db:"email"`
+	Password    string                `json:"password" db:"password"`
+	AccessToken string                `json:"-" db:"access_token"`
+	Avatar      mysql.NullString      `json:"avatar" db:"avatar"`
+	UserType    UserTyp               `json:"user_type" db:"user_type"`
+	Status      UserValidStatus       `json:"status" db:"status"`
+	CreatedAt   time.Time             `json:"created_at" db:"created_at"`
+	UpdatedAt   time.Time             `json:"updated_at" db:"updated_at"`
+	OldPassword mysql.StringJSONArray `json:"-"  db:"old_password"`
 }
 
 // Role role model in database
@@ -333,4 +334,37 @@ func (u *User) GetUserCorporation() *UserCorporation {
 	uc, err := m.FindUserCorporationByUserID(u.ID)
 	assert.Nil(err)
 	return uc
+}
+
+// UpdateOldPassword get user id and password and will update oldpassword column
+func (m *Manager) UpdateOldPassword(d int64, p string) error {
+	u, e := m.FindUserByID(d)
+	if e != nil {
+		return e
+	}
+	np, e := bcrypt.GenerateFromPassword([]byte(p), bcrypt.DefaultCost)
+	if e != nil {
+		return e
+	}
+	if len(u.OldPassword) < 3 {
+		u.OldPassword = append(u.OldPassword, string(np))
+	} else {
+		u.OldPassword = append([]string{string(np)}, u.OldPassword[:2]...)
+	}
+	return m.UpdateUser(u)
+}
+
+// IsOldPassword will return true if user used this password
+func (m *Manager) IsOldPassword(d int64, p string) (bool, error) {
+	u, e := m.FindUserByID(d)
+	if e != nil {
+		return false, e
+	}
+	for _, o := range u.OldPassword {
+		if bcrypt.CompareHashAndPassword([]byte(o), []byte(p)) != nil {
+			return true, nil
+		}
+	}
+	return false, nil
+
 }
