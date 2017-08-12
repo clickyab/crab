@@ -181,9 +181,9 @@ type UserPersonal struct {
 // }
 type UserCorporation struct {
 	UserID       int64            `json:"user_id" db:"user_id"`
-	FirstName    string           `json:"first_name" db:"first_name"`
-	LastName     string           `json:"last_name" db:"last_name"`
-	Name         string           `json:"name" db:"name"`
+	FirstName    mysql.NullString `json:"first_name" db:"first_name"`
+	LastName     mysql.NullString `json:"last_name" db:"last_name"`
+	Name         mysql.NullString `json:"name" db:"name"`
 	Cellphone    mysql.NullString `json:"cellphone" db:"cellphone"`
 	Phone        mysql.NullString `json:"phone" db:"phone"`
 	Address      mysql.NullString `json:"address" db:"address"`
@@ -255,9 +255,9 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 	} else {
 		uc = &UserCorporation{
 			UserID:    u.ID,
-			FirstName: pl.FirstName,
-			LastName:  pl.LastName,
-			Name:      pl.CompanyName,
+			FirstName: mysql.NullString{String: pl.FirstName, Valid: true},
+			LastName:  mysql.NullString{String: pl.LastName, Valid: true},
+			Name:      mysql.NullString{String: pl.CompanyName, Valid: true},
 			Cellphone: mysql.NullString{String: pl.Mobile, Valid: pl.Mobile != ""},
 		}
 		err = m.CreateUserCorporation(uc)
