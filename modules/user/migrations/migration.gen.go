@@ -5,6 +5,7 @@
 // db/20170808115735_seed.sql
 // db/20170812100556_fixprofile.sql
 // db/20170812113047_fixprofile.sql
+// db/20170812181852_users.sql
 // DO NOT EDIT!
 
 package migrations
@@ -172,6 +173,26 @@ func db20170812113047_fixprofileSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20170812181852_usersSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xce\x31\x4b\xc6\x30\x18\x04\xe0\x3d\xbf\xe2\xb6\x4f\x91\x2e\x42\x27\xa7\xd8\x16\x1c\xa2\xd5\xd8\xba\x4a\x6c\x5e\x6c\x30\x26\x21\x6f\x4a\xfd\xf9\x12\x44\xa1\x83\xf0\x8d\x77\xdc\xc1\x23\x9a\x06\x57\x9f\xee\x3d\x9b\x42\x98\x53\x8d\xcf\x4f\x0a\x2e\x80\x69\x29\x2e\x06\x9c\xe6\x74\x82\x63\xd0\x17\x2d\x5b\x21\x8b\x7d\xa5\x80\xb2\x3a\xc6\xcf\xaf\x8e\x1c\xc3\xa4\xe4\x1d\x59\x21\xd5\x34\x68\x4c\xf2\x56\x0d\xd8\x98\x32\x0b\x00\x90\xd6\x22\x7a\xfb\x9a\x0c\xf3\x1e\xb3\xc5\x8b\xd4\xdd\x9d\xd4\x17\xd7\x6d\x7b\x29\x6e\xc4\xc1\xd1\xc7\x3d\xfc\x4a\xfe\x18\xb5\x3c\x0b\x92\xa3\xf7\x64\xf1\x66\x96\x8f\x7f\x30\xbd\x1e\x1f\xd1\x8d\x6a\xbe\x7f\x38\xa0\xaa\xe3\x3b\x00\x00\xff\xff\x3f\x9c\xdf\x83\x11\x01\x00\x00"
+
+func db20170812181852_usersSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20170812181852_usersSql,
+		"db/20170812181852_users.sql",
+	)
+}
+
+func db20170812181852_usersSql() (*asset, error) {
+	bytes, err := db20170812181852_usersSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20170812181852_users.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -229,6 +250,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20170808115735_seed.sql": db20170808115735_seedSql,
 	"db/20170812100556_fixprofile.sql": db20170812100556_fixprofileSql,
 	"db/20170812113047_fixprofile.sql": db20170812113047_fixprofileSql,
+	"db/20170812181852_users.sql": db20170812181852_usersSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -277,6 +299,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20170808115735_seed.sql": &bintree{db20170808115735_seedSql, map[string]*bintree{}},
 		"20170812100556_fixprofile.sql": &bintree{db20170812100556_fixprofileSql, map[string]*bintree{}},
 		"20170812113047_fixprofile.sql": &bintree{db20170812113047_fixprofileSql, map[string]*bintree{}},
+		"20170812181852_users.sql": &bintree{db20170812181852_usersSql, map[string]*bintree{}},
 	}},
 }}
 
