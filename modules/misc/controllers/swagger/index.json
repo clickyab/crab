@@ -7,6 +7,121 @@
 		"aaa_GenderType": {
 			"type": "string"
 		},
+		"aaa_UserCorporation": {
+			"properties": {
+				"address": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"cellphone": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"city_id": {
+					"properties": {
+						"Int64": {
+							"type": "integer"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"created_at": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"economic_code": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"first_name": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"last_name": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"name": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"phone": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"register_code": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"updated_at": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"user_id": {
+					"type": "integer"
+				}
+			},
+			"type": "object"
+		},
 		"controller_ErrorResponseSimple": {
 			"properties": {
 				"error": {
@@ -199,6 +314,38 @@
 			},
 			"type": "object"
 		},
+		"user_corporation": {
+			"properties": {
+				"address": {
+					"type": "string"
+				},
+				"cellphone": {
+					"type": "string"
+				},
+				"city_id": {
+					"type": "integer"
+				},
+				"economic_code": {
+					"type": "string"
+				},
+				"first_name": {
+					"type": "string"
+				},
+				"last_name": {
+					"type": "string"
+				},
+				"name": {
+					"type": "string"
+				},
+				"phone": {
+					"type": "string"
+				},
+				"register_code": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
 		"user_forget": {
 			"properties": {
 				"email": {
@@ -325,13 +472,37 @@
 									"type": "object"
 								},
 								"first_name": {
-									"type": "string"
+									"properties": {
+										"String": {
+											"type": "string"
+										},
+										"Valid": {
+											"type": "boolean"
+										}
+									},
+									"type": "object"
 								},
 								"last_name": {
-									"type": "string"
+									"properties": {
+										"String": {
+											"type": "string"
+										},
+										"Valid": {
+											"type": "boolean"
+										}
+									},
+									"type": "object"
 								},
 								"name": {
-									"type": "string"
+									"properties": {
+										"String": {
+											"type": "string"
+										},
+										"Valid": {
+											"type": "boolean"
+										}
+									},
+									"type": "object"
 								},
 								"phone": {
 									"properties": {
@@ -457,7 +628,7 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "34"
+		"version": "36"
 	},
 	"paths": {
 		"/location/cities/{provinces_id}": {
@@ -619,6 +790,69 @@
 				},
 				"tags": [
 					"controllers"
+				]
+			}
+		},
+		"/user/corporation": {
+			"put": {
+				"description": "editCorporation is used for current user update",
+				"parameters": [
+					{
+						"description": "the security token, get it from login route",
+						"in": "header",
+						"name": "token",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"description": "",
+						"in": "body",
+						"name": "payload_data",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/user_corporation"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/aaa_UserCorporation"
+						}
+					},
+					"401": {
+						"description": "you are not authorized",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "not_authorized",
+							"type": "object"
+						}
+					},
+					"403": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					}
+				},
+				"tags": [
+					"user"
 				]
 			}
 		},

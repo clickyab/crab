@@ -5,6 +5,7 @@ package location
 import (
 	"sync"
 
+	"clickyab.com/crab/modules/domain/middleware/domain"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
@@ -18,7 +19,9 @@ var once = sync.Once{}
 func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 	once.Do(func() {
 
-		groupMiddleware := []framework.Middleware{}
+		groupMiddleware := []framework.Middleware{
+			domain.Access,
+		}
 
 		group := r.NewGroup(mountPoint + "/location")
 
