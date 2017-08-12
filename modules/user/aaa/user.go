@@ -88,6 +88,8 @@ const (
 	MaleGender GenderType = "male"
 	// FemaleGender female
 	FemaleGender GenderType = "female"
+	// NotSpecifiedGender not specified
+	NotSpecifiedGender GenderType = "not_specified"
 )
 
 // User user model in database
@@ -159,8 +161,8 @@ type RolePermission struct {
 // }
 type UserPersonal struct {
 	UserID    int64            `json:"user_id" db:"user_id"`
-	FirstName mysql.NullString `json:"first_name" db:"first_name"`
-	LastName  mysql.NullString `json:"last_name" db:"last_name"`
+	FirstName string           `json:"first_name" db:"first_name"`
+	LastName  string           `json:"last_name" db:"last_name"`
 	Gender    GenderType       `json:"gender" db:"gender"`
 	Cellphone mysql.NullString `json:"cellphone" db:"cellphone"`
 	Phone     mysql.NullString `json:"phone" db:"phone"`
@@ -170,8 +172,29 @@ type UserPersonal struct {
 	UpdatedAt time.Time        `json:"updated_at" db:"updated_at"`
 }
 
+// UserCorporation user corporation model
+// @Model {
+//		table = user_corporation
+//		primary = false, user_id
+//		find_by = user_id
+// }
+type UserCorporation struct {
+	UserID       int64            `json:"user_id" db:"user_id"`
+	FirstName    string           `json:"first_name" db:"first_name"`
+	LastName     string           `json:"last_name" db:"last_name"`
+	Name         string           `json:"name" db:"name"`
+	Cellphone    mysql.NullString `json:"cellphone" db:"cellphone"`
+	Phone        mysql.NullString `json:"phone" db:"phone"`
+	Address      mysql.NullString `json:"address" db:"address"`
+	EconomicCode mysql.NullString `json:"economic_code" db:"economic_code"`
+	RegisterCode mysql.NullString `json:"register_code" db:"register_code"`
+	CityID       mysql.NullInt64  `json:"city_id" db:"city_id"`
+	CreatedAt    time.Time        `json:"created_at" db:"created_at"`
+	UpdatedAt    time.Time        `json:"updated_at" db:"updated_at"`
+}
+
 // RegisterUser try to register user
-func (m *Manager) RegisterUser(email, pass string, typ UserTyp, domainID int64) (*User, error) {
+func (m *Manager) RegisterUser(email, pass string, typ UserTyp, first, last, company string, domainID int64) (*User, *UserPersonal, *UserCorporation, error) {
 	password, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
 	assert.Nil(err)
 	err = m.Begin()
@@ -192,27 +215,52 @@ func (m *Manager) RegisterUser(email, pass string, typ UserTyp, domainID int64) 
 	}
 	err = m.CreateUser(u)
 	if err != nil {
-		return nil, err
+		return nil, nil, nil, err
 	}
 	role, err := m.FindRoleByNameDomain(ucfg.DefaultRole.String(), domainID)
 	if err != nil {
-		return nil, err
+		return nil, nil, nil, err
 	}
 	ur := &RoleUser{RoleID: role.ID, UserID: u.ID}
 	err = m.CreateRoleUser(ur)
 	if err != nil {
-		return nil, err
+		return nil, nil, nil, err
+	}
+	var up *UserPersonal
+	var uc *UserCorporation
+	if typ == PersonalUserTyp {
+		up = &UserPersonal{
+			UserID:    u.ID,
+			FirstName: first,
+			LastName:  last,
+			Gender:    NotSpecifiedGender,
+		}
+		err = m.CreateUserPersonal(up)
+		if err != nil {
+			return nil, nil, nil, err
+		}
+	} else {
+		uc = &UserCorporation{
+			UserID:    u.ID,
+			FirstName: first,
+			LastName:  last,
+			Name:      company,
+		}
+		err = m.CreateUserCorporation(uc)
+		if err != nil {
+			return nil, nil, nil, err
+		}
 	}
 	dManager, err := dmn.NewDmnManagerFromTransaction(m.GetRDbMap())
 	if err != nil {
-		return nil, err
+		return nil, nil, nil, err
 	}
 	du := &dmn.DomainUser{UserID: u.ID, DomainID: domainID}
 	err = dManager.CreateDomainUser(du)
 	if err != nil {
-		return nil, err
+		return nil, nil, nil, err
 	}
-	return u, nil
+	return u, up, uc, nil
 }
 
 // FindRoleByNameDomain return the Role base on its name and domain

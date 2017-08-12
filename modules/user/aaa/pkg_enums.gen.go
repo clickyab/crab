@@ -164,6 +164,7 @@ func (e GenderType) IsValid() bool {
 		string(e),
 		string(MaleGender),
 		string(FemaleGender),
+		string(NotSpecifiedGender),
 	)
 }
 

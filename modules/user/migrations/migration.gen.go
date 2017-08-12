@@ -4,6 +4,7 @@
 // db/20170808103139_fixrole.sql
 // db/20170808115735_seed.sql
 // db/20170812100556_fixprofile.sql
+// db/20170812113047_fixprofile.sql
 // DO NOT EDIT!
 
 package migrations
@@ -151,6 +152,26 @@ func db20170812100556_fixprofileSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20170812113047_fixprofileSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x9c\x92\xcd\x4e\x02\x31\x14\x85\xf7\xf3\x14\x67\x37\x10\x25\x71\xa1\x2b\x56\x23\x33\x46\xe2\xfc\xe0\xc8\x98\xb0\x22\x75\x7a\x81\x1b\x4b\xdb\xb4\x25\xf8\xf8\x06\x04\x03\x0b\x75\x70\xd7\x36\xe7\x7c\xbd\x4d\xbf\x68\x30\xc0\xd5\x9a\x97\x4e\x04\x42\x63\x77\xdb\x97\xe7\x1c\xac\xe1\xa9\x0d\x6c\x34\xe2\xc6\xc6\x60\x0f\xfa\xa0\x76\x13\x48\x62\xbb\x22\x8d\xb0\x62\x8f\xaf\xde\x2e\xc4\x1e\xc2\x5a\xc5\x24\xa3\x24\x9f\x66\x35\xa6\xc9\x7d\x9e\x61\xe3\xc9\xcd\x5b\xe3\xac\x39\xe4\xd2\xba\x9a\x80\xe5\xf0\xf7\x54\x92\xa6\x98\xd4\xe3\x22\xa9\x67\x78\xca\x66\xe8\xed\x13\x2c\xfb\x1d\x7a\xa3\x2a\x6f\x8a\x12\x4a\xf8\x30\xd7\x62\x4d\x78\x4d\xea\xd1\x63\x52\xf7\x6e\x6f\xfa\x28\xab\x29\xca\x26\xcf\xbb\x73\x16\xec\x2e\x04\x59\x72\xde\x68\xa1\x50\x54\xe9\xf8\x61\xf6\xef\x81\x7e\xe0\x5c\x3e\xd0\xe9\xcb\xce\x59\x67\x94\xbb\xcb\xc6\x59\x92\x96\xe4\x90\x95\x4d\xd1\x8b\xd7\x42\x51\x7c\x8d\x78\x41\xc7\x95\x36\x61\xee\x2d\xb5\xbc\x60\x92\x71\x7f\x18\x9d\x89\x96\x9a\xad\x3e\xaa\xf6\xed\xd9\xee\xb0\x93\x69\xce\x28\x45\x12\x6f\xa2\x7d\xef\x60\xdb\x89\x48\xdd\xbf\x9d\xe5\xb1\xf7\x47\x67\x7f\xc5\x41\xcf\x61\x14\x7d\x06\x00\x00\xff\xff\xbd\xf4\x39\x31\x4f\x03\x00\x00"
+
+func db20170812113047_fixprofileSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20170812113047_fixprofileSql,
+		"db/20170812113047_fixprofile.sql",
+	)
+}
+
+func db20170812113047_fixprofileSql() (*asset, error) {
+	bytes, err := db20170812113047_fixprofileSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20170812113047_fixprofile.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -207,6 +228,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20170808103139_fixrole.sql": db20170808103139_fixroleSql,
 	"db/20170808115735_seed.sql": db20170808115735_seedSql,
 	"db/20170812100556_fixprofile.sql": db20170812100556_fixprofileSql,
+	"db/20170812113047_fixprofile.sql": db20170812113047_fixprofileSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -254,6 +276,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20170808103139_fixrole.sql": &bintree{db20170808103139_fixroleSql, map[string]*bintree{}},
 		"20170808115735_seed.sql": &bintree{db20170808115735_seedSql, map[string]*bintree{}},
 		"20170812100556_fixprofile.sql": &bintree{db20170812100556_fixprofileSql, map[string]*bintree{}},
+		"20170812113047_fixprofile.sql": &bintree{db20170812113047_fixprofileSql, map[string]*bintree{}},
 	}},
 }}
 

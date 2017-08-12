@@ -10,17 +10,26 @@ import (
 	"github.com/clickyab/services/trans"
 )
 
+// @Validate {
+// }
 type registerPayload struct {
-	Email    string      `json:"email" validate:"email" error:"email is invalid"`
-	Password string      `json:"password" validate:"gt=5" error:"password is too short"`
-	UserType aaa.UserTyp `json:"user_type"`
+	Email       string      `json:"email" validate:"email" error:"email is invalid"`
+	Password    string      `json:"password" validate:"gt=5" error:"password is too short"`
+	FirstName   string      `json:"first_name" validate:"required" error:"first name is invalid"`
+	LastName    string      `json:"last_name" validate:"required" error:"last name is invalid"`
+	CompanyName string      `json:"company_name"`
+	UserType    aaa.UserTyp `json:"user_type" validate:"required"`
 }
 
 type responseRegister struct {
-	ID       int64       `json:"id"`
-	Email    string      `json:"email"`
-	Token    string      `json:"token"`
-	UserType aaa.UserTyp `json:"user_type"`
+	Token   string `json:"token"`
+	Account struct {
+		ID          int64                `json:"id"`
+		Email       string               `json:"email"`
+		UserType    aaa.UserTyp          `json:"user_type"`
+		Corporation *aaa.UserCorporation `json:"corporation"`
+		Personal    *aaa.UserPersonal    `json:"personal"`
+	} `json:"account"`
 }
 
 // @Route {
@@ -40,17 +49,26 @@ func (u *Controller) Register(ctx context.Context, w http.ResponseWriter, r *htt
 	}
 	m := aaa.NewAaaManager()
 	d := domain.MustGetDomain(ctx)
-	usr, err := m.RegisterUser(pl.Email, pl.Password, pl.UserType, d.ID)
+	if pl.UserType == aaa.CorporationUserTyp && pl.CompanyName == "" {
+		u.BadResponse(w, trans.E("company name required for corporation users"))
+		return
+	}
+	usr, up, uc, err := m.RegisterUser(pl.Email, pl.Password, pl.UserType, pl.FirstName, pl.LastName, pl.CompanyName, d.ID)
 	if err != nil {
 		u.BadResponse(w, trans.E("error registering user"))
 		return
 	}
 	token := aaa.GetNewToken(usr)
-	u.OKResponse(w, responseRegister{
-		ID:       usr.ID,
-		Email:    usr.Email,
-		Token:    token,
-		UserType: usr.UserType,
-	})
+	res := responseRegister{
+		Account: struct {
+			ID          int64                `json:"id"`
+			Email       string               `json:"email"`
+			UserType    aaa.UserTyp          `json:"user_type"`
+			Corporation *aaa.UserCorporation `json:"corporation"`
+			Personal    *aaa.UserPersonal    `json:"personal"`
+		}{ID: usr.ID, Email: usr.Email, UserType: usr.UserType, Corporation: uc, Personal: up},
+		Token: token,
+	}
+	u.OKResponse(w, res)
 
 }
