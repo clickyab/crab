@@ -1,4 +1,4 @@
-package eav
+package kv
 
 import (
 	"time"
@@ -33,13 +33,11 @@ var (
 	atomicFactory StoreAtomicFactory
 )
 
-// RegisterAeav is a function to register store factory
-func RegisterAeav(s StoreAtomicFactory) {
-	atomicFactory = s
-}
-
 // NewAEAVStore return a new eav store
 func NewAEAVStore(key string) AKiwi {
-	assert.NotNil(factory, "[BUG] factory is not registered")
+	regLock.RLock()
+	defer regLock.RUnlock()
+
+	assert.NotNil(atomicFactory, "[BUG] factory is not registered")
 	return atomicFactory(key)
 }

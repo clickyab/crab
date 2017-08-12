@@ -8,9 +8,9 @@ import (
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/eav"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/controller"
+	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/trans"
 )
 
@@ -24,7 +24,7 @@ func Authenticate(next framework.Handler) framework.Handler {
 	return func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("token")
 		if token != "" {
-			val := eav.NewEavStore(token).SubKey("token")
+			val := kv.NewEavStore(token).SubKey("token")
 			if val != "" {
 				// TODO : Write me
 				userDomain, ok := ctx.Value(domain.ContextDomain).(*dmn.Domain)

@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"clickyab.com/crab/modules/domain/dmn"
-	ucfg "clickyab.com/crab/modules/user/config"
+	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/eav"
+	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/random"
 	"golang.org/x/crypto/bcrypt"
@@ -235,7 +235,7 @@ func (m *Manager) FindRoleByNameDomain(n string, domainID int64) (*Role, error) 
 // GetNewToken save new token
 func GetNewToken(user *User) string {
 	t := fmt.Sprintf("%d:%s", user.ID, <-random.ID)
-	generated := eav.NewEavStore(t).SetSubKey("token", user.AccessToken)
+	generated := kv.NewEavStore(t).SetSubKey("token", user.AccessToken)
 	assert.Nil(generated.Save(ucfg.TokenTimeout.Duration()))
 	return t
 }

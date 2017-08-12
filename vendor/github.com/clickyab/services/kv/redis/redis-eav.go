@@ -4,8 +4,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/clickyab/services/eav"
-	"github.com/clickyab/services/redis"
+	"github.com/clickyab/services/aredis"
+	"github.com/clickyab/services/kv"
 )
 
 type kiwiRedis struct {
@@ -36,7 +36,7 @@ func (kr *kiwiRedis) Key() string {
 }
 
 // SetSubKey for adding a sub key
-func (kr *kiwiRedis) SetSubKey(key, value string) eav.Kiwi {
+func (kr *kiwiRedis) SetSubKey(key, value string) kv.Kiwi {
 	kr.lock.Lock()
 	defer kr.lock.Unlock()
 
@@ -101,14 +101,10 @@ func (kr *kiwiRedis) Save(t time.Duration) error {
 }
 
 // newRedisEAVStore return a redis store for eav
-func newRedisEAVStore(key string) eav.Kiwi {
+func newRedisEAVStore(key string) kv.Kiwi {
 	return &kiwiRedis{
 		key:  key,
 		v:    make(map[string]string),
 		lock: sync.Mutex{},
 	}
-}
-
-func init() {
-	eav.RegisterEav(newRedisEAVStore)
 }

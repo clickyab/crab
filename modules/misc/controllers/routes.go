@@ -1,12 +1,10 @@
 package misc
 
 import (
-	"path/filepath"
-
 	"context"
-	"net/http"
-
 	"encoding/json"
+	"net/http"
+	"path/filepath"
 
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"

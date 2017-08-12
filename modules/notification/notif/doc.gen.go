@@ -16,7 +16,7 @@ import (
 // CreateNotification try to save a new Notification in database
 func (m *Manager) CreateNotification(n *Notification) error {
 	now := time.Now()
-	n.CreatedAt = &now
+	n.CreatedAt = now
 
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
