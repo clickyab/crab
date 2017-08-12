@@ -4,6 +4,94 @@
 		"application/json"
 	],
 	"definitions": {
+		"aaa_GenderType": {
+			"type": "string"
+		},
+		"aaa_UserPersonal": {
+			"properties": {
+				"address": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"cellphone": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"city_id": {
+					"properties": {
+						"Int64": {
+							"type": "integer"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"created_at": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"first_name": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"gender": {
+					"type": "string"
+				},
+				"last_name": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"phone": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"updated_at": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"user_id": {
+					"type": "integer"
+				}
+			},
+			"type": "object"
+		},
 		"controller_ErrorResponseSimple": {
 			"properties": {
 				"error": {
@@ -125,6 +213,32 @@
 			},
 			"type": "object"
 		},
+		"user_personalPayload": {
+			"properties": {
+				"address": {
+					"type": "string"
+				},
+				"cellphone": {
+					"type": "string"
+				},
+				"city_id": {
+					"type": "integer"
+				},
+				"first_name": {
+					"type": "string"
+				},
+				"gender": {
+					"type": "string"
+				},
+				"last_name": {
+					"type": "string"
+				},
+				"phone": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
 		"user_registerPayload": {
 			"properties": {
 				"email": {
@@ -178,9 +292,81 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "19"
+		"version": "21"
 	},
 	"paths": {
+		"/upload/{module}": {
+			"post": {
+				"description": "Upload into the system",
+				"parameters": [
+					{
+						"description": "",
+						"in": "path",
+						"name": "module",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"description": "the security token, get it from login route",
+						"in": "header",
+						"name": "token",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"401": {
+						"description": "you are not authorized",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "not_authorized",
+							"type": "object"
+						}
+					},
+					"403": {
+						"description": "forbidden, you have no access here",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "forbidden",
+							"type": "object"
+						}
+					}
+				},
+				"tags": [
+					"controllers"
+				]
+			}
+		},
 		"/user/mail/check": {
 			"post": {
 				"description": "checkMail check mail in system",
@@ -200,6 +386,92 @@
 						"description": "",
 						"schema": {
 							"$ref": "#/definitions/user_checkMailResponse"
+						}
+					}
+				},
+				"tags": [
+					"user"
+				]
+			}
+		},
+		"/user/personal": {
+			"put": {
+				"description": "EditPersonal route for edit personal profile",
+				"parameters": [
+					{
+						"description": "the security token, get it from login route",
+						"in": "header",
+						"name": "token",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"description": "",
+						"in": "body",
+						"name": "payload_data",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/user_personalPayload"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/aaa_UserPersonal"
+						}
+					},
+					"400": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					},
+					"401": {
+						"description": "you are not authorized",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "not_authorized",
+							"type": "object"
+						}
+					},
+					"403": {
+						"description": "forbidden, you have no access here",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "forbidden",
+							"type": "object"
 						}
 					}
 				},

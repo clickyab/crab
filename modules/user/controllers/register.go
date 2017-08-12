@@ -27,7 +27,6 @@ type responseRegister struct {
 // 		url = /register
 //		method = post
 //		payload = registerPayload
-//		middleware = domain.Access
 //		200 = responseRegister
 //		400 = controller.ErrorResponseSimple
 // }
