@@ -16,5 +16,5 @@ import (
 // }
 func (c Controller) ping(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	user := authz.MustGetUser(ctx)
-	c.responseLoginOKStatus(w, user.ID, user.Email, authz.MustGetToken(ctx), user.UserType)
+	c.createLoginResponse(w, user, authz.MustGetToken(ctx))
 }
