@@ -194,9 +194,20 @@ type UserCorporation struct {
 	UpdatedAt    time.Time        `json:"updated_at" db:"updated_at"`
 }
 
+// RegisterUserPayload register
+type RegisterUserPayload struct {
+	Email       string
+	Password    string
+	FirstName   string
+	Mobile      string
+	LastName    string
+	CompanyName string
+	UserType    UserTyp
+}
+
 // RegisterUser try to register user
-func (m *Manager) RegisterUser(email, pass string, typ UserTyp, first, last, company string, domainID int64) (*User, error) {
-	password, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
+func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, error) {
+	password, err := bcrypt.GenerateFromPassword([]byte(pl.Password), bcrypt.DefaultCost)
 	assert.Nil(err)
 	err = m.Begin()
 	assert.Nil(err)
@@ -208,9 +219,9 @@ func (m *Manager) RegisterUser(email, pass string, typ UserTyp, first, last, com
 		}
 	}()
 	u := &User{
-		Email:       email,
+		Email:       pl.Email,
 		Password:    string(password),
-		UserType:    typ,
+		UserType:    pl.UserType,
 		Status:      RegisteredUserStatus,
 		AccessToken: <-random.ID,
 	}
@@ -229,11 +240,12 @@ func (m *Manager) RegisterUser(email, pass string, typ UserTyp, first, last, com
 	}
 	var up *UserPersonal
 	var uc *UserCorporation
-	if typ == PersonalUserTyp {
+	if pl.UserType == PersonalUserTyp {
 		up = &UserPersonal{
 			UserID:    u.ID,
-			FirstName: first,
-			LastName:  last,
+			FirstName: pl.FirstName,
+			LastName:  pl.LastName,
+			Cellphone: mysql.NullString{String: pl.Mobile, Valid: pl.Mobile != ""},
 			Gender:    NotSpecifiedGender,
 		}
 		err = m.CreateUserPersonal(up)
@@ -243,9 +255,10 @@ func (m *Manager) RegisterUser(email, pass string, typ UserTyp, first, last, com
 	} else {
 		uc = &UserCorporation{
 			UserID:    u.ID,
-			FirstName: first,
-			LastName:  last,
-			Name:      company,
+			FirstName: pl.FirstName,
+			LastName:  pl.LastName,
+			Name:      pl.CompanyName,
+			Cellphone: mysql.NullString{String: pl.Mobile, Valid: pl.Mobile != ""},
 		}
 		err = m.CreateUserCorporation(uc)
 		if err != nil {
@@ -366,5 +379,23 @@ func (m *Manager) IsOldPassword(d int64, p string) (bool, error) {
 		}
 	}
 	return false, nil
+}
 
+// FindUserByEmailDomain return the User base on its email an domain
+func (m *Manager) FindUserByEmailDomain(email string, domain *dmn.Domain) (*User, error) {
+	var res User
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT u.* FROM %s AS u "+
+			"INNER JOIN domain_user AS dm ON dm.user_id=u.id"+
+			" WHERE u.email=? AND dm.domain_id=?", UserTableFull),
+		email,
+		domain.ID,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
 }
