@@ -196,6 +196,17 @@
 			},
 			"type": "object"
 		},
+		"user_loginPayload": {
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
 		"user_personalPayload": {
 			"properties": {
 				"address": {
@@ -234,6 +245,9 @@
 					"type": "string"
 				},
 				"last_name": {
+					"type": "string"
+				},
+				"mobile": {
 					"type": "string"
 				},
 				"password": {
@@ -432,7 +446,7 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "30"
+		"version": "31"
 	},
 	"paths": {
 		"/location/cities/{provinces_id}": {
@@ -594,6 +608,45 @@
 				},
 				"tags": [
 					"controllers"
+				]
+			}
+		},
+		"/user/login": {
+			"post": {
+				"description": "login user in system",
+				"parameters": [
+					{
+						"description": "",
+						"in": "body",
+						"name": "payload_data",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/user_loginPayload"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/user_responseLoginOK"
+						}
+					},
+					"400": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					},
+					"403": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					}
+				},
+				"tags": [
+					"user"
 				]
 			}
 		},

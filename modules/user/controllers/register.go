@@ -16,6 +16,7 @@ type registerPayload struct {
 	Email       string      `json:"email" validate:"email" error:"email is invalid"`
 	Password    string      `json:"password" validate:"gt=5" error:"password is too short"`
 	FirstName   string      `json:"first_name" validate:"required" error:"first name is invalid"`
+	Mobile      string      `json:"mobile"`
 	LastName    string      `json:"last_name" validate:"required" error:"last name is invalid"`
 	CompanyName string      `json:"company_name"`
 	UserType    aaa.UserTyp `json:"user_type" validate:"required"`
@@ -42,7 +43,16 @@ func (u *Controller) Register(ctx context.Context, w http.ResponseWriter, r *htt
 		u.BadResponse(w, trans.E("company name required for corporation users"))
 		return
 	}
-	usr, err := m.RegisterUser(pl.Email, pl.Password, pl.UserType, pl.FirstName, pl.LastName, pl.CompanyName, d.ID)
+	res := aaa.RegisterUserPayload{
+		Email:       pl.Email,
+		Password:    pl.Password,
+		UserType:    pl.UserType,
+		FirstName:   pl.FirstName,
+		LastName:    pl.LastName,
+		Mobile:      pl.Mobile,
+		CompanyName: pl.CompanyName,
+	}
+	usr, err := m.RegisterUser(res, d.ID)
 	if err != nil {
 		u.BadResponse(w, trans.E("error registering user"))
 		return
