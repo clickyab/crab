@@ -21,22 +21,11 @@ type registerPayload struct {
 	UserType    aaa.UserTyp `json:"user_type" validate:"required"`
 }
 
-type responseRegister struct {
-	Token   string `json:"token"`
-	Account struct {
-		ID          int64                `json:"id"`
-		Email       string               `json:"email"`
-		UserType    aaa.UserTyp          `json:"user_type"`
-		Corporation *aaa.UserCorporation `json:"corporation"`
-		Personal    *aaa.UserPersonal    `json:"personal"`
-	} `json:"account"`
-}
-
 // @Route {
 // 		url = /register
 //		method = post
 //		payload = registerPayload
-//		200 = responseRegister
+//		200 = responseLoginOK
 //		400 = controller.ErrorResponseSimple
 // }
 func (u *Controller) Register(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -53,22 +42,12 @@ func (u *Controller) Register(ctx context.Context, w http.ResponseWriter, r *htt
 		u.BadResponse(w, trans.E("company name required for corporation users"))
 		return
 	}
-	usr, up, uc, err := m.RegisterUser(pl.Email, pl.Password, pl.UserType, pl.FirstName, pl.LastName, pl.CompanyName, d.ID)
+	usr, err := m.RegisterUser(pl.Email, pl.Password, pl.UserType, pl.FirstName, pl.LastName, pl.CompanyName, d.ID)
 	if err != nil {
 		u.BadResponse(w, trans.E("error registering user"))
 		return
 	}
 	token := aaa.GetNewToken(usr)
-	res := responseRegister{
-		Account: struct {
-			ID          int64                `json:"id"`
-			Email       string               `json:"email"`
-			UserType    aaa.UserTyp          `json:"user_type"`
-			Corporation *aaa.UserCorporation `json:"corporation"`
-			Personal    *aaa.UserPersonal    `json:"personal"`
-		}{ID: usr.ID, Email: usr.Email, UserType: usr.UserType, Corporation: uc, Personal: up},
-		Token: token,
-	}
-	u.OKResponse(w, res)
+	u.createLoginResponse(w, usr, token)
 
 }

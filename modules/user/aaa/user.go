@@ -194,7 +194,7 @@ type UserCorporation struct {
 }
 
 // RegisterUser try to register user
-func (m *Manager) RegisterUser(email, pass string, typ UserTyp, first, last, company string, domainID int64) (*User, *UserPersonal, *UserCorporation, error) {
+func (m *Manager) RegisterUser(email, pass string, typ UserTyp, first, last, company string, domainID int64) (*User, error) {
 	password, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
 	assert.Nil(err)
 	err = m.Begin()
@@ -215,16 +215,16 @@ func (m *Manager) RegisterUser(email, pass string, typ UserTyp, first, last, com
 	}
 	err = m.CreateUser(u)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 	role, err := m.FindRoleByNameDomain(ucfg.DefaultRole.String(), domainID)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 	ur := &RoleUser{RoleID: role.ID, UserID: u.ID}
 	err = m.CreateRoleUser(ur)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 	var up *UserPersonal
 	var uc *UserCorporation
@@ -237,7 +237,7 @@ func (m *Manager) RegisterUser(email, pass string, typ UserTyp, first, last, com
 		}
 		err = m.CreateUserPersonal(up)
 		if err != nil {
-			return nil, nil, nil, err
+			return nil, err
 		}
 	} else {
 		uc = &UserCorporation{
@@ -248,19 +248,19 @@ func (m *Manager) RegisterUser(email, pass string, typ UserTyp, first, last, com
 		}
 		err = m.CreateUserCorporation(uc)
 		if err != nil {
-			return nil, nil, nil, err
+			return nil, err
 		}
 	}
 	dManager, err := dmn.NewDmnManagerFromTransaction(m.GetRDbMap())
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 	du := &dmn.DomainUser{UserID: u.ID, DomainID: domainID}
 	err = dManager.CreateDomainUser(du)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
-	return u, up, uc, nil
+	return u, nil
 }
 
 // FindRoleByNameDomain return the Role base on its name and domain
@@ -317,4 +317,20 @@ func (m *Manager) FindUserByAccessTokenDomain(at string, domainID int64) (*User,
 	}
 
 	return &res, nil
+}
+
+// GetUserPersonal get personal profile
+func (u *User) GetUserPersonal() *UserPersonal {
+	m := NewAaaManager()
+	up, err := m.FindUserPersonalByUserID(u.ID)
+	assert.Nil(err)
+	return up
+}
+
+// GetUserCorporation get corporation profile
+func (u *User) GetUserCorporation() *UserCorporation {
+	m := NewAaaManager()
+	uc, err := m.FindUserCorporationByUserID(u.ID)
+	assert.Nil(err)
+	return uc
 }

@@ -32,10 +32,14 @@ type auditData struct {
 }
 
 type responseLoginOK struct {
-	ID       int64       `json:"id"`
-	Email    string      `json:"email"`
-	Token    string      `json:"token"`
-	UserType aaa.UserTyp `json:"user_type"`
+	Token   string `json:"token"`
+	Account struct {
+		ID          int64                `json:"id"`
+		Email       string               `json:"email"`
+		UserType    aaa.UserTyp          `json:"user_type"`
+		Personal    *aaa.UserPersonal    `json:"personal"`
+		Corporation *aaa.UserCorporation `json:"corporation"`
+	} `json:"account"`
 }
 
 var (
@@ -100,11 +104,21 @@ func audit(username, action, class string, data interface{}) {
 	)
 }
 
-func (c Controller) responseLoginOKStatus(w http.ResponseWriter, id int64, email, token string, typ aaa.UserTyp) {
-	c.OKResponse(w, responseLoginOK{
-		ID:       id,
-		UserType: typ,
-		Token:    token,
-		Email:    email,
-	})
+func (c Controller) createLoginResponse(w http.ResponseWriter, user *aaa.User, token string) {
+	res := responseLoginOK{
+		Token: token,
+		Account: struct {
+			ID          int64                `json:"id"`
+			Email       string               `json:"email"`
+			UserType    aaa.UserTyp          `json:"user_type"`
+			Personal    *aaa.UserPersonal    `json:"personal"`
+			Corporation *aaa.UserCorporation `json:"corporation"`
+		}{ID: user.ID, Email: user.Email, UserType: user.UserType},
+	}
+	if user.UserType == aaa.PersonalUserTyp {
+		res.Account.Personal = user.GetUserPersonal()
+	} else {
+		res.Account.Corporation = user.GetUserCorporation()
+	}
+	c.OKResponse(w, res)
 }

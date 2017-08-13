@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
@@ -28,7 +29,7 @@ type personalPayload struct {
 //		method = put
 //		payload = personalPayload
 //		middleware = authz.Authenticate
-//		200 = aaa.UserPersonal
+//		200 = responseLoginOK
 //		400 = controller.ErrorResponseSimple
 // }
 func (u *Controller) EditPersonal(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -62,5 +63,5 @@ func (u *Controller) EditPersonal(ctx context.Context, w http.ResponseWriter, r 
 		u.BadResponse(w, trans.EE(err))
 		return
 	}
-	u.OKResponse(w, up)
+	u.createLoginResponse(w, currentUser, authz.MustGetToken(ctx))
 }
