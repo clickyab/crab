@@ -32,5 +32,5 @@ type Notification struct {
 	Title     string           `json:"title" db:"title"`
 	Message   string           `json:"message" db:"message"`
 	Type      NotificationType `json:"type" db:"type"`
-	CreatedAt *time.Time       `json:"created_at" db:"created_at"`
+	CreatedAt time.Time        `json:"created_at" db:"created_at"`
 }
