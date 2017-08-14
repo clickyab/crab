@@ -490,6 +490,17 @@
 			},
 			"type": "object"
 		},
+		"user_changePassword": {
+			"properties": {
+				"current_password": {
+					"type": "string"
+				},
+				"new_password": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
 		"user_checkMailPayload": {
 			"properties": {
 				"email": {
@@ -856,7 +867,7 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "52"
+		"version": "53"
 	},
 	"paths": {
 		"/asset/category": {
@@ -1601,6 +1612,92 @@
 						"description": "",
 						"schema": {
 							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					}
+				},
+				"tags": [
+					"user"
+				]
+			}
+		},
+		"/user/password/change": {
+			"put": {
+				"description": "changePassword",
+				"parameters": [
+					{
+						"description": "the security token, get it from login route",
+						"in": "header",
+						"name": "token",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"description": "",
+						"in": "body",
+						"name": "payload_data",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/user_changePassword"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_NormalResponse"
+						}
+					},
+					"400": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					},
+					"401": {
+						"description": "you are not authorized",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "not_authorized",
+							"type": "object"
+						}
+					},
+					"403": {
+						"description": "forbidden, you have no access here",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "forbidden",
+							"type": "object"
 						}
 					}
 				},

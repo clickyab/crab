@@ -221,6 +221,41 @@ func (pl *callBack) Validate(ctx context.Context, w http.ResponseWriter, r *http
 	return nil
 }
 
+func (pl *changePassword) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	err := func(in interface{}) error {
+		if v, ok := in.(interface {
+			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
+		}); ok {
+			return v.ValidateExtra(ctx, w, r)
+		}
+		return nil
+	}(pl)
+	if err != nil {
+		return err
+	}
+	errs := validator.New().Struct(pl)
+	if errs == nil {
+		return nil
+	}
+	res := middleware.GroupError{}
+	for _, i := range errs.(validator.ValidationErrors) {
+		switch i.Field() {
+		case "CurrentPassword":
+			res["current_password"] = trans.E("invalid value")
+
+		case "NewPassword":
+			res["new_password"] = trans.E("invalid value")
+
+		default:
+			logrus.Panicf("the field %s is not translated", i)
+		}
+	}
+	if len(res) > 0 {
+		return res
+	}
+	return nil
+}
+
 func (pl *registerPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	err := func(in interface{}) error {
 		if v, ok := in.(interface {

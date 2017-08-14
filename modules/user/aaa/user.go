@@ -4,9 +4,13 @@ import (
 	"fmt"
 	"time"
 
+	"errors"
+
 	"clickyab.com/crab/modules/domain/dmn"
+
 	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
@@ -323,6 +327,25 @@ func (m *Manager) FindUserByAccessTokenDomain(at string, domainID int64) (*User,
 	return &res, nil
 }
 
+// FindUserByEmailDomain return the User base on its email an domain
+func (m *Manager) FindUserByEmailDomain(email string, domain *dmn.Domain) (*User, error) {
+	var res User
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT u.* FROM %s AS u "+
+			"INNER JOIN domain_user AS dm ON dm.user_id=u.id"+
+			" WHERE u.email=? AND dm.domain_id=?", UserTableFull),
+		email,
+		domain.ID,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
 // GetUserPersonal get personal profile
 func (u *User) GetUserPersonal() *UserPersonal {
 	if u.profile == nil {
@@ -345,13 +368,44 @@ func (u *User) GetUserCorporation() *UserCorporation {
 	return u.profile.(*UserCorporation)
 }
 
-// UpdateOldPassword get user id and password and will update oldpassword column
-func (m *Manager) UpdateOldPassword(d int64, p string) error {
-	u, e := m.FindUserByID(d)
-	if e != nil {
-		return e
+var allowOldPassword = config.RegisterBoolean("crab.user.allow_old_pass", true,
+	"determine if the user can change it's password to the one of old ones")
+
+var (
+	// ErrorOldPass when The password was used before
+	ErrorOldPass = errors.New("This password was used before, please try another one.")
+	// ErrorWrongPassword when The current user password and claimed password doesn't match
+	ErrorWrongPassword = errors.New("Current password is not correct")
+)
+
+// UpdatePassword will change password (p param) if the current given password (c param) be correct.
+func (u *User) UpdatePassword(c, p string) error {
+	if !u.ValidatePassword(c) {
+		return errors.New("Current Password is wrong")
 	}
+	return u.ChangePassword(p)
+
+}
+
+// ValidatePassword return true if the given password is the user current password.
+func (u *User) ValidatePassword(p string) bool {
+	if bcrypt.CompareHashAndPassword([]byte(p), []byte(u.Password)) == nil {
+		return true
+	}
+	return false
+}
+
+// ChangePassword get user and password and will update oldpassword column
+func (u *User) ChangePassword(p string) error {
+
+	b := u.isOldPassword(p)
+
+	if b && !allowOldPassword.Bool() {
+		return ErrorOldPass
+	}
+
 	np, e := bcrypt.GenerateFromPassword([]byte(p), bcrypt.DefaultCost)
+	u.Password = string(np)
 	if e != nil {
 		return e
 	}
@@ -360,38 +414,17 @@ func (m *Manager) UpdateOldPassword(d int64, p string) error {
 	} else {
 		u.OldPassword = append([]string{string(np)}, u.OldPassword[:2]...)
 	}
+	m := NewAaaManager()
+
 	return m.UpdateUser(u)
 }
 
-// IsOldPassword will return true if user used this password
-func (m *Manager) IsOldPassword(d int64, p string) (bool, error) {
-	u, e := m.FindUserByID(d)
-	if e != nil {
-		return false, e
-	}
+// isOldPassword will return true if user used this password
+func (u *User) isOldPassword(p string) bool {
 	for _, o := range u.OldPassword {
-		if bcrypt.CompareHashAndPassword([]byte(o), []byte(p)) != nil {
-			return true, nil
+		if bcrypt.CompareHashAndPassword([]byte(o), []byte(p)) == nil {
+			return true
 		}
 	}
-	return false, nil
-}
-
-// FindUserByEmailDomain return the User base on its email an domain
-func (m *Manager) FindUserByEmailDomain(email string, domain *dmn.Domain) (*User, error) {
-	var res User
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT u.* FROM %s AS u "+
-			"INNER JOIN domain_user AS dm ON dm.user_id=u.id"+
-			" WHERE u.email=? AND dm.domain_id=?", UserTableFull),
-		email,
-		domain.ID,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
+	return false
 }
