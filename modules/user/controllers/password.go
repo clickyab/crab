@@ -73,16 +73,58 @@ func (c Controller) forgetCallBack(ctx context.Context, w http.ResponseWriter, r
 	id, err := strconv.ParseInt(userID, 10, 0)
 	assert.Nil(err)
 
-	valid, err := aaa.NewAaaManager().IsOldPassword(id, payload.NewPassword)
-	assert.Nil(err)
+	u, e := aaa.NewAaaManager().FindUserByID(id)
+	assert.Nil(e)
 
-	if !valid {
-		c.BadResponse(w, trans.E("password were used before"))
-		return
+	e = u.ChangePassword(payload.NewPassword)
+	if e != nil {
+		switch e {
+		case aaa.ErrorWrongPassword:
+			c.BadResponse(w, trans.EE(e))
+			return
+		case aaa.ErrorOldPass:
+			c.BadResponse(w, trans.EE(e))
+			return
+		default:
+			assert.Nil(e)
+		}
 	}
 
-	err = aaa.NewAaaManager().UpdateOldPassword(id, payload.NewPassword)
-	assert.Nil(err)
+	c.OKResponse(w, nil)
+}
+
+// @Validate {
+// }
+type changePassword struct {
+	CurrentPassword string `json:"current_password" validate:"gt=5"`
+	NewPassword     string `json:"new_password" validate:"gt=5"`
+}
+
+// changePassword
+// @Route {
+//		url = /password/change
+//      method = put
+//      payload = changePassword
+//		middleware = authz.Authenticate
+//      200 = controller.NormalResponse
+//      400 = controller.ErrorResponseSimple
+// }
+func (c Controller) changePassword(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	u := c.MustGetUser(ctx)
+	payload := c.MustGetPayload(ctx).(*changePassword)
+	e := u.UpdatePassword(payload.CurrentPassword, payload.NewPassword)
+	if e != nil {
+		switch e {
+		case aaa.ErrorWrongPassword:
+			c.BadResponse(w, trans.EE(e))
+			return
+		case aaa.ErrorOldPass:
+			c.BadResponse(w, trans.EE(e))
+			return
+		default:
+			assert.Nil(e)
+		}
+	}
 
 	c.OKResponse(w, nil)
 }
