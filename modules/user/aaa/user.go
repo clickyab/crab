@@ -110,6 +110,8 @@ type User struct {
 	CreatedAt   time.Time             `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time             `json:"updated_at" db:"updated_at"`
 	OldPassword mysql.StringJSONArray `json:"-"  db:"old_password"`
+
+	profile interface{} `db:"-"`
 }
 
 // Role role model in database
@@ -252,6 +254,7 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 		if err != nil {
 			return nil, err
 		}
+		u.profile = up
 	} else {
 		uc = &UserCorporation{
 			UserID:    u.ID,
@@ -264,6 +267,7 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 		if err != nil {
 			return nil, err
 		}
+		u.profile = uc
 	}
 	dManager, err := dmn.NewDmnManagerFromTransaction(m.GetRDbMap())
 	if err != nil {
@@ -335,18 +339,24 @@ func (m *Manager) FindUserByAccessTokenDomain(at string, domainID int64) (*User,
 
 // GetUserPersonal get personal profile
 func (u *User) GetUserPersonal() *UserPersonal {
-	m := NewAaaManager()
-	up, err := m.FindUserPersonalByUserID(u.ID)
-	assert.Nil(err)
-	return up
+	if u.profile == nil {
+		m := NewAaaManager()
+		up, err := m.FindUserPersonalByUserID(u.ID)
+		assert.Nil(err)
+		u.profile = up
+	}
+	return u.profile.(*UserPersonal)
 }
 
 // GetUserCorporation get corporation profile
 func (u *User) GetUserCorporation() *UserCorporation {
-	m := NewAaaManager()
-	uc, err := m.FindUserCorporationByUserID(u.ID)
-	assert.Nil(err)
-	return uc
+	if u.profile == nil {
+		m := NewAaaManager()
+		uc, err := m.FindUserCorporationByUserID(u.ID)
+		assert.Nil(err)
+		u.profile = uc
+	}
+	return u.profile.(*UserCorporation)
 }
 
 // UpdateOldPassword get user id and password and will update oldpassword column
