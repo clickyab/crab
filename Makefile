@@ -54,3 +54,13 @@ build-webserver:
 run-webserver: build-webserver
 	echo $(DATABASE_URL)
 	$(BIN)/webserver
+
+debug-webserver: all
+	$(BIN)/dlv --listen=:5000 --headless=true --api-version=2 exec $(BIN)/webserver
+
+run-webserver: all
+	 $(BIN)/webserver
+
+debuger:
+	$(GO) get -v github.com/derekparker/delve/cmd/dlv
+	$(GO) install -v github.com/derekparker/delve/cmd/dlv
