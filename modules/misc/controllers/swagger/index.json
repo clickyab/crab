@@ -181,6 +181,20 @@
 			},
 			"type": "object"
 		},
+		"location_City": {
+			"properties": {
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"province_id": {
+					"type": "integer"
+				}
+			},
+			"type": "object"
+		},
 		"location_Country": {
 			"properties": {
 				"id": {
@@ -205,6 +219,23 @@
 				}
 			},
 			"type": "object"
+		},
+		"location_cities": {
+			"items": {
+				"properties": {
+					"id": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					},
+					"province_id": {
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"location_countries": {
 			"items": {
@@ -628,7 +659,7 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "36"
+		"version": "41"
 	},
 	"paths": {
 		"/location/cities/{provinces_id}": {
@@ -647,7 +678,7 @@
 					"200": {
 						"description": "",
 						"schema": {
-							"$ref": "#/definitions/location_provinces"
+							"$ref": "#/definitions/location_cities"
 						}
 					},
 					"400": {
