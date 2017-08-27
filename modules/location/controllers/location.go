@@ -57,10 +57,12 @@ func (ctrl *Controller) Provinces(ctx context.Context, w http.ResponseWriter, r 
 	ctrl.JSON(w, http.StatusOK, res)
 }
 
+type cities []location.City
+
 // @Route {
 // 		url = /cities/:provinces_id
 //		method = get
-//		200 = provinces
+//		200 = cities
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 // }
