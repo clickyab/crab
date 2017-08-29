@@ -4,10 +4,10 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/asset/asst"
+	"clickyab.com/crab/modules/asset/orm"
 )
 
-type osResponse []asst.OS
+type osResponse []orm.OS
 
 // os return list all is (e.g. linux, ...)
 // @Route {
@@ -17,6 +17,6 @@ type osResponse []asst.OS
 //		middleware = authz.Authenticate
 // }
 func (c *Controller) os(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	m := asst.NewAsstManager()
+	m := orm.NewOrmManager()
 	c.OKResponse(w, m.ListOS())
 }

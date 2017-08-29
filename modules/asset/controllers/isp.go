@@ -4,10 +4,10 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/asset/asst"
+	"clickyab.com/crab/modules/asset/orm"
 )
 
-type ispResponse []asst.ISP
+type ispResponse []orm.ISP
 
 // isp return list all is (e.g. irancell, ...)
 // @Route {
@@ -17,6 +17,6 @@ type ispResponse []asst.ISP
 //		middleware = authz.Authenticate
 // }
 func (c *Controller) isp(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	m := asst.NewAsstManager()
+	m := orm.NewOrmManager()
 	c.OKResponse(w, m.ListISPS())
 }

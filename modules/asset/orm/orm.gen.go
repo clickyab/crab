@@ -10,8 +10,20 @@ import (
 // AUTO GENERATED CODE. DO NOT EDIT!
 
 const (
+	// BrowserTableFull is the Browser table name
+	BrowserTableFull = "browsers"
+
+	// CategoryTableFull is the Category table name
+	CategoryTableFull = "categories"
+
+	// ISPTableFull is the ISP table name
+	ISPTableFull = "isps"
+
 	// ManufacturerTableFull is the Manufacturer table name
 	ManufacturerTableFull = "manufacturers"
+
+	// OSTableFull is the OS table name
+	OSTableFull = "oses"
 )
 
 // Manager is the model manager for orm package
@@ -39,8 +51,40 @@ func NewOrmManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 func (m *Manager) Initialize() {
 
 	m.AddTableWithName(
+		Browser{},
+		BrowserTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
+
+	m.AddTableWithName(
+		Category{},
+		CategoryTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
+
+	m.AddTableWithName(
+		ISP{},
+		ISPTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
+
+	m.AddTableWithName(
 		Manufacturer{},
 		ManufacturerTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
+
+	m.AddTableWithName(
+		OS{},
+		OSTableFull,
 	).SetKeys(
 		true,
 		"ID",
