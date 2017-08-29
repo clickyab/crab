@@ -122,67 +122,6 @@
 			},
 			"type": "object"
 		},
-		"asst_Category": {
-			"properties": {
-				"description": {
-					"type": "string"
-				},
-				"id": {
-					"type": "integer"
-				},
-				"name": {
-					"type": "string"
-				},
-				"status": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
-		},
-		"asst_ISP": {
-			"properties": {
-				"created_at": {
-					"format": "dateTime",
-					"type": "string"
-				},
-				"id": {
-					"type": "integer"
-				},
-				"name": {
-					"type": "string"
-				},
-				"status": {
-					"type": "boolean"
-				},
-				"updated_at": {
-					"format": "dateTime",
-					"type": "string"
-				}
-			},
-			"type": "object"
-		},
-		"asst_OS": {
-			"properties": {
-				"created_at": {
-					"format": "dateTime",
-					"type": "string"
-				},
-				"id": {
-					"type": "integer"
-				},
-				"name": {
-					"type": "string"
-				},
-				"status": {
-					"type": "boolean"
-				},
-				"updated_at": {
-					"format": "dateTime",
-					"type": "string"
-				}
-			},
-			"type": "object"
-		},
 		"controller_ErrorResponseSimple": {
 			"properties": {
 				"error": {
@@ -424,6 +363,45 @@
 			},
 			"type": "array"
 		},
+		"orm_Category": {
+			"properties": {
+				"description": {
+					"type": "string"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"status": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"orm_ISP": {
+			"properties": {
+				"created_at": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"status": {
+					"type": "boolean"
+				},
+				"updated_at": {
+					"format": "dateTime",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
 		"orm_Manufacturer": {
 			"properties": {
 				"active": {
@@ -438,6 +416,28 @@
 				},
 				"id": {
 					"type": "integer"
+				},
+				"updated_at": {
+					"format": "dateTime",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"orm_OS": {
+			"properties": {
+				"created_at": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"status": {
+					"type": "boolean"
 				},
 				"updated_at": {
 					"format": "dateTime",
@@ -867,7 +867,7 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "53"
+		"version": "54"
 	},
 	"paths": {
 		"/asset/category": {

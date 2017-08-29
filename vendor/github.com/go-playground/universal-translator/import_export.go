@@ -197,7 +197,7 @@ func (t *UniversalTranslator) Import(format ImportExportFormat, dirnameOrFilenam
 
 // ImportByReader imports the the translations found within the contents read from the supplied reader.
 //
-// NOTE: generally used when assets have been embedded into the binary and are already in memory.
+// NOTE: generally used when asset have been embedded into the binary and are already in memory.
 func (t *UniversalTranslator) ImportByReader(format ImportExportFormat, reader io.Reader) error {
 
 	b, err := ioutil.ReadAll(reader)

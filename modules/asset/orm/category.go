@@ -1,4 +1,4 @@
-package asst
+package orm
 
 // Category category model in database
 // @Model {

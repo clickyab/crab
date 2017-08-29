@@ -4,10 +4,10 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/asset/asst"
+	"clickyab.com/crab/modules/asset/orm"
 )
 
-type catResponse []asst.Category
+type catResponse []orm.Category
 
 // category return list iab categories
 // @Route {
@@ -17,6 +17,6 @@ type catResponse []asst.Category
 //		middleware = authz.Authenticate
 // }
 func (c *Controller) category(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	m := asst.NewAsstManager()
+	m := orm.NewOrmManager()
 	c.OKResponse(w, m.ListCategories())
 }
