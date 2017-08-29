@@ -51,9 +51,6 @@ migration: $(addsuffix -migration,$(wildcard $(ROOT)/modules/*))
 build-webserver:
 	$(BUILD) clickyab.com/crab/cmd/webserver
 
-run-webserver: build-webserver
-	echo $(DATABASE_URL)
-	$(BIN)/webserver
 
 debug-webserver: all
 	$(BIN)/dlv --listen=:5000 --headless=true --api-version=2 exec $(BIN)/webserver
