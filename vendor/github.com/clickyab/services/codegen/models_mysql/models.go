@@ -453,6 +453,7 @@ func plural(s string) string {
 }
 
 func getVar(s string) string {
+
 	if str := strings.ToLower(trim(s)); len(str) < 3 {
 		return str
 	}
@@ -465,7 +466,9 @@ func getVar(s string) string {
 			res += i[0:1]
 		}
 	}
-
+	if res == "m" {
+		return "mm"
+	}
 	return res
 }
 
