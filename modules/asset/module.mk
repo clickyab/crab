@@ -1,7 +1,7 @@
 export ASSET_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(ASSET_ROOT)-codegen: tools-codegen
-	$(BIN)/codegen -p clickyab.com/crab/modules/asset/ast
+	$(BIN)/codegen -p clickyab.com/crab/modules/asset/asst
 	$(BIN)/codegen -p clickyab.com/crab/modules/asset/controllers
 
 $(ASSET_ROOT)-migration: tools-go-bindata

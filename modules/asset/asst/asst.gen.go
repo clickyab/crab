@@ -1,6 +1,6 @@
 // Code generated build with models DO NOT EDIT.
 
-package ast
+package asst
 
 import (
 	"github.com/clickyab/services/mysql"
@@ -10,6 +10,9 @@ import (
 // AUTO GENERATED CODE. DO NOT EDIT!
 
 const (
+	// CategoryTableFull is the Category table name
+	CategoryTableFull = "categories"
+
 	// ISPTableFull is the ISP table name
 	ISPTableFull = "isps"
 
@@ -17,18 +20,18 @@ const (
 	OSTableFull = "oses"
 )
 
-// Manager is the model manager for ast package
+// Manager is the model manager for asst package
 type Manager struct {
 	mysql.Manager
 }
 
-// NewAstManager create and return a manager for this module
-func NewAstManager() *Manager {
+// NewAsstManager create and return a manager for this module
+func NewAsstManager() *Manager {
 	return &Manager{}
 }
 
-// NewAstManagerFromTransaction create and return a manager for this module from a transaction
-func NewAstManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
+// NewAsstManagerFromTransaction create and return a manager for this module from a transaction
+func NewAsstManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 	m := &Manager{}
 	err := m.Hijack(tx)
 	if err != nil {
@@ -38,8 +41,16 @@ func NewAstManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 	return m, nil
 }
 
-// Initialize ast package
+// Initialize asst package
 func (m *Manager) Initialize() {
+
+	m.AddTableWithName(
+		Category{},
+		CategoryTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
 
 	m.AddTableWithName(
 		ISP{},
@@ -59,5 +70,5 @@ func (m *Manager) Initialize() {
 
 }
 func init() {
-	mysql.Register(NewAstManager())
+	mysql.Register(NewAsstManager())
 }
