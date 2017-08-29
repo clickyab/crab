@@ -753,7 +753,11 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
+<<<<<<< HEAD
 		"version": "46"
+=======
+		"version": "45"
+>>>>>>> Add manufacturers (mobile)
 	},
 	"paths": {
 		"/asset/isp": {
