@@ -10,6 +10,9 @@ import (
 // AUTO GENERATED CODE. DO NOT EDIT!
 
 const (
+	// ISPTableFull is the ISP table name
+	ISPTableFull = "isps"
+
 	// OSTableFull is the OS table name
 	OSTableFull = "oses"
 )
@@ -37,6 +40,14 @@ func NewAstManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 
 // Initialize ast package
 func (m *Manager) Initialize() {
+
+	m.AddTableWithName(
+		ISP{},
+		ISPTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
 
 	m.AddTableWithName(
 		OS{},

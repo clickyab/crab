@@ -659,7 +659,7 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "43"
+		"version": "44"
 	},
 	"paths": {
 		"/location/cities/{provinces_id}": {
