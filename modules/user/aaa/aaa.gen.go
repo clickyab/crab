@@ -10,6 +10,9 @@ import (
 // AUTO GENERATED CODE. DO NOT EDIT!
 
 const (
+	// ConsularCustomerTableFull is the ConsularCustomer table name
+	ConsularCustomerTableFull = "consular_customer"
+
 	// RolePermissionTableFull is the RolePermission table name
 	RolePermissionTableFull = "role_permission"
 
@@ -52,6 +55,15 @@ func NewAaaManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 
 // Initialize aaa package
 func (m *Manager) Initialize() {
+
+	m.AddTableWithName(
+		ConsularCustomer{},
+		ConsularCustomerTableFull,
+	).SetKeys(
+		false,
+		"ConsularyID",
+		"CustomerID",
+	)
 
 	m.AddTableWithName(
 		RolePermission{},

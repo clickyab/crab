@@ -9,6 +9,7 @@ import (
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/mysql"
+	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/random"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -58,23 +59,6 @@ const (
 	BlockedUserStatus UserValidStatus = "blocked"
 )
 
-// UserScope is the user perm
-type (
-	// UserScope is the user perm
-	// @Enum{
-	// }
-	UserScope string
-)
-
-const (
-	// SelfPerm user self
-	SelfPerm UserScope = "self"
-	// ParentPerm user parent
-	ParentPerm UserScope = "parent"
-	// GlobalPerm user global
-	GlobalPerm UserScope = "global"
-)
-
 // GenderType is the user gender
 type (
 	// GenderType is the user gender
@@ -111,7 +95,9 @@ type User struct {
 	UpdatedAt   time.Time             `json:"updated_at" db:"updated_at"`
 	OldPassword mysql.StringJSONArray `json:"-"  db:"old_password"`
 
-	profile interface{} `db:"-"`
+	profile  interface{}                              `db:"-"`
+	roles    []Role                                   `db:"-"`
+	resource map[permission.UserScope]map[string]bool `db:"-"`
 }
 
 // Role role model in database
@@ -148,12 +134,12 @@ type RoleUser struct {
 //		find_by = id
 // }
 type RolePermission struct {
-	ID        int64     `json:"id" db:"id"`
-	RoleID    int64     `json:"role_id" db:"role_id"`
-	Scope     UserScope `json:"scope" db:"scope"`
-	Perm      string    `json:"perm" db:"perm"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	ID        int64                `json:"id" db:"id"`
+	RoleID    int64                `json:"role_id" db:"role_id"`
+	Scope     permission.UserScope `json:"scope" db:"scope"`
+	Perm      string               `json:"perm" db:"perm"`
+	CreatedAt time.Time            `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time            `json:"updated_at" db:"updated_at"`
 }
 
 // UserPersonal user personal model

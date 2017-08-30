@@ -856,7 +856,7 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-		"version": "51"
+		"version": "52"
 	},
 	"paths": {
 		"/asset/category": {
