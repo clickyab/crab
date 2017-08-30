@@ -7,9 +7,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/trans"
+	"github.com/sirupsen/logrus"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
