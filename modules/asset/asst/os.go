@@ -7,6 +7,7 @@ import "time"
 //		table = oses
 //		primary = true, id
 //		find_by = id,name
+//		list = yes
 // }
 type OS struct {
 	ID        int64     `json:"id" db:"id"`

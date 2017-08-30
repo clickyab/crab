@@ -4,7 +4,9 @@ package asst
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/initializer"
 )
 
@@ -33,6 +35,76 @@ func (m *Manager) UpdateCategory(c *Category) error {
 
 	_, err := m.GetWDbMap().Update(c)
 	return err
+}
+
+// ListCategoriesWithFilter try to list all Categories without pagination
+func (m *Manager) ListCategoriesWithFilter(filter string, params ...interface{}) []Category {
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
+	}
+	var res []Category
+	_, err := m.GetRDbMap().Select(
+		&res,
+		fmt.Sprintf("SELECT * FROM %s %s", CategoryTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
+
+	return res
+}
+
+// ListCategories try to list all Categories without pagination
+func (m *Manager) ListCategories() []Category {
+	return m.ListCategoriesWithFilter("")
+}
+
+// CountCategoriesWithFilter count entity in Categories table with valid where filter
+func (m *Manager) CountCategoriesWithFilter(filter string, params ...interface{}) int64 {
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
+	}
+	cnt, err := m.GetRDbMap().SelectInt(
+		fmt.Sprintf("SELECT COUNT(*) FROM %s %s", CategoryTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
+
+	return cnt
+}
+
+// CountCategories count entity in Categories table
+func (m *Manager) CountCategories() int64 {
+	return m.CountCategoriesWithFilter("")
+}
+
+// ListCategoriesWithPaginationFilter try to list all Categories with pagination and filter
+func (m *Manager) ListCategoriesWithPaginationFilter(
+	offset, perPage int, filter string, params ...interface{}) []Category {
+	var res []Category
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
+	}
+
+	filter += " LIMIT ?, ? "
+	params = append(params, offset, perPage)
+
+	// TODO : better pagination without offset and limit
+	_, err := m.GetRDbMap().Select(
+		&res,
+		fmt.Sprintf("SELECT * FROM %s %s", CategoryTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
+
+	return res
+}
+
+// ListCategoriesWithPagination try to list all Categories with pagination
+func (m *Manager) ListCategoriesWithPagination(offset, perPage int) []Category {
+	return m.ListCategoriesWithPaginationFilter(offset, perPage, "")
 }
 
 // FindCategoryByID return the Category base on its id
