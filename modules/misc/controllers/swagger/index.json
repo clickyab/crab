@@ -122,6 +122,23 @@
 			},
 			"type": "object"
 		},
+		"asst_Category": {
+			"properties": {
+				"description": {
+					"type": "string"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"status": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
 		"asst_ISP": {
 			"properties": {
 				"created_at": {
@@ -189,6 +206,26 @@
 			"properties": {},
 			"type": "object"
 		},
+		"controllers_catResponse": {
+			"items": {
+				"properties": {
+					"description": {
+						"type": "string"
+					},
+					"id": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					},
+					"status": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
 		"controllers_ispResponse": {
 			"items": {
 				"properties": {
@@ -204,6 +241,31 @@
 					},
 					"status": {
 						"type": "boolean"
+					},
+					"updated_at": {
+						"format": "dateTime",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"controllers_manufacturers": {
+			"items": {
+				"properties": {
+					"active": {
+						"type": "boolean"
+					},
+					"brand": {
+						"type": "string"
+					},
+					"created_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"id": {
+						"type": "integer"
 					},
 					"updated_at": {
 						"format": "dateTime",
@@ -361,6 +423,47 @@
 				"type": "object"
 			},
 			"type": "array"
+		},
+		"orm_Manufacturer": {
+			"properties": {
+				"active": {
+					"type": "boolean"
+				},
+				"brand": {
+					"type": "string"
+				},
+				"created_at": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"updated_at": {
+					"format": "dateTime",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"orm_base": {
+			"properties": {
+				"active": {
+					"type": "boolean"
+				},
+				"created_at": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"updated_at": {
+					"format": "dateTime",
+					"type": "string"
+				}
+			},
+			"type": "object"
 		},
 		"trans_t9Base": {
 			"properties": {
@@ -753,13 +856,80 @@
 	"info": {
 		"description": "The crab api, auto generated",
 		"title": "The clickyab.com/crab API",
-<<<<<<< HEAD
-		"version": "46"
-=======
-		"version": "45"
->>>>>>> Add manufacturers (mobile)
+		"version": "51"
 	},
 	"paths": {
+		"/asset/category": {
+			"get": {
+				"description": "category return list iab categories",
+				"parameters": [
+					{
+						"description": "the security token, get it from login route",
+						"in": "header",
+						"name": "token",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controllers_catResponse"
+						}
+					},
+					"401": {
+						"description": "you are not authorized",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "not_authorized",
+							"type": "object"
+						}
+					},
+					"403": {
+						"description": "forbidden, you have no access here",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "forbidden",
+							"type": "object"
+						}
+					}
+				},
+				"tags": [
+					"controllers"
+				]
+			}
+		},
 		"/asset/isp": {
 			"get": {
 				"description": "isp return list all is (e.g. irancell, ...)",
@@ -777,6 +947,77 @@
 						"description": "",
 						"schema": {
 							"$ref": "#/definitions/controllers_ispResponse"
+						}
+					},
+					"401": {
+						"description": "you are not authorized",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "not_authorized",
+							"type": "object"
+						}
+					},
+					"403": {
+						"description": "forbidden, you have no access here",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "forbidden",
+							"type": "object"
+						}
+					}
+				},
+				"tags": [
+					"controllers"
+				]
+			}
+		},
+		"/asset/manufacturers": {
+			"get": {
+				"description": "Manufacturers return list all mobile manufacturers (e.g. Apple, Samsung)",
+				"parameters": [
+					{
+						"description": "the security token, get it from login route",
+						"in": "header",
+						"name": "token",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controllers_manufacturers"
 						}
 					},
 					"401": {
