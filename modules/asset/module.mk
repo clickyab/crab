@@ -4,6 +4,7 @@ $(ASSET_ROOT)-codegen: tools-codegen
 	$(BIN)/codegen -p clickyab.com/crab/modules/asset/orm
 	$(BIN)/codegen -p clickyab.com/crab/modules/asset/asst
 	$(BIN)/codegen -p clickyab.com/crab/modules/asset/controllers
+
 $(ASSET_ROOT)-migration: tools-go-bindata
 	cd $(ASSET_ROOT)/migrations && $(BIN)/go-bindata -nometadata -o $(ASSET_ROOT)/migrations/migration.gen.go -nomemcopy=true -pkg=migrations ./db/...
 
