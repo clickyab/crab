@@ -122,6 +122,50 @@
 			},
 			"type": "object"
 		},
+		"asst_ISP": {
+			"properties": {
+				"created_at": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"status": {
+					"type": "boolean"
+				},
+				"updated_at": {
+					"format": "dateTime",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"asst_OS": {
+			"properties": {
+				"created_at": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"name": {
+					"type": "string"
+				},
+				"status": {
+					"type": "boolean"
+				},
+				"updated_at": {
+					"format": "dateTime",
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
 		"controller_ErrorResponseSimple": {
 			"properties": {
 				"error": {
@@ -144,6 +188,56 @@
 		"controller_NormalResponse": {
 			"properties": {},
 			"type": "object"
+		},
+		"controllers_ispResponse": {
+			"items": {
+				"properties": {
+					"created_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"id": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					},
+					"status": {
+						"type": "boolean"
+					},
+					"updated_at": {
+						"format": "dateTime",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"controllers_osResponse": {
+			"items": {
+				"properties": {
+					"created_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"id": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					},
+					"status": {
+						"type": "boolean"
+					},
+					"updated_at": {
+						"format": "dateTime",
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"dmn_ActiveStatus": {
 			"type": "string"
@@ -662,6 +756,148 @@
 		"version": "46"
 	},
 	"paths": {
+		"/asset/isp": {
+			"get": {
+				"description": "isp return list all is (e.g. irancell, ...)",
+				"parameters": [
+					{
+						"description": "the security token, get it from login route",
+						"in": "header",
+						"name": "token",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controllers_ispResponse"
+						}
+					},
+					"401": {
+						"description": "you are not authorized",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "not_authorized",
+							"type": "object"
+						}
+					},
+					"403": {
+						"description": "forbidden, you have no access here",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "forbidden",
+							"type": "object"
+						}
+					}
+				},
+				"tags": [
+					"controllers"
+				]
+			}
+		},
+		"/asset/os": {
+			"get": {
+				"description": "os return list all is (e.g. linux, ...)",
+				"parameters": [
+					{
+						"description": "the security token, get it from login route",
+						"in": "header",
+						"name": "token",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controllers_osResponse"
+						}
+					},
+					"401": {
+						"description": "you are not authorized",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "not_authorized",
+							"type": "object"
+						}
+					},
+					"403": {
+						"description": "forbidden, you have no access here",
+						"schema": {
+							"properties": {
+								"error": {
+									"properties": {
+										"params": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"text": {
+											"type": "string"
+										}
+									},
+									"type": "object"
+								}
+							},
+							"title": "forbidden",
+							"type": "object"
+						}
+					}
+				},
+				"tags": [
+					"controllers"
+				]
+			}
+		},
 		"/location/cities/{provinces_id}": {
 			"get": {
 				"description": "",

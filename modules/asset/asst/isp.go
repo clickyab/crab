@@ -7,6 +7,7 @@ import "time"
 //		table = isps
 //		primary = true, id
 //		find_by = id,name
+//		list = yes
 // }
 type ISP struct {
 	ID        int64     `json:"id" db:"id"`
