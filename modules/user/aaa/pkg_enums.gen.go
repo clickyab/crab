@@ -89,6 +89,7 @@ func (e UserValidStatus) IsValid() bool {
 		string(e),
 		string(RegisteredUserStatus),
 		string(BlockedUserStatus),
+		string(ActiveUserStatus),
 	)
 }
 
