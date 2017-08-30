@@ -104,12 +104,12 @@ func (cfg *Config) FormatDSN() string {
 		}
 	}
 
-	if !cfg.AllowNativePasswords {
+	if cfg.AllowNativePasswords {
 		if hasParam {
-			buf.WriteString("&allowNativePasswords=false")
+			buf.WriteString("&allowNativePasswords=true")
 		} else {
 			hasParam = true
-			buf.WriteString("?allowNativePasswords=false")
+			buf.WriteString("?allowNativePasswords=true")
 		}
 	}
 
@@ -284,9 +284,8 @@ func (cfg *Config) FormatDSN() string {
 func ParseDSN(dsn string) (cfg *Config, err error) {
 	// New config with some default values
 	cfg = &Config{
-		Loc:                  time.UTC,
-		Collation:            defaultCollation,
-		AllowNativePasswords: true,
+		Loc:       time.UTC,
+		Collation: defaultCollation,
 	}
 
 	// [user[:password]@][net[(addr)]]/dbname[?param1=value1&paramN=valueN]

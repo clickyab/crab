@@ -490,6 +490,17 @@
 			},
 			"type": "object"
 		},
+		"user_checkActivePayload": {
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"number": {
+					"type": "integer"
+				}
+			},
+			"type": "object"
+		},
 		"user_checkMailPayload": {
 			"properties": {
 				"email": {
@@ -846,6 +857,14 @@
 					"type": "object"
 				},
 				"token": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"user_sendActivePayload": {
+			"properties": {
+				"email": {
 					"type": "string"
 				}
 			},
@@ -1302,6 +1321,82 @@
 				},
 				"tags": [
 					"controllers"
+				]
+			}
+		},
+		"/user/active": {
+			"patch": {
+				"description": "",
+				"parameters": [
+					{
+						"description": "",
+						"in": "body",
+						"name": "payload_data",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/user_checkActivePayload"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_NormalResponse"
+						}
+					},
+					"400": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					},
+					"404": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					}
+				},
+				"tags": [
+					"user"
+				]
+			},
+			"post": {
+				"description": "",
+				"parameters": [
+					{
+						"description": "",
+						"in": "body",
+						"name": "payload_data",
+						"required": false,
+						"schema": {
+							"$ref": "#/definitions/user_sendActivePayload"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_NormalResponse"
+						}
+					},
+					"400": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					},
+					"404": {
+						"description": "",
+						"schema": {
+							"$ref": "#/definitions/controller_ErrorResponseSimple"
+						}
+					}
+				},
+				"tags": [
+					"user"
 				]
 			}
 		},

@@ -56,6 +56,8 @@ const (
 	RegisteredUserStatus UserValidStatus = "registered"
 	// BlockedUserStatus user blocked
 	BlockedUserStatus UserValidStatus = "blocked"
+	// ActiveUserStatus user active
+	ActiveUserStatus UserValidStatus = "active"
 )
 
 // UserScope is the user perm
