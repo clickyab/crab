@@ -7,7 +7,7 @@ import (
 
 	"strconv"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/permission"
 )

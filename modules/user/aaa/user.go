@@ -61,6 +61,8 @@ const (
 	RegisteredUserStatus UserValidStatus = "registered"
 	// BlockedUserStatus user blocked
 	BlockedUserStatus UserValidStatus = "blocked"
+	// ActiveUserStatus user active
+	ActiveUserStatus UserValidStatus = "active"
 )
 
 // GenderType is the user gender
