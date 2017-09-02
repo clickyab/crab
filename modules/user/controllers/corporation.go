@@ -23,6 +23,8 @@ type corporation struct {
 	EconomicCode string `json:"economic_code" validate:"omitempty,numeric"`
 	RegisterCode string `json:"register_code" validate:"omitempty,numeric"`
 	CityID       int64  `json:"city_id" validate:"omitempty,numeric"`
+	ProvinceID   int64  `json:"province_id" validate:"omitempty,numeric"`
+	CountryID    int64  `json:"country_id" validate:"omitempty,numeric"`
 }
 
 // editCorporation is used for current user update
@@ -54,6 +56,8 @@ func (c Controller) editCorporation(ctx context.Context, w http.ResponseWriter, 
 		Phone:        mysql.NullString{String: payload.Phone, Valid: payload.Phone != ""},
 		RegisterCode: mysql.NullString{String: payload.RegisterCode, Valid: payload.RegisterCode != ""},
 		CityID:       mysql.NullInt64{Int64: payload.CityID, Valid: payload.CityID != 0},
+		ProvinceID:   mysql.NullInt64{Int64: payload.ProvinceID, Valid: payload.ProvinceID != 0},
+		CountryID:    mysql.NullInt64{Int64: payload.CountryID, Valid: payload.CountryID != 0},
 	}
 
 	err := aaa.NewAaaManager().UpdateUserCorporation(dbInsert)

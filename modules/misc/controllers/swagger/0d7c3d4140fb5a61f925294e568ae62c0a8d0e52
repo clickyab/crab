@@ -9,6 +9,9 @@
 		"city_id": {
 			"type": "integer"
 		},
+		"country_id": {
+			"type": "integer"
+		},
 		"economic_code": {
 			"type": "string"
 		},
@@ -23,6 +26,9 @@
 		},
 		"phone": {
 			"type": "string"
+		},
+		"province_id": {
+			"type": "integer"
 		},
 		"register_code": {
 			"type": "string"

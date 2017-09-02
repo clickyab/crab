@@ -9,6 +9,7 @@
 // db/20170814081543_consulary_customer.sql
 // db/20170830131111_fixrolepermission.sql
 // db/20170902055834_fix_user.sql
+// db/20170902104216_user_fix2.sql
 // DO NOT EDIT!
 
 package migrations
@@ -256,6 +257,26 @@ func db20170902055834_fix_userSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20170902104216_user_fix2Sql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x94\x90\xbb\x4e\x03\x31\x10\x45\x7b\x7f\xc5\xed\x52\xa0\x7c\x41\xaa\x45\x4e\xb7\x12\x10\x92\x3a\x32\xf6\x88\x8c\x30\x33\x96\x1f\x04\xfe\x1e\x2d\xcf\x85\xa0\xec\x52\xda\xba\x67\x66\xee\x31\xcb\x25\x2e\x1e\xf9\x3e\xbb\x4a\xd8\xa5\xe1\x79\x7b\xd3\x83\x05\x85\x7c\x65\x15\x2c\x76\x69\x01\x2e\xa0\x67\xf2\xad\x52\xc0\xf1\x40\x82\x7a\xe0\x82\x77\x6e\x08\x71\x81\x4b\x29\x32\x05\xd3\xf5\xdb\xf5\x06\xdb\xee\xb2\x5f\xa3\x15\xca\xfb\x44\xb9\xa8\xb8\x88\xce\x5a\xa4\xac\x4f\x2c\x9e\xf6\x1c\xc0\x52\x21\x2d\xc6\xd5\x04\xe3\xb5\x49\xcd\x2f\x3f\x91\x53\xc6\x6b\x4e\xfa\x71\xcf\x3f\x56\xfd\xc6\xfe\xde\x36\xd6\x64\xf5\x28\x9f\xa2\xbe\x2c\x0d\x9f\xb3\x3c\x65\x8d\x91\x02\xee\x9c\x7f\x38\xd3\xdb\x6e\xae\xae\xc7\x0d\xce\x39\x7a\xcb\x7e\x9f\x3d\xe5\x66\xc6\xe8\x93\xf8\x48\xca\xca\x98\xd7\x00\x00\x00\xff\xff\x99\xcb\xff\xc0\x35\x02\x00\x00"
+
+func db20170902104216_user_fix2SqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20170902104216_user_fix2Sql,
+		"db/20170902104216_user_fix2.sql",
+	)
+}
+
+func db20170902104216_user_fix2Sql() (*asset, error) {
+	bytes, err := db20170902104216_user_fix2SqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20170902104216_user_fix2.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -317,6 +338,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20170814081543_consulary_customer.sql": db20170814081543_consulary_customerSql,
 	"db/20170830131111_fixrolepermission.sql": db20170830131111_fixrolepermissionSql,
 	"db/20170902055834_fix_user.sql": db20170902055834_fix_userSql,
+	"db/20170902104216_user_fix2.sql": db20170902104216_user_fix2Sql,
 }
 
 // AssetDir returns the file names below a certain
@@ -369,6 +391,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20170814081543_consulary_customer.sql": &bintree{db20170814081543_consulary_customerSql, map[string]*bintree{}},
 		"20170830131111_fixrolepermission.sql": &bintree{db20170830131111_fixrolepermissionSql, map[string]*bintree{}},
 		"20170902055834_fix_user.sql": &bintree{db20170902055834_fix_userSql, map[string]*bintree{}},
+		"20170902104216_user_fix2.sql": &bintree{db20170902104216_user_fix2Sql, map[string]*bintree{}},
 	}},
 }}
 

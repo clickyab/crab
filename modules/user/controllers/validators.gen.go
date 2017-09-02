@@ -126,6 +126,12 @@ func (pl *corporation) Validate(ctx context.Context, w http.ResponseWriter, r *h
 		case "CityID":
 			res["city_id"] = trans.E("invalid value")
 
+		case "ProvinceID":
+			res["province_id"] = trans.E("invalid value")
+
+		case "CountryID":
+			res["country_id"] = trans.E("invalid value")
+
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}
@@ -175,6 +181,12 @@ func (pl *personalPayload) Validate(ctx context.Context, w http.ResponseWriter, 
 
 		case "CityID":
 			res["city_id"] = trans.E("invalid value")
+
+		case "ProvinceID":
+			res["province_id"] = trans.E("invalid value")
+
+		case "CountryID":
+			res["country_id"] = trans.E("invalid value")
 
 		default:
 			logrus.Panicf("the field %s is not translated", i)
