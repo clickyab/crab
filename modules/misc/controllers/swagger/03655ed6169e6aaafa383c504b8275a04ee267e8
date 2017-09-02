@@ -33,6 +33,17 @@
 			},
 			"type": "object"
 		},
+		"country_id": {
+			"properties": {
+				"Int64": {
+					"type": "integer"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
 		"created_at": {
 			"format": "dateTime",
 			"type": "string"
@@ -85,6 +96,17 @@
 			"properties": {
 				"String": {
 					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"province_id": {
+			"properties": {
+				"Int64": {
+					"type": "integer"
 				},
 				"Valid": {
 					"type": "boolean"

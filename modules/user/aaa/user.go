@@ -155,16 +155,18 @@ type RolePermission struct {
 //		find_by = user_id
 // }
 type UserPersonal struct {
-	UserID    int64            `json:"user_id" db:"user_id"`
-	FirstName string           `json:"first_name" db:"first_name"`
-	LastName  string           `json:"last_name" db:"last_name"`
-	Gender    GenderType       `json:"gender" db:"gender"`
-	Cellphone mysql.NullString `json:"cellphone" db:"cellphone"`
-	Phone     mysql.NullString `json:"phone" db:"phone"`
-	Address   mysql.NullString `json:"address" db:"address"`
-	CityID    mysql.NullInt64  `json:"city_id" db:"city_id"`
-	CreatedAt time.Time        `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time        `json:"updated_at" db:"updated_at"`
+	UserID     int64            `json:"user_id" db:"user_id"`
+	FirstName  string           `json:"first_name" db:"first_name"`
+	LastName   string           `json:"last_name" db:"last_name"`
+	Gender     GenderType       `json:"gender" db:"gender"`
+	Cellphone  mysql.NullString `json:"cellphone" db:"cellphone"`
+	Phone      mysql.NullString `json:"phone" db:"phone"`
+	Address    mysql.NullString `json:"address" db:"address"`
+	CityID     mysql.NullInt64  `json:"city_id" db:"city_id"`
+	ProvinceID mysql.NullInt64  `json:"province_id" db:"province_id"`
+	CountryID  mysql.NullInt64  `json:"country_id" db:"country_id"`
+	CreatedAt  time.Time        `json:"created_at" db:"created_at"`
+	UpdatedAt  time.Time        `json:"updated_at" db:"updated_at"`
 }
 
 // UserCorporation user corporation model
@@ -184,6 +186,8 @@ type UserCorporation struct {
 	EconomicCode mysql.NullString `json:"economic_code" db:"economic_code"`
 	RegisterCode mysql.NullString `json:"register_code" db:"register_code"`
 	CityID       mysql.NullInt64  `json:"city_id" db:"city_id"`
+	ProvinceID   mysql.NullInt64  `json:"province_id" db:"province_id"`
+	CountryID    mysql.NullInt64  `json:"country_id" db:"country_id"`
 	CreatedAt    time.Time        `json:"created_at" db:"created_at"`
 	UpdatedAt    time.Time        `json:"updated_at" db:"updated_at"`
 }

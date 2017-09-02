@@ -14,13 +14,15 @@ import (
 // @Validate {
 // }
 type personalPayload struct {
-	FirstName string         `json:"first_name" validate:"gt=2"`
-	LastName  string         `json:"last_name" validate:"gt=2"`
-	Gender    aaa.GenderType `json:"gender" validate:"required"`
-	CellPhone string         `json:"cellphone" validate:"omitempty,numeric"`
-	Phone     string         `json:"phone" validate:"omitempty,numeric"`
-	Address   string         `json:"address" validate:"omitempty,gt=5"`
-	CityID    int64          `json:"city_id" validate:"omitempty,numeric"`
+	FirstName  string         `json:"first_name" validate:"gt=2"`
+	LastName   string         `json:"last_name" validate:"gt=2"`
+	Gender     aaa.GenderType `json:"gender" validate:"required"`
+	CellPhone  string         `json:"cellphone" validate:"omitempty,numeric"`
+	Phone      string         `json:"phone" validate:"omitempty,numeric"`
+	Address    string         `json:"address" validate:"omitempty,gt=5"`
+	CityID     int64          `json:"city_id" validate:"omitempty,numeric"`
+	ProvinceID int64          `json:"province_id" validate:"omitempty,numeric"`
+	CountryID  int64          `json:"country_id" validate:"omitempty,numeric"`
 }
 
 // EditPersonal route for edit personal profile
@@ -49,14 +51,16 @@ func (u *Controller) EditPersonal(ctx context.Context, w http.ResponseWriter, r 
 	}
 	m := aaa.NewAaaManager()
 	up := &aaa.UserPersonal{
-		UserID:    currentUser.ID,
-		FirstName: pl.FirstName,
-		LastName:  pl.LastName,
-		Gender:    pl.Gender,
-		Cellphone: mysql.NullString{String: pl.CellPhone, Valid: pl.CellPhone != ""},
-		Phone:     mysql.NullString{String: pl.Phone, Valid: pl.Phone != ""},
-		Address:   mysql.NullString{String: pl.Address, Valid: pl.Address != ""},
-		CityID:    mysql.NullInt64{Int64: pl.CityID, Valid: pl.CityID != 0},
+		UserID:     currentUser.ID,
+		FirstName:  pl.FirstName,
+		LastName:   pl.LastName,
+		Gender:     pl.Gender,
+		Cellphone:  mysql.NullString{String: pl.CellPhone, Valid: pl.CellPhone != ""},
+		Phone:      mysql.NullString{String: pl.Phone, Valid: pl.Phone != ""},
+		Address:    mysql.NullString{String: pl.Address, Valid: pl.Address != ""},
+		CountryID:  mysql.NullInt64{Int64: pl.CountryID, Valid: pl.CountryID != 0},
+		ProvinceID: mysql.NullInt64{Int64: pl.ProvinceID, Valid: pl.ProvinceID != 0},
+		CityID:     mysql.NullInt64{Int64: pl.CityID, Valid: pl.CityID != 0},
 	}
 	err := m.UpdateUserPersonal(up)
 	if err != nil {
