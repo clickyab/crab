@@ -14,9 +14,9 @@ import (
 	"github.com/clickyab/services/codegen/annotate"
 	"github.com/clickyab/services/codegen/plugins"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/goraz/humanize"
 	"github.com/jinzhu/inflection"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/tools/imports"
 )
 
@@ -453,7 +453,6 @@ func plural(s string) string {
 }
 
 func getVar(s string) string {
-
 	if str := strings.ToLower(trim(s)); len(str) < 3 {
 		return str
 	}
