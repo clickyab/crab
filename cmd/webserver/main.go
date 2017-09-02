@@ -2,7 +2,7 @@ package main
 
 import (
 	"clickyab.com/crab/cmd"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/initializer"
 	_ "github.com/clickyab/services/kv/redis"
