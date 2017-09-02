@@ -53,14 +53,21 @@ func (e publisherType) Value() (driver.Value, error) {
 	return string(e), nil
 }
 
-type inventory struct {
+// Inventory user_inventories model in database
+// @Model {
+//		table = user_inventories
+//		primary = true, id
+//		find_by = id, user_id
+//		list = yes
+// }
+type Inventory struct {
 	ID            int64                 `json:"id" db:"id"`
 	CreatedAt     time.Time             `json:"created_at" db:"created_at"`
 	UpdatedAt     time.Time             `json:"updated_at" db:"updated_at"`
 	Active        bool                  `json:"active" db:"active"`
-	UserID        int64                 `json:"user_id",db:"user_id"`
-	Label         string                `json:"label",db:"label"`
-	Domains       mysql.StringJSONArray `json:"domains",db:"domains"`
-	Kind          bool                  `json:"kind",db:"kind"`
-	PublisherType publisherType         `json:"publisher_type",db:"publisher_type"`
+	UserID        int64                 `json:"user_id" db:"user_id"`
+	Label         string                `json:"label" db:"label"`
+	Domains       mysql.StringJSONArray `json:"domains" db:"domains"`
+	Kind          bool                  `json:"kind" db:"kind"`
+	PublisherType publisherType         `json:"publisher_type" db:"publisher_type"`
 }
