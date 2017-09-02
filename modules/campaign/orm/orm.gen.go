@@ -10,6 +10,9 @@ import (
 // AUTO GENERATED CODE. DO NOT EDIT!
 
 const (
+	// assetsTableFull is the assets table name
+	assetsTableFull = "campaign_document"
+
 	// ScheduleTableFull is the Schedule table name
 	ScheduleTableFull = "schedules"
 )
@@ -37,6 +40,14 @@ func NewOrmManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 
 // Initialize orm package
 func (m *Manager) Initialize() {
+
+	m.AddTableWithName(
+		assets{},
+		assetsTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
 
 	m.AddTableWithName(
 		Schedule{},
