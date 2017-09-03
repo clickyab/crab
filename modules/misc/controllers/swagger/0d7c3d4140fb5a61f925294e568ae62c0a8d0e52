@@ -1,0 +1,32 @@
+{
+	"properties": {
+		"address": {
+			"type": "string"
+		},
+		"cellphone": {
+			"type": "string"
+		},
+		"city_id": {
+			"type": "integer"
+		},
+		"economic_code": {
+			"type": "string"
+		},
+		"first_name": {
+			"type": "string"
+		},
+		"last_name": {
+			"type": "string"
+		},
+		"name": {
+			"type": "string"
+		},
+		"phone": {
+			"type": "string"
+		},
+		"register_code": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

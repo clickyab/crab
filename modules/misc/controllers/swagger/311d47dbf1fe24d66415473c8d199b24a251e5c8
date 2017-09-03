@@ -1,0 +1,26 @@
+{
+	"properties": {
+		"address": {
+			"type": "string"
+		},
+		"cellphone": {
+			"type": "string"
+		},
+		"city_id": {
+			"type": "integer"
+		},
+		"first_name": {
+			"type": "string"
+		},
+		"gender": {
+			"type": "string"
+		},
+		"last_name": {
+			"type": "string"
+		},
+		"phone": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

@@ -23,10 +23,13 @@ export BUILD=cd $(ROOT) && $(GO) install -v $(LD_ARGS)
 export DATABASE_URL=mysql://$(DB_USER):$(DB_PASS)@127.0.0.1:3306/$(DB_NAME)
 export SWAGGER_TITLE=The clickyab.com/crab API
 export SWAGGER_DESCRIPTION=The crab api, auto generated
-export SWAGGER_VERSION=$(COMMIT_COUNT)
+export SWAGGER_VERSION="0.0.1-pre-alpha"
 
 all:
 	GOPATH=$(GOPATH) $(BUILD) clickyab.com/crab/cmd/...
+
+jsonsplitter:
+	GOPATH=$(GOPATH) $(BUILD) clickyab.com/crab/cmd/jsonsplitter
 
 all-gen: codegen migration all
 
@@ -37,8 +40,11 @@ include $(wildcard $(ROOT)/scripts/*.mk)
 include $(wildcard $(ROOT)/modules/*/module.mk)
 
 # codegen target as wildcard target
-codegen: tools-go-bindata $(addsuffix -codegen,$(wildcard $(ROOT)/modules/*))
-	cp $(ROOT)/tmp/swagger/out.json $(ROOT)/modules/misc/controllers/swagger/index.json
+codegen-base: tools-go-bindata $(addsuffix -codegen,$(wildcard $(ROOT)/modules/*))
+	@echo "Done"
+
+codegen: codegen-base jsonsplitter
+	$(BIN)/jsonsplitter --path=$(ROOT)/tmp/swagger/out.json --target=$(ROOT)/modules/misc/controllers/swagger/
 	#cp $(ROOT)/tmp/swagger/out.yaml $(ROOT)/modules/misc/controllers/swagger/index.yaml
 	cd $(ROOT)/modules/misc/controllers/ && $(BIN)/go-bindata -nometadata -o swagger.gen.go -nomemcopy=true -pkg=misc ./swagger/...
 

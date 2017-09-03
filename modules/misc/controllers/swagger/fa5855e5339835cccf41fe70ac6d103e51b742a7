@@ -1,0 +1,17 @@
+{
+	"properties": {
+		"description": {
+			"type": "string"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"name": {
+			"type": "string"
+		},
+		"status": {
+			"type": "boolean"
+		}
+	},
+	"type": "object"
+}

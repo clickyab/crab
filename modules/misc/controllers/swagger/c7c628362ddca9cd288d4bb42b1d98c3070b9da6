@@ -1,0 +1,14 @@
+{
+	"properties": {
+		"params": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
+		"text": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

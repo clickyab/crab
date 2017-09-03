@@ -1,0 +1,37 @@
+{
+	"get": {
+		"description": "",
+		"parameters": [
+			{
+				"description": "",
+				"in": "path",
+				"name": "provinces_id",
+				"required": true,
+				"type": "string"
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/location_cities"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			},
+			"404": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			}
+		},
+		"tags": [
+			"location"
+		]
+	}
+}

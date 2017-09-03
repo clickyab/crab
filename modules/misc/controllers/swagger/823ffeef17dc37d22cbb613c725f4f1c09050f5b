@@ -1,0 +1,63 @@
+{
+	"put": {
+		"description": "editCorporation is used for current user update",
+		"parameters": [
+			{
+				"description": "the security token, get it from login route",
+				"in": "header",
+				"name": "token",
+				"required": true,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "body",
+				"name": "payload_data",
+				"required": false,
+				"schema": {
+					"$ref": "#/definitions/user_corporation"
+				}
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/aaa_UserCorporation"
+				}
+			},
+			"401": {
+				"description": "you are not authorized",
+				"schema": {
+					"properties": {
+						"error": {
+							"properties": {
+								"params": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								},
+								"text": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						}
+					},
+					"title": "not_authorized",
+					"type": "object"
+				}
+			},
+			"403": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			}
+		},
+		"tags": [
+			"user"
+		]
+	}
+}

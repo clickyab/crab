@@ -1,0 +1,33 @@
+{
+	"post": {
+		"description": "",
+		"parameters": [
+			{
+				"description": "",
+				"in": "body",
+				"name": "payload_data",
+				"required": false,
+				"schema": {
+					"$ref": "#/definitions/user_registerPayload"
+				}
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/user_responseLoginOK"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			}
+		},
+		"tags": [
+			"user"
+		]
+	}
+}

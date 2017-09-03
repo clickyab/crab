@@ -1,0 +1,17 @@
+{
+	"items": {
+		"properties": {
+			"id": {
+				"type": "integer"
+			},
+			"name": {
+				"type": "string"
+			},
+			"province_id": {
+				"type": "integer"
+			}
+		},
+		"type": "object"
+	},
+	"type": "array"
+}
