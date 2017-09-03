@@ -8,6 +8,7 @@ import (
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework"
+	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
 	"github.com/rs/xhandler"
@@ -27,9 +28,9 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		group := r.NewGroup(mountPoint + "/inventory")
 
 		/* Route {
-			"Route": "/:user",
+			"Route": "/presets",
 			"Method": "GET",
-			"Function": "Controller.Inventories",
+			"Function": "Controller.whiteBlackLists",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -45,13 +46,13 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/:user", xhandler.HandlerFuncC(framework.Mix(ctrl.Inventories, m0...)))
+		group.GET("/presets", xhandler.HandlerFuncC(framework.Mix(ctrl.whiteBlackLists, m0...)))
 		// End route with key 0
 
 		/* Route {
-			"Route": "/:id",
+			"Route": "/preset/:id",
 			"Method": "GET",
-			"Function": "Controller.Inventory",
+			"Function": "Controller.whiteBlackList",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -67,8 +68,32 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/:id", xhandler.HandlerFuncC(framework.Mix(ctrl.Inventory, m1...)))
+		group.GET("/preset/:id", xhandler.HandlerFuncC(framework.Mix(ctrl.whiteBlackList, m1...)))
 		// End route with key 1
+
+		/* Route {
+			"Route": "/preset",
+			"Method": "POST",
+			"Function": "Controller.addPreset",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "ctrl",
+			"Payload": "whiteBlackList",
+			"Resource": "",
+			"Scope": ""
+		} with key 2 */
+		m2 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		// Make sure payload is the last middleware
+		m2 = append(m2, middleware.PayloadUnMarshallerGenerator(whiteBlackList{}))
+		group.POST("/preset", xhandler.HandlerFuncC(framework.Mix(ctrl.addPreset, m2...)))
+		// End route with key 2
 
 		initializer.DoInitialize(ctrl)
 	})

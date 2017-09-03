@@ -1,0 +1,40 @@
+{
+	"items": {
+		"properties": {
+			"active": {
+				"type": "boolean"
+			},
+			"created_at": {
+				"format": "dateTime",
+				"type": "string"
+			},
+			"domains": {
+				"items": {
+					"type": "string"
+				},
+				"type": "array"
+			},
+			"id": {
+				"type": "integer"
+			},
+			"kind": {
+				"type": "boolean"
+			},
+			"label": {
+				"type": "string"
+			},
+			"publisher_type": {
+				"type": "string"
+			},
+			"updated_at": {
+				"format": "dateTime",
+				"type": "string"
+			},
+			"user_id": {
+				"type": "integer"
+			}
+		},
+		"type": "object"
+	},
+	"type": "array"
+}

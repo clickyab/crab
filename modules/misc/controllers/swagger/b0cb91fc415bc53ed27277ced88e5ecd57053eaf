@@ -1,0 +1,20 @@
+{
+	"properties": {
+		"domains": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
+		"kind": {
+			"type": "boolean"
+		},
+		"label": {
+			"type": "string"
+		},
+		"publisher_type": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
