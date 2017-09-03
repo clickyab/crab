@@ -1,0 +1,19 @@
+{
+	"properties": {
+		"active": {
+			"type": "boolean"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"updated_at": {
+			"format": "dateTime",
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

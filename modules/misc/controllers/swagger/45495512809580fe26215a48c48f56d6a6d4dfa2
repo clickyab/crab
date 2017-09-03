@@ -1,0 +1,27 @@
+{
+	"post": {
+		"description": "checkMail check mail in system",
+		"parameters": [
+			{
+				"description": "",
+				"in": "body",
+				"name": "payload_data",
+				"required": false,
+				"schema": {
+					"$ref": "#/definitions/user_checkMailPayload"
+				}
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/user_checkMailResponse"
+				}
+			}
+		},
+		"tags": [
+			"user"
+		]
+	}
+}

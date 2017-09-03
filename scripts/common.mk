@@ -3,3 +3,4 @@ need_root :
 
 not_root :
 	@[ "$(shell id -u)" != "0" ] || exit 1
+

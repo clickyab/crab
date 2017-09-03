@@ -1,0 +1,206 @@
+{
+	"properties": {
+		"account": {
+			"properties": {
+				"corporation": {
+					"properties": {
+						"address": {
+							"properties": {
+								"String": {
+									"type": "string"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"cellphone": {
+							"properties": {
+								"String": {
+									"type": "string"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"city_id": {
+							"properties": {
+								"Int64": {
+									"type": "integer"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"created_at": {
+							"format": "dateTime",
+							"type": "string"
+						},
+						"economic_code": {
+							"properties": {
+								"String": {
+									"type": "string"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"first_name": {
+							"properties": {
+								"String": {
+									"type": "string"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"last_name": {
+							"properties": {
+								"String": {
+									"type": "string"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"name": {
+							"properties": {
+								"String": {
+									"type": "string"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"phone": {
+							"properties": {
+								"String": {
+									"type": "string"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"register_code": {
+							"properties": {
+								"String": {
+									"type": "string"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"updated_at": {
+							"format": "dateTime",
+							"type": "string"
+						},
+						"user_id": {
+							"type": "integer"
+						}
+					},
+					"type": "object"
+				},
+				"email": {
+					"type": "string"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"personal": {
+					"properties": {
+						"address": {
+							"properties": {
+								"String": {
+									"type": "string"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"cellphone": {
+							"properties": {
+								"String": {
+									"type": "string"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"city_id": {
+							"properties": {
+								"Int64": {
+									"type": "integer"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"created_at": {
+							"format": "dateTime",
+							"type": "string"
+						},
+						"first_name": {
+							"type": "string"
+						},
+						"gender": {
+							"type": "string"
+						},
+						"last_name": {
+							"type": "string"
+						},
+						"phone": {
+							"properties": {
+								"String": {
+									"type": "string"
+								},
+								"Valid": {
+									"type": "boolean"
+								}
+							},
+							"type": "object"
+						},
+						"updated_at": {
+							"format": "dateTime",
+							"type": "string"
+						},
+						"user_id": {
+							"type": "integer"
+						}
+					},
+					"type": "object"
+				},
+				"user_type": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"token": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

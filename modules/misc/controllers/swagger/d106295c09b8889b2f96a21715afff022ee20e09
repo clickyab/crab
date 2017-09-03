@@ -1,0 +1,22 @@
+{
+	"properties": {
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"name": {
+			"type": "string"
+		},
+		"status": {
+			"type": "boolean"
+		},
+		"updated_at": {
+			"format": "dateTime",
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

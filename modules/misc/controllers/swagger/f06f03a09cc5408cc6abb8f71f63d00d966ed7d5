@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"current_password": {
+			"type": "string"
+		},
+		"new_password": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

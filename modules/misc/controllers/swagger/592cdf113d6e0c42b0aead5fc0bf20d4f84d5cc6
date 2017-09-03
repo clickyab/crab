@@ -1,0 +1,16 @@
+{
+	"get": {
+		"description": "",
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/location_countries"
+				}
+			}
+		},
+		"tags": [
+			"location"
+		]
+	}
+}
