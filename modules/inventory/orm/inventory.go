@@ -9,24 +9,24 @@ import (
 	"github.com/clickyab/services/trans"
 )
 
-type publisherType string
+type PublisherType string
 
 const (
-	publisherTypeWeb = "web"
-	publisherTypeAPP = "app"
+	PublisherTypeWeb = "web"
+	PublisherTypeAPP = "app"
 )
 
 // IsValid try to validate enum value on ths type
-func (e publisherType) IsValid() bool {
+func (e PublisherType) IsValid() bool {
 	return array.StringInArray(
 		string(e),
-		string(publisherTypeWeb),
-		string(publisherTypeAPP),
+		string(PublisherTypeWeb),
+		string(PublisherTypeAPP),
 	)
 }
 
 // Scan convert the json array ino string slice
-func (e *publisherType) Scan(src interface{}) error {
+func (e *PublisherType) Scan(src interface{}) error {
 	var b []byte
 	switch src.(type) {
 	case []byte:
@@ -38,36 +38,37 @@ func (e *publisherType) Scan(src interface{}) error {
 	default:
 		return trans.E("unsupported type")
 	}
-	if !publisherType(b).IsValid() {
+	if !PublisherType(b).IsValid() {
 		return trans.E("invaid value")
 	}
-	*e = publisherType(b)
+	*e = PublisherType(b)
 	return nil
 }
 
 // Value try to get the string slice representation in database
-func (e publisherType) Value() (driver.Value, error) {
+func (e PublisherType) Value() (driver.Value, error) {
 	if !e.IsValid() {
 		return nil, trans.E("invalid status")
 	}
 	return string(e), nil
 }
 
-// Inventory user_inventories model in database
+// WhiteBlackList user_wlbl_presets model in database
 // @Model {
-//		table = user_inventories
+//		table = user_wlbl_presets
 //		primary = true, id
-//		find_by = id, user_id
+//		find_by = id
 //		list = yes
 // }
-type Inventory struct {
-	ID            int64                 `json:"id" db:"id"`
-	CreatedAt     time.Time             `json:"created_at" db:"created_at"`
-	UpdatedAt     time.Time             `json:"updated_at" db:"updated_at"`
-	Active        bool                  `json:"active" db:"active"`
-	UserID        int64                 `json:"user_id" db:"user_id"`
-	Label         string                `json:"label" db:"label"`
-	Domains       mysql.StringJSONArray `json:"domains" db:"domains"`
-	Kind          bool                  `json:"kind" db:"kind"`
-	PublisherType publisherType         `json:"publisher_type" db:"publisher_type"`
+type WhiteBlackList struct {
+	ID        int64                 `json:"id" db:"id"`
+	CreatedAt time.Time             `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time             `json:"updated_at" db:"updated_at"`
+	Active    bool                  `json:"active" db:"active"`
+	UserID    int64                 `json:"user_id" db:"user_id"`
+	Label     string                `json:"label" db:"label"`
+	Domains   mysql.StringJSONArray `json:"domains" db:"domains"`
+	// Kind shows if it's a white list (true) or blacklist (false)
+	Kind          bool          `json:"kind" db:"kind"`
+	PublisherType PublisherType `json:"publisher_type" db:"publisher_type"`
 }
