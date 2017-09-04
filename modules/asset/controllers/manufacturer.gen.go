@@ -27,9 +27,9 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		group := r.NewGroup(mountPoint + "/asset")
 
 		/* Route {
-			"Route": "/category",
+			"Route": "/browser",
 			"Method": "GET",
-			"Function": "Controller.category",
+			"Function": "Controller.browser",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -45,13 +45,13 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/category", xhandler.HandlerFuncC(framework.Mix(c.category, m0...)))
+		group.GET("/browser", xhandler.HandlerFuncC(framework.Mix(c.browser, m0...)))
 		// End route with key 0
 
 		/* Route {
-			"Route": "/isp",
+			"Route": "/category",
 			"Method": "GET",
-			"Function": "Controller.isp",
+			"Function": "Controller.category",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -67,13 +67,13 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/isp", xhandler.HandlerFuncC(framework.Mix(c.isp, m1...)))
+		group.GET("/category", xhandler.HandlerFuncC(framework.Mix(c.category, m1...)))
 		// End route with key 1
 
 		/* Route {
-			"Route": "/manufacturers",
+			"Route": "/isp",
 			"Method": "GET",
-			"Function": "Controller.manufacturer",
+			"Function": "Controller.isp",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -89,13 +89,13 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/manufacturers", xhandler.HandlerFuncC(framework.Mix(c.manufacturer, m2...)))
+		group.GET("/isp", xhandler.HandlerFuncC(framework.Mix(c.isp, m2...)))
 		// End route with key 2
 
 		/* Route {
-			"Route": "/os",
+			"Route": "/manufacturers",
 			"Method": "GET",
-			"Function": "Controller.os",
+			"Function": "Controller.manufacturer",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -111,8 +111,30 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/os", xhandler.HandlerFuncC(framework.Mix(c.os, m3...)))
+		group.GET("/manufacturers", xhandler.HandlerFuncC(framework.Mix(c.manufacturer, m3...)))
 		// End route with key 3
+
+		/* Route {
+			"Route": "/os",
+			"Method": "GET",
+			"Function": "Controller.os",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "",
+			"Scope": ""
+		} with key 4 */
+		m4 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		group.GET("/os", xhandler.HandlerFuncC(framework.Mix(c.os, m4...)))
+		// End route with key 4
 
 		initializer.DoInitialize(c)
 	})

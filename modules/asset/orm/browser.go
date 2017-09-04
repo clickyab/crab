@@ -17,7 +17,7 @@ type Browser struct {
 }
 
 // FindActiveBrowsersByName find active browsers by name
-func (m *Manager) FindActiveBrowsers() ([]Browser, error) {
+func (m *Manager) ListActiveBrowsers() ([]Browser, error) {
 	var res []Browser
 	q := fmt.Sprintf("SELECT * FROM %s WHERE active=?", BrowserTableFull)
 	err := m.GetRDbMap().SelectOne(&res, q, true)
