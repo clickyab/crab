@@ -8,6 +8,7 @@
 		"aaa_UserCorporation": "file://03655ed6169e6aaafa383c504b8275a04ee267e8",
 		"controller_ErrorResponseSimple": "file://035d0d82ff8e72fec8d60b07faa9b516e0ab40c0",
 		"controller_NormalResponse": "file://79ffc6e5cd8d5b843aa71b6e8c5ff43c8ee12e76",
+		"controllers_browserResponse": "file://7e564a516c6ee5a8c78a405acc31598126a171aa",
 		"controllers_catResponse": "file://0e74409ec7b72387b6561220ad71335c6fd22734",
 		"controllers_ispResponse": "file://c5b6fd5a57026c13ac2de28ffbd12fd09d1aa267",
 		"controllers_manufacturers": "file://0bfdecda2c87cd24a4ba612dda4011c217c15ffd",
@@ -22,6 +23,7 @@
 		"location_cities": "file://279650d4225957f7b2549dc014b0919c347c4d0e",
 		"location_countries": "file://8d77ae62ccbcee3618a817b23a8131e7e458b923",
 		"location_provinces": "file://92b4594c6625acaf229159be2038e2fdf710a063",
+		"orm_Browser": "file://801c60efcc0cfb1be874bd1eb2dfe86591db3d4c",
 		"orm_Category": "file://fa5855e5339835cccf41fe70ac6d103e51b742a7",
 		"orm_ISP": "file://d106295c09b8889b2f96a21715afff022ee20e09",
 		"orm_Manufacturer": "file://8bd355b2e08f2637bc1d49ec2d6a5f1737be8403",
@@ -50,6 +52,7 @@
 		"version": "\"0.0.1-pre-alpha\""
 	},
 	"paths": {
+		"/asset/browser": "file://51ed0d2b16f961f1c662b8562855fb73e686f3e7",
 		"/asset/category": "file://43778246185a5bb9f41d8af9600450880dd5bbe2",
 		"/asset/isp": "file://2048c126d567e71d8c55814043aa6739ebe2e304",
 		"/asset/manufacturers": "file://8e6fcf42cba17f0da85184b9b1513dd1da0ba0ae",
