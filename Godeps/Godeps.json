@@ -55,6 +55,10 @@
 			"Rev": "55de9bc2f92c2983b93d3fb77cdbff3be1347030"
 		},
 		{
+			"ImportPath": "github.com/clickyab/services/fluentd",
+			"Rev": "55de9bc2f92c2983b93d3fb77cdbff3be1347030"
+		},
+		{
 			"ImportPath": "github.com/clickyab/services/framework",
 			"Rev": "55de9bc2f92c2983b93d3fb77cdbff3be1347030"
 		},
@@ -143,6 +147,16 @@
 			"Rev": "55de9bc2f92c2983b93d3fb77cdbff3be1347030"
 		},
 		{
+			"ImportPath": "github.com/evalphobia/logrus_fluent",
+			"Comment": "v0.4.0",
+			"Rev": "76779e73f35d90f5a873e7feaf6691999b2c5db4"
+		},
+		{
+			"ImportPath": "github.com/fluent/fluent-logger-golang/fluent",
+			"Comment": "v1.2.1-23-ga8dfe4a",
+			"Rev": "a8dfe4adfeaf7b985acb486f6b060ff2f6a17e91"
+		},
+		{
 			"ImportPath": "github.com/fzerorubigd/go-redmine",
 			"Rev": "05bb0a08b5c20b45765553ca33aea5a2aea9f3a8"
 		},
@@ -193,6 +207,10 @@
 			"Rev": "9110dbae3d07cb26c2993dbf3bdbd0aad98329f9"
 		},
 		{
+			"ImportPath": "github.com/philhofer/fwd",
+			"Rev": "1612a298117663d7bc9a760ae20d383413859798"
+		},
+		{
 			"ImportPath": "github.com/rs/cors",
 			"Comment": "v1.2-1-geabcc6a",
 			"Rev": "eabcc6af4bbe5ad3a949d36450326a2b0b9894b8"
@@ -214,6 +232,11 @@
 			"ImportPath": "github.com/sirupsen/logrus",
 			"Comment": "v1.0.3-11-g89742ae",
 			"Rev": "89742aefa4b206dcf400792f3bd35b542998eb3b"
+		},
+		{
+			"ImportPath": "github.com/tinylib/msgp/msgp",
+			"Comment": "1.0.2-5-g4a23c71",
+			"Rev": "4a23c718c2167f44ec3318034a7a2b020281412b"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/bcrypt",
