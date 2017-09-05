@@ -2,13 +2,14 @@ package main
 
 import (
 	"clickyab.com/crab/cmd"
-	"github.com/sirupsen/logrus"
 	"github.com/clickyab/services/config"
+	_ "github.com/clickyab/services/fluentd"
 	"github.com/clickyab/services/initializer"
 	_ "github.com/clickyab/services/kv/redis"
 	_ "github.com/clickyab/services/redmine"
 	"github.com/clickyab/services/shell"
 	_ "github.com/clickyab/services/slack"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {

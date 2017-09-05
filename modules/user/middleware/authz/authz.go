@@ -12,6 +12,7 @@ import (
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/trans"
+	"github.com/sirupsen/logrus"
 )
 
 type dataType string
@@ -23,6 +24,7 @@ const tokenKey dataType = "__token_data__"
 func Authenticate(next framework.Handler) framework.Handler {
 	return func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		token := r.Header.Get("token")
+		logrus.WithField("token", token).Debug("user token in authz")
 		if token != "" {
 			val := kv.NewEavStore(token).SubKey("token")
 			if val != "" {
