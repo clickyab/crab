@@ -24,6 +24,9 @@
 		"name": {
 			"type": "string"
 		},
+		"national_id": {
+			"type": "string"
+		},
 		"phone": {
 			"type": "string"
 		},
@@ -32,6 +35,9 @@
 		},
 		"register_code": {
 			"type": "string"
+		},
+		"zip_code": {
+			"type": "integer"
 		}
 	},
 	"type": "object"

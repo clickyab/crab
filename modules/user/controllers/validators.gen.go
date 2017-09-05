@@ -123,6 +123,12 @@ func (pl *corporation) Validate(ctx context.Context, w http.ResponseWriter, r *h
 		case "RegisterCode":
 			res["register_code"] = trans.E("invalid value")
 
+		case "ZipCode":
+			res["zip_code"] = trans.E("invalid value")
+
+		case "NationalID":
+			res["national_id"] = trans.E("invalid value")
+
 		case "CityID":
 			res["city_id"] = trans.E("invalid value")
 
@@ -184,6 +190,12 @@ func (pl *personalPayload) Validate(ctx context.Context, w http.ResponseWriter, 
 
 		case "ProvinceID":
 			res["province_id"] = trans.E("invalid value")
+
+		case "ZipCode":
+			res["zip_code"] = trans.E("invalid value")
+
+		case "NationalID":
+			res["national_id"] = trans.E("invalid value")
 
 		case "CountryID":
 			res["country_id"] = trans.E("invalid value")

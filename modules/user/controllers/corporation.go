@@ -17,14 +17,16 @@ type corporation struct {
 	Name         string `json:"name" validate:"omitempty,gt=2"`
 	FirstName    string `json:"first_name" db:"first_name" validate:"omitempty,gt=2"`
 	LastName     string `json:"last_name" db:"last_name" validate:"omitempty,gt=2"`
-	Cellphone    string `json:"cellphone" validate:"omitempty,numeric"`
-	Phone        string `json:"phone" validate:"omitempty,numeric"`
+	Cellphone    string `json:"cellphone" validate:"omitempty"`
+	Phone        string `json:"phone" validate:"omitempty"`
 	Address      string `json:"address" validate:"omitempty,gt=2"`
-	EconomicCode string `json:"economic_code" validate:"omitempty,numeric"`
-	RegisterCode string `json:"register_code" validate:"omitempty,numeric"`
-	CityID       int64  `json:"city_id" validate:"omitempty,numeric"`
-	ProvinceID   int64  `json:"province_id" validate:"omitempty,numeric"`
-	CountryID    int64  `json:"country_id" validate:"omitempty,numeric"`
+	EconomicCode string `json:"economic_code" validate:"omitempty"`
+	RegisterCode string `json:"register_code" validate:"omitempty"`
+	ZipCode      int64  `json:"zip_code" validate:"omitempty"`
+	NationalID   string `json:"national_id" validate:"omitempty"`
+	CityID       int64  `json:"city_id" validate:"omitempty"`
+	ProvinceID   int64  `json:"province_id" validate:"omitempty"`
+	CountryID    int64  `json:"country_id" validate:"omitempty"`
 }
 
 // editCorporation is used for current user update
@@ -57,6 +59,8 @@ func (c Controller) editCorporation(ctx context.Context, w http.ResponseWriter, 
 		RegisterCode: mysql.NullString{String: payload.RegisterCode, Valid: payload.RegisterCode != ""},
 		CityID:       mysql.NullInt64{Int64: payload.CityID, Valid: payload.CityID != 0},
 		ProvinceID:   mysql.NullInt64{Int64: payload.ProvinceID, Valid: payload.ProvinceID != 0},
+		NationalID:   mysql.NullString{String: payload.NationalID, Valid: payload.NationalID != ""},
+		ZipCode:      mysql.NullInt64{Int64: payload.ZipCode, Valid: payload.ZipCode != 0},
 		CountryID:    mysql.NullInt64{Int64: payload.CountryID, Valid: payload.CountryID != 0},
 	}
 
