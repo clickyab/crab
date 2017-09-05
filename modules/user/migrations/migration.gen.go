@@ -10,6 +10,7 @@
 // db/20170830131111_fixrolepermission.sql
 // db/20170902055834_fix_user.sql
 // db/20170902104216_user_fix2.sql
+// db/20170905075616_addfieldtoprofile.sql
 // DO NOT EDIT!
 
 package migrations
@@ -277,6 +278,26 @@ func db20170902104216_user_fix2Sql() (*asset, error) {
 	return a, nil
 }
 
+var _db20170905075616_addfieldtoprofileSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x94\x90\xcd\x4a\x03\x31\x14\x85\xf7\xf3\x14\x67\xd7\x8a\x14\x2c\x2e\x5d\xc5\x4e\x41\x21\xb6\x1a\x67\xdc\x0e\x31\xb9\xd8\x8b\x31\x09\x49\x4a\xc5\xa7\x97\xf1\x0f\xab\xd5\x76\x96\x09\xf7\x3b\x87\xf3\x55\x93\x09\x8e\x9f\xf8\x21\xe9\x42\x68\x63\xff\xbc\xbd\x91\x60\x8f\x4c\xa6\x70\xf0\x18\xb5\x71\x04\xce\xa0\x67\x32\xeb\x42\x16\x9b\x15\x79\x94\x15\x67\xbc\x73\xfd\x11\x67\xe8\x18\x1d\x93\xad\x84\x6c\xe6\x0a\x8d\x38\x97\x73\xac\x33\xa5\x2e\x52\xca\xc1\x6b\x07\x51\xd7\x98\x2d\x65\x7b\xb5\xc0\x0b\xc7\xce\x04\x4b\xb8\x5c\x34\xe3\xe9\xf4\xe8\xec\x37\x66\x42\x8a\xe1\x23\x7e\x18\xb9\xab\xd0\xbf\x05\x69\xd7\xb1\xc5\x9d\x50\xb3\x0b\xa1\xc6\xa7\x27\x03\x7a\xff\x0c\xd8\x32\x58\x87\x8d\xff\x74\xf8\x25\xb0\xff\x3c\x48\x61\x0a\xce\x91\xc5\xbd\x36\x8f\xff\xac\xaa\xd5\xf2\xfa\xa7\x8d\x3d\x3b\x0e\x44\x76\x56\x7c\x1b\x3e\xa0\x65\x8b\xaa\x5e\x03\x00\x00\xff\xff\x28\x45\xd6\xa6\x66\x02\x00\x00"
+
+func db20170905075616_addfieldtoprofileSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20170905075616_addfieldtoprofileSql,
+		"db/20170905075616_addfieldtoprofile.sql",
+	)
+}
+
+func db20170905075616_addfieldtoprofileSql() (*asset, error) {
+	bytes, err := db20170905075616_addfieldtoprofileSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20170905075616_addfieldtoprofile.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -339,6 +360,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20170830131111_fixrolepermission.sql": db20170830131111_fixrolepermissionSql,
 	"db/20170902055834_fix_user.sql": db20170902055834_fix_userSql,
 	"db/20170902104216_user_fix2.sql": db20170902104216_user_fix2Sql,
+	"db/20170905075616_addfieldtoprofile.sql": db20170905075616_addfieldtoprofileSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -392,6 +414,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20170830131111_fixrolepermission.sql": &bintree{db20170830131111_fixrolepermissionSql, map[string]*bintree{}},
 		"20170902055834_fix_user.sql": &bintree{db20170902055834_fix_userSql, map[string]*bintree{}},
 		"20170902104216_user_fix2.sql": &bintree{db20170902104216_user_fix2Sql, map[string]*bintree{}},
+		"20170905075616_addfieldtoprofile.sql": &bintree{db20170905075616_addfieldtoprofileSql, map[string]*bintree{}},
 	}},
 }}
 

@@ -165,6 +165,8 @@ type UserPersonal struct {
 	CityID     mysql.NullInt64  `json:"city_id" db:"city_id"`
 	ProvinceID mysql.NullInt64  `json:"province_id" db:"province_id"`
 	CountryID  mysql.NullInt64  `json:"country_id" db:"country_id"`
+	ZipCode    mysql.NullInt64  `json:"zip_code" db:"zip_code"`
+	NationalID mysql.NullString `json:"national_id" db:"national_id"`
 	CreatedAt  time.Time        `json:"created_at" db:"created_at"`
 	UpdatedAt  time.Time        `json:"updated_at" db:"updated_at"`
 }
@@ -188,6 +190,8 @@ type UserCorporation struct {
 	CityID       mysql.NullInt64  `json:"city_id" db:"city_id"`
 	ProvinceID   mysql.NullInt64  `json:"province_id" db:"province_id"`
 	CountryID    mysql.NullInt64  `json:"country_id" db:"country_id"`
+	ZipCode      mysql.NullInt64  `json:"zip_code" db:"zip_code"`
+	NationalID   mysql.NullString `json:"national_id" db:"national_id"`
 	CreatedAt    time.Time        `json:"created_at" db:"created_at"`
 	UpdatedAt    time.Time        `json:"updated_at" db:"updated_at"`
 }
