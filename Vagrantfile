@@ -17,6 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.network "forwarded_port", guest: 8090,    	host: 80       # nginx
   config.vm.network "forwarded_port", guest: 8080,    	host: 8080     # goconvey
+  config.vm.network "forwarded_port", guest: 8025,    	host: 8025     # mailhog
   config.vm.network "forwarded_port", guest: 15672,     host: 15672    # rabbitmq management
   config.vm.network "forwarded_port", guest: 22,        host: 5555     # ssh server
   config.vm.network "forwarded_port", guest: 5000,      host: 5000     # debug webserver
