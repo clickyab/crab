@@ -24,6 +24,9 @@ const (
 
 	// OSTableFull is the OS table name
 	OSTableFull = "oses"
+
+	// RegionTableFull is the Region table name
+	RegionTableFull = "regions"
 )
 
 // Manager is the model manager for orm package
@@ -85,6 +88,14 @@ func (m *Manager) Initialize() {
 	m.AddTableWithName(
 		OS{},
 		OSTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
+
+	m.AddTableWithName(
+		Region{},
+		RegionTableFull,
 	).SetKeys(
 		true,
 		"ID",
