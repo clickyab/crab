@@ -53,15 +53,17 @@ func (u *Controller) sendActive(ctx context.Context, w http.ResponseWriter, r *h
 		u.BadResponse(w, trans.E("user already activated or blocked"))
 		return
 	}
-	c := rand.Intn(9999) + 10000
+	c := rand.Intn(99999) + 100000
 	//save in redis
-	if len(kv.NewEavStore(fmt.Sprintf("%s%s%d", active, seperator, c)).AllKeys()) != 0 {
-		u.BadResponse(w, trans.E("check your mail please"))
-		return
+	for i := 0; i < 10; i++ {
+		if len(kv.NewEavStore(fmt.Sprintf("%s%s%d", active, seperator, c)).AllKeys()) == 0 {
+			break
+		}
+		c = rand.Intn(99999) + 100000
 	}
 	err = kv.NewEavStore(fmt.Sprintf("%s%s%d", active, seperator, c)).
 		SetSubKey(userID, fmt.Sprintf("%d", user.ID)).
-		Save(10 * time.Minute)
+		Save(2 * time.Hour)
 	assert.Nil(err)
 	a := notification.Packet{Platform: notification.MailType, To: []string{pl.Email}}
 	go func() {
