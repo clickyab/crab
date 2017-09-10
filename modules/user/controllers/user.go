@@ -15,7 +15,7 @@ import (
 	"github.com/clickyab/services/kv"
 )
 
-// Controller is the controller for the user package
+// Controller is the controller for the userPayload package
 // @Route {
 //		group = /user
 //		middleware = domain.Access
@@ -32,14 +32,8 @@ type auditData struct {
 }
 
 type responseLoginOK struct {
-	Token   string `json:"token"`
-	Account struct {
-		ID          int64                `json:"id"`
-		Email       string               `json:"email"`
-		UserType    aaa.UserTyp          `json:"user_type"`
-		Personal    *aaa.UserPersonal    `json:"personal"`
-		Corporation *aaa.UserCorporation `json:"corporation"`
-	} `json:"account"`
+	Token   string    `json:"token"`
+	Account *aaa.User `json:"account"`
 }
 
 var (
@@ -48,7 +42,7 @@ var (
 	_ = domain.Access
 )
 
-// MustGetUser try to get back the user to system
+// MustGetUser try to get back the userPayload to system
 func (u Controller) MustGetUser(ctx context.Context) *aaa.User {
 	return authz.MustGetUser(ctx)
 }
@@ -106,19 +100,9 @@ func audit(username, action, class string, data interface{}) {
 
 func (c Controller) createLoginResponse(w http.ResponseWriter, user *aaa.User, token string) {
 	res := responseLoginOK{
-		Token: token,
-		Account: struct {
-			ID          int64                `json:"id"`
-			Email       string               `json:"email"`
-			UserType    aaa.UserTyp          `json:"user_type"`
-			Personal    *aaa.UserPersonal    `json:"personal"`
-			Corporation *aaa.UserCorporation `json:"corporation"`
-		}{ID: user.ID, Email: user.Email, UserType: user.UserType},
+		Token:   token,
+		Account: user,
 	}
-	if user.UserType == aaa.PersonalUserTyp {
-		res.Account.Personal = user.GetUserPersonal()
-	} else {
-		res.Account.Corporation = user.GetUserCorporation()
-	}
+
 	c.OKResponse(w, res)
 }

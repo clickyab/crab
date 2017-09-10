@@ -38,19 +38,19 @@ const activeTemplate string = ``
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 // }
-func (u *Controller) sendActive(ctx context.Context, w http.ResponseWriter, r *http.Request) { //send only for registered user
+func (u *Controller) sendActive(ctx context.Context, w http.ResponseWriter, r *http.Request) { //send only for registered userPayload
 	pl := u.MustGetPayload(ctx).(*sendActivePayload)
-	//find user by email
+	//find userPayload by email
 	m := aaa.NewAaaManager()
 	user, err := m.FindUserByEmail(pl.Email)
 	if err != nil {
-		// user not found (not registered)
-		u.NotFoundResponse(w, trans.E("user not found"))
+		// userPayload not found (not registered)
+		u.NotFoundResponse(w, trans.E("userPayload not found"))
 		return
 	}
 	if user.Status != aaa.RegisteredUserStatus {
-		// user is blocked oa already active
-		u.BadResponse(w, trans.E("user already activated or blocked"))
+		// userPayload is blocked oa already active
+		u.BadResponse(w, trans.E("userPayload already activated or blocked"))
 		return
 	}
 	c := rand.Intn(99999) + 100000

@@ -80,7 +80,7 @@ func (pl *checkMailPayload) Validate(ctx context.Context, w http.ResponseWriter,
 	return nil
 }
 
-func (pl *corporation) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+func (u *userPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	err := func(in interface{}) error {
 		if v, ok := in.(interface {
 			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
@@ -88,117 +88,52 @@ func (pl *corporation) Validate(ctx context.Context, w http.ResponseWriter, r *h
 			return v.ValidateExtra(ctx, w, r)
 		}
 		return nil
-	}(pl)
+	}(u)
 	if err != nil {
 		return err
 	}
-	errs := validator.New().Struct(pl)
+	errs := validator.New().Struct(u)
 	if errs == nil {
 		return nil
 	}
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
-		case "Name":
-			res["name"] = trans.E("invalid value")
+		case "Email":
+			res["email"] = trans.E("invalid value")
 
-		case "FirstName":
-			res["first_name"] = trans.E("invalid value")
-
-		case "LastName":
-			res["last_name"] = trans.E("invalid value")
-
-		case "Cellphone":
-			res["cellphone"] = trans.E("invalid value")
-
-		case "Phone":
-			res["phone"] = trans.E("invalid value")
-
-		case "Address":
-			res["address"] = trans.E("invalid value")
-
-		case "EconomicCode":
-			res["economic_code"] = trans.E("invalid value")
-
-		case "RegisterCode":
-			res["register_code"] = trans.E("invalid value")
-
-		case "ZipCode":
-			res["zip_code"] = trans.E("invalid value")
-
-		case "NationalID":
-			res["national_id"] = trans.E("invalid value")
+		case "Avatar":
+			res["avatar"] = trans.E("invalid value")
 
 		case "CityID":
 			res["city_id"] = trans.E("invalid value")
 
-		case "ProvinceID":
-			res["province_id"] = trans.E("invalid value")
+		case "LandLine":
+			res["land_line"] = trans.E("invalid value")
 
-		case "CountryID":
-			res["country_id"] = trans.E("invalid value")
+		case "CellPhone":
+			res["cell_phone"] = trans.E("invalid value")
 
-		default:
-			logrus.Panicf("the field %s is not translated", i)
-		}
-	}
-	if len(res) > 0 {
-		return res
-	}
-	return nil
-}
+		case "PostalCode":
+			res["postal_code"] = trans.E("invalid value")
 
-func (pl *personalPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	err := func(in interface{}) error {
-		if v, ok := in.(interface {
-			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
-		}); ok {
-			return v.ValidateExtra(ctx, w, r)
-		}
-		return nil
-	}(pl)
-	if err != nil {
-		return err
-	}
-	errs := validator.New().Struct(pl)
-	if errs == nil {
-		return nil
-	}
-	res := middleware.GroupError{}
-	for _, i := range errs.(validator.ValidationErrors) {
-		switch i.Field() {
 		case "FirstName":
 			res["first_name"] = trans.E("invalid value")
 
 		case "LastName":
 			res["last_name"] = trans.E("invalid value")
+
+		case "Address":
+			res["address"] = trans.E("invalid value")
 
 		case "Gender":
 			res["gender"] = trans.E("invalid value")
 
-		case "CellPhone":
-			res["cellphone"] = trans.E("invalid value")
+		case "SSN":
+			res["ssn"] = trans.E("invalid value")
 
-		case "Phone":
-			res["phone"] = trans.E("invalid value")
-
-		case "Address":
-			res["address"] = trans.E("invalid value")
-
-		case "CityID":
-			res["city_id"] = trans.E("invalid value")
-
-		case "ProvinceID":
-			res["province_id"] = trans.E("invalid value")
-
-		case "ZipCode":
-			res["zip_code"] = trans.E("invalid value")
-
-		case "NationalID":
-			res["national_id"] = trans.E("invalid value")
-
-		case "CountryID":
-			res["country_id"] = trans.E("invalid value")
+		case "Corporation":
+			res["corporation"] = trans.E("invalid value")
 
 		default:
 			logrus.Panicf("the field %s is not translated", i)
@@ -346,8 +281,8 @@ func (pl *registerPayload) Validate(ctx context.Context, w http.ResponseWriter, 
 		case "LastName":
 			res["last_name"] = trans.E("last name is invalid")
 
-		case "UserType":
-			res["user_type"] = trans.E("invalid value")
+		case "LegalName":
+			res["legal_name"] = trans.E("invalid value")
 
 		default:
 			logrus.Panicf("the field %s is not translated", i)

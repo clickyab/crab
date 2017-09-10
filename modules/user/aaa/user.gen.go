@@ -13,6 +13,47 @@ import (
 
 // AUTO GENERATED CODE. DO NOT EDIT!
 
+// CreateCorporation try to save a new Corporation in database
+func (m *Manager) CreateCorporation(c *Corporation) error {
+
+	func(in interface{}) {
+		if ii, ok := in.(initializer.Simple); ok {
+			ii.Initialize()
+		}
+	}(c)
+
+	return m.GetWDbMap().Insert(c)
+}
+
+// UpdateCorporation try to update Corporation in database
+func (m *Manager) UpdateCorporation(c *Corporation) error {
+
+	func(in interface{}) {
+		if ii, ok := in.(initializer.Simple); ok {
+			ii.Initialize()
+		}
+	}(c)
+
+	_, err := m.GetWDbMap().Update(c)
+	return err
+}
+
+// FindCorporationByUserID return the Corporation base on its user_id
+func (m *Manager) FindCorporationByUserID(ui int64) (*Corporation, error) {
+	var res Corporation
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT * FROM %s WHERE user_id=?", CorporationTableFull),
+		ui,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
 // CreateRolePermission try to save a new RolePermission in database
 func (m *Manager) CreateRolePermission(rp *RolePermission) error {
 	now := time.Now()
@@ -189,94 +230,6 @@ func (m *Manager) FindRoleByID(id int64) (*Role, error) {
 		&res,
 		fmt.Sprintf("SELECT * FROM %s WHERE id=?", RoleTableFull),
 		id,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
-// CreateUserCorporation try to save a new UserCorporation in database
-func (m *Manager) CreateUserCorporation(uc *UserCorporation) error {
-	now := time.Now()
-	uc.CreatedAt = now
-	uc.UpdatedAt = now
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
-		}
-	}(uc)
-
-	return m.GetWDbMap().Insert(uc)
-}
-
-// UpdateUserCorporation try to update UserCorporation in database
-func (m *Manager) UpdateUserCorporation(uc *UserCorporation) error {
-	now := time.Now()
-	uc.UpdatedAt = now
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
-		}
-	}(uc)
-
-	_, err := m.GetWDbMap().Update(uc)
-	return err
-}
-
-// FindUserCorporationByUserID return the UserCorporation base on its user_id
-func (m *Manager) FindUserCorporationByUserID(ui int64) (*UserCorporation, error) {
-	var res UserCorporation
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE user_id=?", UserCorporationTableFull),
-		ui,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
-// CreateUserPersonal try to save a new UserPersonal in database
-func (m *Manager) CreateUserPersonal(up *UserPersonal) error {
-	now := time.Now()
-	up.CreatedAt = now
-	up.UpdatedAt = now
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
-		}
-	}(up)
-
-	return m.GetWDbMap().Insert(up)
-}
-
-// UpdateUserPersonal try to update UserPersonal in database
-func (m *Manager) UpdateUserPersonal(up *UserPersonal) error {
-	now := time.Now()
-	up.UpdatedAt = now
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
-		}
-	}(up)
-
-	_, err := m.GetWDbMap().Update(up)
-	return err
-}
-
-// FindUserPersonalByUserID return the UserPersonal base on its user_id
-func (m *Manager) FindUserPersonalByUserID(ui int64) (*UserPersonal, error) {
-	var res UserPersonal
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE user_id=?", UserPersonalTableFull),
-		ui,
 	)
 
 	if err != nil {

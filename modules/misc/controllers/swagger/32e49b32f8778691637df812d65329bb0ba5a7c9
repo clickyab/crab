@@ -1,0 +1,74 @@
+{
+	"properties": {
+		"address": {
+			"type": "string"
+		},
+		"avatar": {
+			"type": "string"
+		},
+		"cell_phone": {
+			"type": "string"
+		},
+		"city_id": {
+			"type": "integer"
+		},
+		"corporation": {
+			"properties": {
+				"economic_code": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"legal_name": {
+					"type": "string"
+				},
+				"legal_register": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"user_id": {
+					"type": "integer"
+				}
+			},
+			"type": "object"
+		},
+		"email": {
+			"type": "string"
+		},
+		"first_name": {
+			"type": "string"
+		},
+		"gender": {
+			"type": "string"
+		},
+		"land_line": {
+			"type": "string"
+		},
+		"last_name": {
+			"type": "string"
+		},
+		"postal_code": {
+			"type": "string"
+		},
+		"ssn": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

@@ -1,6 +1,6 @@
 {
 	"put": {
-		"description": "EditPersonal route for edit personal profile",
+		"description": "changePassword",
 		"parameters": [
 			{
 				"description": "the security token, get it from login route",
@@ -15,7 +15,7 @@
 				"name": "payload_data",
 				"required": false,
 				"schema": {
-					"$ref": "#/definitions/user_userPayload"
+					"$ref": "#/definitions/user_changePassword"
 				}
 			}
 		],
@@ -23,7 +23,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/user_responseLoginOK"
+					"$ref": "#/definitions/controller_NormalResponse"
 				}
 			},
 			"400": {

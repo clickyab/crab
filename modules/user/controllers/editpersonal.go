@@ -4,72 +4,113 @@ import (
 	"context"
 	"net/http"
 
+	"time"
+
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
+	echo "gopkg.in/labstack/echo.v3"
 )
 
 // @Validate {
 // }
-type personalPayload struct {
-	FirstName  string         `json:"first_name" validate:"gt=2"`
-	LastName   string         `json:"last_name" validate:"gt=2"`
-	Gender     aaa.GenderType `json:"gender" validate:"required"`
-	CellPhone  string         `json:"cellphone" validate:"omitempty"`
-	Phone      string         `json:"phone" validate:"omitempty"`
-	Address    string         `json:"address" validate:"omitempty,gt=5"`
-	CityID     int64          `json:"city_id" validate:"omitempty"`
-	ProvinceID int64          `json:"province_id" validate:"omitempty"`
-	ZipCode    int64          `json:"zip_code" validate:"omitempty"`
-	NationalID string         `json:"national_id" validate:"omitempty"`
-	CountryID  int64          `json:"country_id" validate:"omitempty"`
+type userPayload struct {
+	Email       string           `json:"email" validate:"omitempty, email"`
+	Avatar      string           `json:"avatar" validate:"omitempty, url"`
+	CityID      int64            `json:"city_id" validate:"omitempty"`
+	LandLine    string           `json:"land_line" validate:"omitempty"`
+	CellPhone   string           `json:"cell_phone" validate:"omitempty"`
+	PostalCode  string           `json:"postal_code" validate:"omitempty"`
+	FirstName   string           `json:"first_name" validate:"omitempty,gt=2"`
+	LastName    string           `json:"last_name" validate:"omitempty,gt=2"`
+	Address     string           `json:"address" validate:"omitempty"`
+	Gender      aaa.GenderType   `json:"gender" validate:"omitempty"`
+	SSN         string           `json:"ssn" validate:"omitempty"`
+	Corporation *aaa.Corporation `json:"corporation" validate:"omitempty"`
+}
+
+func (u *userPayload) ValidateExtra(ctx echo.Context) error {
+	if u.Gender != "" {
+		if u.Gender.IsValid() {
+			return middleware.GroupError{
+				"validate": trans.E("Gender is not valid"),
+			}
+		}
+	}
+
+	return nil
 }
 
 // EditPersonal route for edit personal profile
 // @Route {
 // 		url = /personal
 //		method = put
-//		payload = personalPayload
+//		payload = userPayload
 //		middleware = authz.Authenticate
 //		200 = responseLoginOK
 //		400 = controller.ErrorResponseSimple
 // }
-func (u *Controller) EditPersonal(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := u.MustGetPayload(ctx).(*personalPayload)
+func (u *Controller) Edit(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := u.MustGetPayload(ctx).(*userPayload)
 	if !pl.Gender.IsValid() || pl.Gender == aaa.NotSpecifiedGender {
 		u.BadResponse(w, middleware.GroupError{
 			string(pl.Gender): trans.E("gender is invalid"),
 		})
 		return
 	}
-	// TODO check for valid city id
-	currentUser := u.MustGetUser(ctx)
-	// the user should be personal type only
-	if currentUser.UserType != aaa.PersonalUserTyp {
-		u.BadResponse(w, trans.E("user is not personal"))
-		return
-	}
+
+	cu := u.MustGetUser(ctx)
 	m := aaa.NewAaaManager()
-	up := &aaa.UserPersonal{
-		UserID:     currentUser.ID,
-		FirstName:  pl.FirstName,
-		LastName:   pl.LastName,
-		Gender:     pl.Gender,
-		Cellphone:  mysql.NullString{String: pl.CellPhone, Valid: pl.CellPhone != ""},
-		Phone:      mysql.NullString{String: pl.Phone, Valid: pl.Phone != ""},
-		Address:    mysql.NullString{String: pl.Address, Valid: pl.Address != ""},
-		CountryID:  mysql.NullInt64{Int64: pl.CountryID, Valid: pl.CountryID != 0},
-		ProvinceID: mysql.NullInt64{Int64: pl.ProvinceID, Valid: pl.ProvinceID != 0},
-		NationalID: mysql.NullString{String: pl.NationalID, Valid: pl.NationalID != ""},
-		ZipCode:    mysql.NullInt64{Int64: pl.ZipCode, Valid: pl.ZipCode != 0},
-		CityID:     mysql.NullInt64{Int64: pl.CityID, Valid: pl.CityID != 0},
+
+	var cc *aaa.Corporation
+	var e error
+	if pl.Corporation != nil {
+		cc, e = m.FindCorporationByUserID(cu.ID)
+		if e != nil {
+			u.BadResponse(w, trans.E("Personal userPayload not allowed to update corporate account"))
+		}
 	}
-	err := m.UpdateUserPersonal(up)
-	if err != nil {
-		u.BadResponse(w, trans.EE(err))
+
+	cu.Email = pl.Email
+	cu.Avatar = stringToNullString(pl.Avatar)
+	cu.CityID = intToNullInt64(pl.CityID)
+	cu.LandLine = stringToNullString(pl.LandLine)
+	cu.Cellphone = stringToNullString(pl.CellPhone)
+	cu.PostalCode = stringToNullString(pl.PostalCode)
+	cu.FirstName = pl.FirstName
+	cu.LastName = pl.LastName
+	cu.Address = stringToNullString(pl.Address)
+	cu.Gender = pl.Gender
+	cu.SSN = stringToNullString(pl.SSN)
+	cu.UpdatedAt = time.Now()
+
+	e = m.UpdateUser(cu)
+	if e != nil {
+		u.BadResponse(w, trans.EE(e))
 		return
 	}
-	u.createLoginResponse(w, currentUser, authz.MustGetToken(ctx))
+
+	if pl.Corporation != nil {
+		cc.LegalName = pl.Corporation.LegalName
+		cc.EconomicCode = stringToNullString(pl.Corporation.LegalName)
+		cc.LegalRegister = stringToNullString(pl.Corporation.LegalName)
+
+		e = m.UpdateCorporation(cc)
+		if e != nil {
+			u.BadResponse(w, trans.EE(e))
+			return
+		}
+	}
+
+	u.createLoginResponse(w, cu, authz.MustGetToken(ctx))
+}
+
+func stringToNullString(val string) mysql.NullString {
+	return mysql.NullString{String: val, Valid: val == ""}
+}
+
+func intToNullInt64(val int64) mysql.NullInt64 {
+	return mysql.NullInt64{Int64: val, Valid: val != 0}
 }

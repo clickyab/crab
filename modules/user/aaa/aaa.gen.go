@@ -13,6 +13,9 @@ const (
 	// ConsularCustomerTableFull is the ConsularCustomer table name
 	ConsularCustomerTableFull = "consular_customer"
 
+	// CorporationTableFull is the Corporation table name
+	CorporationTableFull = "corporations"
+
 	// RolePermissionTableFull is the RolePermission table name
 	RolePermissionTableFull = "role_permission"
 
@@ -21,12 +24,6 @@ const (
 
 	// RoleTableFull is the Role table name
 	RoleTableFull = "roles"
-
-	// UserCorporationTableFull is the UserCorporation table name
-	UserCorporationTableFull = "user_corporation"
-
-	// UserPersonalTableFull is the UserPersonal table name
-	UserPersonalTableFull = "user_personal"
 
 	// UserTableFull is the User table name
 	UserTableFull = "users"
@@ -66,6 +63,14 @@ func (m *Manager) Initialize() {
 	)
 
 	m.AddTableWithName(
+		Corporation{},
+		CorporationTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
+
+	m.AddTableWithName(
 		RolePermission{},
 		RolePermissionTableFull,
 	).SetKeys(
@@ -88,22 +93,6 @@ func (m *Manager) Initialize() {
 	).SetKeys(
 		true,
 		"ID",
-	)
-
-	m.AddTableWithName(
-		UserCorporation{},
-		UserCorporationTableFull,
-	).SetKeys(
-		false,
-		"UserID",
-	)
-
-	m.AddTableWithName(
-		UserPersonal{},
-		UserPersonalTableFull,
-	).SetKeys(
-		false,
-		"UserID",
 	)
 
 	m.AddTableWithName(
