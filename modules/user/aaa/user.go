@@ -18,36 +18,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// ActiveStatus is the user active status
-type (
-	// ActiveStatus is the user active status
-	// @Enum{
-	// }
-	ActiveStatus string
-)
-
-const (
-	// ActiveStatusYes domain active
-	ActiveStatusYes ActiveStatus = "yes"
-	// ActiveStatusNo for inactive domain
-	ActiveStatusNo ActiveStatus = "no"
-)
-
-// UserTyp is the user type status
-type (
-	// UserTyp is the user type status
-	// @Enum{
-	// }
-	UserTyp string
-)
-
-const (
-	// PersonalUserTyp user personal
-	PersonalUserTyp UserTyp = "personal"
-	// CorporationUserTyp user corporation
-	CorporationUserTyp UserTyp = "corporation"
-)
-
 // UserValidStatus is the user status
 type (
 	// UserValidStatus is the user status
@@ -90,20 +60,27 @@ const (
 //		list = yes
 // }
 type User struct {
-	ID          int64                 `json:"id" db:"id"`
-	Email       string                `json:"email" db:"email"`
-	Password    string                `json:"password" db:"password"`
-	AccessToken string                `json:"-" db:"access_token"`
-	Avatar      mysql.NullString      `json:"avatar" db:"avatar"`
-	UserType    UserTyp               `json:"user_type" db:"user_type"`
-	Status      UserValidStatus       `json:"status" db:"status"`
-	CreatedAt   time.Time             `json:"created_at" db:"created_at"`
-	UpdatedAt   time.Time             `json:"updated_at" db:"updated_at"`
-	OldPassword mysql.StringJSONArray `json:"-"  db:"old_password"`
-
-	profile  interface{}                              `db:"-"`
-	roles    []Role                                   `db:"-"`
-	resource map[permission.UserScope]map[string]bool `db:"-"`
+	ID          int64                                    `json:"id" db:"id"`
+	Email       string                                   `json:"email" db:"email"`
+	Password    string                                   `json:"password" db:"password"`
+	AccessToken string                                   `json:"-" db:"access_token"`
+	Avatar      mysql.NullString                         `json:"avatar" db:"avatar"`
+	Status      UserValidStatus                          `json:"status" db:"status"`
+	CreatedAt   time.Time                                `json:"created_at" db:"created_at"`
+	UpdatedAt   time.Time                                `json:"updated_at" db:"updated_at"`
+	OldPassword mysql.StringJSONArray                    `json:"-"  db:"old_password"`
+	CityID      mysql.NullInt64                          `json:"city_id" db:"city_id"`
+	LandLine    mysql.NullString                         `json:"land_line" db:"land_line"`
+	Cellphone   mysql.NullString                         `json:"cellphone" db:"cellphone"`
+	PostalCode  mysql.NullString                         `json:"postal_code" db:"postal_code"`
+	FirstName   string                                   `json:"first_name" db:"first_name"`
+	LastName    string                                   `json:"last_name" db:"last_name"`
+	Address     mysql.NullString                         `json:"address" db:"address"`
+	Gender      GenderType                               `json:"gender" db:"gender"`
+	SSN         mysql.NullString                         `json:"ssn" db:"ssn"`
+	Corporation *Corporation                             `json:"corporation, omitempty" db:"-"`
+	roles       []Role                                   `db:"-"`
+	resource    map[permission.UserScope]map[string]bool `db:"-"`
 }
 
 // Role role model in database
@@ -148,63 +125,28 @@ type RolePermission struct {
 	UpdatedAt time.Time            `json:"updated_at" db:"updated_at"`
 }
 
-// UserPersonal user personal model
+// Corporation user corporation model
 // @Model {
-//		table = user_personal
-//		primary = false, user_id
+//		table = corporations
+//		primary = true, id
 //		find_by = user_id
 // }
-type UserPersonal struct {
-	UserID     int64            `json:"user_id" db:"user_id"`
-	FirstName  string           `json:"first_name" db:"first_name"`
-	LastName   string           `json:"last_name" db:"last_name"`
-	Gender     GenderType       `json:"gender" db:"gender"`
-	Cellphone  mysql.NullString `json:"cellphone" db:"cellphone"`
-	Phone      mysql.NullString `json:"phone" db:"phone"`
-	Address    mysql.NullString `json:"address" db:"address"`
-	CityID     mysql.NullInt64  `json:"city_id" db:"city_id"`
-	ProvinceID mysql.NullInt64  `json:"province_id" db:"province_id"`
-	CountryID  mysql.NullInt64  `json:"country_id" db:"country_id"`
-	ZipCode    mysql.NullInt64  `json:"zip_code" db:"zip_code"`
-	NationalID mysql.NullString `json:"national_id" db:"national_id"`
-	CreatedAt  time.Time        `json:"created_at" db:"created_at"`
-	UpdatedAt  time.Time        `json:"updated_at" db:"updated_at"`
-}
-
-// UserCorporation user corporation model
-// @Model {
-//		table = user_corporation
-//		primary = false, user_id
-//		find_by = user_id
-// }
-type UserCorporation struct {
-	UserID       int64            `json:"user_id" db:"user_id"`
-	FirstName    mysql.NullString `json:"first_name" db:"first_name"`
-	LastName     mysql.NullString `json:"last_name" db:"last_name"`
-	Name         mysql.NullString `json:"name" db:"name"`
-	Cellphone    mysql.NullString `json:"cellphone" db:"cellphone"`
-	Phone        mysql.NullString `json:"phone" db:"phone"`
-	Address      mysql.NullString `json:"address" db:"address"`
-	EconomicCode mysql.NullString `json:"economic_code" db:"economic_code"`
-	RegisterCode mysql.NullString `json:"register_code" db:"register_code"`
-	CityID       mysql.NullInt64  `json:"city_id" db:"city_id"`
-	ProvinceID   mysql.NullInt64  `json:"province_id" db:"province_id"`
-	CountryID    mysql.NullInt64  `json:"country_id" db:"country_id"`
-	ZipCode      mysql.NullInt64  `json:"zip_code" db:"zip_code"`
-	NationalID   mysql.NullString `json:"national_id" db:"national_id"`
-	CreatedAt    time.Time        `json:"created_at" db:"created_at"`
-	UpdatedAt    time.Time        `json:"updated_at" db:"updated_at"`
+type Corporation struct {
+	ID            int64            `json:"id" db:"id"`
+	UserID        int64            `json:"user_id" db:"user_id"`
+	LegalName     string           `json:"legal_name" db:"legal_name"`
+	LegalRegister mysql.NullString `json:"legal_register" db:"legal_register"`
+	EconomicCode  mysql.NullString `json:"economic_code" db:"economic_code"`
 }
 
 // RegisterUserPayload register
 type RegisterUserPayload struct {
-	Email       string
-	Password    string
-	FirstName   string
-	Mobile      string
-	LastName    string
-	CompanyName string
-	UserType    UserTyp
+	Email     string
+	Password  string
+	FirstName string
+	Mobile    string
+	LastName  string
+	LegalName string
 }
 
 // RegisterUser try to register user
@@ -223,9 +165,12 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 	u := &User{
 		Email:       pl.Email,
 		Password:    string(password),
-		UserType:    pl.UserType,
 		Status:      RegisteredUserStatus,
 		AccessToken: <-random.ID,
+		FirstName:   pl.FirstName,
+		LastName:    pl.LastName,
+		Cellphone:   mysql.NullString{String: pl.Mobile, Valid: pl.Mobile != ""},
+		Gender:      NotSpecifiedGender,
 	}
 	err = m.CreateUser(u)
 	if err != nil {
@@ -240,34 +185,17 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 	if err != nil {
 		return nil, err
 	}
-	var up *UserPersonal
-	var uc *UserCorporation
-	if pl.UserType == PersonalUserTyp {
-		up = &UserPersonal{
+
+	if pl.LegalName != "" {
+		uc := &Corporation{
 			UserID:    u.ID,
-			FirstName: pl.FirstName,
-			LastName:  pl.LastName,
-			Cellphone: mysql.NullString{String: pl.Mobile, Valid: pl.Mobile != ""},
-			Gender:    NotSpecifiedGender,
+			LegalName: pl.LegalName,
 		}
-		err = m.CreateUserPersonal(up)
+		err = m.CreateCorporation(uc)
 		if err != nil {
 			return nil, err
 		}
-		u.profile = up
-	} else {
-		uc = &UserCorporation{
-			UserID:    u.ID,
-			FirstName: mysql.NullString{String: pl.FirstName, Valid: true},
-			LastName:  mysql.NullString{String: pl.LastName, Valid: true},
-			Name:      mysql.NullString{String: pl.CompanyName, Valid: true},
-			Cellphone: mysql.NullString{String: pl.Mobile, Valid: pl.Mobile != ""},
-		}
-		err = m.CreateUserCorporation(uc)
-		if err != nil {
-			return nil, err
-		}
-		u.profile = uc
+		u.Corporation = uc
 	}
 	dManager, err := dmn.NewDmnManagerFromTransaction(m.GetRDbMap())
 	if err != nil {
@@ -354,28 +282,6 @@ func (m *Manager) FindUserByEmailDomain(email string, domain *dmn.Domain) (*User
 	}
 
 	return &res, nil
-}
-
-// GetUserPersonal get personal profile
-func (u *User) GetUserPersonal() *UserPersonal {
-	if u.profile == nil {
-		m := NewAaaManager()
-		up, err := m.FindUserPersonalByUserID(u.ID)
-		assert.Nil(err)
-		u.profile = up
-	}
-	return u.profile.(*UserPersonal)
-}
-
-// GetUserCorporation get corporation profile
-func (u *User) GetUserCorporation() *UserCorporation {
-	if u.profile == nil {
-		m := NewAaaManager()
-		uc, err := m.FindUserCorporationByUserID(u.ID)
-		assert.Nil(err)
-		u.profile = uc
-	}
-	return u.profile.(*UserCorporation)
 }
 
 var allowOldPassword = config.RegisterBoolean("crab.user.allow_old_pass", true,

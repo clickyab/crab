@@ -31,7 +31,7 @@ func (u Controller) checkMail(ctx context.Context, w http.ResponseWriter, r *htt
 	pl := u.MustGetPayload(ctx).(*checkMailPayload)
 	currentDomain := domain.MustGetDomain(ctx)
 	m := aaa.NewAaaManager()
-	// find user domains
+	// find userPayload domains
 	domains := m.FindUserDomainsByEmail(pl.Email)
 	var currentDomainFound bool
 	for i := range domains {

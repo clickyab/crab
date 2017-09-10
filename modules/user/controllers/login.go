@@ -17,7 +17,7 @@ type loginPayload struct {
 	Password string `json:"password" validate:"gt=5" error:"password is too short"`
 }
 
-// login user in system
+// login userPayload in system
 // @Route {
 // 		url = /login
 //		method = post

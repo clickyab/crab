@@ -1,8 +1,5 @@
 {
 	"properties": {
-		"company_name": {
-			"type": "string"
-		},
 		"email": {
 			"type": "string"
 		},
@@ -12,13 +9,13 @@
 		"last_name": {
 			"type": "string"
 		},
+		"legal_name": {
+			"type": "string"
+		},
 		"mobile": {
 			"type": "string"
 		},
 		"password": {
-			"type": "string"
-		},
-		"user_type": {
 			"type": "string"
 		}
 	},

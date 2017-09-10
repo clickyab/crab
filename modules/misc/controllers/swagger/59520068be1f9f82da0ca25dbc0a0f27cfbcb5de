@@ -1,6 +1,6 @@
 {
-	"post": {
-		"description": "login userPayload in system",
+	"put": {
+		"description": "forgetCallBack is the url coming from sent email \t\t@Route { \t\turl = /password/callback \t\tmethod = put payload = callBack \t\t200 = controller.NormalResponse \t\t400 = controller.ErrorResponseSimple }",
 		"parameters": [
 			{
 				"description": "",
@@ -8,7 +8,7 @@
 				"name": "payload_data",
 				"required": false,
 				"schema": {
-					"$ref": "#/definitions/user_loginPayload"
+					"$ref": "#/definitions/user_callBack"
 				}
 			}
 		],
@@ -16,16 +16,10 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/user_responseLoginOK"
+					"$ref": "#/definitions/controller_NormalResponse"
 				}
 			},
 			"400": {
-				"description": "",
-				"schema": {
-					"$ref": "#/definitions/controller_ErrorResponseSimple"
-				}
-			},
-			"403": {
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/controller_ErrorResponseSimple"

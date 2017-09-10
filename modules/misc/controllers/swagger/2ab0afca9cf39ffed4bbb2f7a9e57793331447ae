@@ -1,6 +1,6 @@
 {
-	"put": {
-		"description": "EditPersonal route for edit personal profile",
+	"get": {
+		"description": "closeSession closes current session",
 		"parameters": [
 			{
 				"description": "the security token, get it from login route",
@@ -8,28 +8,13 @@
 				"name": "token",
 				"required": true,
 				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "body",
-				"name": "payload_data",
-				"required": false,
-				"schema": {
-					"$ref": "#/definitions/user_userPayload"
-				}
 			}
 		],
 		"responses": {
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/user_responseLoginOK"
-				}
-			},
-			"400": {
-				"description": "",
-				"schema": {
-					"$ref": "#/definitions/controller_ErrorResponseSimple"
+					"$ref": "#/definitions/controller_NormalResponse"
 				}
 			},
 			"401": {

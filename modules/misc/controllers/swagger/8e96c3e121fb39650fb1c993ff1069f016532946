@@ -1,6 +1,6 @@
 {
-	"put": {
-		"description": "EditPersonal route for edit personal profile",
+	"get": {
+		"description": "logout is for the logout from the system",
 		"parameters": [
 			{
 				"description": "the security token, get it from login route",
@@ -8,15 +8,6 @@
 				"name": "token",
 				"required": true,
 				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "body",
-				"name": "payload_data",
-				"required": false,
-				"schema": {
-					"$ref": "#/definitions/user_userPayload"
-				}
 			}
 		],
 		"responses": {
@@ -24,12 +15,6 @@
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/user_responseLoginOK"
-				}
-			},
-			"400": {
-				"description": "",
-				"schema": {
-					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			},
 			"401": {
