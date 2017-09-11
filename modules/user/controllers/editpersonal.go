@@ -104,7 +104,7 @@ func (u *Controller) Edit(ctx context.Context, w http.ResponseWriter, r *http.Re
 		}
 	}
 
-	u.createLoginResponse(w, cu, authz.MustGetToken(ctx))
+	u.createLoginResponseWithToken(w, cu, authz.MustGetToken(ctx))
 }
 
 func stringToNullString(val string) mysql.NullString {

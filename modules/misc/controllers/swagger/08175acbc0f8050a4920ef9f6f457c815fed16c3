@@ -1,0 +1,65 @@
+{
+	"properties": {
+		"address": {
+			"type": "string"
+		},
+		"avatar": {
+			"type": "string"
+		},
+		"cellphone": {
+			"type": "string"
+		},
+		"city_id": {
+			"type": "integer"
+		},
+		"city_name": {
+			"type": "string"
+		},
+		"country_id": {
+			"type": "integer"
+		},
+		"country_name": {
+			"type": "string"
+		},
+		"economic_code": {
+			"type": "string"
+		},
+		"email": {
+			"type": "string"
+		},
+		"first_name": {
+			"type": "string"
+		},
+		"gender": {
+			"type": "string"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"land_line": {
+			"type": "string"
+		},
+		"last_name": {
+			"type": "string"
+		},
+		"legal_name": {
+			"type": "string"
+		},
+		"legal_register": {
+			"type": "string"
+		},
+		"postal_code": {
+			"type": "string"
+		},
+		"province_id": {
+			"type": "integer"
+		},
+		"province_name": {
+			"type": "string"
+		},
+		"ssn": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

@@ -33,7 +33,7 @@ func (c Controller) closeSession(ctx context.Context, w http.ResponseWriter, r *
 // 		url = /logout/closeother
 //		method = get
 //		middleware = authz.Authenticate
-//		200 = controller.NormalResponse
+//		200 = responseLoginOK
 // }
 func (c Controller) closeAllOtherSession(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	token := authz.MustGetToken(ctx)
@@ -51,7 +51,5 @@ func (c Controller) closeAllOtherSession(ctx context.Context, w http.ResponseWri
 	err = m.UpdateUser(user)
 	assert.Nil(err)
 
-	respToken := aaa.GetNewToken(user)
-
-	c.createLoginResponse(w, user, respToken)
+	c.createLoginResponse(w, user)
 }

@@ -3,87 +3,27 @@
 		"account": {
 			"properties": {
 				"address": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"avatar": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"cellphone": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"city_id": {
-					"properties": {
-						"Int64": {
-							"type": "integer"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "integer"
 				},
-				"corporation": {
-					"properties": {
-						"economic_code": {
-							"properties": {
-								"String": {
-									"type": "string"
-								},
-								"Valid": {
-									"type": "boolean"
-								}
-							},
-							"type": "object"
-						},
-						"id": {
-							"type": "integer"
-						},
-						"legal_name": {
-							"type": "string"
-						},
-						"legal_register": {
-							"properties": {
-								"String": {
-									"type": "string"
-								},
-								"Valid": {
-									"type": "boolean"
-								}
-							},
-							"type": "object"
-						},
-						"user_id": {
-							"type": "integer"
-						}
-					},
-					"type": "object"
+				"city_name": {
+					"type": "string"
 				},
-				"created_at": {
-					"format": "dateTime",
+				"country_id": {
+					"type": "integer"
+				},
+				"country_name": {
+					"type": "string"
+				},
+				"economic_code": {
 					"type": "string"
 				},
 				"email": {
@@ -99,49 +39,27 @@
 					"type": "integer"
 				},
 				"land_line": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"last_name": {
 					"type": "string"
 				},
-				"password": {
+				"legal_name": {
+					"type": "string"
+				},
+				"legal_register": {
 					"type": "string"
 				},
 				"postal_code": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
-				},
-				"ssn": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
-				},
-				"status": {
 					"type": "string"
 				},
-				"updated_at": {
-					"format": "dateTime",
+				"province_id": {
+					"type": "integer"
+				},
+				"province_name": {
+					"type": "string"
+				},
+				"ssn": {
 					"type": "string"
 				}
 			},

@@ -22,7 +22,7 @@ type checkActivePayload struct {
 // 		url = /active
 //		method = patch
 //		payload = checkActivePayload
-//		200 = controller.NormalResponse
+//		200 = responseLoginOK
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 // }
@@ -60,5 +60,6 @@ func (u *Controller) checkActive(ctx context.Context, w http.ResponseWriter, r *
 	//all good change active status
 	user.Status = aaa.ActiveUserStatus
 	assert.Nil(m.UpdateUser(user))
-	u.OKResponse(w, nil)
+
+	u.createLoginResponse(w, user)
 }

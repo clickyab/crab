@@ -31,7 +31,6 @@ type registerPayload struct {
 // 		url = /register
 //		method = post
 //		payload = registerPayload
-//		200 = responseLoginOK
 //		400 = controller.ErrorResponseSimple
 // }
 func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -52,7 +51,6 @@ func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *htt
 		u.BadResponse(w, trans.E("error registering userPayload"))
 		return
 	}
-	token := aaa.GetNewToken(usr)
 	//generate activation code
 	c := rand.Intn(99999) + 100000
 	//save in redis
@@ -73,6 +71,6 @@ func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *htt
 	go func() {
 		notification.Send("welcome", message, a)
 	}()
-	u.createLoginResponse(w, usr, token)
+	u.OKResponse(w, "user has been created")
 
 }

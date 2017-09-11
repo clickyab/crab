@@ -19,7 +19,7 @@
 					"$ref": "#/definitions/user_responseLoginOK"
 				}
 			},
-			"400": {
+			"401": {
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/controller_ErrorResponseSimple"
