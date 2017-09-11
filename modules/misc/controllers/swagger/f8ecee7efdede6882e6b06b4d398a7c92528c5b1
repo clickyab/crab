@@ -13,12 +13,6 @@
 			}
 		],
 		"responses": {
-			"200": {
-				"description": "",
-				"schema": {
-					"$ref": "#/definitions/user_responseLoginOK"
-				}
-			},
 			"400": {
 				"description": "",
 				"schema": {

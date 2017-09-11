@@ -4,9 +4,6 @@
 		"application/json"
 	],
 	"definitions": {
-		"aaa_Corporation": "file://4e6f5731bb80c9554df3fbb4b437c0b56a772413",
-		"aaa_GenderType": "file://e2e02a6468918500001d01a0c2e6d2d68e39fa70",
-		"aaa_UserValidStatus": "file://faa533736a56bc53f8b52e4b68a1dc6b633c119e",
 		"controller_ErrorResponseSimple": "file://035d0d82ff8e72fec8d60b07faa9b516e0ab40c0",
 		"controller_NormalResponse": "file://79ffc6e5cd8d5b843aa71b6e8c5ff43c8ee12e76",
 		"controllers_browserResponse": "file://7e564a516c6ee5a8c78a405acc31598126a171aa",
@@ -43,7 +40,8 @@
 		"user_registerPayload": "file://e58b6e35a3a18cfe0c6853307c71d4d79fc839be",
 		"user_responseLoginOK": "file://39664c27b42f2b750f0c42b6f51f2a88bfae5caa",
 		"user_sendActivePayload": "file://51b119212483c76a8972d5dc787110dc3d208d96",
-		"user_userPayload": "file://32e49b32f8778691637df812d65329bb0ba5a7c9"
+		"user_userPayload": "file://32e49b32f8778691637df812d65329bb0ba5a7c9",
+		"user_userResponse": "file://08175acbc0f8050a4920ef9f6f457c815fed16c3"
 	},
 	"host": "127.0.0.1",
 	"info": {

@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
+	"clickyab.com/crab/modules/location/location"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"clickyab.com/crab/modules/user/ucfg"
@@ -13,6 +14,7 @@ import (
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/hub"
 	"github.com/clickyab/services/kv"
+	"github.com/clickyab/services/mysql"
 )
 
 // Controller is the controller for the userPayload package
@@ -32,8 +34,8 @@ type auditData struct {
 }
 
 type responseLoginOK struct {
-	Token   string    `json:"token"`
-	Account *aaa.User `json:"account"`
+	Token   string `json:"token"`
+	Account userResponse   `json:"account"`
 }
 
 var (
@@ -98,11 +100,78 @@ func audit(username, action, class string, data interface{}) {
 	)
 }
 
-func (c Controller) createLoginResponse(w http.ResponseWriter, user *aaa.User, token string) {
+type userResponse struct {
+	ID            int64          `json:"id"`
+	Email         string         `json:"email"`
+	FirstName     string         `json:"first_name"`
+	LastName      string         `json:"last_name"`
+	Avatar        *string        `json:"avatar, omitempty"`
+	CityName      string         `json:"city_name, omitempty"`
+	CityID        int64          `json:"city_id, omitempty"`
+	ProvinceName  string         `json:"province_name, omitempty"`
+	ProvinceID    int64          `json:"province_id, omitempty"`
+	CountryName   string         `json:"country_name, omitempty"`
+	CountryID     int64          `json:"country_id, omitempty"`
+	LandLine      *string        `json:"land_line, omitempty"`
+	Cellphone     *string        `json:"cellphone, omitempty"`
+	PostalCode    *string        `json:"postal_code, omitempty"`
+	Address       *string        `json:"address, omitempty"`
+	Gender        aaa.GenderType `json:"gender, omitempty"`
+	SSN           *string        `json:"ssn, omitempty"`
+	LegalName     string         `json:"legal_name, omitempty"`
+	LegalRegister *string        `json:"legal_register, omitempty"`
+	EconomicCode  *string        `json:"economic_code, omitempty"`
+}
+
+func (c Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aaa.User, token string) {
+	u := userResponse{}
+
+	u.ID = user.ID
+	u.Email = user.Email
+	u.FirstName = user.FirstName
+	u.LastName = user.LastName
+	u.Avatar = nullableToPointer(user.Avatar)
+	u.LandLine = nullableToPointer(user.LandLine)
+	u.Cellphone = nullableToPointer(user.Cellphone)
+	u.PostalCode = nullableToPointer(user.PostalCode)
+	u.Address = nullableToPointer(user.Address)
+	u.Gender = user.Gender
+	u.SSN = nullableToPointer(user.SSN)
+	if user.Corporation != nil {
+
+		u.LegalName = user.Corporation.LegalName
+		u.LegalRegister = nullableToPointer(user.Corporation.LegalRegister)
+		u.EconomicCode = nullableToPointer(user.Corporation.EconomicCode)
+	}
+
+	var l *location.CityInfo
+	if user.CityID.Valid {
+		m := location.NewLocationManager()
+		m.FindAllByCityID(user.CityID.Int64)
+
+		u.CityName = l.CityName
+		u.CityID = l.CityID
+		u.ProvinceName = l.ProvinceName
+		u.ProvinceID = l.ProvinceID
+		u.CountryName = l.CountryName
+		u.CountryID = l.CountryID
+	}
 	res := responseLoginOK{
 		Token:   token,
-		Account: user,
+		Account: u,
 	}
 
 	c.OKResponse(w, res)
+}
+
+func nullableToPointer(v mysql.NullString) *string {
+	if v.Valid {
+		return &v.String
+	}
+	return nil
+}
+
+func (c Controller) createLoginResponse(w http.ResponseWriter, user *aaa.User) {
+	token := aaa.GetNewToken(user)
+	c.createLoginResponseWithToken(w, user, token)
 }

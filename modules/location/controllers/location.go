@@ -81,3 +81,4 @@ func (ctrl *Controller) Cities(ctx context.Context, w http.ResponseWriter, r *ht
 	}
 	ctrl.JSON(w, http.StatusOK, res)
 }
+
