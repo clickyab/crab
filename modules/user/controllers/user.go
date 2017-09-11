@@ -14,7 +14,6 @@ import (
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/hub"
 	"github.com/clickyab/services/kv"
-	"github.com/clickyab/services/mysql"
 )
 
 // Controller is the controller for the userPayload package
@@ -34,8 +33,8 @@ type auditData struct {
 }
 
 type responseLoginOK struct {
-	Token   string `json:"token"`
-	Account userResponse   `json:"account"`
+	Token   string       `json:"token"`
+	Account userResponse `json:"account"`
 }
 
 var (
@@ -105,22 +104,22 @@ type userResponse struct {
 	Email         string         `json:"email"`
 	FirstName     string         `json:"first_name"`
 	LastName      string         `json:"last_name"`
-	Avatar        *string        `json:"avatar, omitempty"`
-	CityName      string         `json:"city_name, omitempty"`
-	CityID        int64          `json:"city_id, omitempty"`
-	ProvinceName  string         `json:"province_name, omitempty"`
-	ProvinceID    int64          `json:"province_id, omitempty"`
-	CountryName   string         `json:"country_name, omitempty"`
-	CountryID     int64          `json:"country_id, omitempty"`
-	LandLine      *string        `json:"land_line, omitempty"`
-	Cellphone     *string        `json:"cellphone, omitempty"`
-	PostalCode    *string        `json:"postal_code, omitempty"`
-	Address       *string        `json:"address, omitempty"`
-	Gender        aaa.GenderType `json:"gender, omitempty"`
-	SSN           *string        `json:"ssn, omitempty"`
-	LegalName     string         `json:"legal_name, omitempty"`
-	LegalRegister *string        `json:"legal_register, omitempty"`
-	EconomicCode  *string        `json:"economic_code, omitempty"`
+	Avatar        string         `json:"avatar,omitempty"`
+	CityName      string         `json:"city_name,omitempty"`
+	CityID        int64          `json:"city_id,omitempty"`
+	ProvinceName  string         `json:"province_name,omitempty"`
+	ProvinceID    int64          `json:"province_id,omitempty"`
+	CountryName   string         `json:"country_name,omitempty"`
+	CountryID     int64          `json:"country_id,omitempty"`
+	LandLine      string         `json:"land_line,omitempty"`
+	Cellphone     string         `json:"cellphone,omitempty"`
+	PostalCode    string         `json:"postal_code,omitempty"`
+	Address       string         `json:"address,omitempty"`
+	Gender        aaa.GenderType `json:"gender,omitempty"`
+	SSN           string         `json:"ssn,omitempty"`
+	LegalName     string         `json:"legal_name,omitempty"`
+	LegalRegister string         `json:"legal_register,omitempty"`
+	EconomicCode  string         `json:"economic_code,omitempty"`
 }
 
 func (c Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aaa.User, token string) {
@@ -130,18 +129,19 @@ func (c Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aa
 	u.Email = user.Email
 	u.FirstName = user.FirstName
 	u.LastName = user.LastName
-	u.Avatar = nullableToPointer(user.Avatar)
-	u.LandLine = nullableToPointer(user.LandLine)
-	u.Cellphone = nullableToPointer(user.Cellphone)
-	u.PostalCode = nullableToPointer(user.PostalCode)
-	u.Address = nullableToPointer(user.Address)
-	u.Gender = user.Gender
-	u.SSN = nullableToPointer(user.SSN)
+	u.Avatar = user.Avatar.String
+	u.LandLine = user.LandLine.String
+	u.Cellphone = user.Cellphone.String
+	u.PostalCode = user.PostalCode.String
+	u.Address = user.Address.String
+	if user.Gender != aaa.NotSpecifiedGender {
+		u.Gender = user.Gender
+	}
+	u.SSN = user.SSN.String
 	if user.Corporation != nil {
-
 		u.LegalName = user.Corporation.LegalName
-		u.LegalRegister = nullableToPointer(user.Corporation.LegalRegister)
-		u.EconomicCode = nullableToPointer(user.Corporation.EconomicCode)
+		u.LegalRegister = user.Corporation.LegalRegister.String
+		u.EconomicCode = user.Corporation.EconomicCode.String
 	}
 
 	var l *location.CityInfo
@@ -162,13 +162,6 @@ func (c Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aa
 	}
 
 	c.OKResponse(w, res)
-}
-
-func nullableToPointer(v mysql.NullString) *string {
-	if v.Valid {
-		return &v.String
-	}
-	return nil
 }
 
 func (c Controller) createLoginResponse(w http.ResponseWriter, user *aaa.User) {
