@@ -8,21 +8,6 @@ import (
 	"github.com/clickyab/services/mysql"
 )
 
-// ActiveStatus is the domain active status
-type (
-	// ActiveStatus is the domain active status
-	// @Enum{
-	// }
-	ActiveStatus string
-)
-
-const (
-	// ActiveStatusYes domain active
-	ActiveStatusYes ActiveStatus = "yes"
-	// ActiveStatusNo for inactive domain
-	ActiveStatusNo ActiveStatus = "no"
-)
-
 // Domain domain model in database
 // @Model {
 //		table = domains
@@ -34,7 +19,7 @@ type Domain struct {
 	ID          int64            `json:"id" db:"id"`
 	Name        string           `json:"name" db:"name"`
 	Description mysql.NullString `json:"description" db:"description"`
-	Active      ActiveStatus     `json:"active" db:"active"`
+	Active      bool             `json:"active" db:"active"`
 	CreatedAt   time.Time        `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time        `json:"updated_at" db:"updated_at"`
 }
@@ -53,7 +38,7 @@ type DomainUser struct {
 func (m *Manager) FindActiveDomainByName(name string) (*Domain, error) {
 	var res Domain
 	q := fmt.Sprintf("SELECT * FROM %s WHERE name=? AND active=?", DomainTableFull)
-	err := m.GetRDbMap().SelectOne(&res, q, name, ActiveStatusYes)
+	err := m.GetRDbMap().SelectOne(&res, q, name, true)
 	if err != nil {
 		return nil, err
 	}

@@ -7,7 +7,7 @@
 			"items": {
 				"properties": {
 					"active": {
-						"type": "string"
+						"type": "boolean"
 					},
 					"created_at": {
 						"format": "dateTime",

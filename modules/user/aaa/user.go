@@ -241,7 +241,7 @@ func (m *Manager) FindUserDomainsByEmail(e string) []dmn.Domain {
 		"INNER JOIN domain_user AS dm ON dm.domain_id=d.id " +
 		"INNER JOIN users AS u ON u.id=dm.user_id " +
 		"WHERE u.email=? AND d.active=?"
-	_, err := m.GetRDbMap().Select(&res, q, e, dmn.ActiveStatusYes)
+	_, err := m.GetRDbMap().Select(&res, q, e, true)
 	assert.Nil(err)
 	return res
 }
