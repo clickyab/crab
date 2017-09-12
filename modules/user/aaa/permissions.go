@@ -7,19 +7,19 @@ import (
 
 	"strconv"
 
-	"github.com/sirupsen/logrus"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/permission"
+	"github.com/sirupsen/logrus"
 )
 
-func (u *User) Has(scope permission.UserScope, p permission.Token) (permission.UserScope, bool) {
+func (u *User) Has(scope permission.UserScope, p permission.Token, d int64) (permission.UserScope, bool) {
 	perm := string(p)
 	if !scope.IsValid() {
 		return permission.ScopeSelf, false
 	}
 
-	u.setUserRoles()
-	u.setUserPermissions()
+	u.setUserRoles(d)
+	u.setUserPermissions(d)
 
 	var (
 		rScope      permission.UserScope
@@ -29,12 +29,6 @@ func (u *User) Has(scope permission.UserScope, p permission.Token) (permission.U
 	switch scope {
 	case permission.ScopeSelf:
 		if u.resource[permission.ScopeSelf][perm] {
-			rScope = scope
-			permGranted = true
-		}
-		fallthrough
-	case permission.ScopeParent:
-		if u.resource[permission.ScopeParent][perm] {
 			rScope = scope
 			permGranted = true
 		}
@@ -49,30 +43,23 @@ func (u *User) Has(scope permission.UserScope, p permission.Token) (permission.U
 	return rScope, permGranted
 }
 
-func (u *User) HasOn(perm permission.Token, ownerID, parentID int64, scopes ...permission.UserScope) (permission.UserScope, bool) {
+func (u *User) HasOn(perm permission.Token, ownerID, parentID int64, DomainID int64, scopes ...permission.UserScope) (permission.UserScope, bool) {
 	if len(scopes) == 0 {
 		return permission.ScopeSelf, false
 	}
 
-	u.setUserRoles()
-	u.setUserPermissions()
+	u.setUserRoles(DomainID)
+	u.setUserPermissions(DomainID)
 
-	if !NewAaaManager().ConsularCustomerExists(parentID, ownerID) {
-		return permission.ScopeSelf, false
-	}
-
-	var self, parent, global bool
+	var self, global bool
 
 	if len(scopes) == 0 {
 		self = true
-		parent = true
 		global = true
 	} else {
 		for i := range scopes {
 			if scopes[i] == permission.ScopeSelf {
 				self = true
-			} else if scopes[i] == permission.ScopeParent {
-				parent = true
 			} else if scopes[i] == permission.ScopeGlobal {
 				global = true
 			}
@@ -86,13 +73,6 @@ func (u *User) HasOn(perm permission.Token, ownerID, parentID int64, scopes ...p
 			}
 		}
 	}
-	if parent {
-		if parentID == u.ID {
-			if u.resource[permission.ScopeParent][string(perm)] {
-				return permission.ScopeParent, true
-			}
-		}
-	}
 
 	if global {
 		if u.resource[permission.ScopeGlobal][string(perm)] || u.resource[permission.ScopeGlobal]["god"] {
@@ -102,28 +82,28 @@ func (u *User) HasOn(perm permission.Token, ownerID, parentID int64, scopes ...p
 	return permission.ScopeSelf, false
 }
 
-func (u *User) getUserRoles() []Role {
+func (u *User) getUserRoles(DomainID int64) []Role {
 	var roles []Role
-	query := fmt.Sprintf("SELECT roles.* FROM %[1]s INNER JOIN %[2]s ON %[2]s.role_id=roles.id WHERE %[2]s.user_id=?", RoleTableFull, RoleUserTableFull)
+	query := fmt.Sprintf("SELECT roles.* FROM %[1]s INNER JOIN %[2]s ON %[2]s.role_id=roles.id WHERE %[2]s.user_id=? AND %[1]s.domain_id=?", RoleTableFull, RoleUserTableFull)
 
-	_, err := NewAaaManager().GetRDbMap().Select(&roles, query, u.ID)
+	_, err := NewAaaManager().GetRDbMap().Select(&roles, query, u.ID, DomainID)
 	assert.Nil(err)
 	return roles
 }
 
-func (u *User) setUserRoles() {
+func (u *User) setUserRoles(DomainID int64) {
 	if len(u.roles) == 0 {
-		u.roles = u.getUserRoles()
+		u.roles = u.getUserRoles(DomainID)
 	}
 }
 
-func (u *User) getUserPermissions() map[permission.UserScope]map[string]bool {
+func (u *User) getUserPermissions(DomainID int64) map[permission.UserScope]map[string]bool {
 	var roleIDs []string
 	var rolePerm []RolePermission
 	var resp = make(map[permission.UserScope]map[string]bool, 0)
 
 	if len(u.roles) == 0 {
-		u.setUserRoles()
+		u.setUserRoles(DomainID)
 	}
 	roles := u.roles
 
@@ -154,8 +134,8 @@ func (u *User) getUserPermissions() map[permission.UserScope]map[string]bool {
 	return resp
 }
 
-func (u *User) setUserPermissions() {
+func (u *User) setUserPermissions(DomainID int64) {
 	if u.resource == nil {
-		u.resource = u.getUserPermissions()
+		u.resource = u.getUserPermissions(DomainID)
 	}
 }

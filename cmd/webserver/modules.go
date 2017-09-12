@@ -8,5 +8,6 @@ import (
 	_ "clickyab.com/crab/modules/misc"
 	_ "clickyab.com/crab/modules/upload"
 	_ "clickyab.com/crab/modules/user"
+	_ "clickyab.com/crab/modules/publisher"
 	_ "github.com/clickyab/services/kv/redis"
 )

@@ -1,0 +1,16 @@
+{
+	"get": {
+		"description": "",
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controllers_listPublisherDefResponse"
+				}
+			}
+		},
+		"tags": [
+			"controllers"
+		]
+	}
+}

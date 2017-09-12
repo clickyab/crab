@@ -10,11 +10,11 @@ import (
 // AUTO GENERATED CODE. DO NOT EDIT!
 
 const (
-	// ConsularCustomerTableFull is the ConsularCustomer table name
-	ConsularCustomerTableFull = "consular_customer"
-
 	// CorporationTableFull is the Corporation table name
 	CorporationTableFull = "corporations"
+
+	// ParentUserTableFull is the ParentUser table name
+	ParentUserTableFull = "parent_user"
 
 	// RolePermissionTableFull is the RolePermission table name
 	RolePermissionTableFull = "role_permission"
@@ -54,20 +54,21 @@ func NewAaaManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 func (m *Manager) Initialize() {
 
 	m.AddTableWithName(
-		ConsularCustomer{},
-		ConsularCustomerTableFull,
-	).SetKeys(
-		false,
-		"ConsularyID",
-		"CustomerID",
-	)
-
-	m.AddTableWithName(
 		Corporation{},
 		CorporationTableFull,
 	).SetKeys(
 		true,
 		"ID",
+	)
+
+	m.AddTableWithName(
+		ParentUser{},
+		ParentUserTableFull,
+	).SetKeys(
+		false,
+		"UserID",
+		"ParentID",
+		"DomainID",
 	)
 
 	m.AddTableWithName(

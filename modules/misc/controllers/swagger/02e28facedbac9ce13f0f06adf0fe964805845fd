@@ -1,0 +1,99 @@
+{
+	"get": {
+		"description": "",
+		"parameters": [
+			{
+				"description": " show definition in result?",
+				"in": "query",
+				"name": "def",
+				"required": false,
+				"type": "bool"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " search the id field",
+				"in": "query",
+				"name": "id",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "the security token, get it from login route",
+				"in": "header",
+				"name": "token",
+				"required": true,
+				"type": "string"
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controllers_listPublisherResponse"
+				}
+			},
+			"401": {
+				"description": "you are not authorized",
+				"schema": {
+					"properties": {
+						"error": {
+							"properties": {
+								"params": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								},
+								"text": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						}
+					},
+					"title": "not_authorized",
+					"type": "object"
+				}
+			},
+			"403": {
+				"description": "forbidden, you have no access here",
+				"schema": {
+					"properties": {
+						"error": {
+							"properties": {
+								"params": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								},
+								"text": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						}
+					},
+					"title": "forbidden",
+					"type": "object"
+				}
+			}
+		},
+		"tags": [
+			"controllers"
+		]
+	}
+}
