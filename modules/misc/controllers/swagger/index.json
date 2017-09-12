@@ -39,16 +39,16 @@
 		"trans_t9Base": "file://c7c628362ddca9cd288d4bb42b1d98c3070b9da6",
 		"user_callBack": "file://7e3ac4b2161f375b1964b31d63d2795cb7a39434",
 		"user_changePassword": "file://f06f03a09cc5408cc6abb8f71f63d00d966ed7d5",
-		"user_checkActivePayload": "file://c8b83d211bd4c6fe67d49da7083db166edaacda0",
 		"user_checkMailPayload": "file://ed050dc843d3484b495ecf504aa772590c3f59aa",
 		"user_checkMailResponse": "file://0cb4bd529760dbb3183017eb0ef0cce6e42dfdbf",
 		"user_forget": "file://7d5e5cfab1d5789321921c11b4ed3a6c1435005f",
 		"user_loginPayload": "file://a3152804bb2c7852c77d345a2186b7b647a941ee",
 		"user_registerPayload": "file://e58b6e35a3a18cfe0c6853307c71d4d79fc839be",
 		"user_responseLoginOK": "file://39664c27b42f2b750f0c42b6f51f2a88bfae5caa",
-		"user_sendActivePayload": "file://51b119212483c76a8972d5dc787110dc3d208d96",
 		"user_userPayload": "file://32e49b32f8778691637df812d65329bb0ba5a7c9",
-		"user_userResponse": "file://08175acbc0f8050a4920ef9f6f457c815fed16c3"
+		"user_userResponse": "file://08175acbc0f8050a4920ef9f6f457c815fed16c3",
+		"user_verifyIdResponse": "file://827bd4e8a9a3d28270805640ce1be787cb5968f9",
+		"user_verifyResendPayload": "file://81d85ecbfe8cd545656a36d66f72430ceafcef62"
 	},
 	"host": "127.0.0.1",
 	"info": {
@@ -71,7 +71,6 @@
 		"/publisher/list": "file://6a52d1a67ea925cef7da791d8258c46dbf9008e9",
 		"/publisher/list/definition": "file://97edc26a567a863154941f2faa85306c012bf5da",
 		"/upload/{module}": "file://b6a374ab08c6aef32606e9455b638b412e53036c",
-		"/user/active": "file://84e8465502012e943ddff0078116560d8319e01c",
 		"/user/login": "file://da3fcb65e530bfb28272ddbcf251dad73f8ade81",
 		"/user/logout": "file://b749e0f4751e88cd6784f011030a45c5c3a39d7b",
 		"/user/logout/closeother": "file://db2d1b73e3b04f7d70ca243e9c2c93ddc09dfd9b",
@@ -81,7 +80,9 @@
 		"/user/password/forget": "file://adbcda3d72c31c85c82ffc5a06097b0f37059e7d",
 		"/user/personal": "file://3354f7980b8bebb6268fed0fa44458faacf07c36",
 		"/user/ping": "file://4416a4e4c163a273509696c8f207e7a9fb05874e",
-		"/user/register": "file://f8ecee7efdede6882e6b06b4d398a7c92528c5b1"
+		"/user/register": "file://f8ecee7efdede6882e6b06b4d398a7c92528c5b1",
+		"/user/verify/resend": "file://776d65a648c51a6bd28a3248902a9a5c61de8cf5",
+		"/user/verify/{hash}/{key}": "file://e7a491e85b22fe20a9665b5f445796776acf43ef"
 	},
 	"produces": [
 		"application/json"

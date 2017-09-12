@@ -1,0 +1,22 @@
+{
+	"post": {
+		"description": "verifyResend will send an email again",
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/user_verifyResendPayload"
+				}
+			},
+			"404": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			}
+		},
+		"tags": [
+			"user"
+		]
+	}
+}

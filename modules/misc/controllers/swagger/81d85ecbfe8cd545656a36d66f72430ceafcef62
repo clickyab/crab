@@ -1,0 +1,8 @@
+{
+	"properties": {
+		"email_string": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

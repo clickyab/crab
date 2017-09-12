@@ -2,17 +2,10 @@ package user
 
 import (
 	"context"
-	"math/rand"
 	"net/http"
-
-	"fmt"
-	"time"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
-	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/kv"
-	"github.com/clickyab/services/notification"
 	"github.com/clickyab/services/trans"
 )
 
@@ -51,26 +44,7 @@ func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *htt
 		u.BadResponse(w, trans.E("error registering userPayload"))
 		return
 	}
-	//generate activation code
-	c := rand.Intn(99999) + 100000
-	//save in redis
-	for i := 0; i < 10; i++ {
-		if len(kv.NewEavStore(fmt.Sprintf("%s%s%d", active, seperator, c)).AllKeys()) == 0 {
-			break
-		}
-		c = rand.Intn(99999) + 100000
-	}
-
-	err = kv.NewEavStore(fmt.Sprintf("%s%s%d", active, seperator, c)).
-		SetSubKey(userID, fmt.Sprintf("%d", usr.ID)).
-		Save(2 * time.Hour)
-	assert.Nil(err)
-	//send mail to user
-	a := notification.Packet{Platform: notification.MailType, To: []string{pl.Email}}
-	message := fmt.Sprintf("welcome to crab this is your activation code\n%d", c)
-	go func() {
-		notification.Send("welcome", message, a)
-	}()
-	u.OKResponse(w, nil)
+	sendVerifyCode(usr)
+	u.OKResponse(w, "user has been created")
 
 }
