@@ -7,6 +7,7 @@ import (
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/trans"
+	"clickyab.com/crab/modules/domain/middleware/domain"
 )
 
 const (
@@ -19,9 +20,10 @@ func AuthorizeGenerator(resource permission.Token, scope permission.UserScope) f
 	return func(next framework.Handler) framework.Handler {
 		return func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			u := MustGetUser(ctx)
-			grantedScope, ok := u.Has(scope, resource)
+			currentDomain:=domain.MustGetDomain(ctx)
+			grantedScope, ok := u.Has(scope, resource,currentDomain.ID)
 			if !ok {
-				grantedScope, ok = u.Has(permission.ScopeGlobal, permission.God)
+				grantedScope, ok = u.Has(permission.ScopeGlobal, permission.God,currentDomain.ID)
 				resource = permission.God
 			}
 

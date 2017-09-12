@@ -1,0 +1,38 @@
+{
+	"properties": {
+		"data": {
+			"type": "string"
+		},
+		"filter": {
+			"type": "boolean"
+		},
+		"filter_valid_map": {
+			"additionalProperties": {
+				"items": {
+					"type": "string"
+				},
+				"type": "array"
+			},
+			"type": "object"
+		},
+		"name": {
+			"type": "string"
+		},
+		"searchable": {
+			"type": "boolean"
+		},
+		"sortable": {
+			"type": "boolean"
+		},
+		"title": {
+			"type": "string"
+		},
+		"type": {
+			"type": "string"
+		},
+		"visible": {
+			"type": "boolean"
+		}
+	},
+	"type": "object"
+}
