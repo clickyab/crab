@@ -8,143 +8,143 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/clickyab/services/aredis",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/array",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/assert",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/codegen/annotate",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/codegen/datatable",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/codegen/enums",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/codegen/gin",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/codegen/models_mysql",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/codegen/plugins",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/codegen/swagger",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/codegen/validate",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/config",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/fluentd",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/framework",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/framework/controller",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/framework/middleware",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/framework/router",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/healthz",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/hub",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/initializer",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/kv",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/kv/redis",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/migration",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/mysql",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/mysql/connection/mysql",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/notification",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/notification/internal/mail",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/permission",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/random",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/redmine",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/safe",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/shell",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/slack",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/trans",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/clickyab/services/version",
-			"Rev": "6bc1148716ceae280a4cbc2f0657c5a30bd3c931"
+			"Rev": "764cbd2559ecb2c1f42e7f83c31d1ea68c94c045"
 		},
 		{
 			"ImportPath": "github.com/evalphobia/logrus_fluent",
@@ -186,8 +186,8 @@
 		},
 		{
 			"ImportPath": "github.com/go-sql-driver/mysql",
-			"Comment": "v1.3-31-g26471af",
-			"Rev": "26471af196a17ee75a22e6481b5a5897fb16b081"
+			"Comment": "v1.3-28-g3955978",
+			"Rev": "3955978caca48c1658a4bb7a9c6a0f084e326af3"
 		},
 		{
 			"ImportPath": "github.com/goraz/humanize",
@@ -196,26 +196,6 @@
 		{
 			"ImportPath": "github.com/jinzhu/inflection",
 			"Rev": "1c35d901db3da928c72a72d8458480cc9ade058f"
-		},
-		{
-			"ImportPath": "github.com/labstack/gommon/color",
-			"Comment": "0.2.2",
-			"Rev": "779b8a8b9850a97acba6a3fe20feb628c39e17c1"
-		},
-		{
-			"ImportPath": "github.com/labstack/gommon/log",
-			"Comment": "0.2.2",
-			"Rev": "779b8a8b9850a97acba6a3fe20feb628c39e17c1"
-		},
-		{
-			"ImportPath": "github.com/mattn/go-colorable",
-			"Comment": "v0.0.9-6-gad5389d",
-			"Rev": "ad5389df28cdac544c99bd7b9161a0b5b6ca9d1b"
-		},
-		{
-			"ImportPath": "github.com/mattn/go-isatty",
-			"Comment": "v0.0.2",
-			"Rev": "fc9e8d8ef48496124e79ae0df75490096eccf6fe"
 		},
 		{
 			"ImportPath": "github.com/ogier/pflag",
@@ -228,7 +208,7 @@
 		},
 		{
 			"ImportPath": "github.com/philhofer/fwd",
-			"Rev": "bb6d471dc95d4fe11e432687f8b70ff496cf3136"
+			"Rev": "1612a298117663d7bc9a760ae20d383413859798"
 		},
 		{
 			"ImportPath": "github.com/rs/cors",
@@ -246,7 +226,7 @@
 		},
 		{
 			"ImportPath": "github.com/rubenv/sql-migrate/sqlparse",
-			"Rev": "79fe99e24311fa42469fb2ca23eb3f8f065e6155"
+			"Rev": "72a5478faa469f9023cc1802367cddfc5270acbb"
 		},
 		{
 			"ImportPath": "github.com/sirupsen/logrus",
@@ -259,48 +239,32 @@
 			"Rev": "4a23c718c2167f44ec3318034a7a2b020281412b"
 		},
 		{
-			"ImportPath": "github.com/valyala/bytebufferpool",
-			"Rev": "e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7"
-		},
-		{
-			"ImportPath": "github.com/valyala/fasttemplate",
-			"Rev": "dcecefd839c4193db0d35b88ec65b4c12d360ab0"
-		},
-		{
-			"ImportPath": "golang.org/x/crypto/acme",
-			"Rev": "9ba3862cf6a5452ae579de98f9364dd2e544844c"
-		},
-		{
-			"ImportPath": "golang.org/x/crypto/acme/autocert",
-			"Rev": "9ba3862cf6a5452ae579de98f9364dd2e544844c"
-		},
-		{
 			"ImportPath": "golang.org/x/crypto/bcrypt",
-			"Rev": "9ba3862cf6a5452ae579de98f9364dd2e544844c"
+			"Rev": "eb71ad9bd329b5ac0fd0148dd99bd62e8be8e035"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/blowfish",
-			"Rev": "9ba3862cf6a5452ae579de98f9364dd2e544844c"
+			"Rev": "eb71ad9bd329b5ac0fd0148dd99bd62e8be8e035"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/ssh/terminal",
-			"Rev": "9ba3862cf6a5452ae579de98f9364dd2e544844c"
+			"Rev": "eb71ad9bd329b5ac0fd0148dd99bd62e8be8e035"
 		},
 		{
 			"ImportPath": "golang.org/x/sys/unix",
-			"Rev": "a5054c7c1385fd50d9394475365355a87a7873ec"
+			"Rev": "9f7170bcd8e9f4d3691c06401119c46a769a1e03"
 		},
 		{
 			"ImportPath": "golang.org/x/sys/windows",
-			"Rev": "a5054c7c1385fd50d9394475365355a87a7873ec"
+			"Rev": "9f7170bcd8e9f4d3691c06401119c46a769a1e03"
 		},
 		{
 			"ImportPath": "golang.org/x/tools/go/ast/astutil",
-			"Rev": "3b1faeda9afbcba128c2d794b38ffe7982141139"
+			"Rev": "84a35ef54dff3c5596983e180ec10919fc432242"
 		},
 		{
 			"ImportPath": "golang.org/x/tools/imports",
-			"Rev": "3b1faeda9afbcba128c2d794b38ffe7982141139"
+			"Rev": "84a35ef54dff3c5596983e180ec10919fc432242"
 		},
 		{
 			"ImportPath": "gopkg.in/fzerorubigd/onion.v3",
@@ -319,18 +283,13 @@
 		},
 		{
 			"ImportPath": "gopkg.in/go-playground/validator.v9",
-			"Comment": "v9.7.0",
-			"Rev": "a021b2ec9a8a8bb970f3f15bc42617cb520e8a64"
+			"Comment": "v9.6.0",
+			"Rev": "d529ee1b0f30352444f507cc6cdac96bfd12decc"
 		},
 		{
 			"ImportPath": "gopkg.in/gorp.v2",
 			"Comment": "v2.0.0",
 			"Rev": "4deece61034873cb5b5416e81abe4cea7bd0da72"
-		},
-		{
-			"ImportPath": "gopkg.in/labstack/echo.v3",
-			"Comment": "v3.2.1",
-			"Rev": "935a60782cbbc55110e7bd4b33120e4567cbee43"
 		},
 		{
 			"ImportPath": "gopkg.in/redis.v5",
