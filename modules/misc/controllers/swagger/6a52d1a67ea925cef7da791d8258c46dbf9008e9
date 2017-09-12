@@ -3,6 +3,13 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": "",
+				"in": "query",
+				"name": "status",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the domain field",
 				"in": "query",
 				"name": "domain",
@@ -15,13 +22,6 @@
 				"name": "c",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": " page number",
