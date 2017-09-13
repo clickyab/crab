@@ -1,6 +1,17 @@
 {
 	"post": {
 		"description": "verifyResend will send an email again",
+		"parameters": [
+			{
+				"description": "",
+				"in": "body",
+				"name": "payload_data",
+				"required": false,
+				"schema": {
+					"$ref": "#/definitions/user_verifyResendPayload"
+				}
+			}
+		],
 		"responses": {
 			"200": {
 				"description": "",

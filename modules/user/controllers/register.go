@@ -6,6 +6,7 @@ import (
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/trans"
 )
 
@@ -44,7 +45,11 @@ func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *htt
 		u.BadResponse(w, trans.E("error registering userPayload"))
 		return
 	}
-	sendVerifyCode(usr)
-	u.OKResponse(w, "user has been created")
+	e := verifyEmail(usr, r)
+	if e == tooSoonError {
+		u.OKResponse(w, "user has been created")
+		return
+	}
+	assert.Nil(e)
 
 }

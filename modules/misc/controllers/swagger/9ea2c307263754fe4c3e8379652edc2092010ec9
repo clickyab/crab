@@ -1,0 +1,40 @@
+{
+	"put": {
+		"description": "\t\t@Route { \t\turl = /password/change/:token \t\tmethod = put \t\tpayload = callBackPayload \t\t200 = responseLoginOK \t\t400 = controller.ErrorResponseSimple }",
+		"parameters": [
+			{
+				"description": "",
+				"in": "path",
+				"name": "token",
+				"required": true,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "body",
+				"name": "payload_data",
+				"required": false,
+				"schema": {
+					"$ref": "#/definitions/user_callBackPayload"
+				}
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/user_responseLoginOK"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			}
+		},
+		"tags": [
+			"user"
+		]
+	}
+}

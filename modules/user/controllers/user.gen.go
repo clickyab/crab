@@ -144,36 +144,54 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
 			"RecName": "c",
-			"Payload": "forget",
+			"Payload": "forgetPayload",
 			"Resource": "",
 			"Scope": ""
 		} with key 5 */
 		m5 := append(groupMiddleware, []framework.Middleware{}...)
 
 		// Make sure payload is the last middleware
-		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(forget{}))
+		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(forgetPayload{}))
 		group.POST("/password/forget", xhandler.HandlerFuncC(framework.Mix(ctrl.forgetPassword, m5...)))
 		// End route with key 5
 
 		/* Route {
-			"Route": "/password/callback",
-			"Method": "PUT",
-			"Function": "Controller.forgetCallBack",
+			"Route": "/password/verify/:token",
+			"Method": "GET",
+			"Function": "Controller.checkForgetCode",
 			"RoutePkg": "user",
 			"RouteMiddleware": null,
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
 			"RecName": "c",
-			"Payload": "callBack",
+			"Payload": "",
 			"Resource": "",
 			"Scope": ""
 		} with key 6 */
 		m6 := append(groupMiddleware, []framework.Middleware{}...)
 
-		// Make sure payload is the last middleware
-		m6 = append(m6, middleware.PayloadUnMarshallerGenerator(callBack{}))
-		group.PUT("/password/callback", xhandler.HandlerFuncC(framework.Mix(ctrl.forgetCallBack, m6...)))
+		group.GET("/password/verify/:token", xhandler.HandlerFuncC(framework.Mix(ctrl.checkForgetCode, m6...)))
 		// End route with key 6
+
+		/* Route {
+			"Route": "/password/change/:token",
+			"Method": "PUT",
+			"Function": "Controller.changeForgetPassword",
+			"RoutePkg": "user",
+			"RouteMiddleware": null,
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "callBackPayload",
+			"Resource": "",
+			"Scope": ""
+		} with key 7 */
+		m7 := append(groupMiddleware, []framework.Middleware{}...)
+
+		// Make sure payload is the last middleware
+		m7 = append(m7, middleware.PayloadUnMarshallerGenerator(callBackPayload{}))
+		group.PUT("/password/change/:token", xhandler.HandlerFuncC(framework.Mix(ctrl.changeForgetPassword, m7...)))
+		// End route with key 7
 
 		/* Route {
 			"Route": "/password/change",
@@ -189,15 +207,15 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"Payload": "changePassword",
 			"Resource": "",
 			"Scope": ""
-		} with key 7 */
-		m7 := append(groupMiddleware, []framework.Middleware{
+		} with key 8 */
+		m8 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		// Make sure payload is the last middleware
-		m7 = append(m7, middleware.PayloadUnMarshallerGenerator(changePassword{}))
-		group.PUT("/password/change", xhandler.HandlerFuncC(framework.Mix(ctrl.changePassword, m7...)))
-		// End route with key 7
+		m8 = append(m8, middleware.PayloadUnMarshallerGenerator(changePassword{}))
+		group.PUT("/password/change", xhandler.HandlerFuncC(framework.Mix(ctrl.changePassword, m8...)))
+		// End route with key 8
 
 		/* Route {
 			"Route": "/ping",
@@ -213,13 +231,13 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"Payload": "",
 			"Resource": "",
 			"Scope": ""
-		} with key 8 */
-		m8 := append(groupMiddleware, []framework.Middleware{
+		} with key 9 */
+		m9 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		group.GET("/ping", xhandler.HandlerFuncC(framework.Mix(ctrl.ping, m8...)))
-		// End route with key 8
+		group.GET("/ping", xhandler.HandlerFuncC(framework.Mix(ctrl.ping, m9...)))
+		// End route with key 9
 
 		/* Route {
 			"Route": "/register",
@@ -233,36 +251,18 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"Payload": "registerPayload",
 			"Resource": "",
 			"Scope": ""
-		} with key 9 */
-		m9 := append(groupMiddleware, []framework.Middleware{}...)
-
-		// Make sure payload is the last middleware
-		m9 = append(m9, middleware.PayloadUnMarshallerGenerator(registerPayload{}))
-		group.POST("/register", xhandler.HandlerFuncC(framework.Mix(ctrl.register, m9...)))
-		// End route with key 9
-
-		/* Route {
-			"Route": "/verify/:hash/:key",
-			"Method": "GET",
-			"Function": "Controller.verifyEmail",
-			"RoutePkg": "user",
-			"RouteMiddleware": null,
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "ctrl",
-			"Payload": "",
-			"Resource": "",
-			"Scope": ""
 		} with key 10 */
 		m10 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("/verify/:hash/:key", xhandler.HandlerFuncC(framework.Mix(ctrl.verifyEmail, m10...)))
+		// Make sure payload is the last middleware
+		m10 = append(m10, middleware.PayloadUnMarshallerGenerator(registerPayload{}))
+		group.POST("/register", xhandler.HandlerFuncC(framework.Mix(ctrl.register, m10...)))
 		// End route with key 10
 
 		/* Route {
-			"Route": "/verify/resend",
-			"Method": "POST",
-			"Function": "Controller.verifyResend",
+			"Route": "/email/verify/:token",
+			"Method": "GET",
+			"Function": "Controller.verifyEmail",
 			"RoutePkg": "user",
 			"RouteMiddleware": null,
 			"RouteFuncMiddleware": "",
@@ -274,8 +274,28 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		} with key 11 */
 		m11 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.POST("/verify/resend", xhandler.HandlerFuncC(framework.Mix(ctrl.verifyResend, m11...)))
+		group.GET("/email/verify/:token", xhandler.HandlerFuncC(framework.Mix(ctrl.verifyEmail, m11...)))
 		// End route with key 11
+
+		/* Route {
+			"Route": "/email/verify/resend",
+			"Method": "POST",
+			"Function": "Controller.verifyResend",
+			"RoutePkg": "user",
+			"RouteMiddleware": null,
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "ctrl",
+			"Payload": "verifyResendPayload",
+			"Resource": "",
+			"Scope": ""
+		} with key 12 */
+		m12 := append(groupMiddleware, []framework.Middleware{}...)
+
+		// Make sure payload is the last middleware
+		m12 = append(m12, middleware.PayloadUnMarshallerGenerator(verifyResendPayload{}))
+		group.POST("/email/verify/resend", xhandler.HandlerFuncC(framework.Mix(ctrl.verifyResend, m12...)))
+		// End route with key 12
 
 		initializer.DoInitialize(ctrl)
 	})
