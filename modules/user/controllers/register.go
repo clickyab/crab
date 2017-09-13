@@ -71,6 +71,6 @@ func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *htt
 	go func() {
 		notification.Send("welcome", message, a)
 	}()
-	u.OKResponse(w, "user has been created")
+	u.OKResponse(w, nil)
 
 }

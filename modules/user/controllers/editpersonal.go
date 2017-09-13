@@ -11,7 +11,6 @@ import (
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
-	echo "gopkg.in/labstack/echo.v3"
 )
 
 // @Validate {
@@ -31,7 +30,7 @@ type userPayload struct {
 	Corporation *aaa.Corporation `json:"corporation" validate:"omitempty"`
 }
 
-func (u *userPayload) ValidateExtra(ctx echo.Context) error {
+func (u *userPayload) ValidateExtra(ctx context.Context) error {
 	if u.Gender != "" {
 		if u.Gender.IsValid() {
 			return middleware.GroupError{
