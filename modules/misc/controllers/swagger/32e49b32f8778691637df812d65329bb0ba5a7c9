@@ -12,41 +12,8 @@
 		"city_id": {
 			"type": "integer"
 		},
-		"corporation": {
-			"properties": {
-				"economic_code": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
-				},
-				"id": {
-					"type": "integer"
-				},
-				"legal_name": {
-					"type": "string"
-				},
-				"legal_register": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
-				},
-				"user_id": {
-					"type": "integer"
-				}
-			},
-			"type": "object"
+		"economic_code": {
+			"type": "string"
 		},
 		"email": {
 			"type": "string"
@@ -61,6 +28,12 @@
 			"type": "string"
 		},
 		"last_name": {
+			"type": "string"
+		},
+		"legal_name": {
+			"type": "string"
+		},
+		"legal_register": {
 			"type": "string"
 		},
 		"postal_code": {

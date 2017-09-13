@@ -48,7 +48,7 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		// End route with key 0
 
 		/* Route {
-			"Route": "/personal",
+			"Route": "/update",
 			"Method": "PUT",
 			"Function": "Controller.Edit",
 			"RoutePkg": "user",
@@ -68,7 +68,7 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 
 		// Make sure payload is the last middleware
 		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(userPayload{}))
-		group.PUT("/personal", xhandler.HandlerFuncC(framework.Mix(ctrl.Edit, m1...)))
+		group.PUT("/update", xhandler.HandlerFuncC(framework.Mix(ctrl.Edit, m1...)))
 		// End route with key 1
 
 		/* Route {

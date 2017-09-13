@@ -16,18 +16,20 @@ import (
 // @Validate {
 // }
 type userPayload struct {
-	Email       string           `json:"email" validate:"omitempty, email"`
-	Avatar      string           `json:"avatar" validate:"omitempty, url"`
-	CityID      int64            `json:"city_id" validate:"omitempty"`
-	LandLine    string           `json:"land_line" validate:"omitempty"`
-	CellPhone   string           `json:"cell_phone" validate:"omitempty"`
-	PostalCode  string           `json:"postal_code" validate:"omitempty"`
-	FirstName   string           `json:"first_name" validate:"omitempty,gt=2"`
-	LastName    string           `json:"last_name" validate:"omitempty,gt=2"`
-	Address     string           `json:"address" validate:"omitempty"`
-	Gender      aaa.GenderType   `json:"gender" validate:"omitempty"`
-	SSN         string           `json:"ssn" validate:"omitempty"`
-	Corporation *aaa.Corporation `json:"corporation" validate:"omitempty"`
+	Email         string         `json:"email" validate:"omitempty, email"`
+	Avatar        string         `json:"avatar" validate:"omitempty, url"`
+	CityID        int64          `json:"city_id" validate:"omitempty"`
+	LandLine      string         `json:"land_line" validate:"omitempty"`
+	CellPhone     string         `json:"cell_phone" validate:"omitempty"`
+	PostalCode    string         `json:"postal_code" validate:"omitempty"`
+	FirstName     string         `json:"first_name" validate:"omitempty,gt=2"`
+	LastName      string         `json:"last_name" validate:"omitempty,gt=2"`
+	Address       string         `json:"address" validate:"omitempty"`
+	Gender        aaa.GenderType `json:"gender" validate:"omitempty"`
+	SSN           string         `json:"ssn" validate:"omitempty"`
+	LegalName     string         `json:"legal_name" db:"legal_name"`
+	LegalRegister string         `json:"legal_register" db:"legal_register"`
+	EconomicCode  string         `json:"economic_code" db:"economic_code"`
 }
 
 func (u *userPayload) ValidateExtra(ctx context.Context) error {
@@ -44,7 +46,7 @@ func (u *userPayload) ValidateExtra(ctx context.Context) error {
 
 // EditPersonal route for edit personal profile
 // @Route {
-// 		url = /personal
+// 		url = /update
 //		method = put
 //		payload = userPayload
 //		middleware = authz.Authenticate
@@ -65,7 +67,7 @@ func (u *Controller) Edit(ctx context.Context, w http.ResponseWriter, r *http.Re
 
 	var cc *aaa.Corporation
 	var e error
-	if pl.Corporation != nil {
+	if pl.LegalName != "" {
 		cc, e = m.FindCorporationByUserID(cu.ID)
 		if e != nil {
 			u.BadResponse(w, trans.E("Personal userPayload not allowed to update corporate account"))
@@ -91,10 +93,10 @@ func (u *Controller) Edit(ctx context.Context, w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	if pl.Corporation != nil {
-		cc.LegalName = pl.Corporation.LegalName
-		cc.EconomicCode = stringToNullString(pl.Corporation.LegalName)
-		cc.LegalRegister = stringToNullString(pl.Corporation.LegalName)
+	if pl.LegalName != "" {
+		cc.LegalName = pl.LegalName
+		cc.EconomicCode = stringToNullString(pl.LegalName)
+		cc.LegalRegister = stringToNullString(pl.LegalName)
 
 		e = m.UpdateCorporation(cc)
 		if e != nil {

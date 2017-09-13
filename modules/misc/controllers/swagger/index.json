@@ -78,9 +78,9 @@
 		"/user/password/callback": "file://394f588100b8f316d05ae706b405b24fa2d9b820",
 		"/user/password/change": "file://624b8b6895dbc74ca9ee3187e9ee8c3f51b597a3",
 		"/user/password/forget": "file://adbcda3d72c31c85c82ffc5a06097b0f37059e7d",
-		"/user/personal": "file://3354f7980b8bebb6268fed0fa44458faacf07c36",
 		"/user/ping": "file://4416a4e4c163a273509696c8f207e7a9fb05874e",
 		"/user/register": "file://f8ecee7efdede6882e6b06b4d398a7c92528c5b1",
+		"/user/update": "file://951d1a07ddde52ec17cf0844784bb4dbfbc9c164",
 		"/user/verify/resend": "file://776d65a648c51a6bd28a3248902a9a5c61de8cf5",
 		"/user/verify/{hash}/{key}": "file://e7a491e85b22fe20a9665b5f445796776acf43ef"
 	},
