@@ -97,9 +97,6 @@ func (u *userPayload) Validate(ctx context.Context, w http.ResponseWriter, r *ht
 		case "SSN":
 			res["ssn"] = trans.E("invalid value")
 
-		case "Corporation":
-			res["corporation"] = trans.E("invalid value")
-
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}
