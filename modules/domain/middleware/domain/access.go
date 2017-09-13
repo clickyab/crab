@@ -9,6 +9,7 @@ import (
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/trans"
+	"github.com/sirupsen/logrus"
 )
 
 type contextKey string
@@ -24,6 +25,7 @@ func Access(next framework.Handler) framework.Handler {
 		// check if d is valid
 		d, err := dmn.NewDmnManager().FindActiveDomainByName(r.Host)
 		if err != nil {
+			logrus.WithError(err).WithField("domain", r.Host).Debug("domain not found")
 			framework.JSON(w, http.StatusNotFound, controller.ErrorResponseSimple{Error: trans.E(http.StatusText(http.StatusNotFound))})
 			return
 		}
