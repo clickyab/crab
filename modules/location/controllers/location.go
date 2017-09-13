@@ -44,14 +44,14 @@ type provinces []location.Province
 func (ctrl *Controller) Provinces(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	d, e := strconv.ParseInt(xmux.Param(ctx, "country_id"), 10, 64)
 	if e != nil || d == 0 {
-		w.WriteHeader(http.StatusBadRequest)
+		ctrl.BadResponse(w, nil)
 		return
 	}
 	m := location.NewLocationManager()
 	c := &location.Country{ID: d}
 	res := m.GetCountryProvinces(c)
 	if len(res) == 0 {
-		w.WriteHeader(http.StatusNotFound)
+		ctrl.NotFoundResponse(w, nil)
 		return
 	}
 	ctrl.JSON(w, http.StatusOK, res)
@@ -69,16 +69,15 @@ type cities []location.City
 func (ctrl *Controller) Cities(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	d, e := strconv.ParseInt(xmux.Param(ctx, "provinces_id"), 10, 64)
 	if e != nil || d == 0 {
-		w.WriteHeader(http.StatusBadRequest)
+		ctrl.BadResponse(w, nil)
 		return
 	}
 	m := location.NewLocationManager()
 	c := &location.Province{ID: d}
 	res := m.GetProvinceCities(c)
 	if len(res) == 0 {
-		w.WriteHeader(http.StatusNotFound)
+		ctrl.NotFoundResponse(w, nil)
 		return
 	}
 	ctrl.JSON(w, http.StatusOK, res)
 }
-
