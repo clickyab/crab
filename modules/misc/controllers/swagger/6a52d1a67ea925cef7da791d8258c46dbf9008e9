@@ -3,20 +3,6 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "pub_type",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": " search the domain field",
 				"in": "query",
 				"name": "domain",
@@ -34,6 +20,20 @@
 				"description": "",
 				"in": "query",
 				"name": "status",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "pub_type",
 				"required": false,
 				"type": "string"
 			},

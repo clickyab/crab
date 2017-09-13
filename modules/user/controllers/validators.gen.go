@@ -97,6 +97,15 @@ func (u *userPayload) Validate(ctx context.Context, w http.ResponseWriter, r *ht
 		case "SSN":
 			res["ssn"] = trans.E("invalid value")
 
+		case "LegalName":
+			res["legal_name"] = trans.E("invalid value")
+
+		case "LegalRegister":
+			res["legal_register"] = trans.E("invalid value")
+
+		case "EconomicCode":
+			res["economic_code"] = trans.E("invalid value")
+
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}
@@ -142,7 +151,7 @@ func (pl *loginPayload) Validate(ctx context.Context, w http.ResponseWriter, r *
 	return nil
 }
 
-func (pl *callBack) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+func (pl *forgetPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	err := func(in interface{}) error {
 		if v, ok := in.(interface {
 			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
@@ -161,9 +170,38 @@ func (pl *callBack) Validate(ctx context.Context, w http.ResponseWriter, r *http
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
-		case "Token":
-			res["token"] = trans.E("invalid value")
+		case "Email":
+			res["email"] = trans.E("invalid value")
 
+		default:
+			logrus.Panicf("the field %s is not translated", i)
+		}
+	}
+	if len(res) > 0 {
+		return res
+	}
+	return nil
+}
+
+func (pl *callBackPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	err := func(in interface{}) error {
+		if v, ok := in.(interface {
+			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
+		}); ok {
+			return v.ValidateExtra(ctx, w, r)
+		}
+		return nil
+	}(pl)
+	if err != nil {
+		return err
+	}
+	errs := validator.New().Struct(pl)
+	if errs == nil {
+		return nil
+	}
+	res := middleware.GroupError{}
+	for _, i := range errs.(validator.ValidationErrors) {
+		switch i.Field() {
 		case "NewPassword":
 			res["new_password"] = trans.E("password is too short")
 

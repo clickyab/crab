@@ -16,102 +16,167 @@ import (
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/kv"
 
+	"strings"
+
+	"net/url"
+
 	"github.com/clickyab/services/notification"
 	"github.com/clickyab/services/random"
+	"github.com/clickyab/services/trans"
 	"github.com/rs/xmux"
 )
 
 const (
-	verifyKey      = "VERIFY"
-	verifySub      = "ID"
-	dump           = "d"
-	activeTemplate = "Email"
+	verifyKey          = "VERIFY"
+	subID              = "ID"
+	dump               = "d"
+	emailVerifyPath    = "user/email/verify"
+	passwordVerifyPath = "user/password/verify"
+)
+
+var (
+	tooSoonError = errors.New("code has been sent")
 )
 
 type verifyIdResponse responseLoginOK
 
 // verifyId is verify code
 // @Route {
-// 		url = /verify/:hash/:key
+// 		url = /email/verify/:token
 //		method = get
 //		200 = verifyIdResponse
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
 // }
 func (ctrl *Controller) verifyEmail(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	h := xmux.Param(ctx, "hash")
-	k := xmux.Param(ctx, "key")
-	kw := kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKey, h))
+	u, e := verifyCode(xmux.Param(ctx, "token"))
 
-	if kw.SubKey(k) != dump {
-		ctrl.BadResponse(w, errors.New("Code is not valid"))
-		return
-	}
-	id, e := strconv.ParseInt(kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKey, h)).SubKey(verifySub), 10, 64)
-	assert.Nil(e)
-
-	m := aaa.NewAaaManager()
-	cu, e := m.FindUserByID(id)
-	assert.Nil(e)
-	if cu.Status != aaa.RegisteredUserStatus {
+	if e != nil || u.Status != aaa.RegisteredUserStatus {
 		ctrl.ForbiddenResponse(w, nil)
 		return
 	}
-	cu.Status = aaa.ActiveUserStatus
-	m.UpdateUser(cu)
-	ctrl.createLoginResponse(w, cu)
+	u.Status = aaa.ActiveUserStatus
+	assert.Nil(aaa.NewAaaManager().UpdateUser(u))
+	ctrl.createLoginResponse(w, u)
 }
 
 // @Validate{
 // }
 type verifyResendPayload struct {
-	Email    string `json:"email_string" validate:"required|email"`
+	Email string `json:"email_string" validate:"required,email"`
 }
 
 // verifyResend will send an email again
 // @Route {
-// 		url = /verify/resend
+// 		url = /email/verify/resend
 //		method = post
-//		200 = verifyResendPayload
+//		payload = verifyResendPayload
+//      200 = controller.NormalResponse
 //		404 = controller.ErrorResponseSimple
 // }
 func (ctrl *Controller) verifyResend(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := ctrl.MustGetPayload(ctx).(*verifyResendPayload)
+
 	u, e := aaa.NewAaaManager().FindUserByEmail(pl.Email)
 	if e != nil {
 		ctrl.NotFoundResponse(w, nil)
 		return
 	}
-
-	sendVerifyCode(u)
+	e = verifyEmail(u, r)
+	if e == tooSoonError {
+		ctrl.OKResponse(w, nil)
+		return
+	}
+	assert.Nil(e)
 }
 
-func sendVerifyCode(u *aaa.User) {
+func verifyEmail(u *aaa.User, r *http.Request) error {
+	ur, e := genVerificationURL(u, emailVerifyPath, r)
+	if e != nil {
+		return e
+	}
+
+	// TODO: Change email template
+	notification.Send(trans.T("Welcome to Clickyab!").String(), ur.String(), notification.Packet{
+		Platform: notification.MailType,
+		To:       []string{u.Email},
+	})
+	return nil
+}
+
+func genVerificationURL(u *aaa.User, p string, r *http.Request) (*url.URL, error) {
+	k, e := genVerifyCode(u, p)
+	if e != nil {
+		return nil, e
+	}
+
+	return &url.URL{
+		Scheme: func() string {
+			if r.TLS != nil {
+				return "https"
+			}
+			return "http"
+		}(),
+		Host:     r.Host,
+		Path:     p,
+		RawQuery: fmt.Sprintf("key=%s", k),
+	}, nil
+
+}
+
+const delimiter = "-"
+
+func verifyCode(c string) (*aaa.User, error) {
+	var s []string
+	if s := strings.Split(c, delimiter); len(s) != 2 {
+		return nil, errors.New("code is not valid")
+	}
+
+	hash, key := s[0], s[1]
+
+	kw := kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKey, hash))
+
+	if kw.SubKey(key) != dump {
+		return nil, errors.New("code is not valid")
+	}
+	defer kw.Drop()
+	id, e := strconv.ParseInt(kw.SubKey(subID), 10, 64)
+	assert.Nil(e)
+	m := aaa.NewAaaManager()
+	cu, e := m.FindUserByID(id)
+	assert.Nil(e)
+	return cu, nil
+}
+
+var exp = 5 * time.Hour
+var saltError = errors.New("salt should not be empty")
+
+func genVerifyCode(u *aaa.User, salt string) (string, error) {
+	if salt == "" {
+		return "", saltError
+	}
 	hash := func() string {
 		h := sha1.New()
-		h.Write([]byte(u.Email))
+		h.Write([]byte(u.Email + salt))
 		return fmt.Sprintf("%x", h.Sum(nil))
 	}()
 
 	kw := kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKey, hash))
 	// TODO: get it from config
-	exp := 5 * time.Hour
 
 	if len(kw.AllKeys()) != 0 {
 		t := time.Now().Add(exp).Add(-2 * time.Minute).Sub(time.Now())
 		if t < kw.TTL() {
-			return
+			return "", tooSoonError
 		}
 	}
 
-	key := fmt.Sprintf("%s%s%s", <-random.ID, <-random.ID, <-random.ID)
+	key := fmt.Sprintf("%s%s", <-random.ID, <-random.ID)
 	strconv.FormatInt(u.ID, 64)
-	kw.SetSubKey(verifySub, strconv.FormatInt(u.ID, 64))
+	kw.SetSubKey(subID, fmt.Sprintf("%d", u.ID))
 	kw.SetSubKey(key, dump)
 	assert.Nil(kw.Save(exp))
 
-	go func() {
-		a := notification.Packet{Platform: notification.MailType, To: []string{u.Email}}
-		notification.Send(fmt.Sprintf("%s/%s", hash, key), fmt.Sprintf("%s/%s", hash, key), a)
-	}()
+	return fmt.Sprintf("%s%s%s", hash, delimiter, key), nil
+
 }

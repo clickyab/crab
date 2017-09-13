@@ -16,20 +16,20 @@ import (
 // @Validate {
 // }
 type userPayload struct {
-	Email         string         `json:"email" validate:"omitempty, email"`
-	Avatar        string         `json:"avatar" validate:"omitempty, url"`
+	Email         string         `json:"email" validate:"required,email"`
+	Avatar        string         `json:"avatar" validate:"omitempty,url"`
 	CityID        int64          `json:"city_id" validate:"omitempty"`
 	LandLine      string         `json:"land_line" validate:"omitempty"`
 	CellPhone     string         `json:"cell_phone" validate:"omitempty"`
 	PostalCode    string         `json:"postal_code" validate:"omitempty"`
-	FirstName     string         `json:"first_name" validate:"omitempty,gt=2"`
-	LastName      string         `json:"last_name" validate:"omitempty,gt=2"`
+	FirstName     string         `json:"first_name" validate:"required,gt=2"`
+	LastName      string         `json:"last_name" validate:"required,gt=2"`
 	Address       string         `json:"address" validate:"omitempty"`
 	Gender        aaa.GenderType `json:"gender" validate:"omitempty"`
 	SSN           string         `json:"ssn" validate:"omitempty"`
-	LegalName     string         `json:"legal_name" db:"legal_name"`
-	LegalRegister string         `json:"legal_register" db:"legal_register"`
-	EconomicCode  string         `json:"economic_code" db:"economic_code"`
+	LegalName     string         `json:"legal_name" validate:"omitempty"`
+	LegalRegister string         `json:"legal_register" validate:"omitempty"`
+	EconomicCode  string         `json:"economic_code" validate:"omitempty"`
 }
 
 func (u *userPayload) ValidateExtra(ctx context.Context) error {
