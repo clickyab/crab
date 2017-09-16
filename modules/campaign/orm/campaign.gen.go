@@ -108,22 +108,6 @@ func (m *Manager) ListCampaignAttributesWithPagination(offset, perPage int) []Ca
 	return m.ListCampaignAttributesWithPaginationFilter(offset, perPage, "")
 }
 
-// FindCampaignAttributesByID return the CampaignAttributes base on its id
-func (m *Manager) FindCampaignAttributesByID(id int64) (*CampaignAttributes, error) {
-	var res CampaignAttributes
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", CampaignAttributesTableFull),
-		id,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
 // FindCampaignAttributesByCampaignID return the CampaignAttributes base on its campaign_id
 func (m *Manager) FindCampaignAttributesByCampaignID(ci int64) (*CampaignAttributes, error) {
 	var res CampaignAttributes

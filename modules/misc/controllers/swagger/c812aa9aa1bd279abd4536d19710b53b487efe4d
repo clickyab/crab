@@ -1,7 +1,14 @@
 {
 	"put": {
-		"description": "update campaign",
+		"description": "updateBase campaign",
 		"parameters": [
+			{
+				"description": "",
+				"in": "path",
+				"name": "id",
+				"required": true,
+				"type": "string"
+			},
 			{
 				"description": "the security token, get it from login route",
 				"in": "header",
@@ -23,7 +30,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controller_NormalResponse"
+					"$ref": "#/definitions/orm_Campaign"
 				}
 			},
 			"400": {
@@ -76,6 +83,12 @@
 					},
 					"title": "forbidden",
 					"type": "object"
+				}
+			},
+			"404": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},

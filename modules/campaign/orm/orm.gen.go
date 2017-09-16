@@ -48,8 +48,8 @@ func (m *Manager) Initialize() {
 		CampaignAttributes{},
 		CampaignAttributesTableFull,
 	).SetKeys(
-		true,
-		"ID",
+		false,
+		"CampaignID",
 	)
 
 	m.AddTableWithName(
