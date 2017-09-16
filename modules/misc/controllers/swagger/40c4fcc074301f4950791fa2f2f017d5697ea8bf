@@ -1,7 +1,14 @@
 {
 	"put": {
-		"description": "update campaign",
+		"description": "updateWhiteBlackList will update campaign white/black list",
 		"parameters": [
+			{
+				"description": "",
+				"in": "path",
+				"name": "id",
+				"required": true,
+				"type": "string"
+			},
 			{
 				"description": "the security token, get it from login route",
 				"in": "header",
@@ -15,7 +22,7 @@
 				"name": "payload_data",
 				"required": false,
 				"schema": {
-					"$ref": "#/definitions/controllers_updateCampaignPayload"
+					"$ref": "#/definitions/controllers_whiteBlackPayload"
 				}
 			}
 		],
@@ -23,7 +30,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controller_NormalResponse"
+					"$ref": "#/definitions/orm_Campaign"
 				}
 			},
 			"400": {
@@ -76,6 +83,12 @@
 					},
 					"title": "forbidden",
 					"type": "object"
+				}
+			},
+			"404": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},

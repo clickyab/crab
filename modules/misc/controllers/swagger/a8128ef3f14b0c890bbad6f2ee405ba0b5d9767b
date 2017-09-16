@@ -1,11 +1,95 @@
 {
 	"properties": {
+		"active": {
+			"type": "boolean"
+		},
+		"attributes": {
+			"properties": {
+				"browser": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"cellular": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"device": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"iab": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"isp": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"manufacturer": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"os": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"region": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				}
+			},
+			"type": "object"
+		},
+		"budget": {
+			"type": "integer"
+		},
+		"cost_type": {
+			"type": "string"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"daily_limit": {
+			"type": "integer"
+		},
+		"domain_id": {
+			"type": "integer"
+		},
 		"end_at": {
 			"format": "dateTime",
 			"type": "string"
 		},
+		"id": {
+			"type": "integer"
+		},
 		"kind": {
 			"type": "string"
+		},
+		"max_bid": {
+			"type": "integer"
+		},
+		"notify_email": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
 		},
 		"schedule": {
 			"properties": {
@@ -96,6 +180,16 @@
 		},
 		"type": {
 			"type": "string"
+		},
+		"updated_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"user_id": {
+			"type": "integer"
+		},
+		"white_black_id": {
+			"type": "integer"
 		}
 	},
 	"type": "object"
