@@ -3,6 +3,13 @@
 		"description": "update campaign",
 		"parameters": [
 			{
+				"description": "",
+				"in": "path",
+				"name": "id",
+				"required": true,
+				"type": "string"
+			},
+			{
 				"description": "the security token, get it from login route",
 				"in": "header",
 				"name": "token",
@@ -76,6 +83,12 @@
 					},
 					"title": "forbidden",
 					"type": "object"
+				}
+			},
+			"404": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},

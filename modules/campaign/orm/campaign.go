@@ -9,9 +9,7 @@ import (
 	"clickyab.com/crab/modules/inventory/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
-	_ "github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
-	_ "github.com/clickyab/services/mysql"
 )
 
 // UserValidStatus is the user status
@@ -49,8 +47,12 @@ const (
 type CampaignType string
 
 const (
+
+	// BannerType of campaign
 	BannerType CampaignType = "banner"
-	VastType   CampaignType = "vast"
+	// VastType   of campaign
+	VastType CampaignType = "vast"
+	// NativeType of campaign
 	NativeType CampaignType = "native"
 )
 
@@ -89,7 +91,7 @@ type Campaign struct {
 	EndAt        time.Time       `json:"end_at" db:"end_at"`
 	Title        string          `json:"title" db:"title"`
 	Budget       int64           `json:"budget" db:"budget"`
-	Daily_limit  int64           `json:"daily_limit" db:"daily_limit"`
+	DailyLimit   int64           `json:"daily_limit" db:"daily_limit"`
 	CostType     CostType        `json:"cost_type" db:"cost_type"`
 	CPCCost      int64           `json:"cpc_cost" db:"cpc_cost"`
 	WhiteBlackID mysql.NullInt64 `json:"white_black_id" db:"white_black_id"`
@@ -120,55 +122,115 @@ type CampaignAttributes struct {
 	ISP          mysql.StringJSONArray `json:"isp" db:"isp"`
 }
 
+// ErrInventoryID of insert or update campaign
+var ErrInventoryID = errors.New("there is no inventory with this id")
 
-type CampaignPayload struct {
-	Kind         CampaignKind `json:"kind"`
-	Type         CampaignType `json:"type"`
-	Status       bool         `json:"status"`
-	StartAt      time.Time    `json:"start_at"`
-	EndAt        time.Time    `json:"end_at"`
-	Title        string       `json:"title"`
-	Budget       int64        `json:"budget"`
-	Daily_limit  int64        `json:"daily_limit"`
-	CostType     CostType     `json:"cost_type"`
-	CPCCost      int64        `json:"cpc_cost"`
-	WhiteBlackID int64        `json:"white_black_id"`
-	Email        []string     `json:"email"`
-	Device       []string     `json:"device"`
-	Manufacturer []string     `json:"manufacturer"`
-	OS           []string     `json:"os"`
-	Browser      []string     `json:"browser"`
-	IAB          []string     `json:"iab"`
-	Region       []string     `json:"region"`
-	Cellular     []string     `json:"cellular"`
-	ISP          []string     `json:"isp"`
-	H00          bool         `json:"h00"`
-	H01          bool         `json:"h01"`
-	H02          bool         `json:"h02"`
-	H03          bool         `json:"h03"`
-	H04          bool         `json:"h04"`
-	H05          bool         `json:"h05"`
-	H06          bool         `json:"h06"`
-	H07          bool         `json:"h07"`
-	H08          bool         `json:"h08"`
-	H09          bool         `json:"h09"`
-	H10          bool         `json:"h10"`
-	H11          bool         `json:"h11"`
-	H12          bool         `json:"h12"`
-	H13          bool         `json:"h13"`
-	H14          bool         `json:"h14"`
-	H15          bool         `json:"h15"`
-	H16          bool         `json:"h16"`
-	H17          bool         `json:"h17"`
-	H18          bool         `json:"h18"`
-	H19          bool         `json:"h19"`
-	H20          bool         `json:"h20"`
-	H21          bool         `json:"h21"`
-	H22          bool         `json:"h22"`
-	H23          bool         `json:"h23"`
+// UpdateCampaignByPayload will update a campaign
+func (m *Manager) UpdateCampaignByPayload(id int64, p UpdateCampaign) error {
+	c, e := m.FindCampaignByID(id)
+	if e != nil {
+		return e
+	}
+	now := time.Now()
+	c.Status = p.Campaign.Status
+	c.StartAt = p.Campaign.StartAt
+	c.EndAt = p.Campaign.EndAt
+	c.Title = p.Campaign.Title
+	c.Budget = p.Campaign.Budget
+	c.DailyLimit = p.Campaign.DailyLimit
+	c.UpdatedAt = now
+	c.CPCCost = p.Campaign.CPCCost
+	if p.Campaign.WhiteBlackID == 0 {
+		c.WhiteBlackID.Valid = false
+		c.WhiteBlackValue = []string{}
+		c.WhiteBlackType.Valid = false
+	} else if p.Campaign.WhiteBlackID != c.WhiteBlackID.Int64 {
+		n, e := orm.NewOrmManager().FindWhiteBlackListByID(p.Campaign.WhiteBlackID)
+		if e != nil {
+			return ErrInventoryID
+		}
+		c.WhiteBlackID = mysql.NullInt64{
+			Valid: true,
+			Int64: p.Campaign.WhiteBlackID,
+		}
+		c.WhiteBlackType = mysql.NullBool{
+			Valid: true,
+			Bool:  n.Kind,
+		}
+		c.WhiteBlackValue = n.Domains
+	}
+
+	h, e := m.FindScheduleByCampaignID(id)
+	if e != nil {
+		return e
+	}
+
+	h.UpdatedAt = now
+	h.H00 = p.Schedule.H00
+	h.H01 = p.Schedule.H01
+	h.H02 = p.Schedule.H02
+	h.H03 = p.Schedule.H03
+	h.H04 = p.Schedule.H04
+	h.H05 = p.Schedule.H05
+	h.H06 = p.Schedule.H06
+	h.H07 = p.Schedule.H07
+	h.H08 = p.Schedule.H08
+	h.H09 = p.Schedule.H09
+	h.H10 = p.Schedule.H10
+	h.H11 = p.Schedule.H11
+	h.H12 = p.Schedule.H12
+	h.H13 = p.Schedule.H13
+	h.H14 = p.Schedule.H14
+	h.H15 = p.Schedule.H15
+	h.H16 = p.Schedule.H16
+	h.H17 = p.Schedule.H17
+	h.H18 = p.Schedule.H18
+	h.H19 = p.Schedule.H19
+	h.H20 = p.Schedule.H20
+	h.H21 = p.Schedule.H21
+	h.H22 = p.Schedule.H22
+	h.H23 = p.Schedule.H23
+
+	a, e := m.FindCampaignAttributesByCampaignID(c.ID)
+	if e != nil {
+		return e
+	}
+	a.Email = p.Attributes.Email
+	a.Device = p.Attributes.Device
+	a.Manufacturer = p.Attributes.Manufacturer
+	a.OS = p.Attributes.OS
+	a.Browser = p.Attributes.Browser
+	a.IAB = p.Attributes.IAB
+	a.Region = p.Attributes.Region
+	a.Cellular = p.Attributes.Cellular
+	a.ISP = p.Attributes.ISP
+	err := m.Begin()
+	assert.Nil(err)
+	defer func() {
+		if err != nil {
+			m.Rollback()
+			return
+		}
+		m.Commit()
+	}()
+	err = m.UpdateCampaign(c)
+	if err != nil {
+		return err
+	}
+	err = m.UpdateCampaignAttributes(a)
+	if err != nil {
+		return err
+	}
+	err = m.UpdateSchedule(h)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
 
-func (m *Manager) AddCampaign(p CampaignPayload, u *aaa.User, d *dmn.Domain) (int64, error) {
+// AddCampaign will add new campaign to campaign table
+func (m *Manager) AddCampaign(p CreateCampaign, u *aaa.User, d *dmn.Domain) (int64, error) {
 	c := &Campaign{}
 	now := time.Now()
 	c.CreatedAt = now
@@ -177,25 +239,25 @@ func (m *Manager) AddCampaign(p CampaignPayload, u *aaa.User, d *dmn.Domain) (in
 	c.UserID = u.ID
 	c.DomainID = d.ID
 
-	c.Kind = p.Kind
-	c.Type = p.Type
-	c.Status = p.Status
-	c.StartAt = p.StartAt
-	c.EndAt = p.EndAt
-	c.Title = p.Title
-	c.Budget = p.Budget
-	c.Daily_limit = p.Daily_limit
-	c.CostType = p.CostType
-	c.CPCCost = p.CPCCost
+	c.Kind = p.Campaign.Kind
+	c.Type = p.Campaign.Type
+	c.Status = p.Campaign.Status
+	c.StartAt = p.Campaign.StartAt
+	c.EndAt = p.Campaign.EndAt
+	c.Title = p.Campaign.Title
+	c.Budget = p.Campaign.Budget
+	c.DailyLimit = p.Campaign.DailyLimit
+	c.CostType = p.Campaign.CostType
+	c.CPCCost = p.Campaign.CPCCost
 
-	if p.WhiteBlackID > 1 {
-		n, e := orm.NewOrmManager().FindWhiteBlackListByID(p.WhiteBlackID)
+	if p.Campaign.WhiteBlackID > 0 {
+		n, e := orm.NewOrmManager().FindWhiteBlackListByID(p.Campaign.WhiteBlackID)
 		if e != nil {
-			return 0, errors.New("there is no inventory with this id")
+			return 0, ErrInventoryID
 		}
 		c.WhiteBlackID = mysql.NullInt64{
 			Valid: true,
-			Int64: p.WhiteBlackID,
+			Int64: p.Campaign.WhiteBlackID,
 		}
 		c.WhiteBlackType = mysql.NullBool{
 			Valid: true,
@@ -219,15 +281,15 @@ func (m *Manager) AddCampaign(p CampaignPayload, u *aaa.User, d *dmn.Domain) (in
 		return 0, err
 	}
 	a := &CampaignAttributes{}
-	a.Email = p.Email
-	a.Device = p.Device
-	a.Manufacturer = p.Manufacturer
-	a.OS = p.OS
-	a.Browser = p.Browser
-	a.IAB = p.IAB
-	a.Region = p.Region
-	a.Cellular = p.Cellular
-	a.ISP = p.ISP
+	a.Email = p.Attributes.Email
+	a.Device = p.Attributes.Device
+	a.Manufacturer = p.Attributes.Manufacturer
+	a.OS = p.Attributes.OS
+	a.Browser = p.Attributes.Browser
+	a.IAB = p.Attributes.IAB
+	a.Region = p.Attributes.Region
+	a.Cellular = p.Attributes.Cellular
+	a.ISP = p.Attributes.ISP
 	a.CampaignID = c.ID
 
 	err = m.CreateCampaignAttributes(a)
@@ -238,30 +300,30 @@ func (m *Manager) AddCampaign(p CampaignPayload, u *aaa.User, d *dmn.Domain) (in
 	h := &Schedule{}
 	h.CampaignID = c.ID
 	h.UpdatedAt = now
-	h.H00 = p.H00
-	h.H01 = p.H01
-	h.H02 = p.H02
-	h.H03 = p.H03
-	h.H04 = p.H04
-	h.H05 = p.H05
-	h.H06 = p.H06
-	h.H07 = p.H07
-	h.H08 = p.H08
-	h.H09 = p.H09
-	h.H10 = p.H10
-	h.H11 = p.H11
-	h.H12 = p.H12
-	h.H13 = p.H13
-	h.H14 = p.H14
-	h.H15 = p.H15
-	h.H16 = p.H16
-	h.H17 = p.H17
-	h.H18 = p.H18
-	h.H19 = p.H19
-	h.H20 = p.H20
-	h.H21 = p.H21
-	h.H22 = p.H22
-	h.H23 = p.H23
+	h.H00 = p.Schedule.H00
+	h.H01 = p.Schedule.H01
+	h.H02 = p.Schedule.H02
+	h.H03 = p.Schedule.H03
+	h.H04 = p.Schedule.H04
+	h.H05 = p.Schedule.H05
+	h.H06 = p.Schedule.H06
+	h.H07 = p.Schedule.H07
+	h.H08 = p.Schedule.H08
+	h.H09 = p.Schedule.H09
+	h.H10 = p.Schedule.H10
+	h.H11 = p.Schedule.H11
+	h.H12 = p.Schedule.H12
+	h.H13 = p.Schedule.H13
+	h.H14 = p.Schedule.H14
+	h.H15 = p.Schedule.H15
+	h.H16 = p.Schedule.H16
+	h.H17 = p.Schedule.H17
+	h.H18 = p.Schedule.H18
+	h.H19 = p.Schedule.H19
+	h.H20 = p.Schedule.H20
+	h.H21 = p.Schedule.H21
+	h.H22 = p.Schedule.H22
+	h.H23 = p.Schedule.H23
 	err = m.CreateSchedule(h)
 	if err != nil {
 		return 0, err

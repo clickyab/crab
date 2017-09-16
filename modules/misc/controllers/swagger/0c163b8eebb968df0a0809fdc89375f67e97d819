@@ -74,9 +74,6 @@
 					"format": "dateTime",
 					"type": "string"
 				},
-				"id": {
-					"type": "integer"
-				},
 				"start_at": {
 					"format": "dateTime",
 					"type": "string"

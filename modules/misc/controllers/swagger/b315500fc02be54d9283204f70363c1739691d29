@@ -20,6 +20,18 @@
 			}
 		],
 		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controllers_addResponse"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			},
 			"401": {
 				"description": "you are not authorized",
 				"schema": {
