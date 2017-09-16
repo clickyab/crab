@@ -138,10 +138,11 @@ func (c Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aa
 		u.Gender = user.Gender
 	}
 	u.SSN = user.SSN.String
-	if user.Corporation != nil {
-		u.LegalName = user.Corporation.LegalName
-		u.LegalRegister = user.Corporation.LegalRegister.String
-		u.EconomicCode = user.Corporation.EconomicCode.String
+
+	if c, e := aaa.NewAaaManager().FindCorporationByUserID(u.ID); e == nil {
+		u.LegalName = c.LegalName
+		u.LegalRegister = c.LegalRegister.String
+		u.EconomicCode = c.EconomicCode.String
 	}
 
 	var l *location.CityInfo
