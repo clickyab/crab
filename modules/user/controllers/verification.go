@@ -172,7 +172,6 @@ func genVerifyCode(u *aaa.User, salt string) (string, error) {
 	}
 
 	key := fmt.Sprintf("%s%s", <-random.ID, <-random.ID)
-	strconv.FormatInt(u.ID, 64)
 	kw.SetSubKey(subID, fmt.Sprintf("%d", u.ID))
 	kw.SetSubKey(key, dump)
 	assert.Nil(kw.Save(exp))
