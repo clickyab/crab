@@ -10,44 +10,6 @@ import (
 )
 
 // IsValid try to validate enum value on ths type
-func (e UserValidStatus) IsValid() bool {
-	return array.StringInArray(
-		string(e),
-		string(RegisteredUserStatus),
-		string(BlockedUserStatus),
-		string(ActiveUserStatus),
-	)
-}
-
-// Scan convert the json array ino string slice
-func (e *UserValidStatus) Scan(src interface{}) error {
-	var b []byte
-	switch src.(type) {
-	case []byte:
-		b = src.([]byte)
-	case string:
-		b = []byte(src.(string))
-	case nil:
-		b = make([]byte, 0)
-	default:
-		return trans.E("unsupported type")
-	}
-	if !UserValidStatus(b).IsValid() {
-		return trans.E("invaid value")
-	}
-	*e = UserValidStatus(b)
-	return nil
-}
-
-// Value try to get the string slice representation in database
-func (e UserValidStatus) Value() (driver.Value, error) {
-	if !e.IsValid() {
-		return nil, trans.E("invalid status")
-	}
-	return string(e), nil
-}
-
-// IsValid try to validate enum value on ths type
 func (e CampaignKind) IsValid() bool {
 	return array.StringInArray(
 		string(e),
@@ -115,6 +77,43 @@ func (e *CampaignType) Scan(src interface{}) error {
 
 // Value try to get the string slice representation in database
 func (e CampaignType) Value() (driver.Value, error) {
+	if !e.IsValid() {
+		return nil, trans.E("invalid status")
+	}
+	return string(e), nil
+}
+
+// IsValid try to validate enum value on ths type
+func (e Progress) IsValid() bool {
+	return array.StringInArray(
+		string(e),
+		string(ProgressInProgress),
+		string(ProgressFinalized),
+	)
+}
+
+// Scan convert the json array ino string slice
+func (e *Progress) Scan(src interface{}) error {
+	var b []byte
+	switch src.(type) {
+	case []byte:
+		b = src.([]byte)
+	case string:
+		b = []byte(src.(string))
+	case nil:
+		b = make([]byte, 0)
+	default:
+		return trans.E("unsupported type")
+	}
+	if !Progress(b).IsValid() {
+		return trans.E("invaid value")
+	}
+	*e = Progress(b)
+	return nil
+}
+
+// Value try to get the string slice representation in database
+func (e Progress) Value() (driver.Value, error) {
 	if !e.IsValid() {
 		return nil, trans.E("invalid status")
 	}
