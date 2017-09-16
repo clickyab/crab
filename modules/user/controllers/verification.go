@@ -127,8 +127,8 @@ func genVerificationURL(u *aaa.User, p string, r *http.Request) (*url.URL, error
 const delimiter = "-"
 
 func verifyCode(c string) (*aaa.User, error) {
-	var s []string
-	if s := strings.Split(c, delimiter); len(s) != 2 {
+	s := strings.Split(c, delimiter)
+	if len(s) != 2 {
 		return nil, errors.New("code is not valid")
 	}
 
