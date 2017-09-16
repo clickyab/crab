@@ -90,7 +90,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	ext := filepath.Ext(handler.Filename)
 
 	now := time.Now()
-	fp := filepath.Join(uPath.String(), now.Format("2006/01/02"))
+	fp := filepath.Join(uPath.String(), m, now.Format("2006/01/02"))
 
 	err = os.MkdirAll(fp, os.ModeDir|os.ModePerm)
 	assert.Nil(err)
@@ -102,7 +102,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 			}
 		}
 	}()
-	f, err := os.Create(fmt.Sprintf("%s/%s", uPath.String(), fn))
+	f, err := os.Create(filepath.Join(fp, fn))
 	assert.Nil(err)
 	defer f.Close()
 
