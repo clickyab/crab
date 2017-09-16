@@ -109,7 +109,7 @@ func (u *Controller) Edit(ctx context.Context, w http.ResponseWriter, r *http.Re
 }
 
 func stringToNullString(val string) mysql.NullString {
-	return mysql.NullString{String: val, Valid: val == ""}
+	return mysql.NullString{String: val, Valid: val != ""}
 }
 
 func intToNullInt64(val int64) mysql.NullInt64 {
