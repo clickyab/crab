@@ -306,12 +306,14 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
 			"RecName": "ctrl",
-			"Payload": "",
+			"Payload": "verifyEmailCodePayload",
 			"Resource": "",
 			"Scope": ""
 		} with key 13 */
 		m13 := append(groupMiddleware, []framework.Middleware{}...)
 
+		// Make sure payload is the last middleware
+		m13 = append(m13, middleware.PayloadUnMarshallerGenerator(verifyEmailCodePayload{}))
 		group.POST("/email/verify", xhandler.HandlerFuncC(framework.Mix(ctrl.verifyEmailCode, m13...)))
 		// End route with key 13
 

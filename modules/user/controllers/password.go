@@ -108,7 +108,7 @@ type forgetCodePayload struct {
 // }
 func (c Controller) checkForgetCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	p := c.MustGetPayload(ctx).(*forgetCodePayload)
-	u, e := verifyCode(p.Code)
+	u, e := verifyCode(fmt.Sprintf("%s%s%s", hasher(p.Email+passwordVerifyPath), delimiter, p.Code))
 	if e != nil || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
 		c.ForbiddenResponse(w, nil)
 		return

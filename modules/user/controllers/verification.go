@@ -20,6 +20,7 @@ import (
 
 	"net/url"
 
+	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/notification"
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/trans"
@@ -36,6 +37,8 @@ const (
 
 var (
 	tooSoonError = errors.New("code has been sent")
+	exp          = config.RegisterDuration("crab.modules.user.verification.ttl", 5*time.Hour, "how long the token should be saved")
+	resend       = config.RegisterDuration("crab.modules.user.verification.resend", 2*time.Minute, "Duration between resend")
 )
 
 type verifyIdResponse responseLoginOK
@@ -70,6 +73,7 @@ type verifyEmailCodePayload struct {
 // @Route {
 // 		url = /email/verify
 //		method = post
+//		payload = verifyEmailCodePayload
 //		200 = responseLoginOK
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
@@ -77,7 +81,7 @@ type verifyEmailCodePayload struct {
 func (ctrl *Controller) verifyEmailCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	p := ctrl.MustGetPayload(ctx).(*verifyEmailCodePayload)
-	u, e := verifyCode(p.Code)
+	u, e := verifyCode(fmt.Sprintf("%s%s%s", hasher(p.Email+emailVerifyPath), delimiter, p.Code))
 
 	if e != nil || u.Status != aaa.RegisteredUserStatus || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
 		ctrl.ForbiddenResponse(w, nil)
@@ -170,25 +174,16 @@ func verifyCode(c string) (*aaa.User, error) {
 	return cu, nil
 }
 
-var exp = 5 * time.Hour
 var saltError = errors.New("salt should not be empty")
 
 func genVerifyCode(u *aaa.User, salt string) (string, string, error) {
-	if salt == "" {
-		return "", "", saltError
-	}
-	hash := func() string {
-		h := sha1.New()
-		h.Write([]byte(u.Email + salt))
-		return fmt.Sprintf("%x", h.Sum(nil))
-	}()
+	assert.True(salt != "")
 
+	hash := hasher(u.Email + salt)
 	kw := kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKey, hash))
-	// TODO: get it from config
 
 	if len(kw.AllKeys()) != 0 {
-		t := time.Now().Add(exp).Add(-2 * time.Minute).Sub(time.Now())
-		if t < kw.TTL() {
+		if exp.Duration()-resend.Duration() < kw.TTL() {
 			return "", "", tooSoonError
 		}
 	}
@@ -201,8 +196,13 @@ func genVerifyCode(u *aaa.User, salt string) (string, string, error) {
 	assert.Nil(ee)
 	code := fmt.Sprintf("%d", cc)[:8]
 	kw.SetSubKey(code, dump)
-	assert.Nil(kw.Save(exp))
 
-	return fmt.Sprintf("%s%s%s", hash, delimiter, key), code, nil
+	return fmt.Sprintf("%s%s%s", hash, delimiter, key), code, kw.Save(exp.Duration())
 
+}
+
+func hasher(s string) string {
+	h := sha1.New()
+	h.Write([]byte(s))
+	return fmt.Sprintf("%x", h.Sum(nil))
 }

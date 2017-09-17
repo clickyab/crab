@@ -1,6 +1,17 @@
 {
 	"post": {
 		"description": "",
+		"parameters": [
+			{
+				"description": "",
+				"in": "body",
+				"name": "payload_data",
+				"required": false,
+				"schema": {
+					"$ref": "#/definitions/user_verifyEmailCodePayload"
+				}
+			}
+		],
 		"responses": {
 			"200": {
 				"description": "",
