@@ -297,7 +297,7 @@ var (
 // UpdatePassword will change password (p param) if the current given password (c param) be correct.
 func (u *User) UpdatePassword(c, p string) error {
 	if !u.ValidatePassword(c) {
-		return errors.New("Current Password is wrong")
+		return ErrorWrongPassword
 	}
 	return u.ChangePassword(p)
 
