@@ -44,7 +44,7 @@ type verifyIdResponse responseLoginOK
 // @Route {
 // 		url = /email/verify/:token
 //		method = get
-//		200 = verifyIdResponse
+//		200 = responseLoginOK
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
 // }
@@ -64,13 +64,13 @@ func (ctrl *Controller) verifyEmail(ctx context.Context, w http.ResponseWriter, 
 // }
 type verifyEmailCodePayload struct {
 	Email string `json:"email" validate:"required,email"`
-	Code  string `json:"code" validate:"required,eq=8"`
+	Code  string `json:"code" validate:"required"`
 }
 
 // @Route {
 // 		url = /email/verify
 //		method = post
-//		200 = verifyIdResponse
+//		200 = responseLoginOK
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
 // }
@@ -79,7 +79,7 @@ func (ctrl *Controller) verifyEmailCode(ctx context.Context, w http.ResponseWrit
 	p := ctrl.MustGetPayload(ctx).(*verifyEmailCodePayload)
 	u, e := verifyCode(p.Code)
 
-	if e != nil || u.Status != aaa.RegisteredUserStatus || p.Email != u.Email {
+	if e != nil || u.Status != aaa.RegisteredUserStatus || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
 		ctrl.ForbiddenResponse(w, nil)
 		return
 	}
