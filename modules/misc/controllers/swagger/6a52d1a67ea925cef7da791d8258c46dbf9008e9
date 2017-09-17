@@ -5,7 +5,7 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "status",
+				"name": "pub_type",
 				"required": false,
 				"type": "string"
 			},
@@ -33,7 +33,7 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "pub_type",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},

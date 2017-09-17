@@ -60,6 +60,35 @@ func (ctrl *Controller) verifyEmail(ctx context.Context, w http.ResponseWriter, 
 	ctrl.createLoginResponse(w, u)
 }
 
+// @Validate {
+// }
+type verifyEmailCodePayload struct {
+	Email string `json:"email" validate:"required,email"`
+	Code  string `json:"code" validate:"required,eq=8"`
+}
+
+// @Route {
+// 		url = /email/verify
+//		method = post
+//		200 = verifyIdResponse
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (ctrl *Controller) verifyEmailCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	p := ctrl.MustGetPayload(ctx).(*verifyEmailCodePayload)
+	u, e := verifyCode(p.Code)
+
+	if e != nil || u.Status != aaa.RegisteredUserStatus || p.Email != u.Email {
+		ctrl.ForbiddenResponse(w, nil)
+		return
+	}
+
+	u.Status = aaa.ActiveUserStatus
+	assert.Nil(aaa.NewAaaManager().UpdateUser(u))
+	ctrl.createLoginResponse(w, u)
+}
+
 // @Validate{
 // }
 type verifyResendPayload struct {
@@ -91,37 +120,30 @@ func (ctrl *Controller) verifyResend(ctx context.Context, w http.ResponseWriter,
 }
 
 func verifyEmail(u *aaa.User, r *http.Request) error {
-	ur, e := genVerificationURL(u, emailVerifyPath, r)
+	h, c, e := genVerifyCode(u, emailVerifyPath)
 	if e != nil {
 		return e
 	}
-
-	// TODO: Change email template
-	notification.Send(trans.T("Welcome to Clickyab!").String(), ur.String(), notification.Packet{
-		Platform: notification.MailType,
-		To:       []string{u.Email},
-	})
-	return nil
-}
-
-func genVerificationURL(u *aaa.User, p string, r *http.Request) (*url.URL, error) {
-	k, e := genVerifyCode(u, p)
-	if e != nil {
-		return nil, e
-	}
-
-	return &url.URL{
+	ul := &url.URL{
 		Scheme: func() string {
 			if r.TLS != nil {
 				return "https"
 			}
 			return "http"
 		}(),
-		Host:     r.Host,
-		Path:     p,
-		RawQuery: fmt.Sprintf("key=%s", k),
-	}, nil
-
+		Host: r.Host,
+		Path: fmt.Sprintf("/user/register/verification/%s", h),
+	}
+	temp := fmt.Sprintf(`
+	%s
+	code: %s
+	`, ul.String(), c)
+	// TODO: Change email template
+	notification.Send(trans.T("Welcome to Clickyab!").String(), temp, notification.Packet{
+		Platform: notification.MailType,
+		To:       []string{u.Email},
+	})
+	return nil
 }
 
 const delimiter = "-"
@@ -151,9 +173,9 @@ func verifyCode(c string) (*aaa.User, error) {
 var exp = 5 * time.Hour
 var saltError = errors.New("salt should not be empty")
 
-func genVerifyCode(u *aaa.User, salt string) (string, error) {
+func genVerifyCode(u *aaa.User, salt string) (string, string, error) {
 	if salt == "" {
-		return "", saltError
+		return "", "", saltError
 	}
 	hash := func() string {
 		h := sha1.New()
@@ -167,15 +189,20 @@ func genVerifyCode(u *aaa.User, salt string) (string, error) {
 	if len(kw.AllKeys()) != 0 {
 		t := time.Now().Add(exp).Add(-2 * time.Minute).Sub(time.Now())
 		if t < kw.TTL() {
-			return "", tooSoonError
+			return "", "", tooSoonError
 		}
 	}
 
 	key := fmt.Sprintf("%s%s", <-random.ID, <-random.ID)
 	kw.SetSubKey(subID, fmt.Sprintf("%d", u.ID))
 	kw.SetSubKey(key, dump)
+
+	cc, ee := strconv.ParseInt(key[:10], 16, 64)
+	assert.Nil(ee)
+	code := fmt.Sprintf("%d", cc)[:8]
+	kw.SetSubKey(code, dump)
 	assert.Nil(kw.Save(exp))
 
-	return fmt.Sprintf("%s%s%s", hash, delimiter, key), nil
+	return fmt.Sprintf("%s%s%s", hash, delimiter, key), code, nil
 
 }
