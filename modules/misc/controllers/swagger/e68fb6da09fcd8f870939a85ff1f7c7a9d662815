@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"code": {
+			"type": "string"
+		},
+		"email": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

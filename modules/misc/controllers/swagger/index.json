@@ -34,8 +34,10 @@
 		"orm_OS": "file://e0f2a68c61759b396338f36c24185b7d49427684",
 		"orm_PublisherType": "file://e1608079d07b5a68239759a550f587834248a047",
 		"orm_WhiteBlackList": "file://69f1547f42351f4c63124a42eddd83dd7f349764",
+		"orm_attributes": "file://3a84068d87ed39cd1cd546d72bf5272a52e31a0b",
 		"orm_base": "file://17d7b558fcdd09d85741d584d4fce72430c22193",
 		"orm_common": "file://b2d01a0e762542ec58b13ef26da433668901c355",
+		"orm_schedule": "file://575618613d07c7ff705d0d64bcb1d2f67539755e",
 		"permission_Column": "file://6ad059cea5e9ec238ed7bdd54d1b2c61950308b1",
 		"pub_PubType": "file://68ff74609b96da4de05f25f97e130fe61c35e63a",
 		"pub_Publisher": "file://11cd710c2857af96f0c41db9c593f0e2e6be72f4",
@@ -53,6 +55,7 @@
 		"user_responseLoginOK": "file://39664c27b42f2b750f0c42b6f51f2a88bfae5caa",
 		"user_userPayload": "file://32e49b32f8778691637df812d65329bb0ba5a7c9",
 		"user_userResponse": "file://08175acbc0f8050a4920ef9f6f457c815fed16c3",
+		"user_verifyEmailCodePayload": "file://e68fb6da09fcd8f870939a85ff1f7c7a9d662815",
 		"user_verifyResendPayload": "file://81d85ecbfe8cd545656a36d66f72430ceafcef62"
 	},
 	"host": "127.0.0.1",

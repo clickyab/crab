@@ -13,15 +13,15 @@ import (
 // @Validate {
 // }
 type loginPayload struct {
-	Email    string `json:"email" validate:"email" error:"email is invalid"`
-	Password string `json:"password" validate:"gt=5" error:"password is too short"`
+	Email    string `json:"email" validate:"required,email" error:"email is invalid"`
+	Password string `json:"password" validate:"required,gt=5" error:"password is too short"`
 }
 
 // login userPayload in system
 // @Route {
 // 		url = /login
 //		method = post
-//      payload = loginPayload
+//		payload = loginPayload
 //		200 = responseLoginOK
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
