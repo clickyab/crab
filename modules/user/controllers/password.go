@@ -13,6 +13,8 @@ import (
 	"fmt"
 	"net/url"
 
+	"strings"
+
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/trans"
 )
@@ -93,7 +95,7 @@ func (c Controller) checkForgetHash(ctx context.Context, w http.ResponseWriter, 
 // }
 type forgetCodePayload struct {
 	Email string `json:"email" validate:"required,email"`
-	Code  string `json:"code" validate:"required,eq=8"`
+	Code  string `json:"code" validate:"required"`
 }
 
 // forgetCallBack is the url coming from sent email
@@ -107,7 +109,7 @@ type forgetCodePayload struct {
 func (c Controller) checkForgetCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	p := c.MustGetPayload(ctx).(*forgetCodePayload)
 	u, e := verifyCode(p.Code)
-	if e != nil || p.Email != u.Email {
+	if e != nil || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
 		c.ForbiddenResponse(w, nil)
 		return
 	}

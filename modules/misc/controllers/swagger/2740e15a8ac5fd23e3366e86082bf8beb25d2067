@@ -1,57 +1,25 @@
 {
-	"get": {
-		"description": "",
+	"put": {
+		"description": "update campaign",
 		"parameters": [
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "pub_type",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
-				"required": false,
-				"type": "string"
-			},
 			{
 				"description": "the security token, get it from login route",
 				"in": "header",
 				"name": "token",
 				"required": true,
 				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "body",
+				"name": "payload_data",
+				"required": false,
+				"schema": {
+					"$ref": "#/definitions/controllers_updateCampaignPayload"
+				}
 			}
 		],
 		"responses": {
-			"200": {
-				"description": "",
-				"schema": {
-					"$ref": "#/definitions/controllers_listPublisherResponse"
-				}
-			},
 			"401": {
 				"description": "you are not authorized",
 				"schema": {

@@ -17,7 +17,7 @@ import (
 // }
 type userPayload struct {
 	Email         string         `json:"email" validate:"required,email"`
-	Avatar        string         `json:"avatar" validate:"omitempty,url"`
+	Avatar        string         `json:"avatar" validate:"omitempty"`
 	CityID        int64          `json:"city_id" validate:"omitempty"`
 	LandLine      string         `json:"land_line" validate:"omitempty"`
 	CellPhone     string         `json:"cell_phone" validate:"omitempty"`
