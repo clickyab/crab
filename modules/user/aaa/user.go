@@ -305,7 +305,7 @@ func (u *User) UpdatePassword(c, p string) error {
 
 // ValidatePassword return true if the given password is the user current password.
 func (u *User) ValidatePassword(p string) bool {
-	if bcrypt.CompareHashAndPassword([]byte(p), []byte(u.Password)) == nil {
+	if bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(p)) == nil {
 		return true
 	}
 	return false
