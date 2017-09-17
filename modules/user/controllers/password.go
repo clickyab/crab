@@ -10,6 +10,9 @@ import (
 
 	"errors"
 
+	"fmt"
+	"net/url"
+
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/trans"
 )
@@ -36,15 +39,30 @@ func (c Controller) forgetPassword(ctx context.Context, w http.ResponseWriter, r
 		return
 	}
 
-	ur, e := genVerificationURL(u, passwordVerifyPath, r)
+	ur, co, e := genVerifyCode(u, passwordVerifyPath)
 	if e == tooSoonError {
 		c.OKResponse(w, nil)
 		return
 	}
 	assert.Nil(e)
 
+	ul := &url.URL{
+		Scheme: func() string {
+			if r.TLS != nil {
+				return "https"
+			}
+			return "http"
+		}(),
+		Host: r.Host,
+		Path: fmt.Sprintf("/user/recover/verification/%s", ur),
+	}
+	temp := fmt.Sprintf(`
+	%s
+	code: %s
+	`, ul.String(), co)
+
 	// TODO: Change email template
-	notification.Send(trans.T("Password recovery").String(), ur.String(), notification.Packet{
+	notification.Send(trans.T("Password recovery").String(), temp, notification.Packet{
 		Platform: notification.MailType,
 		To:       []string{u.Email},
 	})
@@ -59,14 +77,42 @@ func (c Controller) forgetPassword(ctx context.Context, w http.ResponseWriter, r
 //		200 = responseLoginOK
 // 		403 = controller.ErrorResponseSimple
 // }
-func (c Controller) checkForgetCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c Controller) checkForgetHash(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	t := xmux.Param(ctx, "token")
 	u, e := verifyCode(t)
 	if e != nil {
 		c.ForbiddenResponse(w, nil)
 		return
 	}
-	s, e := genVerifyCode(u, "change password")
+	s, _, e := genVerifyCode(u, "change password")
+	assert.Nil(e)
+	c.createLoginResponseWithToken(w, u, s)
+}
+
+// @Validate {
+// }
+type forgetCodePayload struct {
+	Email string `json:"email" validate:"required,email"`
+	Code  string `json:"code" validate:"required,eq=8"`
+}
+
+// forgetCallBack is the url coming from sent email
+// 		@Route {
+// 		url = /password/verify/
+// 		method = post
+//		payload = forgetCodePayload
+//		200 = responseLoginOK
+// 		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) checkForgetCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	p := c.MustGetPayload(ctx).(*forgetCodePayload)
+	u, e := verifyCode(p.Code)
+	if e != nil || p.Email != u.Email {
+		c.ForbiddenResponse(w, nil)
+		return
+	}
+
+	s, _, e := genVerifyCode(u, "change password")
 	assert.Nil(e)
 	c.createLoginResponseWithToken(w, u, s)
 }

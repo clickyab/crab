@@ -1,0 +1,33 @@
+{
+	"post": {
+		"description": "forgetCallBack is the url coming from sent email \t\t@Route { \t\turl = /password/verify \t\tmethod = post \t\tpayload = forgetCodePayload \t\t200 = responseLoginOK \t\t403 = controller.ErrorResponseSimple }",
+		"parameters": [
+			{
+				"description": "",
+				"in": "body",
+				"name": "payload_data",
+				"required": false,
+				"schema": {
+					"$ref": "#/definitions/user_forgetCodePayload"
+				}
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/user_responseLoginOK"
+				}
+			},
+			"403": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			}
+		},
+		"tags": [
+			"user"
+		]
+	}
+}
