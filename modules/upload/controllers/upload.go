@@ -29,6 +29,7 @@ type kind struct {
 }
 
 var uPath = config.RegisterString("crab.modules.upload.path", "/statics/uploads", "a path to the location that uploaded file should save")
+var perm = config.RegisterInt("crab.modules.upload.perm", 0777, "file will save with this permission")
 
 // Register add a route and settings for uploads
 // name will be the route, maxsize is maximum allowed size for file upload file and the mimes is alloed mime types
@@ -61,6 +62,7 @@ type Controller struct {
 //		middleware = authz.Authenticate
 // }
 func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
 	m := xmux.Param(ctx, "module")
 	u := authz.MustGetUser(ctx)
 	lock.RLock()
@@ -92,7 +94,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	now := time.Now()
 	fp := filepath.Join(uPath.String(), m, now.Format("2006/01/02"))
 
-	err = os.MkdirAll(fp, os.ModeDir|os.ModePerm)
+	err = os.MkdirAll(fp, os.FileMode(perm.Int64()))
 	assert.Nil(err)
 	fn := func() string {
 		for {
@@ -102,7 +104,8 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 			}
 		}
 	}()
-	f, err := os.Create(filepath.Join(fp, fn))
+	f, err := os.OpenFile(filepath.Join(fp, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(perm.Int64()))
+
 	assert.Nil(err)
 	defer f.Close()
 
@@ -121,7 +124,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	c.JSON(w, http.StatusOK, struct {
 		Src string `json:"src"`
 	}{
-		Src: filepath.Join(now.Format("2006/01/02"), fn),
+		Src: filepath.Join(m, now.Format("2006/01/02"), fn),
 	})
 }
 
