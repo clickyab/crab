@@ -27,7 +27,7 @@ type countries []location.Country
 //		method = get
 //		200 = countries
 // }
-func (ctrl *Controller) Countries(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (ctrl *Controller) countries(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	m := location.NewLocationManager()
 	ctrl.JSON(w, http.StatusOK, m.ListCountries())
 }
@@ -41,7 +41,7 @@ type provinces []location.Province
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 // }
-func (ctrl *Controller) Provinces(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (ctrl *Controller) provinces(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	d, e := strconv.ParseInt(xmux.Param(ctx, "country_id"), 10, 64)
 	if e != nil || d == 0 {
 		ctrl.BadResponse(w, nil)
@@ -66,7 +66,7 @@ type cities []location.City
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 // }
-func (ctrl *Controller) Cities(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (ctrl *Controller) cities(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	d, e := strconv.ParseInt(xmux.Param(ctx, "provinces_id"), 10, 64)
 	if e != nil || d == 0 {
 		ctrl.BadResponse(w, nil)

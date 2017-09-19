@@ -46,7 +46,7 @@ func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *htt
 		return
 	}
 	e := verifyEmail(usr, r)
-	if e == tooSoonError {
+	if e == errTooSoon {
 		u.OKResponse(w, "user has been created")
 		return
 	}

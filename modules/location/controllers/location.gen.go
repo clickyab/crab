@@ -28,7 +28,7 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		/* Route {
 			"Route": "/countries",
 			"Method": "GET",
-			"Function": "Controller.Countries",
+			"Function": "Controller.countries",
 			"RoutePkg": "location",
 			"RouteMiddleware": null,
 			"RouteFuncMiddleware": "",
@@ -40,13 +40,13 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		} with key 0 */
 		m0 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("/countries", xhandler.HandlerFuncC(framework.Mix(ctrl.Countries, m0...)))
+		group.GET("/countries", xhandler.HandlerFuncC(framework.Mix(ctrl.countries, m0...)))
 		// End route with key 0
 
 		/* Route {
 			"Route": "/provinces/:country_id",
 			"Method": "GET",
-			"Function": "Controller.Provinces",
+			"Function": "Controller.provinces",
 			"RoutePkg": "location",
 			"RouteMiddleware": null,
 			"RouteFuncMiddleware": "",
@@ -58,13 +58,13 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		} with key 1 */
 		m1 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("/provinces/:country_id", xhandler.HandlerFuncC(framework.Mix(ctrl.Provinces, m1...)))
+		group.GET("/provinces/:country_id", xhandler.HandlerFuncC(framework.Mix(ctrl.provinces, m1...)))
 		// End route with key 1
 
 		/* Route {
 			"Route": "/cities/:provinces_id",
 			"Method": "GET",
-			"Function": "Controller.Cities",
+			"Function": "Controller.cities",
 			"RoutePkg": "location",
 			"RouteMiddleware": null,
 			"RouteFuncMiddleware": "",
@@ -76,7 +76,7 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		} with key 2 */
 		m2 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("/cities/:provinces_id", xhandler.HandlerFuncC(framework.Mix(ctrl.Cities, m2...)))
+		group.GET("/cities/:provinces_id", xhandler.HandlerFuncC(framework.Mix(ctrl.cities, m2...)))
 		// End route with key 2
 
 		initializer.DoInitialize(ctrl)

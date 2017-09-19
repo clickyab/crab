@@ -36,18 +36,16 @@ const (
 )
 
 var (
-	tooSoonError = errors.New("code has been sent")
-	exp          = config.RegisterDuration("crab.modules.user.verification.ttl", 5*time.Hour, "how long the token should be saved")
-	resend       = config.RegisterDuration("crab.modules.user.verification.resend", 2*time.Minute, "Duration between resend")
+	errTooSoon = errors.New("code has been sent")
+	exp        = config.RegisterDuration("crab.modules.user.verification.ttl", 5*time.Hour, "how long the token should be saved")
+	resend     = config.RegisterDuration("crab.modules.user.verification.resend", 2*time.Minute, "Duration between resend")
 )
-
-type verifyIdResponse responseLoginOK
 
 // verifyId is verify code
 // @Route {
 // 		url = /email/verify/:token
 //		method = get
-//		200 = responseLoginOK
+//		200 = ResponseLoginOK
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
 // }
@@ -74,7 +72,7 @@ type verifyEmailCodePayload struct {
 // 		url = /email/verify
 //		method = post
 //		payload = verifyEmailCodePayload
-//		200 = responseLoginOK
+//		200 = ResponseLoginOK
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
 // }
@@ -116,7 +114,7 @@ func (ctrl *Controller) verifyResend(ctx context.Context, w http.ResponseWriter,
 		return
 	}
 	e = verifyEmail(u, r)
-	if e == tooSoonError {
+	if e == errTooSoon {
 		ctrl.OKResponse(w, nil)
 		return
 	}
@@ -174,8 +172,6 @@ func verifyCode(c string) (*aaa.User, error) {
 	return cu, nil
 }
 
-var saltError = errors.New("salt should not be empty")
-
 func genVerifyCode(u *aaa.User, salt string) (string, string, error) {
 	assert.True(salt != "")
 
@@ -184,7 +180,7 @@ func genVerifyCode(u *aaa.User, salt string) (string, string, error) {
 
 	if len(kw.AllKeys()) != 0 {
 		if exp.Duration()-resend.Duration() < kw.TTL() {
-			return "", "", tooSoonError
+			return "", "", errTooSoon
 		}
 	}
 

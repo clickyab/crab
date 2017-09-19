@@ -42,7 +42,7 @@ func (c Controller) forgetPassword(ctx context.Context, w http.ResponseWriter, r
 	}
 
 	ur, co, e := genVerifyCode(u, passwordVerifyPath)
-	if e == tooSoonError {
+	if e == errTooSoon {
 		c.OKResponse(w, nil)
 		return
 	}
@@ -76,7 +76,7 @@ func (c Controller) forgetPassword(ctx context.Context, w http.ResponseWriter, r
 // 		@Route {
 // 		url = /password/verify/:token
 // 		method = get
-//		200 = responseLoginOK
+//		200 = ResponseLoginOK
 // 		403 = controller.ErrorResponseSimple
 // }
 func (c Controller) checkForgetHash(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -103,7 +103,7 @@ type forgetCodePayload struct {
 // 		url = /password/verify/
 // 		method = post
 //		payload = forgetCodePayload
-//		200 = responseLoginOK
+//		200 = ResponseLoginOK
 // 		403 = controller.ErrorResponseSimple
 // }
 func (c Controller) checkForgetCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -129,7 +129,7 @@ type callBackPayload struct {
 // 		url = /password/change/:token
 // 		method = put
 // 		payload = callBackPayload
-//		200 = responseLoginOK
+//		200 = ResponseLoginOK
 // 		400 = controller.ErrorResponseSimple
 // }
 func (c Controller) changeForgetPassword(ctx context.Context, w http.ResponseWriter, r *http.Request) {

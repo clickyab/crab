@@ -10,7 +10,7 @@ import (
 )
 
 // IsValid try to validate enum value on ths type
-func (e PubType) IsValid() bool {
+func (e PType) IsValid() bool {
 	return array.StringInArray(
 		string(e),
 		string(AppPubType),
@@ -19,7 +19,7 @@ func (e PubType) IsValid() bool {
 }
 
 // Scan convert the json array ino string slice
-func (e *PubType) Scan(src interface{}) error {
+func (e *PType) Scan(src interface{}) error {
 	var b []byte
 	switch src.(type) {
 	case []byte:
@@ -31,15 +31,15 @@ func (e *PubType) Scan(src interface{}) error {
 	default:
 		return trans.E("unsupported type")
 	}
-	if !PubType(b).IsValid() {
+	if !PType(b).IsValid() {
 		return trans.E("invaid value")
 	}
-	*e = PubType(b)
+	*e = PType(b)
 	return nil
 }
 
 // Value try to get the string slice representation in database
-func (e PubType) Value() (driver.Value, error) {
+func (e PType) Value() (driver.Value, error) {
 	if !e.IsValid() {
 		return nil, trans.E("invalid status")
 	}

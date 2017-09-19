@@ -129,7 +129,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 }
 
 func validMIME(a textproto.MIMEHeader, b []string) (bool, string) {
-	ct := make([]string, 0)
+	var ct []string
 	var ok bool
 	if ct, ok = a["Content-Type"]; !ok {
 		return false, ""

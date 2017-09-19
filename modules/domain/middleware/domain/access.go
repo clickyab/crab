@@ -15,7 +15,7 @@ import (
 type contextKey string
 
 const (
-	// ContextBody is the context key for the body unmarshalled object
+	// ContextDomain is the context key for the body unmarshalled object
 	ContextDomain contextKey = "_domain"
 )
 

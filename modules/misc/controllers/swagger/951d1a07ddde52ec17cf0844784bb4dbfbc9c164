@@ -1,6 +1,6 @@
 {
 	"put": {
-		"description": "EditPersonal route for edit personal profile",
+		"description": "edit route for edit personal profile",
 		"parameters": [
 			{
 				"description": "the security token, get it from login route",
@@ -23,7 +23,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/user_responseLoginOK"
+					"$ref": "#/definitions/user_ResponseLoginOK"
 				}
 			},
 			"400": {

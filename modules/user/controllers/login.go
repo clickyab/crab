@@ -22,7 +22,7 @@ type loginPayload struct {
 // 		url = /login
 //		method = post
 //		payload = loginPayload
-//		200 = responseLoginOK
+//		200 = ResponseLoginOK
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
 // }
@@ -37,12 +37,12 @@ func (c Controller) login(ctx context.Context, w http.ResponseWriter, r *http.Re
 	}
 
 	if currentUser.Status == aaa.RegisteredUserStatus {
-		c.ForbiddenResponse(w, errors.New("not verified."))
+		c.ForbiddenResponse(w, errors.New("not verified"))
 		return
 	}
 
 	if currentUser.Status == aaa.BlockedUserStatus {
-		c.ForbiddenResponse(w, errors.New("this account has been blocked."))
+		c.ForbiddenResponse(w, errors.New("this account has been blocked"))
 		return
 	}
 

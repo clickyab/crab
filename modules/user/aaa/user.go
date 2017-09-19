@@ -289,9 +289,9 @@ var allowOldPassword = config.RegisterBoolean("crab.user.allow_old_pass", true,
 
 var (
 	// ErrorOldPass when The password was used before
-	ErrorOldPass = errors.New("This password was used before, please try another one.")
+	ErrorOldPass = errors.New("this password was used before, please try another one")
 	// ErrorWrongPassword when The current user password and claimed password doesn't match
-	ErrorWrongPassword = errors.New("Current password is not correct")
+	ErrorWrongPassword = errors.New("current password is not correct")
 )
 
 // UpdatePassword will change password (p param) if the current given password (c param) be correct.

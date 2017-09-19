@@ -10,19 +10,19 @@ import (
 	"github.com/clickyab/services/permission"
 )
 
-// PubType is the publisher type
+// PType is the publisher type
 type (
-	// PubType is the publisher type
+	// PType is the publisher type
 	// @Enum{
 	// }
-	PubType string
+	PType string
 )
 
 const (
 	// AppPubType app publisher
-	AppPubType PubType = "app"
+	AppPubType PType = "app"
 	// WebPubType web publisher
-	WebPubType PubType = "web"
+	WebPubType PType = "web"
 )
 
 // Status is the publisher status
@@ -55,7 +55,7 @@ type Publisher struct {
 	Name          string    `json:"name" db:"name" type:"string"`
 	Supplier      string    `json:"supplier" db:"supplier" type:"string"`
 	Domain        string    `json:"domain" db:"domain" type:"string" search:"true"`
-	PublisherType PubType   `json:"pub_type" db:"pub_type" type:"enum" filter:"true"`
+	PublisherType PType     `json:"pub_type" db:"pub_type" type:"enum" filter:"true"`
 	PubStatus     Status    `json:"status" db:"status" type:"enum" filter:"true"`
 	CreatedAt     time.Time `json:"created_at" db:"created_at" type:"date"`
 	UpdatedAt     time.Time `json:"updated_at" db:"updated_at" type:"date"`

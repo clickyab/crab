@@ -3,6 +3,13 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": " page number",
 				"in": "query",
 				"name": "p",
@@ -29,13 +36,6 @@
 				"name": "domain",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",
