@@ -10,6 +10,12 @@ import (
 // AUTO GENERATED CODE. DO NOT EDIT!
 
 const (
+	// CampaignAttributesTableFull is the CampaignAttributes table name
+	CampaignAttributesTableFull = "campaign_attributes"
+
+	// CampaignTableFull is the Campaign table name
+	CampaignTableFull = "campaigns"
+
 	// ScheduleTableFull is the Schedule table name
 	ScheduleTableFull = "schedules"
 )
@@ -37,6 +43,22 @@ func NewOrmManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 
 // Initialize orm package
 func (m *Manager) Initialize() {
+
+	m.AddTableWithName(
+		CampaignAttributes{},
+		CampaignAttributesTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
+
+	m.AddTableWithName(
+		Campaign{},
+		CampaignTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
 
 	m.AddTableWithName(
 		Schedule{},

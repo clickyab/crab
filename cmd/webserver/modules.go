@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "clickyab.com/crab/modules/asset"
+	_ "clickyab.com/crab/modules/campaign"
 	_ "clickyab.com/crab/modules/domain"
 	_ "clickyab.com/crab/modules/inventory"
 	_ "clickyab.com/crab/modules/location"
