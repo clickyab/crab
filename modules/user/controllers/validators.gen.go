@@ -384,7 +384,7 @@ func (pl *verifyResendPayload) Validate(ctx context.Context, w http.ResponseWrit
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
 		case "Email":
-			res["email_string"] = trans.E("invalid value")
+			res["email"] = trans.E("invalid value")
 
 		default:
 			logrus.Panicf("the field %s is not translated", i)
