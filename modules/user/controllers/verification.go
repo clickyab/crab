@@ -94,7 +94,7 @@ func (ctrl *Controller) verifyEmailCode(ctx context.Context, w http.ResponseWrit
 // @Validate{
 // }
 type verifyResendPayload struct {
-	Email string `json:"email_string" validate:"required,email"`
+	Email string `json:"email" validate:"required,email"`
 }
 
 // verifyResend will send an email again

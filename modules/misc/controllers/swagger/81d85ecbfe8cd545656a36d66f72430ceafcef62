@@ -1,6 +1,6 @@
 {
 	"properties": {
-		"email_string": {
+		"email": {
 			"type": "string"
 		}
 	},
