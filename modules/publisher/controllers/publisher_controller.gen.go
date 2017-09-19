@@ -57,7 +57,7 @@ func (u *Controller) listPublisher(ctx context.Context, w http.ResponseWriter, r
 
 	filter := make(map[string]string)
 
-	if e := r.URL.Query().Get("pub_type"); e != "" && pub.PubType(e).IsValid() {
+	if e := r.URL.Query().Get("pub_type"); e != "" && pub.PType(e).IsValid() {
 		filter["publishers.pub_type"] = e
 	}
 

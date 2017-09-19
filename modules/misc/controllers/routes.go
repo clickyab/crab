@@ -16,6 +16,10 @@ import (
 	"github.com/rs/xmux"
 )
 
+// Controller is the controller for the misc package
+// @Route {
+//		group = /misc
+// }
 type Controller struct {
 	controller.Base
 }

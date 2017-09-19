@@ -1,12 +1,10 @@
 package controllers
 
-type ByteSize int64
+type byteSize int64
 
 const (
 	_           = iota // ignore first value by assigning to blank identifier
-	kb ByteSize = 1 << (10 * iota)
-	mb
-	gb
+	kb byteSize = 1 << (10 * iota)
 )
 
 func init() {

@@ -7,12 +7,9 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/random"
 )
-
-var sessionTTL = config.GetDuration("crab.session.ttl")
 
 // closeSession closes current session
 // @Route {
@@ -33,7 +30,7 @@ func (c Controller) closeSession(ctx context.Context, w http.ResponseWriter, r *
 // 		url = /logout/closeother
 //		method = get
 //		middleware = authz.Authenticate
-//		200 = responseLoginOK
+//		200 = ResponseLoginOK
 // }
 func (c Controller) closeAllOtherSession(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	token := authz.MustGetToken(ctx)

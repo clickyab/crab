@@ -12,6 +12,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// Has check for pern
 func (u *User) Has(scope permission.UserScope, p permission.Token, d int64) (permission.UserScope, bool) {
 	perm := string(p)
 	if !scope.IsValid() {
@@ -43,6 +44,7 @@ func (u *User) Has(scope permission.UserScope, p permission.Token, d int64) (per
 	return rScope, permGranted
 }
 
+// HasOn check for entity perm
 func (u *User) HasOn(perm permission.Token, ownerID, parentID int64, DomainID int64, scopes ...permission.UserScope) (permission.UserScope, bool) {
 	if len(scopes) == 0 {
 		return permission.ScopeSelf, false

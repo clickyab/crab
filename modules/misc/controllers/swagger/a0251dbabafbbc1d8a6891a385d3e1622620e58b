@@ -16,7 +16,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/user_responseLoginOK"
+					"$ref": "#/definitions/user_ResponseLoginOK"
 				}
 			},
 			"401": {

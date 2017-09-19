@@ -6,12 +6,12 @@ import (
 	"os"
 
 	"clickyab.com/crab/cmd"
-	"github.com/sirupsen/logrus"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/initializer"
 	"github.com/clickyab/services/migration"
 	"github.com/clickyab/services/mysql"
 	"github.com/ogier/pflag"
+	"github.com/sirupsen/logrus"
 )
 
 var (

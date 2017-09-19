@@ -1,6 +1,6 @@
 {
 	"put": {
-		"description": "\t\t@Route { \t\turl = /password/change/:token \t\tmethod = put \t\tpayload = callBackPayload \t\t200 = responseLoginOK \t\t400 = controller.ErrorResponseSimple }",
+		"description": "\t\t@Route { \t\turl = /password/change/:token \t\tmethod = put \t\tpayload = callBackPayload \t\t200 = ResponseLoginOK \t\t400 = controller.ErrorResponseSimple }",
 		"parameters": [
 			{
 				"description": "",
@@ -23,7 +23,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/user_responseLoginOK"
+					"$ref": "#/definitions/user_ResponseLoginOK"
 				}
 			},
 			"400": {

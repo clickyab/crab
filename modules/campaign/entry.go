@@ -1,5 +1,5 @@
 package campaign
 
 import (
-	_ "clickyab.com/crab/modules/campaign/orm"
+	_ "clickyab.com/crab/modules/campaign/orm" // import init
 )

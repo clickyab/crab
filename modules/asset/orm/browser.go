@@ -16,7 +16,7 @@ type Browser struct {
 	Name string `json:"name" db:"name"`
 }
 
-// FindActiveBrowsersByName find active browsers by name
+// ListActiveBrowsers find active browsers by name
 func (m *Manager) ListActiveBrowsers() ([]Browser, error) {
 	var res []Browser
 	q := fmt.Sprintf("SELECT * FROM %s WHERE active=?", BrowserTableFull)

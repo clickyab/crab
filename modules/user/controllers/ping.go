@@ -12,7 +12,7 @@ import (
 // 		url = /ping
 //		method = get
 //		middleware = authz.Authenticate
-//		200 = responseLoginOK
+//		200 = ResponseLoginOK
 // }
 func (c Controller) ping(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	user := authz.MustGetUser(ctx)

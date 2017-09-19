@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
@@ -12,7 +11,6 @@ import (
 	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/controller"
-	"github.com/clickyab/services/hub"
 	"github.com/clickyab/services/kv"
 )
 
@@ -25,14 +23,15 @@ type Controller struct {
 	controller.Base
 }
 
-type auditData struct {
-	Username string      `json:"username"`
-	Action   string      `json:"action"`
-	Class    string      `json:"class"`
-	Data     interface{} `json:"data"`
-}
+//type auditData struct {
+//	Username string      `json:"username"`
+//	Action   string      `json:"action"`
+//	Class    string      `json:"class"`
+//	Data     interface{} `json:"data"`
+//}
 
-type responseLoginOK struct {
+// ResponseLoginOK login or ping or other response
+type ResponseLoginOK struct {
 	Token   string       `json:"token"`
 	Account userResponse `json:"account"`
 }
@@ -81,23 +80,23 @@ func (u Controller) storeData(r *http.Request, token string) error {
 //}
 
 // String make this one a stringer
-func (u auditData) String() string {
-	r, _ := json.Marshal(u)
+//func (u auditData) String() string {
+//	r, _ := json.Marshal(u)
+//
+//	return string(r)
+//}
 
-	return string(r)
-}
-
-func audit(username, action, class string, data interface{}) {
-	hub.Publish(
-		"audit",
-		auditData{
-			Username: username,
-			Action:   action,
-			Class:    class,
-			Data:     data,
-		},
-	)
-}
+//func audit(username, action, class string, data interface{}) {
+//	hub.Publish(
+//		"audit",
+//		auditData{
+//			Username: username,
+//			Action:   action,
+//			Class:    class,
+//			Data:     data,
+//		},
+//	)
+//}
 
 type userResponse struct {
 	ID            int64          `json:"id"`
@@ -122,27 +121,27 @@ type userResponse struct {
 	EconomicCode  string         `json:"economic_code,omitempty"`
 }
 
-func (c Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aaa.User, token string) {
-	u := userResponse{}
+func (u Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aaa.User, token string) {
+	us := userResponse{}
 
-	u.ID = user.ID
-	u.Email = user.Email
-	u.FirstName = user.FirstName
-	u.LastName = user.LastName
-	u.Avatar = user.Avatar.String
-	u.LandLine = user.LandLine.String
-	u.Cellphone = user.Cellphone.String
-	u.PostalCode = user.PostalCode.String
-	u.Address = user.Address.String
+	us.ID = user.ID
+	us.Email = user.Email
+	us.FirstName = user.FirstName
+	us.LastName = user.LastName
+	us.Avatar = user.Avatar.String
+	us.LandLine = user.LandLine.String
+	us.Cellphone = user.Cellphone.String
+	us.PostalCode = user.PostalCode.String
+	us.Address = user.Address.String
 	if user.Gender != aaa.NotSpecifiedGender {
-		u.Gender = user.Gender
+		us.Gender = user.Gender
 	}
-	u.SSN = user.SSN.String
+	us.SSN = user.SSN.String
 
-	if c, e := aaa.NewAaaManager().FindCorporationByUserID(u.ID); e == nil {
-		u.LegalName = c.LegalName
-		u.LegalRegister = c.LegalRegister.String
-		u.EconomicCode = c.EconomicCode.String
+	if c, e := aaa.NewAaaManager().FindCorporationByUserID(us.ID); e == nil {
+		us.LegalName = c.LegalName
+		us.LegalRegister = c.LegalRegister.String
+		us.EconomicCode = c.EconomicCode.String
 	}
 
 	var l *location.CityInfo
@@ -150,22 +149,22 @@ func (c Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aa
 		m := location.NewLocationManager()
 		m.FindAllByCityID(user.CityID.Int64)
 
-		u.CityName = l.CityName
-		u.CityID = l.CityID
-		u.ProvinceName = l.ProvinceName
-		u.ProvinceID = l.ProvinceID
-		u.CountryName = l.CountryName
-		u.CountryID = l.CountryID
+		us.CityName = l.CityName
+		us.CityID = l.CityID
+		us.ProvinceName = l.ProvinceName
+		us.ProvinceID = l.ProvinceID
+		us.CountryName = l.CountryName
+		us.CountryID = l.CountryID
 	}
-	res := responseLoginOK{
+	res := ResponseLoginOK{
 		Token:   token,
-		Account: u,
+		Account: us,
 	}
 
-	c.OKResponse(w, res)
+	u.OKResponse(w, res)
 }
 
-func (c Controller) createLoginResponse(w http.ResponseWriter, user *aaa.User) {
+func (u Controller) createLoginResponse(w http.ResponseWriter, user *aaa.User) {
 	token := aaa.GetNewToken(user)
-	c.createLoginResponseWithToken(w, user, token)
+	u.createLoginResponseWithToken(w, user, token)
 }

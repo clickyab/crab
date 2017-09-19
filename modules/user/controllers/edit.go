@@ -44,16 +44,16 @@ func (u *userPayload) ValidateExtra(ctx context.Context) error {
 	return nil
 }
 
-// EditPersonal route for edit personal profile
+// edit route for edit personal profile
 // @Route {
 // 		url = /update
 //		method = put
 //		payload = userPayload
 //		middleware = authz.Authenticate
-//		200 = responseLoginOK
+//		200 = ResponseLoginOK
 //		400 = controller.ErrorResponseSimple
 // }
-func (u *Controller) Edit(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (u *Controller) edit(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := u.MustGetPayload(ctx).(*userPayload)
 	if !pl.Gender.IsValid() || pl.Gender == aaa.NotSpecifiedGender {
 		u.BadResponse(w, middleware.GroupError{

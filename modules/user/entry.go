@@ -1,8 +1,8 @@
 package user
 
 import (
-	_ "clickyab.com/crab/modules/user/aaa"
-	_ "clickyab.com/crab/modules/user/controllers"
-	_ "clickyab.com/crab/modules/user/middleware/authz"
-	_ "clickyab.com/crab/modules/user/ucfg"
+	_ "clickyab.com/crab/modules/user/aaa"              // import init
+	_ "clickyab.com/crab/modules/user/controllers"      // import init
+	_ "clickyab.com/crab/modules/user/middleware/authz" // import init
+	_ "clickyab.com/crab/modules/user/ucfg"             // import init
 )

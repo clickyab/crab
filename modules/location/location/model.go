@@ -50,6 +50,7 @@ type CityInfo struct {
 	CountryID    int64  `json:"country_id" db:"country_id"`
 }
 
+// FindAllByCityID find city by id
 func (m Manager) FindAllByCityID(id int64) CityInfo {
 	c := CityInfo{}
 	e := m.GetRDbMap().SelectOne(&c,

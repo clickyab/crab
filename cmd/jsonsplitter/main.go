@@ -30,7 +30,7 @@ func main() {
 	var data = make(map[string]interface{})
 	assert.Nil(dec.Decode(&data))
 	res, err := split("root", data, 0)
-
+	assert.Nil(err)
 	assert.Nil(save(filepath.Join(*target, "index.json"), res))
 }
 
