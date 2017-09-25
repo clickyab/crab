@@ -1,0 +1,23 @@
+{
+	"properties": {
+		"budget": {
+			"type": "integer"
+		},
+		"cost_type": {
+			"type": "string"
+		},
+		"daily_limit": {
+			"type": "integer"
+		},
+		"max_bid": {
+			"type": "integer"
+		},
+		"notify_email": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		}
+	},
+	"type": "object"
+}

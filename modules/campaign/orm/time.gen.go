@@ -112,7 +112,7 @@ func (m *Manager) ListSchedulesWithPagination(offset, perPage int) []Schedule {
 }
 
 // FindScheduleByID return the Schedule base on its id
-func (m *Manager) FindScheduleByID(id string) (*Schedule, error) {
+func (m *Manager) FindScheduleByID(id int64) (*Schedule, error) {
 	var res Schedule
 	err := m.GetRDbMap().SelectOne(
 		&res,

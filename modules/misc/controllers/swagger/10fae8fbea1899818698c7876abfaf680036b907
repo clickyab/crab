@@ -1,6 +1,6 @@
 {
-	"put": {
-		"description": "update campaign",
+	"post": {
+		"description": "createBase campaign",
 		"parameters": [
 			{
 				"description": "the security token, get it from login route",
@@ -15,7 +15,7 @@
 				"name": "payload_data",
 				"required": false,
 				"schema": {
-					"$ref": "#/definitions/controllers_updateCampaignPayload"
+					"$ref": "#/definitions/controllers_createCampaignPayload"
 				}
 			}
 		],
@@ -23,7 +23,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controller_NormalResponse"
+					"$ref": "#/definitions/orm_Campaign"
 				}
 			},
 			"400": {

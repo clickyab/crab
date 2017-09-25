@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"kind": {
+			"type": "string"
+		},
+		"type": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
