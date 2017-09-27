@@ -34,6 +34,7 @@ type WhiteBlackList struct {
 	UpdatedAt time.Time             `json:"updated_at" db:"updated_at"`
 	Active    bool                  `json:"active" db:"active"`
 	UserID    int64                 `json:"user_id" db:"user_id"`
+	DomainID  int64                 `json:"domain_id" db:"domain_id"`
 	Label     string                `json:"label" db:"label"`
 	Domains   mysql.StringJSONArray `json:"domains" db:"domains"`
 	// Kind shows if it's a white list (true) or blacklist (false)

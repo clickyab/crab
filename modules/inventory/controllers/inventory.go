@@ -8,6 +8,7 @@ import (
 
 	"time"
 
+	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/inventory/orm"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
@@ -69,14 +70,14 @@ func (ctrl *Controller) whiteBlackList(ctx context.Context, w http.ResponseWrite
 	ctrl.OKResponse(w, res)
 }
 
-//@validate {
+//@Validate {
 //}
 type whiteBlackList struct {
 	Label   string                `json:"label" db:"label" validate:"gt=7"`
-	Domains mysql.StringJSONArray `json:"domains" db:"domains" validate:"gt=1"`
+	Domains mysql.StringJSONArray `json:"domains" db:"domains" validate:"gt=0"`
 	// Kind shows if it's a white list (true) or blacklist (false)
 	Kind          bool              `json:"kind" db:"kind"`
-	PublisherType orm.PublisherType `json:"publisher_type" db:"publisher_type" valid:"eg='web'|eg='app'"`
+	PublisherType orm.PublisherType `json:"publisher_type" db:"publisher_type" validate:"eg='web'|eg='app'"`
 }
 
 // addPreset get a new whitelist blacklist for user
@@ -90,6 +91,7 @@ type whiteBlackList struct {
 func (ctrl *Controller) addPreset(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := ctrl.MustGetPayload(ctx).(*whiteBlackList)
 	u := authz.MustGetUser(ctx)
+	dm := domain.MustGetDomain(ctx)
 	now := time.Now()
 	d := &orm.WhiteBlackList{
 		Active:        true,
@@ -100,6 +102,7 @@ func (ctrl *Controller) addPreset(ctx context.Context, w http.ResponseWriter, r 
 		Kind:          pl.Kind,
 		PublisherType: pl.PublisherType,
 		UserID:        u.ID,
+		DomainID:      dm.ID,
 	}
 	e := orm.NewOrmManager().CreateWhiteBlackList(d)
 	assert.Nil(e)
