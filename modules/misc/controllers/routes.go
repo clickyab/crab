@@ -68,7 +68,7 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 	assert.Nil(err)
 	data = load(data)
 
-	r.GET("/misc/panic", xhandler.HandlerFuncC(
+	r.GET(filepath.Join(mountPoint, "/misc/panic"), xhandler.HandlerFuncC(
 		func(_ context.Context, w http.ResponseWriter, r *http.Request) {
 			if r.Header.Get("token") == panicToken.String() {
 				assert.Nil(0)
