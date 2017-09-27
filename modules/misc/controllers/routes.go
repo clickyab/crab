@@ -24,7 +24,10 @@ type Controller struct {
 	controller.Base
 }
 
-var swaggerRoute = config.RegisterBoolean("services.framework.swagger", true, "is any swagger code available?")
+var (
+	swaggerRoute = config.RegisterBoolean("services.framework.swagger", true, "is any swagger code available?")
+	panicToken   = config.RegisterString("services.framwork.panic", "caba73d2-189d-4011-9676-969774c2b158", "token for force panic")
+)
 
 func load(data map[string]interface{}) map[string]interface{} {
 	f := regexp.MustCompile("^file://([a-f0-9]{40})$")
@@ -64,6 +67,15 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 	err = json.Unmarshal(b, &data)
 	assert.Nil(err)
 	data = load(data)
+
+	r.GET("/misc/panic", xhandler.HandlerFuncC(
+		func(_ context.Context, w http.ResponseWriter, r *http.Request) {
+			if r.Header.Get("token") == panicToken.String() {
+				assert.Nil(0)
+			}
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte("Noop ;)"))
+		}))
 
 	r.GET(filepath.Join(mountPoint, "/misc/swagger/index.json"),
 		xhandler.HandlerFuncC(func(_ context.Context, w http.ResponseWriter, r *http.Request) {
