@@ -1,4 +1,4 @@
-package orm
+package models
 
 import "github.com/clickyab/services/config"
 

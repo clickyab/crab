@@ -9,7 +9,7 @@ import (
 	"net/mail"
 	"strconv"
 
-	"clickyab.com/crab/modules/campaign/orm"
+	"clickyab.com/crab/modules/campaign/models"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
@@ -19,7 +19,7 @@ import (
 // @Validate{
 //}
 type budgetPayload struct {
-	orm.CampaignFinance
+	models.CampaignFinance
 }
 
 func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
@@ -29,7 +29,7 @@ func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter
 		}
 	}
 	if !l.CostType.IsValid() {
-		return fmt.Errorf("cost type %s is not valid. options are %s,%s or %s", l.CostType, orm.CPC, orm.CPM, orm.CPA)
+		return fmt.Errorf("cost type %s is not valid. options are %s,%s or %s", l.CostType, models.CPC, models.CPM, models.CPA)
 	}
 	if l.Budget < 0 || l.DailyLimit < 0 || l.MaxBid < 0 {
 		return errors.New("budget, daily limit and max bid can not be a negative number")
@@ -43,7 +43,7 @@ func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter
 // 		url = /budget/:id
 //		method = put
 //		payload = budgetPayload
-//		200 = orm.Campaign
+//		200 = models.Campaign
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 //		middleware = authz.Authenticate
@@ -55,7 +55,7 @@ func (c *Controller) budget(ctx context.Context, w http.ResponseWriter, r *http.
 	if err != nil || id < 1 {
 		c.BadResponse(w, errors.New("id is not valid"))
 	}
-	db := orm.NewOrmManager()
+	db := models.NewModelsManager()
 	o, err := db.FindCampaignByID(id)
 	if err != nil {
 		c.NotFoundResponse(w, nil)

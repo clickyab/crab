@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	asset "clickyab.com/crab/modules/asset/models"
-	"clickyab.com/crab/modules/campaign/orm"
+	"clickyab.com/crab/modules/campaign/models"
 	"github.com/clickyab/services/array"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/random"
@@ -21,7 +21,7 @@ import (
 // @Validate{
 //}
 type attributesPayload struct {
-	orm.CampaignAttributes
+	models.CampaignAttributes
 }
 
 func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
@@ -31,7 +31,7 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 		return fmt.Sprintf(`SELECT count(id) AS total FROM %s WHERE name IN (%s) AND active = 1`, t, strings.Repeat("?,", m)[:2*m-1])
 	}
 
-	if array.StringInArray(orm.Foreign, l.Region...) && len(l.Region) > 1 {
+	if array.StringInArray(models.Foreign, l.Region...) && len(l.Region) > 1 {
 		return errors.New("region is not valid")
 	}
 	o := asset.NewModelsManager()
@@ -61,7 +61,7 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 // 		url = /attributes/:id
 //		method = put
 //		payload = attributesPayload
-//		200 = orm.Campaign
+//		200 = models.Campaign
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 //		middleware = authz.Authenticate
@@ -73,7 +73,7 @@ func (c *Controller) attributes(ctx context.Context, w http.ResponseWriter, r *h
 	if err != nil || id < 1 {
 		c.BadResponse(w, errors.New("id is not valid"))
 	}
-	db := orm.NewOrmManager()
+	db := models.NewModelsManager()
 	o, err := db.FindCampaignByID(id)
 	if err != nil {
 		c.NotFoundResponse(w, nil)

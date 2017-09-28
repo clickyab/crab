@@ -7,6 +7,9 @@
 			"format": "dateTime",
 			"type": "string"
 		},
+		"id": {
+			"type": "integer"
+		},
 		"updated_at": {
 			"format": "dateTime",
 			"type": "string"

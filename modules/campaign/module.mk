@@ -1,7 +1,7 @@
 export CAMPAIGN_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(CAMPAIGN_ROOT)-codegen: tools-codegen
-	$(BIN)/codegen -p clickyab.com/crab/modules/campaign/orm
+	$(BIN)/codegen -p clickyab.com/crab/modules/campaign/models
 	$(BIN)/codegen -p clickyab.com/crab/modules/campaign/controllers
 
 $(CAMPAIGN_ROOT)-migration: tools-go-bindata

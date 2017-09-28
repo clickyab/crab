@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"clickyab.com/crab/modules/campaign/orm"
+	"clickyab.com/crab/modules/campaign/models"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
@@ -22,10 +22,10 @@ type whiteBlackPayload struct {
 
 // updateWhiteBlackList will update campaign white/black list
 // @Route {
-// 		url = /wb/:id
+// 		url = /whiteblack/:id
 //		method = put
 //		payload = whiteBlackPayload
-//		200 = orm.Campaign
+//		200 = models.Campaign
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 //		middleware = authz.Authenticate
@@ -40,21 +40,21 @@ func (c *Controller) updateWhiteBlackList(ctx context.Context, w http.ResponseWr
 	if err != nil || id < 1 {
 		c.BadResponse(w, errors.New("id is not valid"))
 	}
-	db := orm.NewOrmManager()
+	db := models.NewModelsManager()
 	o, err := db.FindCampaignByID(id)
 	if err != nil {
 		c.NotFoundResponse(w, nil)
 	}
 
 	err = db.UpdateCampaignWhiteBlackList(p.ListID, o)
-	if err == orm.ErrInventoryID {
+	if err == models.ErrInventoryID {
 		c.BadResponse(w, err)
 		return
 	}
 	if err != nil {
-		j, e := json.MarshalIndent(o, " ", "  ")
+		j, e := json.MarshalIndent(o, "", "\t")
 		assert.Nil(e)
-		pj, e := json.MarshalIndent(p, " ", "  ")
+		pj, e := json.MarshalIndent(p, "", "\t")
 		assert.Nil(e)
 
 		eid := <-random.ID
@@ -72,8 +72,9 @@ func (c *Controller) updateWhiteBlackList(ctx context.Context, w http.ResponseWr
 
 // deleteWhiteBlackList will update campaign white/black list
 // @Route {
-// 		url = /wblist/:id
+// 		url = /whiteblack/:id
 //		method = delete
+//		200 = controller.NormalResponse
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 //		middleware = authz.Authenticate
@@ -83,19 +84,19 @@ func (c *Controller) deleteWhiteBlackList(ctx context.Context, w http.ResponseWr
 	if err != nil {
 		c.BadResponse(w, errors.New("id is not valid"))
 	}
-	db := orm.NewOrmManager()
+	db := models.NewModelsManager()
 	o, err := db.FindCampaignByID(id)
 	if err != nil {
 		c.NotFoundResponse(w, nil)
 	}
 
 	err = db.DeleteCampaignWhiteBlackList(o)
-	if err == orm.ErrInventoryID {
+	if err == models.ErrInventoryID {
 		c.BadResponse(w, err)
 		return
 	}
 	if err != nil {
-		j, e := json.MarshalIndent(o, " ", "  ")
+		j, e := json.MarshalIndent(o, "", "\t")
 		assert.Nil(e)
 
 		eid := <-random.ID

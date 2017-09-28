@@ -1,4 +1,4 @@
-package orm
+package models
 
 // UpdateCampaignBudget for updating campaign finance
 func (m *Manager) UpdateCampaignBudget(c CampaignFinance, ca *Campaign) error {

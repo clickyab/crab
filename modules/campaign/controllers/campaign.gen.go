@@ -150,7 +150,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		// End route with key 4
 
 		/* Route {
-			"Route": "/wb/:id",
+			"Route": "/whiteblack/:id",
 			"Method": "PUT",
 			"Function": "Controller.updateWhiteBlackList",
 			"RoutePkg": "controllers",
@@ -170,11 +170,11 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 
 		// Make sure payload is the last middleware
 		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(whiteBlackPayload{}))
-		group.PUT("/wb/:id", xhandler.HandlerFuncC(framework.Mix(c.updateWhiteBlackList, m5...)))
+		group.PUT("/whiteblack/:id", xhandler.HandlerFuncC(framework.Mix(c.updateWhiteBlackList, m5...)))
 		// End route with key 5
 
 		/* Route {
-			"Route": "/wblist/:id",
+			"Route": "/whiteblack/:id",
 			"Method": "DELETE",
 			"Function": "Controller.deleteWhiteBlackList",
 			"RoutePkg": "controllers",
@@ -192,7 +192,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.DELETE("/wblist/:id", xhandler.HandlerFuncC(framework.Mix(c.deleteWhiteBlackList, m6...)))
+		group.DELETE("/whiteblack/:id", xhandler.HandlerFuncC(framework.Mix(c.deleteWhiteBlackList, m6...)))
 		// End route with key 6
 
 		initializer.DoInitialize(c)
