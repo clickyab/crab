@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/domain/dmn"
 	"clickyab.com/crab/modules/domain/middleware/domain"
+	"clickyab.com/crab/modules/domain/models"
 	"clickyab.com/crab/modules/user/aaa"
 )
 
@@ -16,8 +16,8 @@ type checkMailPayload struct {
 }
 
 type checkMailResponse struct {
-	Domains       []dmn.Domain `json:"domains"`
-	CurrentDomain bool         `json:"current_domain"`
+	Domains       models.Domains `json:"domains"`
+	CurrentDomain bool           `json:"current_domain"`
 }
 
 // checkMail check mail in system

@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/domain/dmn"
+	"clickyab.com/crab/modules/domain/models"
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
@@ -29,7 +29,7 @@ func Authenticate(next framework.Handler) framework.Handler {
 			val := kv.NewEavStore(token).SubKey("token")
 			if val != "" {
 				// TODO : Write me
-				userDomain, ok := ctx.Value(domain.ContextDomain).(*dmn.Domain)
+				userDomain, ok := ctx.Value(domain.ContextDomain).(*models.Domain)
 				assert.True(ok, "[BUG] no domain in context")
 				usr, err := aaa.NewAaaManager().FindUserByAccessTokenDomain(val, userDomain.ID)
 				if err == nil {

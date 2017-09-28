@@ -7,7 +7,7 @@ import (
 
 	"database/sql"
 
-	"clickyab.com/crab/modules/domain/dmn"
+	"clickyab.com/crab/modules/domain/models"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
 )
@@ -21,7 +21,7 @@ const (
 var ErrInventoryID = errors.New("there is no inventory with this id")
 
 // AddCampaign for creating campaign with minimum info
-func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *dmn.Domain) (*Campaign, error) {
+func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *models.Domain) (*Campaign, error) {
 	ca := &Campaign{
 		base: base{
 			Active: true,

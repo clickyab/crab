@@ -1,17 +1,19 @@
 {
 	"items": {
 		"properties": {
-			"description": {
-				"type": "string"
+			"active": {
+				"type": "boolean"
 			},
-			"id": {
-				"type": "integer"
+			"created_at": {
+				"format": "dateTime",
+				"type": "string"
 			},
 			"name": {
 				"type": "string"
 			},
-			"status": {
-				"type": "boolean"
+			"updated_at": {
+				"format": "dateTime",
+				"type": "string"
 			}
 		},
 		"type": "object"

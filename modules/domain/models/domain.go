@@ -8,6 +8,9 @@ import (
 	"github.com/clickyab/services/mysql"
 )
 
+// Domains is slice of domain
+type Domains []Domain
+
 // Domain domain model in database
 // @Model {
 //		table = domains
