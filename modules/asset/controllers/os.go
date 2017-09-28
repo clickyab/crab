@@ -4,19 +4,20 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/asset/orm"
+	"clickyab.com/crab/modules/asset/models"
+	"github.com/clickyab/services/assert"
 )
-
-type osResponse []orm.OS
 
 // os return list all is (e.g. linux, ...)
 // @Route {
 // 		url = /os
 //		method = get
-//		200 = osResponse
+//		200 = models.OSes
 //		middleware = authz.Authenticate
 // }
 func (c *Controller) os(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	m := orm.NewOrmManager()
-	c.OKResponse(w, m.ListOS())
+
+	res, err := models.NewModelsManager().ListActiveOSes()
+	assert.Nil(err)
+	c.OKResponse(w, res)
 }

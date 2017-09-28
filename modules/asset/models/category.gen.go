@@ -1,10 +1,11 @@
 // Code generated build with models DO NOT EDIT.
 
-package orm
+package models
 
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/initializer"
@@ -14,7 +15,9 @@ import (
 
 // CreateCategory try to save a new Category in database
 func (m *Manager) CreateCategory(c *Category) error {
-
+	now := time.Now()
+	c.CreatedAt = now
+	c.UpdatedAt = now
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -26,7 +29,8 @@ func (m *Manager) CreateCategory(c *Category) error {
 
 // UpdateCategory try to update Category in database
 func (m *Manager) UpdateCategory(c *Category) error {
-
+	now := time.Now()
+	c.UpdatedAt = now
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -105,22 +109,6 @@ func (m *Manager) ListCategoriesWithPaginationFilter(
 // ListCategoriesWithPagination try to list all Categories with pagination
 func (m *Manager) ListCategoriesWithPagination(offset, perPage int) []Category {
 	return m.ListCategoriesWithPaginationFilter(offset, perPage, "")
-}
-
-// FindCategoryByID return the Category base on its id
-func (m *Manager) FindCategoryByID(id int64) (*Category, error) {
-	var res Category
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", CategoryTableFull),
-		id,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
 }
 
 // FindCategoryByName return the Category base on its name

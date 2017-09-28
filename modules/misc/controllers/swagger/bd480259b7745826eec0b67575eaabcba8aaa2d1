@@ -14,7 +14,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_osResponse"
+					"$ref": "#/definitions/models_OSes"
 				}
 			},
 			"401": {

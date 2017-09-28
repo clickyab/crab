@@ -1,6 +1,6 @@
 // Code generated build with models DO NOT EDIT.
 
-package orm
+package models
 
 import (
 	"fmt"
@@ -111,29 +111,13 @@ func (m *Manager) ListManufacturersWithPagination(offset, perPage int) []Manufac
 	return m.ListManufacturersWithPaginationFilter(offset, perPage, "")
 }
 
-// FindManufacturerByID return the Manufacturer base on its id
-func (m *Manager) FindManufacturerByID(id int64) (*Manufacturer, error) {
+// FindManufacturerByName return the Manufacturer base on its name
+func (m *Manager) FindManufacturerByName(n string) (*Manufacturer, error) {
 	var res Manufacturer
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", ManufacturerTableFull),
-		id,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
-// FindManufacturerByBrand return the Manufacturer base on its brand
-func (m *Manager) FindManufacturerByBrand(b string) (*Manufacturer, error) {
-	var res Manufacturer
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE brand=?", ManufacturerTableFull),
-		b,
+		fmt.Sprintf("SELECT * FROM %s WHERE name=?", ManufacturerTableFull),
+		n,
 	)
 
 	if err != nil {

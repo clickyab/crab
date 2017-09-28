@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	asset "clickyab.com/crab/modules/asset/orm"
+	asset "clickyab.com/crab/modules/asset/models"
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/array"
 	"github.com/clickyab/services/assert"
@@ -28,13 +28,13 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 
 	queryGen := func(t string, s []string) string {
 		m := len(s)
-		return fmt.Sprintf(`select count(id) as total from %s where name in (%s)`, t, strings.Repeat("?,", m)[:2*m-1])
+		return fmt.Sprintf(`SELECT count(id) AS total FROM %s WHERE name IN (%s) AND active = 1`, t, strings.Repeat("?,", m)[:2*m-1])
 	}
 
 	if array.StringInArray(orm.Foreign, l.Region...) && len(l.Region) > 1 {
 		return errors.New("region is not valid")
 	}
-	o := asset.NewOrmManager()
+	o := asset.NewModelsManager()
 
 	if t, err := o.GetRDbMap().SelectInt(queryGen(asset.ISPTableFull, l.ISP), l.ISP); err != nil && int64(len(l.ISP)) != t {
 		return errors.New("isp is not valid")

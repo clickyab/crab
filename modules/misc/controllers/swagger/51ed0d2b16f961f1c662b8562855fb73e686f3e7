@@ -14,7 +14,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_browserResponse"
+					"$ref": "#/definitions/models_Browsers"
 				}
 			},
 			"401": {

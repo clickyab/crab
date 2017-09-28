@@ -1,6 +1,6 @@
 // Code generated build with models DO NOT EDIT.
 
-package orm
+package models
 
 import (
 	"github.com/clickyab/services/mysql"
@@ -29,18 +29,18 @@ const (
 	RegionTableFull = "regions"
 )
 
-// Manager is the model manager for orm package
+// Manager is the model manager for models package
 type Manager struct {
 	mysql.Manager
 }
 
-// NewOrmManager create and return a manager for this module
-func NewOrmManager() *Manager {
+// NewModelsManager create and return a manager for this module
+func NewModelsManager() *Manager {
 	return &Manager{}
 }
 
-// NewOrmManagerFromTransaction create and return a manager for this module from a transaction
-func NewOrmManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
+// NewModelsManagerFromTransaction create and return a manager for this module from a transaction
+func NewModelsManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 	m := &Manager{}
 	err := m.Hijack(tx)
 	if err != nil {
@@ -50,58 +50,58 @@ func NewOrmManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 	return m, nil
 }
 
-// Initialize orm package
+// Initialize models package
 func (m *Manager) Initialize() {
 
 	m.AddTableWithName(
 		Browser{},
 		BrowserTableFull,
 	).SetKeys(
-		true,
-		"ID",
+		false,
+		"Name",
 	)
 
 	m.AddTableWithName(
 		Category{},
 		CategoryTableFull,
 	).SetKeys(
-		true,
-		"ID",
+		false,
+		"Name",
 	)
 
 	m.AddTableWithName(
 		ISP{},
 		ISPTableFull,
 	).SetKeys(
-		true,
-		"ID",
+		false,
+		"Name",
 	)
 
 	m.AddTableWithName(
 		Manufacturer{},
 		ManufacturerTableFull,
 	).SetKeys(
-		true,
-		"ID",
+		false,
+		"Name",
 	)
 
 	m.AddTableWithName(
 		OS{},
 		OSTableFull,
 	).SetKeys(
-		true,
-		"ID",
+		false,
+		"Name",
 	)
 
 	m.AddTableWithName(
 		Region{},
 		RegionTableFull,
 	).SetKeys(
-		true,
+		false,
 		"ID",
 	)
 
 }
 func init() {
-	mysql.Register(NewOrmManager())
+	mysql.Register(NewModelsManager())
 }

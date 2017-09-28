@@ -4,7 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/asset/orm"
+	"clickyab.com/crab/modules/asset/models"
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
 )
 
@@ -17,16 +18,16 @@ type Controller struct {
 	controller.Base
 }
 
-type manufacturers []orm.Manufacturer
-
 // Manufacturers return list all mobile manufacturers (e.g. Apple, Samsung)
 // @Route {
 // 		url = /manufacturers
 //		method = get
-//		200 = manufacturers
+//		200 = models.Manufacturers
 //		middleware = authz.Authenticate
 // }
 func (c *Controller) manufacturer(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	m := orm.NewOrmManager()
-	c.OKResponse(w, m.ListManufacturers())
+
+	res, err := models.NewModelsManager().ListActiveManufacturers()
+	assert.Nil(err)
+	c.OKResponse(w, res)
 }
