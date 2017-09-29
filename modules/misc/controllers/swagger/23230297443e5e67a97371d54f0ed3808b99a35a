@@ -15,7 +15,7 @@
 				"name": "payload_data",
 				"required": false,
 				"schema": {
-					"$ref": "#/definitions/controllers_whiteBlackList"
+					"$ref": "#/definitions/controllers_presetsPayload"
 				}
 			}
 		],
@@ -23,7 +23,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/orm_WhiteBlackList"
+					"$ref": "#/definitions/models_Preset"
 				}
 			},
 			"401": {

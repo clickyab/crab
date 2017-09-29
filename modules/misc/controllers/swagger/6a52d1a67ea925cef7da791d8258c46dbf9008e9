@@ -3,6 +3,13 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
@@ -12,21 +19,14 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "status",
+				"name": "pub_type",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": "",
 				"in": "query",
-				"name": "pub_type",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},

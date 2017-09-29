@@ -1,14 +1,14 @@
 package models
 
 import (
-	"clickyab.com/crab/modules/inventory/orm"
+	"clickyab.com/crab/modules/inventory/models"
 	"github.com/clickyab/services/mysql"
 )
 
 // UpdateCampaignWhiteBlackList update white/black list
 func (m *Manager) UpdateCampaignWhiteBlackList(w int64, ca *Campaign) error {
 
-	l, err := orm.NewOrmManager().FindWhiteBlackListByID(w)
+	l, err := models.NewModelsManager().FindPresetByID(w)
 	if err != nil {
 		return err
 	}

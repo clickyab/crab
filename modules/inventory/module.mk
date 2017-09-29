@@ -1,7 +1,7 @@
 export INVENTORY_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(INVENTORY_ROOT)-codegen: tools-codegen
-	$(BIN)/codegen -p clickyab.com/crab/modules/inventory/orm
+	$(BIN)/codegen -p clickyab.com/crab/modules/inventory/models
 	$(BIN)/codegen -p clickyab.com/crab/modules/inventory/controllers
 
 $(INVENTORY_ROOT)-migration: tools-go-bindata

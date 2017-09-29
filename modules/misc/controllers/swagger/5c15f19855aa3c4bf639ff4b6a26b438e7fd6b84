@@ -1,6 +1,6 @@
 {
 	"get": {
-		"description": "whiteBlackLists return all user inventories",
+		"description": "return all user presets for filtering publishers (black/white list)",
 		"parameters": [
 			{
 				"description": "the security token, get it from login route",
@@ -14,7 +14,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_whiteBlackLists"
+					"$ref": "#/definitions/models_Presets"
 				}
 			},
 			"401": {

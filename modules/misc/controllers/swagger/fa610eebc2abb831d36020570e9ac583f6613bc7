@@ -1,6 +1,6 @@
 {
 	"get": {
-		"description": "whiteBlackList return a user inventory",
+		"description": "user preset",
 		"parameters": [
 			{
 				"description": "",
@@ -21,7 +21,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/orm_WhiteBlackList"
+					"$ref": "#/definitions/models_Preset"
 				}
 			},
 			"401": {
