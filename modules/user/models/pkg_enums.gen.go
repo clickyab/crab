@@ -1,6 +1,6 @@
 // Code generated build with enum DO NOT EDIT.
 
-package aaa
+package models
 
 import (
 	"database/sql/driver"

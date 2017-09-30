@@ -1,4 +1,4 @@
-package aaa
+package models
 
 import (
 	"fmt"
@@ -88,7 +88,7 @@ func (u *User) getUserRoles(DomainID int64) []Role {
 	var roles []Role
 	query := fmt.Sprintf("SELECT roles.* FROM %[1]s INNER JOIN %[2]s ON %[2]s.role_id=roles.id WHERE %[2]s.user_id=? AND %[1]s.domain_id=?", RoleTableFull, RoleUserTableFull)
 
-	_, err := NewAaaManager().GetRDbMap().Select(&roles, query, u.ID, DomainID)
+	_, err := NewModelsManager().GetRDbMap().Select(&roles, query, u.ID, DomainID)
 	assert.Nil(err)
 	return roles
 }
@@ -121,7 +121,7 @@ func (u *User) getUserPermissions(DomainID int64) map[permission.UserScope]map[s
 	}
 
 	query := fmt.Sprintf(`SELECT * from %s WHERE role_id IN (%s)`, RolePermissionTableFull, ids)
-	_, err := NewAaaManager().GetRDbMap().Select(&rolePerm, query)
+	_, err := NewModelsManager().GetRDbMap().Select(&rolePerm, query)
 	assert.Nil(err)
 
 	for i := range rolePerm {

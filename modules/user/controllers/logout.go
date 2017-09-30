@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"clickyab.com/crab/modules/user/models"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/random"
@@ -37,7 +37,7 @@ func (c Controller) closeAllOtherSession(ctx context.Context, w http.ResponseWri
 	store := kv.NewEavStore(token)
 	dbToken := store.SubKey("token")
 
-	m := aaa.NewAaaManager()
+	m := models.NewModelsManager()
 
 	user, err := m.FindUserByAccessToken(dbToken)
 	assert.Nil(err)

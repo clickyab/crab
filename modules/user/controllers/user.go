@@ -6,8 +6,8 @@ import (
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/location/location"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"clickyab.com/crab/modules/user/models"
 	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/controller"
@@ -43,7 +43,7 @@ var (
 )
 
 // MustGetUser try to get back the userPayload to system
-func (u Controller) MustGetUser(ctx context.Context) *aaa.User {
+func (u Controller) MustGetUser(ctx context.Context) *models.User {
 	return authz.MustGetUser(ctx)
 }
 
@@ -73,7 +73,7 @@ func (u Controller) storeData(r *http.Request, token string) error {
 //	other := usr
 //	if usr.ID != objectUserID {
 //		var err error
-//		other, err = aaa.NewAaaManager().FindUserByID(objectUserID)
+//		other, err = models.NewModelsManager().FindUserByID(objectUserID)
 //		assert.Nil(err)
 //	}
 //	return usr.HasPermOn(perm, other.ID, other.ResellerID.Int64)
@@ -99,29 +99,29 @@ func (u Controller) storeData(r *http.Request, token string) error {
 //}
 
 type userResponse struct {
-	ID            int64          `json:"id"`
-	Email         string         `json:"email"`
-	FirstName     string         `json:"first_name"`
-	LastName      string         `json:"last_name"`
-	Avatar        string         `json:"avatar,omitempty"`
-	CityName      string         `json:"city_name,omitempty"`
-	CityID        int64          `json:"city_id,omitempty"`
-	ProvinceName  string         `json:"province_name,omitempty"`
-	ProvinceID    int64          `json:"province_id,omitempty"`
-	CountryName   string         `json:"country_name,omitempty"`
-	CountryID     int64          `json:"country_id,omitempty"`
-	LandLine      string         `json:"land_line,omitempty"`
-	Cellphone     string         `json:"cellphone,omitempty"`
-	PostalCode    string         `json:"postal_code,omitempty"`
-	Address       string         `json:"address,omitempty"`
-	Gender        aaa.GenderType `json:"gender,omitempty"`
-	SSN           string         `json:"ssn,omitempty"`
-	LegalName     string         `json:"legal_name,omitempty"`
-	LegalRegister string         `json:"legal_register,omitempty"`
-	EconomicCode  string         `json:"economic_code,omitempty"`
+	ID            int64             `json:"id"`
+	Email         string            `json:"email"`
+	FirstName     string            `json:"first_name"`
+	LastName      string            `json:"last_name"`
+	Avatar        string            `json:"avatar,omitempty"`
+	CityName      string            `json:"city_name,omitempty"`
+	CityID        int64             `json:"city_id,omitempty"`
+	ProvinceName  string            `json:"province_name,omitempty"`
+	ProvinceID    int64             `json:"province_id,omitempty"`
+	CountryName   string            `json:"country_name,omitempty"`
+	CountryID     int64             `json:"country_id,omitempty"`
+	LandLine      string            `json:"land_line,omitempty"`
+	Cellphone     string            `json:"cellphone,omitempty"`
+	PostalCode    string            `json:"postal_code,omitempty"`
+	Address       string            `json:"address,omitempty"`
+	Gender        models.GenderType `json:"gender,omitempty"`
+	SSN           string            `json:"ssn,omitempty"`
+	LegalName     string            `json:"legal_name,omitempty"`
+	LegalRegister string            `json:"legal_register,omitempty"`
+	EconomicCode  string            `json:"economic_code,omitempty"`
 }
 
-func (u Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aaa.User, token string) {
+func (u Controller) createLoginResponseWithToken(w http.ResponseWriter, user *models.User, token string) {
 	us := userResponse{}
 
 	us.ID = user.ID
@@ -133,12 +133,12 @@ func (u Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aa
 	us.Cellphone = user.Cellphone.String
 	us.PostalCode = user.PostalCode.String
 	us.Address = user.Address.String
-	if user.Gender != aaa.NotSpecifiedGender {
+	if user.Gender != models.NotSpecifiedGender {
 		us.Gender = user.Gender
 	}
 	us.SSN = user.SSN.String
 
-	if c, e := aaa.NewAaaManager().FindCorporationByUserID(us.ID); e == nil {
+	if c, e := models.NewModelsManager().FindCorporationByUserID(us.ID); e == nil {
 		us.LegalName = c.LegalName
 		us.LegalRegister = c.LegalRegister.String
 		us.EconomicCode = c.EconomicCode.String
@@ -164,7 +164,7 @@ func (u Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aa
 	u.OKResponse(w, res)
 }
 
-func (u Controller) createLoginResponse(w http.ResponseWriter, user *aaa.User) {
-	token := aaa.GetNewToken(user)
+func (u Controller) createLoginResponse(w http.ResponseWriter, user *models.User) {
+	token := models.GetNewToken(user)
 	u.createLoginResponseWithToken(w, user, token)
 }

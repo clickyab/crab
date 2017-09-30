@@ -1,13 +1,11 @@
-package aaa
+package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
-	"errors"
-
-	"clickyab.com/crab/modules/domain/models"
-
+	domain "clickyab.com/crab/modules/domain/models"
 	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
@@ -197,11 +195,11 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 		}
 		u.Corporation = uc
 	}
-	dManager, err := models.NewModelsManagerFromTransaction(m.GetRDbMap())
+	dManager, err := domain.NewModelsManagerFromTransaction(m.GetRDbMap())
 	if err != nil {
 		return nil, err
 	}
-	du := &models.DomainUser{UserID: u.ID, DomainID: domainID}
+	du := &domain.DomainUser{UserID: u.ID, DomainID: domainID}
 	err = dManager.CreateDomainUser(du)
 	if err != nil {
 		return nil, err
@@ -235,8 +233,8 @@ func GetNewToken(user *User) string {
 }
 
 // FindUserDomainsByEmail find active user domain based on its email
-func (m *Manager) FindUserDomainsByEmail(e string) []models.Domain {
-	var res []models.Domain
+func (m *Manager) FindUserDomainsByEmail(e string) []domain.Domain {
+	var res []domain.Domain
 	q := "SELECT d.* FROM domains AS d " +
 		"INNER JOIN domain_user AS dm ON dm.domain_id=d.id " +
 		"INNER JOIN users AS u ON u.id=dm.user_id " +
@@ -253,7 +251,7 @@ func (m *Manager) FindUserByAccessTokenDomain(at string, domainID int64) (*User,
 		&res,
 		fmt.Sprintf("SELECT u.* FROM %s AS u "+
 			"INNER JOIN %s AS dm ON dm.user_id=u.id "+
-			"WHERE u.access_token=? AND dm.domain_id=?", UserTableFull, models.DomainUserTableFull),
+			"WHERE u.access_token=? AND dm.domain_id=?", UserTableFull, domain.DomainUserTableFull),
 		at,
 		domainID,
 	)
@@ -266,7 +264,7 @@ func (m *Manager) FindUserByAccessTokenDomain(at string, domainID int64) (*User,
 }
 
 // FindUserByEmailDomain return the User base on its email an domain
-func (m *Manager) FindUserByEmailDomain(email string, domain *models.Domain) (*User, error) {
+func (m *Manager) FindUserByEmailDomain(email string, domain *domain.Domain) (*User, error) {
 	var res User
 	err := m.GetRDbMap().SelectOne(
 		&res,
@@ -330,7 +328,7 @@ func (u *User) ChangePassword(p string) error {
 	} else {
 		u.OldPassword = append([]string{string(np)}, u.OldPassword[:2]...)
 	}
-	m := NewAaaManager()
+	m := NewModelsManager()
 
 	return m.UpdateUser(u)
 }

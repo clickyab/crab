@@ -1,6 +1,6 @@
 // Code generated build with models DO NOT EDIT.
 
-package aaa
+package models
 
 import (
 	"github.com/clickyab/services/mysql"
@@ -29,18 +29,18 @@ const (
 	UserTableFull = "users"
 )
 
-// Manager is the model manager for aaa package
+// Manager is the model manager for models package
 type Manager struct {
 	mysql.Manager
 }
 
-// NewAaaManager create and return a manager for this module
-func NewAaaManager() *Manager {
+// NewModelsManager create and return a manager for this module
+func NewModelsManager() *Manager {
 	return &Manager{}
 }
 
-// NewAaaManagerFromTransaction create and return a manager for this module from a transaction
-func NewAaaManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
+// NewModelsManagerFromTransaction create and return a manager for this module from a transaction
+func NewModelsManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 	m := &Manager{}
 	err := m.Hijack(tx)
 	if err != nil {
@@ -50,7 +50,7 @@ func NewAaaManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 	return m, nil
 }
 
-// Initialize aaa package
+// Initialize models package
 func (m *Manager) Initialize() {
 
 	m.AddTableWithName(
@@ -106,5 +106,5 @@ func (m *Manager) Initialize() {
 
 }
 func init() {
-	mysql.Register(NewAaaManager())
+	mysql.Register(NewModelsManager())
 }

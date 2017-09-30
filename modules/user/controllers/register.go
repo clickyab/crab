@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
-	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/models"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/trans"
 )
@@ -29,10 +29,10 @@ type registerPayload struct {
 // }
 func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := u.MustGetPayload(ctx).(*registerPayload)
-	m := aaa.NewAaaManager()
+	m := models.NewModelsManager()
 	d := domain.MustGetDomain(ctx)
 
-	res := aaa.RegisterUserPayload{
+	res := models.RegisterUserPayload{
 		Email:     pl.Email,
 		Password:  pl.Password,
 		FirstName: pl.FirstName,

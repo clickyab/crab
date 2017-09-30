@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/domain/middleware/domain"
-	"clickyab.com/crab/modules/domain/models"
-	"clickyab.com/crab/modules/user/aaa"
+	dm "clickyab.com/crab/modules/domain/middleware/domain"
+	domain "clickyab.com/crab/modules/domain/models"
+	"clickyab.com/crab/modules/user/models"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/controller"
@@ -29,9 +29,9 @@ func Authenticate(next framework.Handler) framework.Handler {
 			val := kv.NewEavStore(token).SubKey("token")
 			if val != "" {
 				// TODO : Write me
-				userDomain, ok := ctx.Value(domain.ContextDomain).(*models.Domain)
+				userDomain, ok := ctx.Value(dm.ContextDomain).(*domain.Domain)
 				assert.True(ok, "[BUG] no domain in context")
-				usr, err := aaa.NewAaaManager().FindUserByAccessTokenDomain(val, userDomain.ID)
+				usr, err := models.NewModelsManager().FindUserByAccessTokenDomain(val, userDomain.ID)
 				if err == nil {
 					ctx = context.WithValue(ctx, dataKey, usr)
 					ctx = context.WithValue(ctx, tokenKey, token)
@@ -45,8 +45,8 @@ func Authenticate(next framework.Handler) framework.Handler {
 }
 
 // GetUser is the helper function to extract user data from context
-func GetUser(ctx context.Context) (*aaa.User, bool) {
-	rd, ok := ctx.Value(dataKey).(*aaa.User)
+func GetUser(ctx context.Context) (*models.User, bool) {
+	rd, ok := ctx.Value(dataKey).(*models.User)
 	if !ok {
 		return nil, false
 	}
@@ -55,7 +55,7 @@ func GetUser(ctx context.Context) (*aaa.User, bool) {
 }
 
 // MustGetUser try to get user data, or panic if there is no user data
-func MustGetUser(ctx context.Context) *aaa.User {
+func MustGetUser(ctx context.Context) *models.User {
 	rd, ok := GetUser(ctx)
 	assert.True(ok, "[BUG] no user in context")
 	return rd

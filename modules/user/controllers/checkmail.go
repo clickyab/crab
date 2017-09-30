@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/domain/middleware/domain"
-	"clickyab.com/crab/modules/domain/models"
-	"clickyab.com/crab/modules/user/aaa"
+	dm "clickyab.com/crab/modules/domain/middleware/domain"
+	domain "clickyab.com/crab/modules/domain/models"
+	"clickyab.com/crab/modules/user/models"
 )
 
 // @Validate {
@@ -16,7 +16,7 @@ type checkMailPayload struct {
 }
 
 type checkMailResponse struct {
-	Domains       models.Domains `json:"domains"`
+	Domains       domain.Domains `json:"domains"`
 	CurrentDomain bool           `json:"current_domain"`
 }
 
@@ -29,8 +29,8 @@ type checkMailResponse struct {
 // }
 func (u Controller) checkMail(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := u.MustGetPayload(ctx).(*checkMailPayload)
-	currentDomain := domain.MustGetDomain(ctx)
-	m := aaa.NewAaaManager()
+	currentDomain := dm.MustGetDomain(ctx)
+	m := models.NewModelsManager()
 	// find userPayload domains
 	domains := m.FindUserDomainsByEmail(pl.Email)
 	var currentDomainFound bool
