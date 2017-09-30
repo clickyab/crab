@@ -4,19 +4,21 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/asset/orm"
+	"clickyab.com/crab/modules/asset/models"
+	"github.com/clickyab/services/assert"
 )
 
-type ispResponse []orm.ISP
+type ispResponse []models.ISP
 
 // isp return list all is (e.g. irancell, ...)
 // @Route {
 // 		url = /isp
 //		method = get
-//		200 = ispResponse
+//		200 = models.ISPs
 //		middleware = authz.Authenticate
 // }
 func (c *Controller) isp(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	m := orm.NewOrmManager()
-	c.OKResponse(w, m.ListISPS())
+	res, err := models.NewModelsManager().ListActiveISPs()
+	assert.Nil(err)
+	c.OKResponse(w, ispResponse(res))
 }

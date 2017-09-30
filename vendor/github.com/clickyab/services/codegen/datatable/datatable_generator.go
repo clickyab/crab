@@ -149,7 +149,7 @@ package {{ .ControllerPackageName }}
 
 
 import (
-	"modules/user/aaa"
+	"modules/user/models"
 	"modules/user/middlewares"
 	"github.com/clickyab/services/permission"
 	"github.com/rs/xmux"

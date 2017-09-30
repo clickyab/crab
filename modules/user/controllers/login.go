@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
-	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -29,19 +29,19 @@ type loginPayload struct {
 func (c Controller) login(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := c.MustGetPayload(ctx).(*loginPayload)
 	uDomain := domain.MustGetDomain(ctx)
-	currentUser, err := aaa.NewAaaManager().FindUserByEmailDomain(pl.Email, uDomain)
+	currentUser, err := models.NewModelsManager().FindUserByEmailDomain(pl.Email, uDomain)
 
 	if err != nil || bcrypt.CompareHashAndPassword([]byte(currentUser.Password), []byte(pl.Password)) != nil {
 		c.ForbiddenResponse(w, errors.New("wrong email or password"))
 		return
 	}
 
-	if currentUser.Status == aaa.RegisteredUserStatus {
+	if currentUser.Status == models.RegisteredUserStatus {
 		c.ForbiddenResponse(w, errors.New("not verified"))
 		return
 	}
 
-	if currentUser.Status == aaa.BlockedUserStatus {
+	if currentUser.Status == models.BlockedUserStatus {
 		c.ForbiddenResponse(w, errors.New("this account has been blocked"))
 		return
 	}

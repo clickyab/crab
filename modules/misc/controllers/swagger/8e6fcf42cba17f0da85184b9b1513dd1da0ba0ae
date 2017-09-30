@@ -14,7 +14,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_manufacturers"
+					"$ref": "#/definitions/models_Manufacturers"
 				}
 			},
 			"401": {

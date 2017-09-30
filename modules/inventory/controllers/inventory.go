@@ -6,102 +6,89 @@ import (
 
 	"strconv"
 
-	"time"
+	"fmt"
 
-	"clickyab.com/crab/modules/inventory/orm"
+	"clickyab.com/crab/modules/inventory/models"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
-	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
 	"github.com/rs/xmux"
 )
 
-// Controller is the controller for the location package
+// Inventory is the controller for the location package
 // @Route {
 // 		middleware = domain.Access
 //		group = /inventory
 // }
-type Controller struct {
+type Inventory struct {
 	controller.Base
 }
 
-type whiteBlackLists []orm.WhiteBlackList
-
-// whiteBlackLists return all user inventories
+// return all user presets for filtering publishers (black/white list)
 // @Route {
 // 		url = /presets
 //		method = get
-//		200 = whiteBlackLists
+//		200 = models.Presets
 //		404 = controller.ErrorResponseSimple
 //		middleware = authz.Authenticate
 // }
-func (ctrl *Controller) whiteBlackLists(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Inventory) presets(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	u := authz.MustGetUser(ctx)
-	res := orm.NewOrmManager().ListWhiteBlackListsWithFilter(
+	res := models.NewModelsManager().ListPresetsWithFilter(
 		"user_id = ? ", u.ID)
 	if len(res) == 0 {
-		ctrl.NotFoundResponse(w, trans.E("User doesn't have any list"))
+		c.NotFoundResponse(w, trans.E("User doesn't have any list"))
 		return
 	}
-	ctrl.OKResponse(w, res)
+	c.OKResponse(w, res)
 }
 
-// whiteBlackList return a user inventory
+// user preset
 // @Route {
 // 		url = /preset/:id
 //		method = get
-//		200 = orm.WhiteBlackList
+//		200 = models.Preset
 //		404 = controller.ErrorResponseSimple
 //		middleware = authz.Authenticate
 // }
-func (ctrl *Controller) whiteBlackList(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Inventory) preset(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	id, e := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if e != nil {
-		ctrl.BadResponse(w, trans.E("not valid id"))
+		c.BadResponse(w, trans.E("not valid id"))
 		return
 	}
-	res, e := orm.NewOrmManager().FindWhiteBlackListByID(id)
+	res, e := models.NewModelsManager().FindPresetByID(id)
 	if e != nil {
-		ctrl.NotFoundResponse(w, trans.E("Inventory with id %d does not exists!", id))
+		c.NotFoundResponse(w, fmt.Errorf("inventory with id %d does not exists", id))
 		return
 	}
-	ctrl.OKResponse(w, res)
+	c.OKResponse(w, res)
 }
 
 //@validate {
 //}
-type whiteBlackList struct {
-	Label   string                `json:"label" db:"label" validate:"gt=7"`
-	Domains mysql.StringJSONArray `json:"domains" db:"domains" validate:"gt=1"`
-	// Kind shows if it's a white list (true) or blacklist (false)
-	Kind          bool              `json:"kind" db:"kind"`
-	PublisherType orm.PublisherType `json:"publisher_type" db:"publisher_type" valid:"eg='web'|eg='app'"`
+type presetsPayload struct {
+	models.PresetData
 }
 
 // addPreset get a new whitelist blacklist for user
 // @Route {
 // 		url = /preset
 //		method = post
-//		200 = orm.WhiteBlackList
+//		200 = models.Preset
 //		middleware = authz.Authenticate
-//		payload = whiteBlackList
+//		payload = presetsPayload
 // }
-func (ctrl *Controller) addPreset(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := ctrl.MustGetPayload(ctx).(*whiteBlackList)
+func (c *Inventory) addPreset(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*presetsPayload)
 	u := authz.MustGetUser(ctx)
-	now := time.Now()
-	d := &orm.WhiteBlackList{
-		Active:        true,
-		UpdatedAt:     now,
-		CreatedAt:     now,
-		Domains:       pl.Domains,
-		Label:         pl.Label,
-		Kind:          pl.Kind,
-		PublisherType: pl.PublisherType,
-		UserID:        u.ID,
+	d := &models.Preset{
+		Active:     true,
+		PresetData: pl.PresetData,
+		UserID:     u.ID,
 	}
-	e := orm.NewOrmManager().CreateWhiteBlackList(d)
+	e := models.NewModelsManager().CreatePreset(d)
 	assert.Nil(e)
-	ctrl.OKResponse(w, d)
+	c.OKResponse(w, d)
 }

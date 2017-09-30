@@ -14,7 +14,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_catResponse"
+					"$ref": "#/definitions/models_Categories"
 				}
 			},
 			"401": {

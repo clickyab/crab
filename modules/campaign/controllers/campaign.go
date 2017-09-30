@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	"clickyab.com/crab/modules/campaign/orm"
+	"clickyab.com/crab/modules/campaign/models"
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
@@ -29,12 +29,12 @@ type Controller struct {
 	controller.Base
 }
 
-func validate(l orm.CampaignStatus) error {
+func validate(l models.CampaignStatus) error {
 
 	if l.StartAt.IsZero() {
 		return errors.New("campaign should start in future")
 	}
-	if !l.EndAt.IsZero() && l.StartAt.Unix() > l.EndAt.Unix() {
+	if !l.EndAt.IsZero() && l.StartAt.Format("02-01-03") > l.EndAt.Format("02-01-03") {
 		return errors.New("campaign should end after start")
 	}
 	var any bool
@@ -54,7 +54,7 @@ func validate(l orm.CampaignStatus) error {
 // @Validate{
 //}
 type createCampaignPayload struct {
-	orm.CampaignBase
+	models.CampaignBase
 }
 
 func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
@@ -62,16 +62,14 @@ func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.Respon
 		return err
 	}
 	if !l.Kind.IsValid() {
-		return fmt.Errorf("%s is not a valid campaign kind. choose from %s or %s", l.Kind, orm.AppCampaign, orm.WebCampaign)
+		return fmt.Errorf("%s is not a valid campaign kind. choose from %s or %s", l.Kind, models.AppCampaign, models.WebCampaign)
 
 	}
 	if !l.Type.IsValid() {
-		return fmt.Errorf("%s is not a valid campaign type. choose from %s, %s or %s", l.Type, orm.BannerType, orm.VastType, orm.NativeType)
+		return fmt.Errorf("%s is not a valid campaign type. choose from %s, %s or %s", l.Type, models.BannerType, models.VastType, models.NativeType)
 	}
 
-	today, err := time.Parse("02-01-03", time.Now().Format("02-01-03"))
-	assert.Nil(err)
-	if l.StartAt.Unix() < today.Unix() {
+	if l.StartAt.Format("02-01-03") < time.Now().Format("02-01-03") {
 		return errors.New("campaign should start in future")
 	}
 
@@ -84,18 +82,18 @@ func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.Respon
 //		method = post
 //		payload = createCampaignPayload
 //		middleware = authz.Authenticate
-//		200 = orm.Campaign
+//		200 = models.Campaign
 //		400 = controller.ErrorResponseSimple
 // }
 func (c Controller) createBase(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	u := authz.MustGetUser(ctx)
 	d := domain.MustGetDomain(ctx)
 	p := c.MustGetPayload(ctx).(*createCampaignPayload)
-	ca, err := orm.NewOrmManager().AddCampaign(p.CampaignBase, u, d)
+	ca, err := models.NewModelsManager().AddCampaign(p.CampaignBase, u, d)
 	if err != nil {
-		j, e := json.MarshalIndent(ca, " ", "  ")
+		j, e := json.MarshalIndent(ca, "", "\t")
 		assert.Nil(e)
-		pj, e := json.MarshalIndent(p, " ", "  ")
+		pj, e := json.MarshalIndent(p, "", "\t")
 		assert.Nil(e)
 
 		eid := <-random.ID
@@ -114,7 +112,7 @@ func (c Controller) createBase(ctx context.Context, w http.ResponseWriter, r *ht
 // @Validate{
 //}
 type updateCampaignPayload struct {
-	orm.CampaignStatus
+	models.CampaignStatus
 }
 
 func (l *updateCampaignPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
@@ -127,7 +125,7 @@ func (l *updateCampaignPayload) ValidateExtra(ctx context.Context, w http.Respon
 //		method = put
 //		payload = updateCampaignPayload
 //		middleware = authz.Authenticate
-//		200 = orm.Campaign
+//		200 = models.Campaign
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 //		resource = edit-campaign:self
@@ -141,7 +139,7 @@ func (c Controller) updateBase(ctx context.Context, w http.ResponseWriter, r *ht
 	d := domain.MustGetDomain(ctx)
 	p := c.MustGetPayload(ctx).(*updateCampaignPayload)
 
-	o := orm.NewOrmManager()
+	o := models.NewModelsManager()
 	ca, e := o.FindCampaignByID(id)
 	if e != nil || ca.DomainID != d.ID {
 		c.NotFoundResponse(w, nil)
@@ -150,14 +148,14 @@ func (c Controller) updateBase(ctx context.Context, w http.ResponseWriter, r *ht
 	// TODO: check access
 	//u.HasOn("edit-campaign",ca.UserID,[],d.ID)
 	err = o.UpdateCampaignByID(p.CampaignStatus, ca)
-	if err == orm.ErrorStartDate {
+	if err == models.ErrorStartDate {
 		c.BadResponse(w, e)
 		return
 	}
 	if err != nil {
-		j, e := json.MarshalIndent(o, " ", "  ")
+		j, e := json.MarshalIndent(o, "", "\t")
 		assert.Nil(e)
-		pj, e := json.MarshalIndent(p, " ", "  ")
+		pj, e := json.MarshalIndent(p, "", "\t")
 		assert.Nil(e)
 
 		eid := <-random.ID
@@ -190,7 +188,7 @@ func (c *Controller) finalize(ctx context.Context, w http.ResponseWriter, r *htt
 	if err != nil || id < 1 {
 		c.BadResponse(w, errors.New("id is not valid"))
 	}
-	db := orm.NewOrmManager()
+	db := models.NewModelsManager()
 	ca, err := db.FindCampaignByID(id)
 	if err != nil {
 		c.NotFoundResponse(w, nil)

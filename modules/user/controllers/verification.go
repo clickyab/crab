@@ -12,7 +12,7 @@ import (
 
 	"crypto/sha1"
 
-	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/models"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/kv"
 
@@ -52,12 +52,12 @@ var (
 func (ctrl *Controller) verifyEmail(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	u, e := verifyCode(xmux.Param(ctx, "token"))
 
-	if e != nil || u.Status != aaa.RegisteredUserStatus {
+	if e != nil || u.Status != models.RegisteredUserStatus {
 		ctrl.ForbiddenResponse(w, nil)
 		return
 	}
-	u.Status = aaa.ActiveUserStatus
-	assert.Nil(aaa.NewAaaManager().UpdateUser(u))
+	u.Status = models.ActiveUserStatus
+	assert.Nil(models.NewModelsManager().UpdateUser(u))
 	ctrl.createLoginResponse(w, u)
 }
 
@@ -81,13 +81,13 @@ func (ctrl *Controller) verifyEmailCode(ctx context.Context, w http.ResponseWrit
 	p := ctrl.MustGetPayload(ctx).(*verifyEmailCodePayload)
 	u, e := verifyCode(fmt.Sprintf("%s%s%s", hasher(p.Email+emailVerifyPath), delimiter, p.Code))
 
-	if e != nil || u.Status != aaa.RegisteredUserStatus || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
+	if e != nil || u.Status != models.RegisteredUserStatus || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
 		ctrl.ForbiddenResponse(w, nil)
 		return
 	}
 
-	u.Status = aaa.ActiveUserStatus
-	assert.Nil(aaa.NewAaaManager().UpdateUser(u))
+	u.Status = models.ActiveUserStatus
+	assert.Nil(models.NewModelsManager().UpdateUser(u))
 	ctrl.createLoginResponse(w, u)
 }
 
@@ -108,7 +108,7 @@ type verifyResendPayload struct {
 func (ctrl *Controller) verifyResend(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := ctrl.MustGetPayload(ctx).(*verifyResendPayload)
 
-	u, e := aaa.NewAaaManager().FindUserByEmail(pl.Email)
+	u, e := models.NewModelsManager().FindUserByEmail(pl.Email)
 	if e != nil {
 		ctrl.NotFoundResponse(w, nil)
 		return
@@ -121,7 +121,7 @@ func (ctrl *Controller) verifyResend(ctx context.Context, w http.ResponseWriter,
 	assert.Nil(e)
 }
 
-func verifyEmail(u *aaa.User, r *http.Request) error {
+func verifyEmail(u *models.User, r *http.Request) error {
 	h, c, e := genVerifyCode(u, emailVerifyPath)
 	if e != nil {
 		return e
@@ -150,7 +150,7 @@ func verifyEmail(u *aaa.User, r *http.Request) error {
 
 const delimiter = "-"
 
-func verifyCode(c string) (*aaa.User, error) {
+func verifyCode(c string) (*models.User, error) {
 	s := strings.Split(c, delimiter)
 	if len(s) != 2 {
 		return nil, errors.New("code is not valid")
@@ -166,13 +166,13 @@ func verifyCode(c string) (*aaa.User, error) {
 	defer kw.Drop()
 	id, e := strconv.ParseInt(kw.SubKey(subID), 10, 64)
 	assert.Nil(e)
-	m := aaa.NewAaaManager()
+	m := models.NewModelsManager()
 	cu, e := m.FindUserByID(id)
 	assert.Nil(e)
 	return cu, nil
 }
 
-func genVerifyCode(u *aaa.User, salt string) (string, string, error) {
+func genVerifyCode(u *models.User, salt string) (string, string, error) {
 	assert.True(salt != "")
 
 	hash := hasher(u.Email + salt)

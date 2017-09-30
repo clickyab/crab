@@ -6,8 +6,8 @@ import (
 
 	"time"
 
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"clickyab.com/crab/modules/user/models"
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
@@ -16,20 +16,20 @@ import (
 // @Validate {
 // }
 type userPayload struct {
-	Email         string         `json:"email" validate:"required,email"`
-	Avatar        string         `json:"avatar" validate:"omitempty"`
-	CityID        int64          `json:"city_id" validate:"omitempty"`
-	LandLine      string         `json:"land_line" validate:"omitempty"`
-	CellPhone     string         `json:"cell_phone" validate:"omitempty"`
-	PostalCode    string         `json:"postal_code" validate:"omitempty"`
-	FirstName     string         `json:"first_name" validate:"required,gt=2"`
-	LastName      string         `json:"last_name" validate:"required,gt=2"`
-	Address       string         `json:"address" validate:"omitempty"`
-	Gender        aaa.GenderType `json:"gender" validate:"omitempty"`
-	SSN           string         `json:"ssn" validate:"omitempty"`
-	LegalName     string         `json:"legal_name" validate:"omitempty"`
-	LegalRegister string         `json:"legal_register" validate:"omitempty"`
-	EconomicCode  string         `json:"economic_code" validate:"omitempty"`
+	Email         string            `json:"email" validate:"required,email"`
+	Avatar        string            `json:"avatar" validate:"omitempty"`
+	CityID        int64             `json:"city_id" validate:"omitempty"`
+	LandLine      string            `json:"land_line" validate:"omitempty"`
+	CellPhone     string            `json:"cell_phone" validate:"omitempty"`
+	PostalCode    string            `json:"postal_code" validate:"omitempty"`
+	FirstName     string            `json:"first_name" validate:"required,gt=2"`
+	LastName      string            `json:"last_name" validate:"required,gt=2"`
+	Address       string            `json:"address" validate:"omitempty"`
+	Gender        models.GenderType `json:"gender" validate:"omitempty"`
+	SSN           string            `json:"ssn" validate:"omitempty"`
+	LegalName     string            `json:"legal_name" validate:"omitempty"`
+	LegalRegister string            `json:"legal_register" validate:"omitempty"`
+	EconomicCode  string            `json:"economic_code" validate:"omitempty"`
 }
 
 func (u *userPayload) ValidateExtra(ctx context.Context) error {
@@ -55,7 +55,7 @@ func (u *userPayload) ValidateExtra(ctx context.Context) error {
 // }
 func (u *Controller) edit(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := u.MustGetPayload(ctx).(*userPayload)
-	if !pl.Gender.IsValid() || pl.Gender == aaa.NotSpecifiedGender {
+	if !pl.Gender.IsValid() || pl.Gender == models.NotSpecifiedGender {
 		u.BadResponse(w, middleware.GroupError{
 			string(pl.Gender): trans.E("gender is invalid"),
 		})
@@ -63,9 +63,9 @@ func (u *Controller) edit(ctx context.Context, w http.ResponseWriter, r *http.Re
 	}
 
 	cu := u.MustGetUser(ctx)
-	m := aaa.NewAaaManager()
+	m := models.NewModelsManager()
 
-	var cc *aaa.Corporation
+	var cc *models.Corporation
 	var e error
 	if pl.LegalName != "" {
 		cc, e = m.FindCorporationByUserID(cu.ID)

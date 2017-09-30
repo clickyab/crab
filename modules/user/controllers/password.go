@@ -15,7 +15,7 @@ import (
 
 	"strings"
 
-	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/models"
 	"github.com/clickyab/services/trans"
 )
 
@@ -35,7 +35,7 @@ type forgetPayload struct {
 // }
 func (c Controller) forgetPassword(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	p, _ := c.MustGetPayload(ctx).(*forgetPayload)
-	u, err := aaa.NewAaaManager().FindUserByEmail(p.Email)
+	u, err := models.NewModelsManager().FindUserByEmail(p.Email)
 	if err != nil {
 		c.BadResponse(w, errors.New("email not found"))
 		return
@@ -167,10 +167,10 @@ func (c Controller) changePassword(ctx context.Context, w http.ResponseWriter, r
 	e := u.UpdatePassword(payload.CurrentPassword, payload.NewPassword)
 	if e != nil {
 		switch e {
-		case aaa.ErrorWrongPassword:
+		case models.ErrorWrongPassword:
 			c.BadResponse(w, trans.EE(e))
 			return
-		case aaa.ErrorOldPass:
+		case models.ErrorOldPass:
 			c.BadResponse(w, trans.EE(e))
 			return
 		default:

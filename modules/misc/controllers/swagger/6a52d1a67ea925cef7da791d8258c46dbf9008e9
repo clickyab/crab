@@ -3,6 +3,20 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": "",
+				"in": "query",
+				"name": "pub_type",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "status",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the domain field",
 				"in": "query",
 				"name": "domain",
@@ -22,20 +36,6 @@
 				"name": "p",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "pub_type",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": "the security token, get it from login route",

@@ -1,7 +1,7 @@
 export USER_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(USER_ROOT)-codegen: tools-codegen
-	$(BIN)/codegen -p clickyab.com/crab/modules/user/aaa
+	$(BIN)/codegen -p clickyab.com/crab/modules/user/models
 	$(BIN)/codegen -p clickyab.com/crab/modules/user/controllers
 
 $(USER_ROOT)-migration: tools-go-bindata
