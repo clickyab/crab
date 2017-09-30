@@ -111,7 +111,7 @@ func (m *Manager) ListUploadsWithPagination(offset, perPage int) []Upload {
 }
 
 // FindUploadByID return the Upload base on its id
-func (m *Manager) FindUploadByID(id int64) (*Upload, error) {
+func (m *Manager) FindUploadByID(id string) (*Upload, error) {
 	var res Upload
 	err := m.GetRDbMap().SelectOne(
 		&res,

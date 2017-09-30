@@ -4,8 +4,12 @@
 		"application/json"
 	],
 	"definitions": {
+		"add_Ad": "file://5bdd9331fb5af5d80c4b688ff17fb211350db45b",
+		"add_AdActiveStatus": "file://7ee36ebb3c41c60c06ea47afc55446475d459cca",
+		"add_AdType": "file://5c684b432ed4ef39dfba91e38ba4dc5aaf9246ca",
 		"controller_ErrorResponseSimple": "file://035d0d82ff8e72fec8d60b07faa9b516e0ab40c0",
 		"controller_NormalResponse": "file://79ffc6e5cd8d5b843aa71b6e8c5ff43c8ee12e76",
+		"controllers_assignBannerPayload": "file://d5228bef4380a114eaa063171e6807aa3817157b",
 		"controllers_attributesPayload": "file://ec4e8d41a863a66e4f458537d9296853657d80ce",
 		"controllers_browserResponse": "file://7e564a516c6ee5a8c78a405acc31598126a171aa",
 		"controllers_budgetPayload": "file://47c05dcaf3d1880c91eb6c7af28091cb26b47319",
@@ -18,7 +22,6 @@
 		"controllers_listPublisherResponse": "file://5042eebb28829148b8668942e082ff8423354222",
 		"controllers_manufacturers": "file://0bfdecda2c87cd24a4ba612dda4011c217c15ffd",
 		"controllers_osResponse": "file://fd70d1dfdcb588367261c32f40829e1265c14207",
-		"controllers_regionList": "file://d14894a3d2d1ca2e902f467a8cd82777e5b4615e",
 		"controllers_updateCampaignPayload": "file://0c163b8eebb968df0a0809fdc89375f67e97d819",
 		"controllers_whiteBlackList": "file://b0cb91fc415bc53ed27277ced88e5ecd57053eaf",
 		"controllers_whiteBlackLists": "file://84cef84b61e3ba89735c425c487aa1ced5aeebea",
@@ -46,7 +49,6 @@
 		"orm_Manufacturer": "file://8bd355b2e08f2637bc1d49ec2d6a5f1737be8403",
 		"orm_OS": "file://e0f2a68c61759b396338f36c24185b7d49427684",
 		"orm_PublisherType": "file://e1608079d07b5a68239759a550f587834248a047",
-		"orm_Region": "file://921010977ba12219ae14681fedd0bbc690b73a47",
 		"orm_ScheduleSheet": "file://d8797e7fbbfe18809322e2680feff23eaa03bde2",
 		"orm_Status": "file://3df80573c7f36241a6530c1863c60c4dcfef21c6",
 		"orm_WhiteBlackList": "file://69f1547f42351f4c63124a42eddd83dd7f349764",
@@ -78,12 +80,12 @@
 		"version": "\"0.0.1-pre-alpha\""
 	},
 	"paths": {
+		"/ad/banner/{id}": "file://6f1801e2965261b129569e1e26e1487a8630e0ba",
 		"/asset/browser": "file://51ed0d2b16f961f1c662b8562855fb73e686f3e7",
 		"/asset/category": "file://43778246185a5bb9f41d8af9600450880dd5bbe2",
 		"/asset/isp": "file://2048c126d567e71d8c55814043aa6739ebe2e304",
 		"/asset/manufacturers": "file://8e6fcf42cba17f0da85184b9b1513dd1da0ba0ae",
 		"/asset/os": "file://bd480259b7745826eec0b67575eaabcba8aaa2d1",
-		"/asset/region": "file://2ea10e9fd1f177c2c2b95fd3a9652cf9fca04444",
 		"/campaign/attributes/{id}": "file://a6c086491cdde9d8c5f76b0a20a97b0b04bfdab7",
 		"/campaign/base/{id}": "file://f6327b1eace1bd32a58217031d8f4dc75c82c24c",
 		"/campaign/budget/{id}": "file://e6d1a5f92bfcd8e7265c4d72cea7a94e09d8966a",

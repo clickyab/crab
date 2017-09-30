@@ -9,21 +9,19 @@ import (
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
-	"github.com/rs/xhandler"
-	"github.com/rs/xmux"
 )
 
 var once = sync.Once{}
 
 // Routes return the route registered with this
-func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
+func (ctrl *Controller) Routes(r router.Mux) {
 	once.Do(func() {
 
 		groupMiddleware := []framework.Middleware{
 			domain.Access,
 		}
 
-		group := r.NewGroup(mountPoint + "/location")
+		group := r.NewGroup("/location")
 
 		/* Route {
 			"Route": "/countries",
@@ -40,7 +38,7 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		} with key 0 */
 		m0 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("/countries", xhandler.HandlerFuncC(framework.Mix(ctrl.countries, m0...)))
+		group.GET("/countries", framework.Mix(ctrl.countries, m0...))
 		// End route with key 0
 
 		/* Route {
@@ -58,7 +56,7 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		} with key 1 */
 		m1 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("/provinces/:country_id", xhandler.HandlerFuncC(framework.Mix(ctrl.provinces, m1...)))
+		group.GET("/provinces/:country_id", framework.Mix(ctrl.provinces, m1...))
 		// End route with key 1
 
 		/* Route {
@@ -76,7 +74,7 @@ func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		} with key 2 */
 		m2 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("/cities/:provinces_id", xhandler.HandlerFuncC(framework.Mix(ctrl.cities, m2...)))
+		group.GET("/cities/:provinces_id", framework.Mix(ctrl.cities, m2...))
 		// End route with key 2
 
 		initializer.DoInitialize(ctrl)

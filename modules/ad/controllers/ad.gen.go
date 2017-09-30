@@ -5,18 +5,55 @@ package controllers
 import (
 	"sync"
 
+	"clickyab.com/crab/modules/domain/middleware/domain"
+	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/framework"
+	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
-	"github.com/rs/xmux"
+	"github.com/clickyab/services/permission"
 )
 
 var once = sync.Once{}
 
 // Routes return the route registered with this
-func (ctrl *Controller) Routes(r *xmux.Mux, mountPoint string) {
+func (c *Controller) Routes(r router.Mux) {
 	once.Do(func() {
 
-		initializer.DoInitialize(ctrl)
+		groupMiddleware := []framework.Middleware{
+			domain.Access,
+		}
+
+		group := r.NewGroup("/ad")
+
+		/* Route {
+			"Route": "/banner/:id",
+			"Method": "POST",
+			"Function": "Controller.assignNormalBanner",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "assignBannerPayload",
+			"Resource": "assign_banner",
+			"Scope": "self"
+		} with key 0 */
+		m0 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("assign_banner", "assign_banner")
+		m0 = append(m0, authz.AuthorizeGenerator("assign_banner", "self"))
+
+		// Make sure payload is the last middleware
+		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(assignBannerPayload{}))
+		group.POST("/banner/:id", framework.Mix(c.assignNormalBanner, m0...))
+		// End route with key 0
+
+		initializer.DoInitialize(c)
 	})
 }
 

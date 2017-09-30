@@ -15,6 +15,7 @@
 // db/20170912055417_parent.sql
 // db/20170912065827_fixrole.sql
 // db/20170913075842_rp_seeds.sql
+// db/20170930115925_perm_seed.sql
 // DO NOT EDIT!
 
 package migrations
@@ -382,6 +383,26 @@ func db20170913075842_rp_seedsSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20170930115925_perm_seedSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xb4\x90\x4f\x4b\x03\x31\x10\xc5\xef\xfb\x29\xde\x2d\x2d\xa6\x07\x6d\x6f\xc5\x83\xd0\x88\x85\xba\x8b\xfb\xc7\x1e\x97\x74\x33\xb6\x83\xdb\x24\x24\x29\xf5\xe3\xcb\xb2\x2a\xe8\x69\x2f\x5e\x86\x37\x8f\x37\x3c\xe6\x97\x2d\x16\xb8\x39\xf3\x31\xe8\x44\x68\xfc\xb0\x56\x2f\x3b\xb0\x45\xa4\x2e\xb1\xb3\x10\x8d\x17\xe0\x08\xfa\xa0\xee\x92\xc8\xe0\x7a\x22\x8b\x74\xe2\x88\xf1\x6e\x08\x71\x84\xf6\xbe\x67\x32\xd9\x36\xaf\x54\x59\x63\x9b\xd7\x05\x82\xeb\xa9\xf5\x14\xce\x1c\x23\x3b\x3b\x63\x23\x47\x6f\x10\x83\x2f\x11\x3b\xe7\x49\xa2\x0b\xa4\x13\x99\x56\x27\x89\x8b\x37\x5f\x7a\x8e\xd7\x87\x5d\xa3\x2a\xcc\x96\xf2\x56\x0a\x1d\x23\x1f\x6d\x7b\xd0\xd6\x52\x10\x52\x44\xea\xdf\x84\xcc\x8b\xfd\x6c\x3e\xce\xf9\xfa\x9f\xea\x57\xf2\x6e\x5a\xfd\x2f\x9e\x1b\x77\xb5\xdf\x44\x7f\x70\x0e\xe6\x24\xa0\xc1\xf5\x3d\x19\x1c\x74\xf7\x9e\x65\x1b\xb5\x53\xb5\xc2\x63\x59\x3c\xff\x7d\x0b\xfb\x27\x55\x2a\xb0\xb9\x5f\xae\xa7\xe5\x56\xeb\xec\x33\x00\x00\xff\xff\x0e\x2d\x6e\x56\xf8\x01\x00\x00"
+
+func db20170930115925_perm_seedSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20170930115925_perm_seedSql,
+		"db/20170930115925_perm_seed.sql",
+	)
+}
+
+func db20170930115925_perm_seedSql() (*asset, error) {
+	bytes, err := db20170930115925_perm_seedSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20170930115925_perm_seed.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -449,6 +470,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20170912055417_parent.sql": db20170912055417_parentSql,
 	"db/20170912065827_fixrole.sql": db20170912065827_fixroleSql,
 	"db/20170913075842_rp_seeds.sql": db20170913075842_rp_seedsSql,
+	"db/20170930115925_perm_seed.sql": db20170930115925_perm_seedSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -507,6 +529,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20170912055417_parent.sql": &bintree{db20170912055417_parentSql, map[string]*bintree{}},
 		"20170912065827_fixrole.sql": &bintree{db20170912065827_fixroleSql, map[string]*bintree{}},
 		"20170913075842_rp_seeds.sql": &bintree{db20170913075842_rp_seedsSql, map[string]*bintree{}},
+		"20170930115925_perm_seed.sql": &bintree{db20170930115925_perm_seedSql, map[string]*bintree{}},
 	}},
 }}
 

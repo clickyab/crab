@@ -79,6 +79,7 @@ type User struct {
 	Gender      GenderType                               `json:"gender" db:"gender"`
 	SSN         mysql.NullString                         `json:"ssn" db:"ssn"`
 	Corporation *Corporation                             `json:"corporation, omitempty" db:"-"`
+	parents     []int64                                  `json:"-" db:"-"`
 	roles       []Role                                   `db:"-"`
 	resource    map[permission.UserScope]map[string]bool `db:"-"`
 }
@@ -343,4 +344,53 @@ func (u *User) isOldPassword(p string) bool {
 		}
 	}
 	return false
+}
+
+// setUserParents try to get user parent for the specified domain
+func (u *User) setUserParents(d int64) {
+	if len(u.parents) == 0 {
+		u.parents = u.getUserParents(d)
+	}
+}
+
+// getUserParents try to get user parent ids
+func (u *User) getUserParents(d int64) []int64 {
+	var res []int64
+	m := NewAaaManager()
+	parents := m.GetUserParentsIDDomain(u.ID, d)
+	for i := range parents {
+		res = append(res, parents[i].ParentID)
+	}
+	return res
+}
+
+// FindUserWithParentsByID return the User with parent base on its id
+func (m *Manager) FindUserWithParentsByID(id, d int64) (*User, error) {
+	var res User
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT * FROM %s AS u WHERE u.id=?", UserTableFull),
+		id,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+	//fetch parents
+	res.setUserParents(d)
+	return &res, nil
+}
+
+// CheckPermOn has perm on wrapper to use inside controllers
+func CheckPermOn(owner *User, currentUser *User, perm permission.Token, domainID int64, scopes ...permission.UserScope) (permission.UserScope, bool) {
+	if currentUser.ID == owner.ID { //user is the owner
+		return owner.HasOn(perm, owner.ID, owner.parents, domainID, permission.ScopeSelf)
+	}
+	// user is not owner (check parent or global)
+	ownerResources := owner.resource
+	s, ok := currentUser.HasOn(perm, owner.ID, owner.parents, domainID)
+	if s == permission.ScopeSelf && ok {
+		return s, ownerResources[permission.ScopeSelf][string(perm)]
+	}
+	return s, ok
 }

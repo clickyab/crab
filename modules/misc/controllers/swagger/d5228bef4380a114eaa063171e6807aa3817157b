@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"banners": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		}
+	},
+	"type": "object"
+}

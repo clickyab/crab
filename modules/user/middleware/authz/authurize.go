@@ -21,12 +21,13 @@ const (
 func AuthorizeGenerator(resource permission.Token, scope permission.UserScope) framework.Middleware {
 	return func(next framework.Handler) framework.Handler {
 		return func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+			var permGranted permission.Token = resource
 			u := MustGetUser(ctx)
 			currentDomain := domain.MustGetDomain(ctx)
 			grantedScope, ok := u.Has(scope, resource, currentDomain.ID)
 			if !ok {
 				grantedScope, ok = u.Has(permission.ScopeGlobal, permission.God, currentDomain.ID)
-				resource = permission.God
+				permGranted = permission.God
 			}
 
 			if !ok {

@@ -12,21 +12,19 @@ import (
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
 	"github.com/clickyab/services/permission"
-	"github.com/rs/xhandler"
-	"github.com/rs/xmux"
 )
 
 var once = sync.Once{}
 
 // Routes return the route registered with this
-func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
+func (c *Controller) Routes(r router.Mux) {
 	once.Do(func() {
 
 		groupMiddleware := []framework.Middleware{
 			domain.Access,
 		}
 
-		group := r.NewGroup(mountPoint + "/campaign")
+		group := r.NewGroup("/campaign")
 
 		/* Route {
 			"Route": "/attributes/:id",
@@ -49,7 +47,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 
 		// Make sure payload is the last middleware
 		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(attributesPayload{}))
-		group.PUT("/attributes/:id", xhandler.HandlerFuncC(framework.Mix(c.attributes, m0...)))
+		group.PUT("/attributes/:id", framework.Mix(c.attributes, m0...))
 		// End route with key 0
 
 		/* Route {
@@ -73,7 +71,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 
 		// Make sure payload is the last middleware
 		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(budgetPayload{}))
-		group.PUT("/budget/:id", xhandler.HandlerFuncC(framework.Mix(c.budget, m1...)))
+		group.PUT("/budget/:id", framework.Mix(c.budget, m1...))
 		// End route with key 1
 
 		/* Route {
@@ -97,7 +95,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 
 		// Make sure payload is the last middleware
 		m2 = append(m2, middleware.PayloadUnMarshallerGenerator(createCampaignPayload{}))
-		group.POST("/create", xhandler.HandlerFuncC(framework.Mix(c.createBase, m2...)))
+		group.POST("/create", framework.Mix(c.createBase, m2...))
 		// End route with key 2
 
 		/* Route {
@@ -124,7 +122,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 
 		// Make sure payload is the last middleware
 		m3 = append(m3, middleware.PayloadUnMarshallerGenerator(updateCampaignPayload{}))
-		group.PUT("/base/:id", xhandler.HandlerFuncC(framework.Mix(c.updateBase, m3...)))
+		group.PUT("/base/:id", framework.Mix(c.updateBase, m3...))
 		// End route with key 3
 
 		/* Route {
@@ -146,7 +144,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.PUT("/finalize/:id", xhandler.HandlerFuncC(framework.Mix(c.finalize, m4...)))
+		group.PUT("/finalize/:id", framework.Mix(c.finalize, m4...))
 		// End route with key 4
 
 		/* Route {
@@ -170,7 +168,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 
 		// Make sure payload is the last middleware
 		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(whiteBlackPayload{}))
-		group.PUT("/wb/:id", xhandler.HandlerFuncC(framework.Mix(c.updateWhiteBlackList, m5...)))
+		group.PUT("/wb/:id", framework.Mix(c.updateWhiteBlackList, m5...))
 		// End route with key 5
 
 		/* Route {
@@ -192,7 +190,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.DELETE("/wblist/:id", xhandler.HandlerFuncC(framework.Mix(c.deleteWhiteBlackList, m6...)))
+		group.DELETE("/wblist/:id", framework.Mix(c.deleteWhiteBlackList, m6...))
 		// End route with key 6
 
 		initializer.DoInitialize(c)

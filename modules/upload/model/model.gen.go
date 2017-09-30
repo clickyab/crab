@@ -42,7 +42,7 @@ func (m *Manager) Initialize() {
 		Upload{},
 		UploadTableFull,
 	).SetKeys(
-		true,
+		false,
 		"ID",
 	)
 

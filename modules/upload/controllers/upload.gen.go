@@ -10,21 +10,19 @@ import (
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
-	"github.com/rs/xhandler"
-	"github.com/rs/xmux"
 )
 
 var once = sync.Once{}
 
 // Routes return the route registered with this
-func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
+func (c *Controller) Routes(r router.Mux) {
 	once.Do(func() {
 
 		groupMiddleware := []framework.Middleware{
 			domain.Access,
 		}
 
-		group := r.NewGroup(mountPoint + "/upload")
+		group := r.NewGroup("/upload")
 
 		/* Route {
 			"Route": "/:module",
@@ -45,7 +43,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.POST("/:module", xhandler.HandlerFuncC(framework.Mix(c.Upload, m0...)))
+		group.POST("/:module", framework.Mix(c.Upload, m0...))
 		// End route with key 0
 
 		initializer.DoInitialize(c)

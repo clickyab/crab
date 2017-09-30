@@ -12,8 +12,6 @@ import (
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/framework/router"
-	"github.com/rs/xhandler"
-	"github.com/rs/xmux"
 )
 
 // Controller is the controller for the misc package
@@ -54,11 +52,12 @@ func load(data map[string]interface{}) map[string]interface{} {
 }
 
 // Routes return the route registered with this
-func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
+func (u *Controller) Routes(r router.Mux) {
 	// This is a special route.
 	if !swaggerRoute.Bool() {
 		return
 	}
+	m := r.NewGroup("/misc")
 
 	b, err := Asset("swagger/index.json")
 	assert.Nil(err)
@@ -68,7 +67,7 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 	assert.Nil(err)
 	data = load(data)
 
-	r.GET(filepath.Join(mountPoint, "/misc/panic"), xhandler.HandlerFuncC(
+	m.GET("/panic", framework.Handler(
 		func(_ context.Context, w http.ResponseWriter, r *http.Request) {
 			if r.Header.Get("token") == panicToken.String() {
 				assert.Nil(0)
@@ -77,8 +76,8 @@ func (u *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			w.Write([]byte("Noop ;)"))
 		}))
 
-	r.GET(filepath.Join(mountPoint, "/misc/swagger/index.json"),
-		xhandler.HandlerFuncC(func(_ context.Context, w http.ResponseWriter, r *http.Request) {
+	m.GET(filepath.Join("/swagger/index.json"),
+		framework.Handler(func(_ context.Context, w http.ResponseWriter, r *http.Request) {
 			tmp := data
 			tmp["host"] = r.Host
 			framework.JSON(w, http.StatusOK, data)
