@@ -3,11 +3,18 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " search the domain field",
+				"description": "",
 				"in": "query",
-				"name": "domain",
+				"name": "status",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": " page number",
@@ -24,18 +31,11 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the domain field",
 				"in": "query",
-				"name": "status",
+				"name": "domain",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",

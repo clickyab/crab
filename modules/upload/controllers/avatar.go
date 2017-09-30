@@ -1,5 +1,7 @@
 package controllers
 
+import "clickyab.com/crab/modules/upload/model"
+
 type byteSize int64
 
 const (
@@ -8,5 +10,6 @@ const (
 )
 
 func init() {
-	Register("avatar", int64(512*kb), "image/jpeg", "image/pjpeg", "image/png")
+	Register("avatar", int64(512*kb), model.JPGMime, model.PJPGMime, model.PNGMime)
+	Register("banner", int64(512*kb), model.JPGMime, model.PJPGMime, model.PNGMime, model.GifMime)
 }

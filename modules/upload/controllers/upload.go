@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -10,6 +11,13 @@ import (
 	"path/filepath"
 	"sync"
 	"time"
+
+	"bytes"
+
+	"image"
+	"image/gif"
+	"image/jpeg"
+	"image/png"
 
 	"clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/middleware/authz"
@@ -28,12 +36,13 @@ type kind struct {
 	mimes   []string
 }
 
-var uPath = config.RegisterString("crab.modules.upload.path", "/statics/uploads", "a path to the location that uploaded file should save")
+// UPath upload path in system
+var UPath = config.RegisterString("crab.modules.upload.path", "/statics/uploads", "a path to the location that uploaded file should save")
 var perm = config.RegisterInt("crab.modules.upload.perm", 0777, "file will save with this permission")
 
 // Register add a route and settings for uploads
 // name will be the route, maxsize is maximum allowed size for file upload file and the mimes is alloed mime types
-func Register(name string, maxSize int64, mimes ...string) {
+func Register(name model.Mime, maxSize int64, mimes ...string) {
 	assert.True(len(mimes) > 0)
 	lock.Lock()
 	defer lock.Unlock()
@@ -62,7 +71,6 @@ type Controller struct {
 //		middleware = authz.Authenticate
 // }
 func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-
 	m := xmux.Param(ctx, "module")
 	u := authz.MustGetUser(ctx)
 	lock.RLock()
@@ -83,17 +91,27 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 		return
 	}
 	defer file.Close()
+
+	buff := &bytes.Buffer{}
+	dimensionHandler := &bytes.Buffer{}
+	multiHandler := io.MultiWriter(dimensionHandler, buff)
+	io.Copy(multiHandler, file)
 	ac, mime := validMIME(handler.Header, s.mimes)
 	if !ac {
 		c.BadResponse(w, fmt.Errorf("The file type is not valid"))
 		return
 	}
-
+	var attr *model.AdAttr
+	if mime == model.JPGMime || mime == model.PNGMime || mime == model.GifMime || mime == model.PJPGMime {
+		attr, err = getDimension(mime, dimensionHandler)
+		if err != nil {
+			c.BadResponse(w, fmt.Errorf("cant get file dimensions"))
+			return
+		}
+	}
 	ext := filepath.Ext(handler.Filename)
-
 	now := time.Now()
-	fp := filepath.Join(uPath.String(), m, now.Format("2006/01/02"))
-
+	fp := filepath.Join(UPath.String(), m, now.Format("2006/01/02"))
 	err = os.MkdirAll(fp, os.FileMode(perm.Int64()))
 	assert.Nil(err)
 	fn := func() string {
@@ -105,30 +123,31 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 		}
 	}()
 	f, err := os.OpenFile(filepath.Join(fp, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(perm.Int64()))
-
 	assert.Nil(err)
 	defer f.Close()
 
-	size, er := io.Copy(f, file)
+	finalPath := filepath.Join(m, now.Format("2006/01/02"), fn)
+	size, er := io.Copy(f, buff)
 	assert.Nil(er)
 
-	e := model.NewModelManager().CreateUpload(&model.Upload{
-		Path:    filepath.Join(now.Format("2006/01/02"), fn),
+	g := &model.Upload{
+		ID:      finalPath,
 		MIME:    mime,
 		Size:    size,
 		UserID:  u.ID,
 		Section: m,
-	})
+		Attr:    *attr,
+	}
+	e := model.NewModelManager().CreateUpload(g)
 	assert.Nil(e)
-
 	c.JSON(w, http.StatusOK, struct {
 		Src string `json:"src"`
 	}{
-		Src: filepath.Join(m, now.Format("2006/01/02"), fn),
+		Src: g.ID,
 	})
 }
 
-func validMIME(a textproto.MIMEHeader, b []string) (bool, string) {
+func validMIME(a textproto.MIMEHeader, b []string) (bool, model.Mime) {
 	var ct []string
 	var ok bool
 	if ct, ok = a["Content-Type"]; !ok {
@@ -142,4 +161,41 @@ func validMIME(a textproto.MIMEHeader, b []string) (bool, string) {
 		}
 	}
 	return false, ""
+}
+
+func getDimension(mime model.Mime, dimensionHandler *bytes.Buffer) (*model.AdAttr, error) {
+	a := model.AdAttr{}
+	var imgConf image.Config
+	var err error
+	switch mime {
+	case model.JPGMime:
+		imgConf, err = jpeg.DecodeConfig(dimensionHandler)
+		if err != nil {
+			return nil, errors.New("cant get file dimensions")
+		}
+
+	case model.PJPGMime:
+		imgConf, err = jpeg.DecodeConfig(dimensionHandler)
+		if err != nil {
+			return nil, errors.New("cant get file dimensions")
+		}
+	case model.GifMime:
+		imgConf, err = gif.DecodeConfig(dimensionHandler)
+		if err != nil {
+			return nil, errors.New("cant get file dimensions")
+		}
+	case model.PNGMime:
+		imgConf, err = png.DecodeConfig(dimensionHandler)
+		if err != nil {
+			return nil, errors.New("cant get file dimensions")
+		}
+	}
+
+	a = model.AdAttr{
+		Banner: &model.BannerAttr{
+			Width:  imgConf.Width,
+			Height: imgConf.Height,
+		},
+	}
+	return &a, nil
 }

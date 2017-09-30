@@ -13,19 +13,16 @@ import (
 
 // Has check for pern
 func (u *User) Has(scope permission.UserScope, p permission.Token, d int64) (permission.UserScope, bool) {
+	permission.Registered(p)
 	perm := string(p)
 	if !scope.IsValid() {
 		return permission.ScopeSelf, false
 	}
-
-	u.setUserRoles(d)
 	u.setUserPermissions(d)
-
 	var (
-		rScope      permission.UserScope
+		rScope      = permission.ScopeSelf
 		permGranted bool
 	)
-
 	switch scope {
 	case permission.ScopeSelf:
 		if u.resource[permission.ScopeSelf][perm] {
@@ -44,16 +41,12 @@ func (u *User) Has(scope permission.UserScope, p permission.Token, d int64) (per
 }
 
 // HasOn check for entity perm
-func (u *User) HasOn(perm permission.Token, ownerID, parentID int64, DomainID int64, scopes ...permission.UserScope) (permission.UserScope, bool) {
-	if len(scopes) == 0 {
-		return permission.ScopeSelf, false
-	}
-
-	u.setUserRoles(DomainID)
+func (u *User) HasOn(perm permission.Token, ownerID int64, parentIDs []int64, DomainID int64, scopes ...permission.UserScope) (permission.UserScope, bool) {
+	permission.Registered(perm)
 	u.setUserPermissions(DomainID)
-
-	var self, global bool
-
+	var (
+		self, global bool
+	)
 	if len(scopes) == 0 {
 		self = true
 		global = true
@@ -66,11 +59,16 @@ func (u *User) HasOn(perm permission.Token, ownerID, parentID int64, DomainID in
 			}
 		}
 	}
-
 	if self {
 		if ownerID == u.ID {
 			if u.resource[permission.ScopeSelf][string(perm)] {
 				return permission.ScopeSelf, true
+			}
+		} else { //check parents
+			for i := range parentIDs {
+				if parentIDs[i] == u.ID {
+					return permission.ScopeSelf, true
+				}
 			}
 		}
 	}
@@ -101,7 +99,9 @@ func (u *User) setUserRoles(DomainID int64) {
 func (u *User) getUserPermissions(DomainID int64) map[permission.UserScope]map[string]bool {
 	var roleIDs []string
 	var rolePerm []RolePermission
-	var resp = make(map[permission.UserScope]map[string]bool, 0)
+	var resp = make(map[permission.UserScope]map[string]bool)
+	resp[permission.ScopeGlobal] = make(map[string]bool)
+	resp[permission.ScopeSelf] = make(map[string]bool)
 
 	if len(u.roles) == 0 {
 		u.setUserRoles(DomainID)
@@ -122,15 +122,9 @@ func (u *User) getUserPermissions(DomainID int64) map[permission.UserScope]map[s
 	query := fmt.Sprintf(`SELECT * from %s WHERE role_id IN (%s)`, RolePermissionTableFull, ids)
 	_, err := NewAaaManager().GetRDbMap().Select(&rolePerm, query)
 	assert.Nil(err)
-
 	for i := range rolePerm {
-		g := make(map[string]bool, 0)
-		scope := rolePerm[i].Scope
-		perm := rolePerm[i].Perm
-		g[perm] = true
-		resp[scope] = g
+		resp[rolePerm[i].Scope][rolePerm[i].Perm] = true
 	}
-
 	return resp
 }
 

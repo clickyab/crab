@@ -1,6 +1,10 @@
 package add
 
-import "time"
+import (
+	"time"
+
+	"github.com/clickyab/services/assert"
+)
 
 // AdActiveStatus is the ad active status
 type (
@@ -40,7 +44,7 @@ const (
 // @Model {
 //		table = ads
 //		primary = true, id
-//		find_by = id
+//		find_by = id,src
 //		list = yes
 // }
 type Ad struct {
@@ -49,10 +53,46 @@ type Ad struct {
 	Src        string         `json:"src" db:"src"`
 	Mime       string         `json:"mime" db:"mime"`
 	Target     string         `json:"target" db:"target"`
-	Width      int64          `json:"width" db:"width"`
-	Height     int64          `json:"height" db:"height"`
+	Width      int            `json:"width" db:"width"`
+	Height     int            `json:"height" db:"height"`
 	Status     AdActiveStatus `json:"status" db:"status"`
 	Type       AdType         `json:"type" db:"type"`
 	CreatedAt  time.Time      `json:"created_at" db:"created_at"`
 	UpdatedAt  time.Time      `json:"updated_at" db:"updated_at"`
+}
+
+// BannerMethod either create or update
+type BannerMethod string
+
+var (
+	// CreateBannerMethod creation selected
+	CreateBannerMethod BannerMethod = "create"
+	// UpdateBannerMethod update selected
+	UpdateBannerMethod BannerMethod = "update"
+)
+
+// CreateUpdateCampaignNormalBanner assign banner to campaign either create or update
+func (m *Manager) CreateUpdateCampaignNormalBanner(ads []*Ad) ([]Ad, error) {
+	var res []Ad
+	err := m.Begin()
+	assert.Nil(err)
+	defer func() {
+		if err != nil {
+			assert.Nil(m.Rollback())
+		} else {
+			assert.Nil(m.Commit())
+		}
+	}()
+	for i := range ads {
+		if ads[i].ID == 0 {
+			err = m.CreateAd(ads[i])
+		} else {
+			err = m.UpdateAd(ads[i])
+		}
+		if err != nil {
+			return res, err
+		}
+		res = append(res, *ads[i])
+	}
+	return res, nil
 }

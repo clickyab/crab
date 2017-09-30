@@ -1,0 +1,14 @@
+{
+	"properties": {
+		"id": {
+			"type": "integer"
+		},
+		"src": {
+			"type": "string"
+		},
+		"utm": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

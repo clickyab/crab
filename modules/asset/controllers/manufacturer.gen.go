@@ -10,21 +10,19 @@ import (
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
-	"github.com/rs/xhandler"
-	"github.com/rs/xmux"
 )
 
 var once = sync.Once{}
 
 // Routes return the route registered with this
-func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
+func (c *Controller) Routes(r router.Mux) {
 	once.Do(func() {
 
 		groupMiddleware := []framework.Middleware{
 			domain.Access,
 		}
 
-		group := r.NewGroup(mountPoint + "/asset")
+		group := r.NewGroup("/asset")
 
 		/* Route {
 			"Route": "/browser",
@@ -45,7 +43,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/browser", xhandler.HandlerFuncC(framework.Mix(c.browser, m0...)))
+		group.GET("/browser", framework.Mix(c.browser, m0...))
 		// End route with key 0
 
 		/* Route {
@@ -67,7 +65,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/category", xhandler.HandlerFuncC(framework.Mix(c.category, m1...)))
+		group.GET("/category", framework.Mix(c.category, m1...))
 		// End route with key 1
 
 		/* Route {
@@ -89,7 +87,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/isp", xhandler.HandlerFuncC(framework.Mix(c.isp, m2...)))
+		group.GET("/isp", framework.Mix(c.isp, m2...))
 		// End route with key 2
 
 		/* Route {
@@ -111,7 +109,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/manufacturers", xhandler.HandlerFuncC(framework.Mix(c.manufacturer, m3...)))
+		group.GET("/manufacturers", framework.Mix(c.manufacturer, m3...))
 		// End route with key 3
 
 		/* Route {
@@ -133,30 +131,8 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/os", xhandler.HandlerFuncC(framework.Mix(c.os, m4...)))
+		group.GET("/os", framework.Mix(c.os, m4...))
 		// End route with key 4
-
-		/* Route {
-			"Route": "/region",
-			"Method": "GET",
-			"Function": "Controller.region",
-			"RoutePkg": "controllers",
-			"RouteMiddleware": [
-				"authz.Authenticate"
-			],
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "c",
-			"Payload": "",
-			"Resource": "",
-			"Scope": ""
-		} with key 5 */
-		m5 := append(groupMiddleware, []framework.Middleware{
-			authz.Authenticate,
-		}...)
-
-		group.GET("/region", xhandler.HandlerFuncC(framework.Mix(c.region, m5...)))
-		// End route with key 5
 
 		initializer.DoInitialize(c)
 	})

@@ -126,3 +126,19 @@ func (m *Manager) FindAdByID(id int64) (*Ad, error) {
 
 	return &res, nil
 }
+
+// FindAdBySrc return the Ad base on its src
+func (m *Manager) FindAdBySrc(s string) (*Ad, error) {
+	var res Ad
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT * FROM %s WHERE src=?", AdTableFull),
+		s,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}

@@ -1,5 +1,7 @@
 package orm
 
+import "time"
+
 // Region model in database
 // @Model {
 //		table = regions
@@ -7,6 +9,9 @@ package orm
 //		list = yes
 // }
 type Region struct {
-	base
-	Name string `json:"name" db:"name"`
+	ID        string    `json:"id" db:"id"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	Active    bool      `json:"active" db:"active"`
+	Name      string    `json:"name" db:"name"`
 }

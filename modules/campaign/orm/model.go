@@ -3,6 +3,8 @@ package orm
 import (
 	"time"
 
+	"fmt"
+
 	"github.com/clickyab/services/mysql"
 )
 
@@ -138,4 +140,21 @@ func (ca *Campaign) appMaxBid(c CampaignBase) {
 	case NativeType:
 		ca.MaxBid = defaultAppNativeCPC.Int64()
 	}
+}
+
+// FindCampaignByIDDomain return the Campaign base on its id and domain id
+func (m *Manager) FindCampaignByIDDomain(id, d int64) (*Campaign, error) {
+	var res Campaign
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT * FROM %s WHERE id=? AND domain_id=?", CampaignTableFull),
+		id,
+		d,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
 }
