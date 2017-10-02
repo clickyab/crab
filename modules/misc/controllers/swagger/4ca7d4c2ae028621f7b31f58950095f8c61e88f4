@@ -1,0 +1,25 @@
+{
+	"items": {
+		"properties": {
+			"active": {
+				"type": "boolean"
+			},
+			"created_at": {
+				"format": "dateTime",
+				"type": "string"
+			},
+			"id": {
+				"type": "integer"
+			},
+			"name": {
+				"type": "string"
+			},
+			"updated_at": {
+				"format": "dateTime",
+				"type": "string"
+			}
+		},
+		"type": "object"
+	},
+	"type": "array"
+}

@@ -10,6 +10,9 @@ import (
 // AUTO GENERATED CODE. DO NOT EDIT!
 
 const (
+	// InventoryTableFull is the Inventory table name
+	InventoryTableFull = "inventories"
+
 	// WhiteBlackListTableFull is the WhiteBlackList table name
 	WhiteBlackListTableFull = "user_wlbl_presets"
 )
@@ -37,6 +40,14 @@ func NewOrmManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 
 // Initialize orm package
 func (m *Manager) Initialize() {
+
+	m.AddTableWithName(
+		Inventory{},
+		InventoryTableFull,
+	).SetKeys(
+		false,
+		"ID",
+	)
 
 	m.AddTableWithName(
 		WhiteBlackList{},
