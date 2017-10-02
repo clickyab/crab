@@ -1,5 +1,8 @@
 {
 	"properties": {
+		"_actions": {
+			"type": "string"
+		},
 		"active": {
 			"type": "boolean"
 		},

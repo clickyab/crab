@@ -136,6 +136,28 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		group.GET("/os", xhandler.HandlerFuncC(framework.Mix(c.os, m4...)))
 		// End route with key 4
 
+		/* Route {
+			"Route": "/region",
+			"Method": "GET",
+			"Function": "Controller.region",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "",
+			"Scope": ""
+		} with key 5 */
+		m5 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		group.GET("/region", xhandler.HandlerFuncC(framework.Mix(c.region, m5...)))
+		// End route with key 5
+
 		initializer.DoInitialize(c)
 	})
 }
