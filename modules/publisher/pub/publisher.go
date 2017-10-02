@@ -87,17 +87,16 @@ func (m *Manager) FillPublisherDataTableArray(
 	var params []interface{}
 	var res PublisherDataTableArray
 	var where []string
-	countQuery := fmt.Sprintf("SELECT COUNT(p.id) FROM %s AS p",
+	countQuery := fmt.Sprintf("SELECT COUNT(id) FROM %s",
 		PublisherTableFull,
 	)
-	query := fmt.Sprintf("SELECT p.* FROM %s AS p",
+	query := fmt.Sprintf("SELECT * FROM %s",
 		PublisherTableFull,
 	)
 	for field, value := range filters {
-		where = append(where, fmt.Sprintf("%s.%s=?", PublisherTableFull, field))
+		where = append(where, fmt.Sprintf("%s=?", field))
 		params = append(params, value)
 	}
-
 	for column, val := range search {
 		where = append(where, fmt.Sprintf("%s LIKE ?", column))
 		params = append(params, "%"+val+"%")
