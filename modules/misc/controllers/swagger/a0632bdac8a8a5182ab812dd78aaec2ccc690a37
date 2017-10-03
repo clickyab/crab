@@ -1,8 +1,0 @@
-{
-	"properties": {
-		"list_id": {
-			"type": "integer"
-		}
-	},
-	"type": "object"
-}
