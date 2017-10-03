@@ -70,7 +70,7 @@ func (u *Controller) Routes(r router.Mux) {
 	m.GET("/panic", framework.Handler(
 		func(_ context.Context, w http.ResponseWriter, r *http.Request) {
 			if r.Header.Get("token") == panicToken.String() {
-				assert.Nil(0)
+				panic("Don't worry. it's just a test")
 			}
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("Noop ;)"))

@@ -134,6 +134,28 @@ func (c *Controller) Routes(r router.Mux) {
 		group.GET("/os", framework.Mix(c.os, m4...))
 		// End route with key 4
 
+		/* Route {
+			"Route": "/region",
+			"Method": "GET",
+			"Function": "Controller.region",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "",
+			"Scope": ""
+		} with key 5 */
+		m5 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		group.GET("/region", framework.Mix(c.region, m5...))
+		// End route with key 5
+
 		initializer.DoInitialize(c)
 	})
 }

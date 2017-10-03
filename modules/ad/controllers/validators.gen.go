@@ -12,7 +12,7 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
-func (pl *assignBannerPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+func (p *assignBannerPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	err := func(in interface{}) error {
 		if v, ok := in.(interface {
 			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
@@ -20,11 +20,11 @@ func (pl *assignBannerPayload) Validate(ctx context.Context, w http.ResponseWrit
 			return v.ValidateExtra(ctx, w, r)
 		}
 		return nil
-	}(pl)
+	}(p)
 	if err != nil {
 		return err
 	}
-	errs := validator.New().Struct(pl)
+	errs := validator.New().Struct(p)
 	if errs == nil {
 		return nil
 	}
