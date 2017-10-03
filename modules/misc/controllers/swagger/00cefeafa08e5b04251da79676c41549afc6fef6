@@ -3,6 +3,13 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": "",
 				"in": "query",
 				"name": "sort",
@@ -10,9 +17,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the name field",
 				"in": "query",
-				"name": "kind",
+				"name": "name",
 				"required": false,
 				"type": "string"
 			},
@@ -24,13 +31,6 @@
 				"type": "string"
 			},
 			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": " page number",
 				"in": "query",
 				"name": "p",
@@ -38,9 +38,9 @@
 				"type": "int"
 			},
 			{
-				"description": " search the name field",
+				"description": "",
 				"in": "query",
-				"name": "name",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
