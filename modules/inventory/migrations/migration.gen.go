@@ -5,6 +5,7 @@
 // db/20170927075829_invemtory.sql
 // db/20171002100931_inventory.sql
 // db/20171003071731_seed.sql
+// db/20171003123737_inventory.sql
 // DO NOT EDIT!
 
 package migrations
@@ -172,6 +173,26 @@ func db20171003071731_seedSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20171003123737_inventorySql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\xcf\xcd\x4a\xc4\x30\x14\x05\xe0\xfd\x3c\xc5\xd9\xcd\x42\xe6\x09\x5c\x45\x0d\x2a\x64\xea\xcf\xa4\x6b\x13\x93\x8b\x73\xb1\x26\x21\xc9\x38\x3e\xbe\xd4\xd2\x52\x17\x85\xc2\xec\xce\x09\xb9\x07\xbe\xcd\x6e\x87\xab\x2f\xfe\xc8\xb6\x12\xda\xd4\xd7\xc3\x8b\x02\x07\x14\x72\x95\x63\xc0\xb6\x4d\x5b\x70\x01\xfd\x90\x3b\x55\xf2\x38\x1f\x29\xa0\x1e\xb9\x60\xb8\xeb\x3f\x71\x81\x4d\xa9\x63\xf2\x1b\xa1\xb4\x7c\x85\x16\x37\x4a\xc2\x70\xf8\xa6\x50\x63\x66\x2a\x06\xb7\x0f\xa2\xb9\x97\x30\x2e\x93\xad\xf4\x66\xab\x19\xb3\xff\x2b\xfa\x71\x2f\x0f\x5a\xec\x9f\xd1\x3c\x69\x34\xad\x52\xd7\x2b\xd6\x4e\xc9\x4f\x6b\x43\x5e\x5e\xfb\xa7\xbd\x8b\xe7\x30\x7a\x27\x6c\xff\xb8\x8a\x9b\x63\xd7\x91\xc7\xbb\x75\x9f\xab\xc9\x7e\x6e\xbe\x98\xec\xe7\xe6\x65\xf2\x6f\x00\x00\x00\xff\xff\xfe\xd7\x54\x61\xe2\x01\x00\x00"
+
+func db20171003123737_inventorySqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20171003123737_inventorySql,
+		"db/20171003123737_inventory.sql",
+	)
+}
+
+func db20171003123737_inventorySql() (*asset, error) {
+	bytes, err := db20171003123737_inventorySqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20171003123737_inventory.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -229,6 +250,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20170927075829_invemtory.sql": db20170927075829_invemtorySql,
 	"db/20171002100931_inventory.sql": db20171002100931_inventorySql,
 	"db/20171003071731_seed.sql": db20171003071731_seedSql,
+	"db/20171003123737_inventory.sql": db20171003123737_inventorySql,
 }
 
 // AssetDir returns the file names below a certain
@@ -277,6 +299,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20170927075829_invemtory.sql": &bintree{db20170927075829_invemtorySql, map[string]*bintree{}},
 		"20171002100931_inventory.sql": &bintree{db20171002100931_inventorySql, map[string]*bintree{}},
 		"20171003071731_seed.sql": &bintree{db20171003071731_seedSql, map[string]*bintree{}},
+		"20171003123737_inventory.sql": &bintree{db20171003123737_inventorySql, map[string]*bintree{}},
 	}},
 }}
 

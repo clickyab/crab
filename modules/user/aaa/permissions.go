@@ -9,7 +9,6 @@ import (
 
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/permission"
-	"github.com/sirupsen/logrus"
 )
 
 // Has check for pern
@@ -129,7 +128,6 @@ func (u *User) getUserPermissions(DomainID int64) map[permission.UserScope]map[s
 		scope := rolePerm[i].Scope
 		perm := rolePerm[i].Perm
 		g[perm] = true
-		logrus.Warn(scope, perm)
 		resp[scope] = g
 	}
 

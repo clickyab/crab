@@ -110,10 +110,10 @@ func (m *Manager) FillInventoryDataTableArray(
 	var params []interface{}
 	var res InventoryDataTableArray
 	var where []string
-	countQuery := fmt.Sprintf("SELECT COUNT(p.id) FROM %s",
+	countQuery := fmt.Sprintf("SELECT COUNT(id) FROM %s",
 		InventoryTableFull,
 	)
-	query := fmt.Sprintf("SELECT p.* FROM %s",
+	query := fmt.Sprintf("SELECT * FROM %s",
 		InventoryTableFull,
 	)
 	for field, value := range filters {
