@@ -73,7 +73,7 @@ func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.Response
 	for i := range p.Banners {
 		mime, width, height, err := checkBannerImage(p.Banners[i].Src)
 		if err != nil {
-			return errors.New("image mime or dimensions not valid")
+			return err
 		}
 		if p.Banners[i].ID != 0 { //update selected
 			//TODO check access for update banner
@@ -154,7 +154,7 @@ func checkBannerImage(srcID string) (mime string, width int, height int, err err
 	file, err := model.NewModelManager().FindUploadByID(srcID)
 
 	if err != nil || file.Attr.Banner == nil {
-		err = errors.New("invalid banner")
+		err = errors.New("invalid uploaded file")
 		return
 	}
 	//check banner type
@@ -166,6 +166,7 @@ func checkBannerImage(srcID string) (mime string, width int, height int, err err
 	mime = file.MIME
 	ok := checkBannerDimension(file.Attr.Banner.Width, file.Attr.Banner.Height)
 	if !ok {
+		err = errors.New("dimensions not valid")
 		return
 	}
 	width = file.Attr.Banner.Width

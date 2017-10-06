@@ -16,6 +16,7 @@
 // db/20170912065827_fixrole.sql
 // db/20170913075842_rp_seeds.sql
 // db/20170930115925_perm_seed.sql
+// db/20171006182155_avatar.sql
 // DO NOT EDIT!
 
 package migrations
@@ -403,6 +404,26 @@ func db20170930115925_perm_seedSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20171006182155_avatarSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\x91\xb1\x4e\xf3\x30\x14\x85\x77\x3f\xc5\xd9\xda\xea\x57\x87\xfe\x52\x07\x94\xc9\xc4\xb7\x10\x51\x1c\xea\x26\x88\x4e\x91\xa9\x0d\xb5\x1a\x92\x28\x4e\x68\x1f\x1f\x85\x94\x0a\x44\x10\x8c\xbe\xfa\xee\xf1\xf1\x67\x36\x9d\xe2\xdf\x8b\x7b\xae\x75\x63\x91\x56\xdd\x71\xbd\x5a\xc2\x15\xf0\x76\xdb\xb8\xb2\xc0\x28\xad\x46\x70\x1e\xf6\x68\xb7\x6d\x63\x0d\x0e\x3b\x5b\xa0\xd9\x39\x8f\x7e\xaf\x83\x9c\x87\xae\xaa\xdc\x59\xc3\xf8\x32\x21\x85\x84\x5f\x2e\x09\xad\xb7\xb5\xc7\x6d\x2c\xa2\xc5\x06\xfa\x55\x37\xba\xc6\x3d\x57\xe1\x35\x57\xe3\xd9\xc5\x6c\x12\xb0\x50\x11\x4f\x08\xa9\x8c\x56\x29\x21\x92\x82\x1e\xfa\xad\xac\xc7\xb3\xd6\x15\xc6\x1e\x11\xcb\x53\xd8\xb8\x9f\x4f\x82\xef\x17\x31\x2e\x04\xc2\x58\xae\x13\xc5\x23\x99\x9c\x72\xda\x2a\x2f\xb5\xf1\x99\x33\xd9\xd3\x9e\x2d\x62\x45\xd1\x95\xc4\x0d\x6d\xce\x51\x50\xb4\x20\x45\x32\xa4\x35\x4e\x34\xc6\xce\x4c\x02\xf6\xc5\x8e\x28\x0f\xc5\x87\x9f\xb3\x9c\x6e\xf8\x27\x3d\x75\x99\xe7\xd6\xe0\x51\x6f\xf7\x03\x8a\x84\x8a\xef\xf0\xb9\xdb\x40\xf7\x80\xbd\x53\xbf\x3b\x1a\x50\xf3\xc3\x1f\xfc\x9f\xcf\xbb\x57\xbe\x05\x00\x00\xff\xff\xe4\x28\xf6\x61\x05\x02\x00\x00"
+
+func db20171006182155_avatarSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20171006182155_avatarSql,
+		"db/20171006182155_avatar.sql",
+	)
+}
+
+func db20171006182155_avatarSql() (*asset, error) {
+	bytes, err := db20171006182155_avatarSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20171006182155_avatar.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -471,6 +492,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20170912065827_fixrole.sql": db20170912065827_fixroleSql,
 	"db/20170913075842_rp_seeds.sql": db20170913075842_rp_seedsSql,
 	"db/20170930115925_perm_seed.sql": db20170930115925_perm_seedSql,
+	"db/20171006182155_avatar.sql": db20171006182155_avatarSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -530,6 +552,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20170912065827_fixrole.sql": &bintree{db20170912065827_fixroleSql, map[string]*bintree{}},
 		"20170913075842_rp_seeds.sql": &bintree{db20170913075842_rp_seedsSql, map[string]*bintree{}},
 		"20170930115925_perm_seed.sql": &bintree{db20170930115925_perm_seedSql, map[string]*bintree{}},
+		"20171006182155_avatar.sql": &bintree{db20171006182155_avatarSql, map[string]*bintree{}},
 	}},
 }}
 
