@@ -72,7 +72,7 @@ type WhiteBlackList struct {
 //		list = yes
 // }
 type Inventory struct {
-	ID        string                `json:"id" db:"id" type:"string"`
+	ID        int64                 `json:"id" db:"id" type:"number"`
 	CreatedAt time.Time             `json:"created_at" db:"created_at" type:"date" sort:"true"`
 	UpdatedAt time.Time             `json:"updated_at" db:"updated_at" type:"date"`
 	Active    bool                  `json:"active" db:"active" type:"bool"`
