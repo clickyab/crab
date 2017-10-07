@@ -112,7 +112,7 @@ func (m *Manager) ListInventoriesWithPagination(offset, perPage int) []Inventory
 }
 
 // FindInventoryByID return the Inventory base on its id
-func (m *Manager) FindInventoryByID(id string) (*Inventory, error) {
+func (m *Manager) FindInventoryByID(id int64) (*Inventory, error) {
 	var res Inventory
 	err := m.GetRDbMap().SelectOne(
 		&res,

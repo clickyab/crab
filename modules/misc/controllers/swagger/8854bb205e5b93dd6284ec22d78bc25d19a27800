@@ -23,7 +23,7 @@
 						"type": "string"
 					},
 					"id": {
-						"type": "string"
+						"type": "integer"
 					},
 					"kind": {
 						"type": "string"
