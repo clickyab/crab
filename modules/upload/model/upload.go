@@ -9,7 +9,7 @@ import (
 )
 
 // Mime all mime type
-type Mime = string
+type Mime string
 
 const (
 	// JPGMime jpeg image

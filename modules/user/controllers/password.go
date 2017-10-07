@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/notification"
 	"github.com/rs/xmux"
 
 	"errors"
@@ -16,6 +15,7 @@ import (
 	"strings"
 
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/mailer"
 	"github.com/clickyab/services/trans"
 )
 
@@ -64,10 +64,7 @@ func (c Controller) forgetPassword(ctx context.Context, w http.ResponseWriter, r
 	`, ul.String(), co)
 
 	// TODO: Change email template
-	notification.Send(trans.T("Password recovery").String(), temp, notification.Packet{
-		Platform: notification.MailType,
-		To:       []string{u.Email},
-	})
+	mailer.SendMail(u, "Password recovery", temp)
 
 	c.OKResponse(w, nil)
 }
