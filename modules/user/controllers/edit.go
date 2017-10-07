@@ -16,7 +16,6 @@ import (
 // @Validate {
 // }
 type userPayload struct {
-	Email         string         `json:"email" validate:"required,email"`
 	Avatar        string         `json:"avatar" validate:"omitempty"`
 	CityID        int64          `json:"city_id" validate:"omitempty"`
 	LandLine      string         `json:"land_line" validate:"omitempty"`
@@ -74,7 +73,6 @@ func (u *Controller) edit(ctx context.Context, w http.ResponseWriter, r *http.Re
 		}
 	}
 
-	cu.Email = pl.Email
 	cu.Avatar = stringToNullString(pl.Avatar)
 	cu.CityID = intToNullInt64(pl.CityID)
 	cu.LandLine = stringToNullString(pl.LandLine)
