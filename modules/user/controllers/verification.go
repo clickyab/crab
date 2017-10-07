@@ -20,8 +20,8 @@ import (
 
 	"net/url"
 
+	"clickyab.com/crab/modules/user/mailer"
 	"github.com/clickyab/services/config"
-	"github.com/clickyab/services/notification"
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/trans"
 	"github.com/rs/xmux"
@@ -141,10 +141,7 @@ func verifyEmail(u *aaa.User, r *http.Request) error {
 	code: %s
 	`, ul.String(), c)
 	// TODO: Change email template
-	notification.Send(trans.T("Welcome to Clickyab!").String(), temp, notification.Packet{
-		Platform: notification.MailType,
-		To:       []string{u.Email},
-	})
+	mailer.SendMail(u, trans.T("Welcome to Clickyab!").String(), temp)
 	return nil
 }
 

@@ -28,12 +28,12 @@ import (
 	"github.com/rs/xmux"
 )
 
-var routes = make(map[string]kind)
+var routes = make(map[model.Mime]kind)
 var lock = sync.RWMutex{}
 
 type kind struct {
 	maxSize int64
-	mimes   []string
+	mimes   []model.Mime
 }
 
 // UPath upload path in system
@@ -42,7 +42,7 @@ var perm = config.RegisterInt("crab.modules.upload.perm", 0777, "file will save 
 
 // Register add a route and settings for uploads
 // name will be the route, maxsize is maximum allowed size for file upload file and the mimes is alloed mime types
-func Register(name model.Mime, maxSize int64, mimes ...string) {
+func Register(name model.Mime, maxSize int64, mimes ...model.Mime) {
 	assert.True(len(mimes) > 0)
 	lock.Lock()
 	defer lock.Unlock()
@@ -71,13 +71,13 @@ type Controller struct {
 //		middleware = authz.Authenticate
 // }
 func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	m := xmux.Param(ctx, "module")
+	m := model.Mime(xmux.Param(ctx, "module"))
 	u := authz.MustGetUser(ctx)
 	lock.RLock()
 	defer lock.RUnlock()
 	s, ok := routes[m]
 	if !ok {
-		c.NotFoundResponse(w, fmt.Errorf("Not found"))
+		c.NotFoundResponse(w, errors.New("not found"))
 		return
 	}
 	err := r.ParseMultipartForm(s.maxSize)
@@ -111,7 +111,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	}
 	ext := filepath.Ext(handler.Filename)
 	now := time.Now()
-	fp := filepath.Join(UPath.String(), m, now.Format("2006/01/02"))
+	fp := filepath.Join(UPath.String(), string(m), now.Format("2006/01/02"))
 	err = os.MkdirAll(fp, os.FileMode(perm.Int64()))
 	assert.Nil(err)
 	fn := func() string {
@@ -126,16 +126,16 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	assert.Nil(err)
 	defer f.Close()
 
-	finalPath := filepath.Join(m, now.Format("2006/01/02"), fn)
+	finalPath := filepath.Join(string(m), now.Format("2006/01/02"), fn)
 	size, er := io.Copy(f, buff)
 	assert.Nil(er)
 
 	g := &model.Upload{
 		ID:      finalPath,
-		MIME:    mime,
+		MIME:    string(mime),
 		Size:    size,
 		UserID:  u.ID,
-		Section: m,
+		Section: string(m),
 		Attr:    *attr,
 	}
 	e := model.NewModelManager().CreateUpload(g)
@@ -147,7 +147,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	})
 }
 
-func validMIME(a textproto.MIMEHeader, b []string) (bool, model.Mime) {
+func validMIME(a textproto.MIMEHeader, b []model.Mime) (bool, model.Mime) {
 	var ct []string
 	var ok bool
 	if ct, ok = a["Content-Type"]; !ok {
@@ -155,8 +155,8 @@ func validMIME(a textproto.MIMEHeader, b []string) (bool, model.Mime) {
 	}
 	for _, ak := range ct {
 		for _, bv := range b {
-			if ak == bv {
-				return true, ak
+			if ak == string(bv) {
+				return true, model.Mime(ak)
 			}
 		}
 	}
