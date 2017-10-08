@@ -10,16 +10,23 @@
 				"type": "int"
 			},
 			{
-				"description": " search the name field",
+				"description": " page number",
 				"in": "query",
-				"name": "name",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the domain field",
+				"description": " search the name field",
 				"in": "query",
-				"name": "domain",
+				"name": "name",
 				"required": false,
 				"type": "string"
 			},
@@ -31,16 +38,9 @@
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": " search the domain field",
 				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
+				"name": "domain",
 				"required": false,
 				"type": "string"
 			},
