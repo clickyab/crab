@@ -3,9 +3,6 @@
 		"address": {
 			"type": "string"
 		},
-		"avatar": {
-			"type": "string"
-		},
 		"cell_phone": {
 			"type": "string"
 		},
@@ -13,9 +10,6 @@
 			"type": "integer"
 		},
 		"economic_code": {
-			"type": "string"
-		},
-		"email": {
 			"type": "string"
 		},
 		"first_name": {
