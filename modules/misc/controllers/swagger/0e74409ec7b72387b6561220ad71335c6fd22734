@@ -1,6 +1,9 @@
 {
 	"items": {
 		"properties": {
+			"active": {
+				"type": "boolean"
+			},
 			"description": {
 				"type": "string"
 			},
@@ -9,9 +12,6 @@
 			},
 			"name": {
 				"type": "string"
-			},
-			"status": {
-				"type": "boolean"
 			}
 		},
 		"type": "object"
