@@ -149,7 +149,7 @@ func init() {
 			"visible": true,
 			"filter": false,
 			"title": "ID",
-			"type": "string",
+			"type": "number",
 			"filter_valid_map": null
 		},
 		{

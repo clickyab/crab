@@ -64,12 +64,6 @@ func (u *userPayload) Validate(ctx context.Context, w http.ResponseWriter, r *ht
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
-		case "Email":
-			res["email"] = trans.E("invalid value")
-
-		case "Avatar":
-			res["avatar"] = trans.E("invalid value")
-
 		case "CityID":
 			res["city_id"] = trans.E("invalid value")
 

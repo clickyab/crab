@@ -6,17 +6,56 @@ import (
 
 	"time"
 
+	"errors"
+
+	upload "clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
 )
 
+type avatarPayload struct {
+	Avatar string `json:"avatar"`
+}
+
+// route for add/update user avatar
+// @Route {
+// 		url = /avatar
+//		method = put
+//		payload = avatarPayload
+//		middleware = authz.Authenticate
+//		200 = ResponseLoginOK
+//		400 = controller.ErrorResponseSimple
+// }
+func (u *Controller) avatar(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := u.MustGetPayload(ctx).(*avatarPayload)
+
+	cu := u.MustGetUser(ctx)
+	m := aaa.NewAaaManager()
+	if pl.Avatar == "" {
+		cu.Avatar.String = ""
+		cu.Avatar.Valid = false
+	} else {
+
+		up, err := upload.NewModelManager().FindUploadByID(pl.Avatar)
+		if err != nil {
+			u.NotFoundResponse(w, errors.New("avatar not found"))
+			return
+		}
+		cu.Avatar = stringToNullString(up.ID)
+	}
+
+	err := m.UpdateUser(cu)
+	assert.Nil(err)
+	u.createLoginResponse(w, cu)
+}
+
 // @Validate {
 // }
 type userPayload struct {
-	Avatar        string         `json:"avatar" validate:"omitempty"`
 	CityID        int64          `json:"city_id" validate:"omitempty"`
 	LandLine      string         `json:"land_line" validate:"omitempty"`
 	CellPhone     string         `json:"cell_phone" validate:"omitempty"`
@@ -73,7 +112,6 @@ func (u *Controller) edit(ctx context.Context, w http.ResponseWriter, r *http.Re
 		}
 	}
 
-	cu.Avatar = stringToNullString(pl.Avatar)
 	cu.CityID = intToNullInt64(pl.CityID)
 	cu.LandLine = stringToNullString(pl.LandLine)
 	cu.Cellphone = stringToNullString(pl.CellPhone)
