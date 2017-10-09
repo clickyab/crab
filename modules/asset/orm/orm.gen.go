@@ -57,8 +57,8 @@ func (m *Manager) Initialize() {
 		Browser{},
 		BrowserTableFull,
 	).SetKeys(
-		true,
-		"ID",
+		false,
+		"Name",
 	)
 
 	m.AddTableWithName(

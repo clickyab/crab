@@ -111,13 +111,13 @@ func (m *Manager) ListBrowsersWithPagination(offset, perPage int) []Browser {
 	return m.ListBrowsersWithPaginationFilter(offset, perPage, "")
 }
 
-// FindBrowserByID return the Browser base on its id
-func (m *Manager) FindBrowserByID(id int64) (*Browser, error) {
+// FindBrowserByName return the Browser base on its name
+func (m *Manager) FindBrowserByName(n string) (*Browser, error) {
 	var res Browser
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", BrowserTableFull),
-		id,
+		fmt.Sprintf("SELECT * FROM %s WHERE name=?", BrowserTableFull),
+		n,
 	)
 
 	if err != nil {
