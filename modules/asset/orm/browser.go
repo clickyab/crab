@@ -2,18 +2,21 @@ package orm
 
 import (
 	"fmt"
+	"time"
 )
 
 // Browser model in database
 // @Model {
 //		table = browsers
-//		primary = true, id
-//		find_by = id
+//		primary = false, name
+//		find_by = name
 //		list = yes
 // }
 type Browser struct {
-	base
-	Name string `json:"name" db:"name"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	Active    bool      `json:"active" db:"active"`
+	Name      string    `json:"name" db:"name"`
 }
 
 // ListActiveBrowsers find active browsers by name
