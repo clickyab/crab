@@ -28,5 +28,5 @@ type manufacturers []orm.Manufacturer
 // }
 func (c *Controller) manufacturer(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	m := orm.NewOrmManager()
-	c.OKResponse(w, m.ListManufacturers())
+	c.OKResponse(w, m.ListManufacturersWithFilter("active=?", true))
 }

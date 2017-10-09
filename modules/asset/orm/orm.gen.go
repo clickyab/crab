@@ -81,8 +81,8 @@ func (m *Manager) Initialize() {
 		Manufacturer{},
 		ManufacturerTableFull,
 	).SetKeys(
-		true,
-		"ID",
+		false,
+		"Brand",
 	)
 
 	m.AddTableWithName(
