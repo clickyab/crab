@@ -25,6 +25,9 @@ const (
 	// OSTableFull is the OS table name
 	OSTableFull = "oses"
 
+	// PlatformTableFull is the Platform table name
+	PlatformTableFull = "platforms"
+
 	// RegionTableFull is the Region table name
 	RegionTableFull = "regions"
 )
@@ -88,6 +91,14 @@ func (m *Manager) Initialize() {
 	m.AddTableWithName(
 		OS{},
 		OSTableFull,
+	).SetKeys(
+		false,
+		"Name",
+	)
+
+	m.AddTableWithName(
+		Platform{},
+		PlatformTableFull,
 	).SetKeys(
 		false,
 		"Name",

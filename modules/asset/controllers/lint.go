@@ -6,4 +6,5 @@ var (
 	_ = catResponse{}
 	_ = ispResponse{}
 	_ = osResponse{}
+	_ = platformResponse{}
 )
