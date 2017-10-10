@@ -7,9 +7,6 @@
 			"format": "dateTime",
 			"type": "string"
 		},
-		"id": {
-			"type": "integer"
-		},
 		"name": {
 			"type": "string"
 		},

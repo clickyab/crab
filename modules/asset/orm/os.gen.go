@@ -111,22 +111,6 @@ func (m *Manager) ListOSWithPagination(offset, perPage int) []OS {
 	return m.ListOSWithPaginationFilter(offset, perPage, "")
 }
 
-// FindOSByID return the OS base on its id
-func (m *Manager) FindOSByID(id int64) (*OS, error) {
-	var res OS
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", OSTableFull),
-		id,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
 // FindOSByName return the OS base on its name
 func (m *Manager) FindOSByName(n string) (*OS, error) {
 	var res OS
