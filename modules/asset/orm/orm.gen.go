@@ -65,8 +65,8 @@ func (m *Manager) Initialize() {
 		Category{},
 		CategoryTableFull,
 	).SetKeys(
-		true,
-		"ID",
+		false,
+		"Name",
 	)
 
 	m.AddTableWithName(

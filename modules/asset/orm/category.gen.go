@@ -107,22 +107,6 @@ func (m *Manager) ListCategoriesWithPagination(offset, perPage int) []Category {
 	return m.ListCategoriesWithPaginationFilter(offset, perPage, "")
 }
 
-// FindCategoryByID return the Category base on its id
-func (m *Manager) FindCategoryByID(id int64) (*Category, error) {
-	var res Category
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", CategoryTableFull),
-		id,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
 // FindCategoryByName return the Category base on its name
 func (m *Manager) FindCategoryByName(n string) (*Category, error) {
 	var res Category
