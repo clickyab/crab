@@ -8,8 +8,8 @@
 				"format": "dateTime",
 				"type": "string"
 			},
-			"id": {
-				"type": "integer"
+			"kind": {
+				"type": "string"
 			},
 			"name": {
 				"type": "string"

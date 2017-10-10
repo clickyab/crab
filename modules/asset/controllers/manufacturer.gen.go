@@ -69,7 +69,7 @@ func (c *Controller) Routes(r router.Mux) {
 		// End route with key 1
 
 		/* Route {
-			"Route": "/isp",
+			"Route": "/isp/:kind",
 			"Method": "GET",
 			"Function": "Controller.isp",
 			"RoutePkg": "controllers",
@@ -87,7 +87,7 @@ func (c *Controller) Routes(r router.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/isp", framework.Mix(c.isp, m2...))
+		group.GET("/isp/:kind", framework.Mix(c.isp, m2...))
 		// End route with key 2
 
 		/* Route {
