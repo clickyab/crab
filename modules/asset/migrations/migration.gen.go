@@ -10,6 +10,7 @@
 // db/20171009134101_manseed.sql
 // db/20171009151239_browser.sql
 // db/20171009152052_browser_seed.sql
+// db/20171010063508_category.sql
 // DO NOT EDIT!
 
 package migrations
@@ -277,6 +278,26 @@ func db20171009152052_browser_seedSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20171010063508_categorySql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\x90\x31\x6f\xc2\x30\x10\x85\xf7\xfc\x8a\xb7\x01\xaa\x18\x3a\x74\xca\xe4\x62\x57\x8d\x1a\x1c\x70\x93\xaa\x99\x50\x1a\x9f\xe0\xd4\xe0\x44\x49\x10\xfc\xfc\xca\x45\x6d\x83\xaa\x20\x36\xdb\xe7\xef\xf4\xde\x17\xcc\xe7\xb8\xdb\xf3\xb6\x2d\x7a\x42\xd6\xf8\xeb\xeb\x3a\x06\x3b\x74\x54\xf6\x5c\x3b\x4c\xb2\x66\x02\xee\x40\x27\x2a\x0f\x3d\x59\x1c\x77\xe4\xd0\xef\xb8\xc3\x99\xf3\x9f\xb8\x43\xd1\x34\x15\x93\x0d\x44\x9c\x2a\x83\x54\x3c\xc6\x0a\x65\xd1\xd3\xb6\x6e\x99\x3a\x48\x93\xac\xc0\x36\x0c\xbe\x0f\x91\x96\xea\x7d\x30\x76\xc5\x9e\x36\x07\x76\x96\x4e\x48\xf4\x60\x10\x8e\xed\x5b\x26\x32\x7a\xca\xe1\x41\xbc\x09\xb3\x78\x16\x66\x7a\xff\x30\x83\x4e\x52\xe8\x2c\x8e\x47\x41\x21\x25\x56\x26\x5a\x0a\x93\xe3\x45\xe5\x98\xfa\x15\xb3\x30\xb8\x30\x21\xeb\xa3\xfb\x71\xf1\x2b\xc2\x3f\xde\xa4\xa2\xad\xab\x8a\x2c\x3e\x8a\xf2\xf3\xaa\x8e\x41\x8c\xab\x71\xd9\x22\xd2\xe7\x5a\x97\xcc\xc2\x28\x91\x2a\x64\x3a\x5a\x67\xea\x9f\xd4\xcd\xa8\xd5\xbf\xd2\x5f\x01\x00\x00\xff\xff\x56\x49\xf9\x10\x00\x02\x00\x00"
+
+func db20171010063508_categorySqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20171010063508_categorySql,
+		"db/20171010063508_category.sql",
+	)
+}
+
+func db20171010063508_categorySql() (*asset, error) {
+	bytes, err := db20171010063508_categorySqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20171010063508_category.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -339,6 +360,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20171009134101_manseed.sql": db20171009134101_manseedSql,
 	"db/20171009151239_browser.sql": db20171009151239_browserSql,
 	"db/20171009152052_browser_seed.sql": db20171009152052_browser_seedSql,
+	"db/20171010063508_category.sql": db20171010063508_categorySql,
 }
 
 // AssetDir returns the file names below a certain
@@ -392,6 +414,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20171009134101_manseed.sql": &bintree{db20171009134101_manseedSql, map[string]*bintree{}},
 		"20171009151239_browser.sql": &bintree{db20171009151239_browserSql, map[string]*bintree{}},
 		"20171009152052_browser_seed.sql": &bintree{db20171009152052_browser_seedSql, map[string]*bintree{}},
+		"20171010063508_category.sql": &bintree{db20171010063508_categorySql, map[string]*bintree{}},
 	}},
 }}
 

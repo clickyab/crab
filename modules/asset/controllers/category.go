@@ -18,5 +18,5 @@ type catResponse []orm.Category
 // }
 func (c *Controller) category(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	m := orm.NewOrmManager()
-	c.OKResponse(w, m.ListCategories())
+	c.OKResponse(w, m.ListCategoriesWithFilter("active=?", true))
 }
