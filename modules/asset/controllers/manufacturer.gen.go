@@ -135,9 +135,9 @@ func (c *Controller) Routes(r router.Mux) {
 		// End route with key 4
 
 		/* Route {
-			"Route": "/region",
+			"Route": "/platform",
 			"Method": "GET",
-			"Function": "Controller.region",
+			"Function": "Controller.platform",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -153,8 +153,30 @@ func (c *Controller) Routes(r router.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/region", framework.Mix(c.region, m5...))
+		group.GET("/platform", framework.Mix(c.platform, m5...))
 		// End route with key 5
+
+		/* Route {
+			"Route": "/region",
+			"Method": "GET",
+			"Function": "Controller.region",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "",
+			"Scope": ""
+		} with key 6 */
+		m6 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		group.GET("/region", framework.Mix(c.region, m6...))
+		// End route with key 6
 
 		initializer.DoInitialize(c)
 	})
