@@ -2,16 +2,33 @@ package orm
 
 import "time"
 
+// ISPKind is the isp type (eg,isp,both,...)
+type (
+	// ISPKind is the isp kind
+	// @Enum{
+	// }
+	ISPKind string
+)
+
+const (
+	// BothISPKind both
+	BothISPKind ISPKind = "both"
+	// CellularISPKind cellular
+	CellularISPKind ISPKind = "cellular"
+	// ISPISPKind just isp
+	ISPISPKind ISPKind = "isp"
+)
+
 // ISP isp model in database
 // @Model {
 //		table = isps
-//		primary = true, id
-//		find_by = id,name
+//		primary = false, name
+//		find_by = name
 //		list = yes
 // }
 type ISP struct {
-	ID        int64     `json:"id" db:"id"`
 	Name      string    `json:"name" db:"name"`
+	Kind      ISPKind   `json:"kind" db:"kind"`
 	Active    bool      `json:"active" db:"active"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`

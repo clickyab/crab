@@ -111,22 +111,6 @@ func (m *Manager) ListISPSWithPagination(offset, perPage int) []ISP {
 	return m.ListISPSWithPaginationFilter(offset, perPage, "")
 }
 
-// FindISPByID return the ISP base on its id
-func (m *Manager) FindISPByID(id int64) (*ISP, error) {
-	var res ISP
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", ISPTableFull),
-		id,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
 // FindISPByName return the ISP base on its name
 func (m *Manager) FindISPByName(n string) (*ISP, error) {
 	var res ISP

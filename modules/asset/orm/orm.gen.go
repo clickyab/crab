@@ -73,8 +73,8 @@ func (m *Manager) Initialize() {
 		ISP{},
 		ISPTableFull,
 	).SetKeys(
-		true,
-		"ID",
+		false,
+		"Name",
 	)
 
 	m.AddTableWithName(

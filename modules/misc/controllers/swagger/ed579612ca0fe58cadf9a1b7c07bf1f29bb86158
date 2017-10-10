@@ -3,6 +3,13 @@
 		"description": "isp return list all is (e.g. irancell, ...)",
 		"parameters": [
 			{
+				"description": "",
+				"in": "path",
+				"name": "kind",
+				"required": true,
+				"type": "string"
+			},
+			{
 				"description": "the security token, get it from login route",
 				"in": "header",
 				"name": "token",
@@ -15,6 +22,12 @@
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/controllers_ispResponse"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			},
 			"401": {
