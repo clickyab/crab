@@ -89,8 +89,8 @@ func (m *Manager) Initialize() {
 		OS{},
 		OSTableFull,
 	).SetKeys(
-		true,
-		"ID",
+		false,
+		"Name",
 	)
 
 	m.AddTableWithName(

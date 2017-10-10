@@ -18,5 +18,5 @@ type osResponse []orm.OS
 // }
 func (c *Controller) os(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	m := orm.NewOrmManager()
-	c.OKResponse(w, m.ListOS())
+	c.OKResponse(w, m.ListOSWithFilter("active=?", true))
 }
