@@ -148,6 +148,31 @@ func (c *Controller) Routes(r router.Mux) {
 		// End route with key 4
 
 		/* Route {
+			"Route": "/:id",
+			"Method": "GET",
+			"Function": "Controller.get",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "get-campaign",
+			"Scope": "self"
+		} with key 5 */
+		m5 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("get-campaign", "get-campaign")
+		m5 = append(m5, authz.AuthorizeGenerator("get-campaign", "self"))
+
+		group.GET("/:id", framework.Mix(c.get, m5...))
+		// End route with key 5
+
+		/* Route {
 			"Route": "/wb/:id",
 			"Method": "PUT",
 			"Function": "Controller.updateWhiteBlackList",
@@ -161,15 +186,15 @@ func (c *Controller) Routes(r router.Mux) {
 			"Payload": "whiteBlackPayload",
 			"Resource": "",
 			"Scope": ""
-		} with key 5 */
-		m5 := append(groupMiddleware, []framework.Middleware{
+		} with key 6 */
+		m6 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		// Make sure payload is the last middleware
-		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(whiteBlackPayload{}))
-		group.PUT("/wb/:id", framework.Mix(c.updateWhiteBlackList, m5...))
-		// End route with key 5
+		m6 = append(m6, middleware.PayloadUnMarshallerGenerator(whiteBlackPayload{}))
+		group.PUT("/wb/:id", framework.Mix(c.updateWhiteBlackList, m6...))
+		// End route with key 6
 
 		/* Route {
 			"Route": "/wblist/:id",
@@ -185,13 +210,13 @@ func (c *Controller) Routes(r router.Mux) {
 			"Payload": "",
 			"Resource": "",
 			"Scope": ""
-		} with key 6 */
-		m6 := append(groupMiddleware, []framework.Middleware{
+		} with key 7 */
+		m7 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		group.DELETE("/wblist/:id", framework.Mix(c.deleteWhiteBlackList, m6...))
-		// End route with key 6
+		group.DELETE("/wblist/:id", framework.Mix(c.deleteWhiteBlackList, m7...))
+		// End route with key 7
 
 		initializer.DoInitialize(c)
 	})

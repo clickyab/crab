@@ -5,6 +5,13 @@
 			{
 				"description": "",
 				"in": "query",
+				"name": "pub_type",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
 				"name": "status",
 				"required": false,
 				"type": "string"
@@ -22,13 +29,6 @@
 				"name": "p",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "pub_type",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": " search the domain field",

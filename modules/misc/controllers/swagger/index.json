@@ -101,6 +101,7 @@
 		"/campaign/finalize/{id}": "file://7acf57e48923e67a78a0f049457562cf93e2a98f",
 		"/campaign/wb/{id}": "file://40c4fcc074301f4950791fa2f2f017d5697ea8bf",
 		"/campaign/wblist/{id}": "file://e851b85b54c4b0c142d2c8f98f6a3c4d72b4b935",
+		"/campaign/{id}": "file://4a0373c2fc0e8acfac839413cc6b7d3572180864",
 		"/inventory/list": "file://00cefeafa08e5b04251da79676c41549afc6fef6",
 		"/inventory/list/definition": "file://9c281530ec43c5e06edcd5856ddeadeea34c7ac2",
 		"/inventory/preset": "file://23230297443e5e67a97371d54f0ed3808b99a35a",
