@@ -12,6 +12,7 @@ import (
 
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/domain/middleware/domain"
+	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
@@ -198,4 +199,42 @@ func (c *Controller) finalize(ctx context.Context, w http.ResponseWriter, r *htt
 
 	db.Finalize(ca)
 	c.OKResponse(w, nil)
+}
+
+// get gets a campaign by id
+// @Route {
+// 		url = /:id
+//		method = get
+//		resource = get-campaign:self
+//		200 = orm.Campaign
+//		400 = controller.ErrorResponseSimple
+//		404 = controller.ErrorResponseSimple
+//		middleware = authz.Authenticate
+// }
+func (c *Controller) get(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	userDomain := domain.MustGetDomain(ctx)
+	currentUser := authz.MustGetUser(ctx)
+	id := xmux.Param(ctx, "id")
+	campID, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		c.BadResponse(w, errors.New("bad id"))
+		return
+	}
+
+	campaign, err := orm.NewOrmManager().FindCampaignByIDDomain(campID, userDomain.ID)
+	if err != nil {
+		c.NotFoundResponse(w, nil)
+		return
+	}
+
+	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(campaign.UserID, userDomain.ID)
+	assert.Nil(err)
+
+	_, ok := aaa.CheckPermOn(owner, currentUser, "get-campaign", userDomain.ID)
+	if !ok {
+		c.ForbiddenResponse(w, errors.New("don't have access for this action"))
+		return
+	}
+
+	c.OKResponse(w, campaign)
 }
