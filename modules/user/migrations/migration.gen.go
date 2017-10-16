@@ -17,7 +17,6 @@
 // db/20170913075842_rp_seeds.sql
 // db/20170930115925_perm_seed.sql
 // db/20171006182155_avatar.sql
-// db/20171016084828_perm.sql
 // DO NOT EDIT!
 
 package migrations
@@ -425,26 +424,6 @@ func db20171006182155_avatarSql() (*asset, error) {
 	return a, nil
 }
 
-var _db20171016084828_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xb4\x91\x4d\x4b\x03\x31\x18\x84\xef\xfb\x2b\xe6\x96\x16\xb3\xd2\x14\xb4\xd2\xe2\x41\x68\xc4\x42\x6d\xb1\xdd\xd5\x63\x49\x93\xd7\x6d\x70\x3f\x42\x92\x52\x7f\xbe\xa4\x7e\x40\xc5\x83\x07\x3d\x25\x79\x98\xc0\x0c\x4f\x96\xe7\x38\x6b\x6c\xe5\x55\x24\x94\x2e\x3d\xd7\x0f\x73\xd8\x16\x81\x74\xb4\x5d\x0b\x56\x3a\x06\x1b\x40\xaf\xa4\xf7\x91\x0c\x0e\x3b\x6a\x11\x77\x36\xe0\xfd\x5f\x0a\xd9\x00\xe5\x5c\x6d\xc9\x64\xb3\xc5\x5a\xae\x0a\xcc\x16\xc5\x12\xda\xab\xed\xb9\xef\x6a\xda\x38\xf2\x8d\x0d\x21\x65\x7b\x47\x60\x0d\x47\x82\x1c\x41\x77\x8e\x38\xb4\x27\x15\xc9\x6c\x54\xe4\xd8\x3b\xf3\x71\xef\xe3\xf1\x66\x5e\xca\x35\x7a\x43\x0e\x56\x51\xcc\xb5\x6a\x9c\xb2\x55\xcb\x38\x58\xa0\xfa\x39\x9d\xc3\x81\x18\xe5\x62\x90\x8b\x4b\x88\xe1\x78\x20\xc6\x17\xa3\x9f\xf1\x15\xeb\x4f\xfe\xad\xa1\xf8\xb3\x86\x27\x56\xa6\xdd\xa1\xfd\xf4\xf2\x25\x25\xc1\x5f\x69\xf1\x5d\x5d\x93\xc1\x56\xe9\x97\x6c\x2a\xe7\xb2\x90\xb8\x5d\x2d\xef\xf1\x7d\xf3\xd3\x9d\x5c\xc9\xe3\xde\xeb\xd3\x11\x93\x2c\x7b\x0b\x00\x00\xff\xff\x21\x44\x16\xf7\x25\x02\x00\x00"
-
-func db20171016084828_permSqlBytes() ([]byte, error) {
-	return bindataRead(
-		_db20171016084828_permSql,
-		"db/20171016084828_perm.sql",
-	)
-}
-
-func db20171016084828_permSql() (*asset, error) {
-	bytes, err := db20171016084828_permSqlBytes()
-	if err != nil {
-		return nil, err
-	}
-
-	info := bindataFileInfo{name: "db/20171016084828_perm.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
-	a := &asset{bytes: bytes, info: info}
-	return a, nil
-}
-
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -514,7 +493,6 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20170913075842_rp_seeds.sql": db20170913075842_rp_seedsSql,
 	"db/20170930115925_perm_seed.sql": db20170930115925_perm_seedSql,
 	"db/20171006182155_avatar.sql": db20171006182155_avatarSql,
-	"db/20171016084828_perm.sql": db20171016084828_permSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -575,7 +553,6 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20170913075842_rp_seeds.sql": &bintree{db20170913075842_rp_seedsSql, map[string]*bintree{}},
 		"20170930115925_perm_seed.sql": &bintree{db20170930115925_perm_seedSql, map[string]*bintree{}},
 		"20171006182155_avatar.sql": &bintree{db20171006182155_avatarSql, map[string]*bintree{}},
-		"20171016084828_perm.sql": &bintree{db20171016084828_permSql, map[string]*bintree{}},
 	}},
 }}
 
