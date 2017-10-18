@@ -76,9 +76,6 @@
 		"h23": {
 			"type": "string"
 		},
-		"kind": {
-			"type": "string"
-		},
 		"start_at": {
 			"format": "dateTime",
 			"type": "string"
@@ -87,9 +84,6 @@
 			"type": "boolean"
 		},
 		"title": {
-			"type": "string"
-		},
-		"type": {
 			"type": "string"
 		}
 	},

@@ -18,6 +18,12 @@
 			}
 		],
 		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controllers_campaignResponse"
+				}
+			},
 			"400": {
 				"description": "",
 				"schema": {

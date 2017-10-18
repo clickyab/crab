@@ -109,7 +109,7 @@ func (c *Controller) Routes(r router.Mux) {
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
 			"RecName": "c",
-			"Payload": "updateCampaignPayload",
+			"Payload": "campaignStatus",
 			"Resource": "edit-campaign",
 			"Scope": "self"
 		} with key 3 */
@@ -121,7 +121,7 @@ func (c *Controller) Routes(r router.Mux) {
 		m3 = append(m3, authz.AuthorizeGenerator("edit-campaign", "self"))
 
 		// Make sure payload is the last middleware
-		m3 = append(m3, middleware.PayloadUnMarshallerGenerator(updateCampaignPayload{}))
+		m3 = append(m3, middleware.PayloadUnMarshallerGenerator(campaignStatus{}))
 		group.PUT("/base/:id", framework.Mix(c.updateBase, m3...))
 		// End route with key 3
 

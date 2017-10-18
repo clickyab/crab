@@ -1,9 +1,5 @@
 {
 	"properties": {
-		"end_at": {
-			"format": "dateTime",
-			"type": "string"
-		},
 		"h00": {
 			"type": "string"
 		},
@@ -74,22 +70,6 @@
 			"type": "string"
 		},
 		"h23": {
-			"type": "string"
-		},
-		"kind": {
-			"type": "string"
-		},
-		"start_at": {
-			"format": "dateTime",
-			"type": "string"
-		},
-		"status": {
-			"type": "boolean"
-		},
-		"title": {
-			"type": "string"
-		},
-		"type": {
 			"type": "string"
 		}
 	},

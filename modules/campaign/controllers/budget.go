@@ -43,7 +43,7 @@ func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter
 // 		url = /budget/:id
 //		method = put
 //		payload = budgetPayload
-//		200 = orm.Campaign
+//		200 = campaignResponse
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 //		middleware = authz.Authenticate
@@ -79,5 +79,5 @@ func (c *Controller) budget(ctx context.Context, w http.ResponseWriter, r *http.
 		c.BadResponse(w, errors.New("can not update budget"))
 		return
 	}
-	c.OKResponse(w, o)
+	c.OKResponse(w, createResponse(o))
 }
