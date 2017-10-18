@@ -90,6 +90,9 @@ func (l *createCampaignPayload) Validate(ctx context.Context, w http.ResponseWri
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
+		case "Title":
+			res["title"] = trans.E("invalid value")
+
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}
@@ -100,7 +103,7 @@ func (l *createCampaignPayload) Validate(ctx context.Context, w http.ResponseWri
 	return nil
 }
 
-func (l *updateCampaignPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+func (l *campaignStatus) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	err := func(in interface{}) error {
 		if v, ok := in.(interface {
 			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
@@ -119,6 +122,9 @@ func (l *updateCampaignPayload) Validate(ctx context.Context, w http.ResponseWri
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
+		case "Title":
+			res["title"] = trans.E("invalid value")
+
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}

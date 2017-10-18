@@ -25,7 +25,7 @@ type whiteBlackPayload struct {
 // 		url = /wb/:id
 //		method = put
 //		payload = whiteBlackPayload
-//		200 = orm.Campaign
+//		200 = campaignResponse
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 //		middleware = authz.Authenticate
@@ -67,13 +67,14 @@ func (c *Controller) updateWhiteBlackList(ctx context.Context, w http.ResponseWr
 		c.BadResponse(w, errors.New("can not update white/black list"))
 		return
 	}
-	c.OKResponse(w, o)
+	c.OKResponse(w, createResponse(o))
 }
 
 // deleteWhiteBlackList will update campaign white/black list
 // @Route {
 // 		url = /wblist/:id
 //		method = delete
+// 		200 = campaignResponse
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 //		middleware = authz.Authenticate
@@ -107,5 +108,5 @@ func (c *Controller) deleteWhiteBlackList(ctx context.Context, w http.ResponseWr
 		c.BadResponse(w, errors.New("can not delete white/black list"))
 		return
 	}
-	c.OKResponse(w, o)
+	c.OKResponse(w, createResponse(o))
 }
