@@ -35,47 +35,56 @@ type Controller struct {
 // @Validate{
 //}
 type createCampaignPayload struct {
-	Kind    orm.CampaignKind `json:"kind"`
-	Type    orm.CampaignType `json:"type"`
-	Status  bool             `json:"status"`
-	StartAt time.Time        `json:"start_at"`
-	EndAt   time.Time        `json:"end_at"`
-	Title   string           `json:"title" validate:"required,gt=5"`
-	H00     string           `json:"h00" hour:""`
-	H01     string           `json:"h01" hour:""`
-	H02     string           `json:"h02" hour:""`
-	H03     string           `json:"h03" hour:""`
-	H04     string           `json:"h04" hour:""`
-	H05     string           `json:"h05" hour:""`
-	H06     string           `json:"h06" hour:""`
-	H07     string           `json:"h07" hour:""`
-	H08     string           `json:"h08" hour:""`
-	H09     string           `json:"h09" hour:""`
-	H10     string           `json:"h10" hour:""`
-	H11     string           `json:"h11" hour:""`
-	H12     string           `json:"h12" hour:""`
-	H13     string           `json:"h13" hour:""`
-	H14     string           `json:"h14" hour:""`
-	H15     string           `json:"h15" hour:""`
-	H16     string           `json:"h16" hour:""`
-	H17     string           `json:"h17" hour:""`
-	H18     string           `json:"h18" hour:""`
-	H19     string           `json:"h19" hour:""`
-	H20     string           `json:"h20" hour:""`
-	H21     string           `json:"h21" hour:""`
-	H22     string           `json:"h22" hour:""`
-	H23     string           `json:"h23" hour:""`
+	Kind     orm.CampaignKind `json:"kind"`
+	Type     orm.CampaignType `json:"type"`
+	Status   bool             `json:"status"`
+	StartAt  time.Time        `json:"start_at"`
+	EndAt    time.Time        `json:"end_at"`
+	Title    string           `json:"title" validate:"required,gt=5"`
+	Schedule struct {
+		H00 string `json:"h00" hour:""`
+		H01 string `json:"h01" hour:""`
+		H02 string `json:"h02" hour:""`
+		H03 string `json:"h03" hour:""`
+		H04 string `json:"h04" hour:""`
+		H05 string `json:"h05" hour:""`
+		H06 string `json:"h06" hour:""`
+		H07 string `json:"h07" hour:""`
+		H08 string `json:"h08" hour:""`
+		H09 string `json:"h09" hour:""`
+		H10 string `json:"h10" hour:""`
+		H11 string `json:"h11" hour:""`
+		H12 string `json:"h12" hour:""`
+		H13 string `json:"h13" hour:""`
+		H14 string `json:"h14" hour:""`
+		H15 string `json:"h15" hour:""`
+		H16 string `json:"h16" hour:""`
+		H17 string `json:"h17" hour:""`
+		H18 string `json:"h18" hour:""`
+		H19 string `json:"h19" hour:""`
+		H20 string `json:"h20" hour:""`
+		H21 string `json:"h21" hour:""`
+		H22 string `json:"h22" hour:""`
+		H23 string `json:"h23" hour:""`
+	} `json:"schedule"`
 }
 
 func validateHours(m interface{}) bool {
 	v := reflect.ValueOf(m)
 	t := reflect.TypeOf(m)
 	for i := 0; i < t.NumField(); i++ {
+		if t.Field(i).Type.Kind() == reflect.Struct {
+			if validateHours(v.Field(i).Interface()) {
+				return true
+			}
+			continue
+		}
 		if _, ok := t.Field(i).Tag.Lookup("hour"); ok {
 			if reflect.Indirect(v).FieldByName(t.Field(i).Name).String() != "" {
 				return true
 			}
 		}
+
 	}
 	return false
 }
@@ -134,77 +143,77 @@ func (c Controller) createBase(ctx context.Context, w http.ResponseWriter, r *ht
 			EndAt:   p.EndAt,
 			Schedule: orm.ScheduleSheet{
 				H00: mysql.NullString{
-					String: p.H00,
-					Valid:  p.H00 != "",
+					String: p.Schedule.H00,
+					Valid:  p.Schedule.H00 != "",
 				}, H01: mysql.NullString{
-					String: p.H01,
-					Valid:  p.H01 != "",
+					String: p.Schedule.H01,
+					Valid:  p.Schedule.H01 != "",
 				}, H02: mysql.NullString{
-					String: p.H02,
-					Valid:  p.H02 != "",
+					String: p.Schedule.H02,
+					Valid:  p.Schedule.H02 != "",
 				}, H03: mysql.NullString{
-					String: p.H03,
-					Valid:  p.H03 != "",
+					String: p.Schedule.H03,
+					Valid:  p.Schedule.H03 != "",
 				}, H04: mysql.NullString{
-					String: p.H04,
-					Valid:  p.H04 != "",
+					String: p.Schedule.H04,
+					Valid:  p.Schedule.H04 != "",
 				}, H05: mysql.NullString{
-					String: p.H05,
-					Valid:  p.H05 != "",
+					String: p.Schedule.H05,
+					Valid:  p.Schedule.H05 != "",
 				}, H06: mysql.NullString{
-					String: p.H06,
-					Valid:  p.H06 != "",
+					String: p.Schedule.H06,
+					Valid:  p.Schedule.H06 != "",
 				}, H07: mysql.NullString{
-					String: p.H07,
-					Valid:  p.H07 != "",
+					String: p.Schedule.H07,
+					Valid:  p.Schedule.H07 != "",
 				}, H08: mysql.NullString{
-					String: p.H08,
-					Valid:  p.H08 != "",
+					String: p.Schedule.H08,
+					Valid:  p.Schedule.H08 != "",
 				}, H09: mysql.NullString{
-					String: p.H09,
-					Valid:  p.H09 != "",
+					String: p.Schedule.H09,
+					Valid:  p.Schedule.H09 != "",
 				}, H10: mysql.NullString{
-					String: p.H10,
-					Valid:  p.H10 != "",
+					String: p.Schedule.H10,
+					Valid:  p.Schedule.H10 != "",
 				}, H11: mysql.NullString{
-					String: p.H11,
-					Valid:  p.H11 != "",
+					String: p.Schedule.H11,
+					Valid:  p.Schedule.H11 != "",
 				}, H12: mysql.NullString{
-					String: p.H12,
-					Valid:  p.H12 != "",
+					String: p.Schedule.H12,
+					Valid:  p.Schedule.H12 != "",
 				}, H13: mysql.NullString{
-					String: p.H13,
-					Valid:  p.H13 != "",
+					String: p.Schedule.H13,
+					Valid:  p.Schedule.H13 != "",
 				}, H14: mysql.NullString{
-					String: p.H14,
-					Valid:  p.H14 != "",
+					String: p.Schedule.H14,
+					Valid:  p.Schedule.H14 != "",
 				}, H15: mysql.NullString{
-					String: p.H15,
-					Valid:  p.H15 != "",
+					String: p.Schedule.H15,
+					Valid:  p.Schedule.H15 != "",
 				}, H16: mysql.NullString{
-					String: p.H16,
-					Valid:  p.H16 != "",
+					String: p.Schedule.H16,
+					Valid:  p.Schedule.H16 != "",
 				}, H17: mysql.NullString{
-					String: p.H17,
-					Valid:  p.H17 != "",
+					String: p.Schedule.H17,
+					Valid:  p.Schedule.H17 != "",
 				}, H18: mysql.NullString{
-					String: p.H18,
-					Valid:  p.H18 != "",
+					String: p.Schedule.H18,
+					Valid:  p.Schedule.H18 != "",
 				}, H19: mysql.NullString{
-					String: p.H19,
-					Valid:  p.H19 != "",
+					String: p.Schedule.H19,
+					Valid:  p.Schedule.H19 != "",
 				}, H20: mysql.NullString{
-					String: p.H20,
-					Valid:  p.H20 != "",
+					String: p.Schedule.H20,
+					Valid:  p.Schedule.H20 != "",
 				}, H21: mysql.NullString{
-					String: p.H21,
-					Valid:  p.H21 != "",
+					String: p.Schedule.H21,
+					Valid:  p.Schedule.H21 != "",
 				}, H22: mysql.NullString{
-					String: p.H22,
-					Valid:  p.H22 != "",
+					String: p.Schedule.H22,
+					Valid:  p.Schedule.H22 != "",
 				}, H23: mysql.NullString{
-					String: p.H23,
-					Valid:  p.H23 != "",
+					String: p.Schedule.H23,
+					Valid:  p.Schedule.H23 != "",
 				},
 			},
 		},
@@ -230,34 +239,36 @@ func (c Controller) createBase(ctx context.Context, w http.ResponseWriter, r *ht
 // @Validate{
 //}
 type campaignStatus struct {
-	Status  bool      `json:"status" `
-	StartAt time.Time `json:"start_at" `
-	EndAt   time.Time `json:"end_at" `
-	Title   string    `json:"title"  validate:"required,gt=5"`
-	H00     string    `json:"h00" hour:""`
-	H01     string    `json:"h01" hour:""`
-	H02     string    `json:"h02" hour:""`
-	H03     string    `json:"h03" hour:""`
-	H04     string    `json:"h04" hour:""`
-	H05     string    `json:"h05" hour:""`
-	H06     string    `json:"h06" hour:""`
-	H07     string    `json:"h07" hour:""`
-	H08     string    `json:"h08" hour:""`
-	H09     string    `json:"h09" hour:""`
-	H10     string    `json:"h10" hour:""`
-	H11     string    `json:"h11" hour:""`
-	H12     string    `json:"h12" hour:""`
-	H13     string    `json:"h13" hour:""`
-	H14     string    `json:"h14" hour:""`
-	H15     string    `json:"h15" hour:""`
-	H16     string    `json:"h16" hour:""`
-	H17     string    `json:"h17" hour:""`
-	H18     string    `json:"h18" hour:""`
-	H19     string    `json:"h19" hour:""`
-	H20     string    `json:"h20" hour:""`
-	H21     string    `json:"h21" hour:""`
-	H22     string    `json:"h22" hour:""`
-	H23     string    `json:"h23" hour:""`
+	Status   bool      `json:"status" `
+	StartAt  time.Time `json:"start_at" `
+	EndAt    time.Time `json:"end_at" `
+	Title    string    `json:"title"  validate:"required,gt=5"`
+	Schedule struct {
+		H00 string `json:"h00" hour:""`
+		H01 string `json:"h01" hour:""`
+		H02 string `json:"h02" hour:""`
+		H03 string `json:"h03" hour:""`
+		H04 string `json:"h04" hour:""`
+		H05 string `json:"h05" hour:""`
+		H06 string `json:"h06" hour:""`
+		H07 string `json:"h07" hour:""`
+		H08 string `json:"h08" hour:""`
+		H09 string `json:"h09" hour:""`
+		H10 string `json:"h10" hour:""`
+		H11 string `json:"h11" hour:""`
+		H12 string `json:"h12" hour:""`
+		H13 string `json:"h13" hour:""`
+		H14 string `json:"h14" hour:""`
+		H15 string `json:"h15" hour:""`
+		H16 string `json:"h16" hour:""`
+		H17 string `json:"h17" hour:""`
+		H18 string `json:"h18" hour:""`
+		H19 string `json:"h19" hour:""`
+		H20 string `json:"h20" hour:""`
+		H21 string `json:"h21" hour:""`
+		H22 string `json:"h22" hour:""`
+		H23 string `json:"h23" hour:""`
+	} `json:"schedule"`
 }
 
 func (l *campaignStatus) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
@@ -310,77 +321,77 @@ func (c Controller) updateBase(ctx context.Context, w http.ResponseWriter, r *ht
 		EndAt:   p.EndAt,
 		Schedule: orm.ScheduleSheet{
 			H00: mysql.NullString{
-				String: p.H00,
-				Valid:  p.H00 != "",
+				String: p.Schedule.H00,
+				Valid:  p.Schedule.H00 != "",
 			}, H01: mysql.NullString{
-				String: p.H01,
-				Valid:  p.H01 != "",
+				String: p.Schedule.H01,
+				Valid:  p.Schedule.H01 != "",
 			}, H02: mysql.NullString{
-				String: p.H02,
-				Valid:  p.H02 != "",
+				String: p.Schedule.H02,
+				Valid:  p.Schedule.H02 != "",
 			}, H03: mysql.NullString{
-				String: p.H03,
-				Valid:  p.H03 != "",
+				String: p.Schedule.H03,
+				Valid:  p.Schedule.H03 != "",
 			}, H04: mysql.NullString{
-				String: p.H04,
-				Valid:  p.H04 != "",
+				String: p.Schedule.H04,
+				Valid:  p.Schedule.H04 != "",
 			}, H05: mysql.NullString{
-				String: p.H05,
-				Valid:  p.H05 != "",
+				String: p.Schedule.H05,
+				Valid:  p.Schedule.H05 != "",
 			}, H06: mysql.NullString{
-				String: p.H06,
-				Valid:  p.H06 != "",
+				String: p.Schedule.H06,
+				Valid:  p.Schedule.H06 != "",
 			}, H07: mysql.NullString{
-				String: p.H07,
-				Valid:  p.H07 != "",
+				String: p.Schedule.H07,
+				Valid:  p.Schedule.H07 != "",
 			}, H08: mysql.NullString{
-				String: p.H08,
-				Valid:  p.H08 != "",
+				String: p.Schedule.H08,
+				Valid:  p.Schedule.H08 != "",
 			}, H09: mysql.NullString{
-				String: p.H09,
-				Valid:  p.H09 != "",
+				String: p.Schedule.H09,
+				Valid:  p.Schedule.H09 != "",
 			}, H10: mysql.NullString{
-				String: p.H10,
-				Valid:  p.H10 != "",
+				String: p.Schedule.H10,
+				Valid:  p.Schedule.H10 != "",
 			}, H11: mysql.NullString{
-				String: p.H11,
-				Valid:  p.H11 != "",
+				String: p.Schedule.H11,
+				Valid:  p.Schedule.H11 != "",
 			}, H12: mysql.NullString{
-				String: p.H12,
-				Valid:  p.H12 != "",
+				String: p.Schedule.H12,
+				Valid:  p.Schedule.H12 != "",
 			}, H13: mysql.NullString{
-				String: p.H13,
-				Valid:  p.H13 != "",
+				String: p.Schedule.H13,
+				Valid:  p.Schedule.H13 != "",
 			}, H14: mysql.NullString{
-				String: p.H14,
-				Valid:  p.H14 != "",
+				String: p.Schedule.H14,
+				Valid:  p.Schedule.H14 != "",
 			}, H15: mysql.NullString{
-				String: p.H15,
-				Valid:  p.H15 != "",
+				String: p.Schedule.H15,
+				Valid:  p.Schedule.H15 != "",
 			}, H16: mysql.NullString{
-				String: p.H16,
-				Valid:  p.H16 != "",
+				String: p.Schedule.H16,
+				Valid:  p.Schedule.H16 != "",
 			}, H17: mysql.NullString{
-				String: p.H17,
-				Valid:  p.H17 != "",
+				String: p.Schedule.H17,
+				Valid:  p.Schedule.H17 != "",
 			}, H18: mysql.NullString{
-				String: p.H18,
-				Valid:  p.H18 != "",
+				String: p.Schedule.H18,
+				Valid:  p.Schedule.H18 != "",
 			}, H19: mysql.NullString{
-				String: p.H19,
-				Valid:  p.H19 != "",
+				String: p.Schedule.H19,
+				Valid:  p.Schedule.H19 != "",
 			}, H20: mysql.NullString{
-				String: p.H20,
-				Valid:  p.H20 != "",
+				String: p.Schedule.H20,
+				Valid:  p.Schedule.H20 != "",
 			}, H21: mysql.NullString{
-				String: p.H21,
-				Valid:  p.H21 != "",
+				String: p.Schedule.H21,
+				Valid:  p.Schedule.H21 != "",
 			}, H22: mysql.NullString{
-				String: p.H22,
-				Valid:  p.H22 != "",
+				String: p.Schedule.H22,
+				Valid:  p.Schedule.H22 != "",
 			}, H23: mysql.NullString{
-				String: p.H23,
-				Valid:  p.H23 != "",
+				String: p.Schedule.H23,
+				Valid:  p.Schedule.H23 != "",
 			}}}, ca)
 	if err == orm.ErrorStartDate {
 		c.BadResponse(w, e)
