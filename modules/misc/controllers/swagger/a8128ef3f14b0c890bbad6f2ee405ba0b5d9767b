@@ -1,0 +1,388 @@
+{
+	"properties": {
+		"active": {
+			"type": "boolean"
+		},
+		"attributes": {
+			"properties": {
+				"browser": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"cellular": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"device": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"iab": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"isp": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"manufacturer": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"os": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"region": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				}
+			},
+			"type": "object"
+		},
+		"budget": {
+			"type": "integer"
+		},
+		"cost_type": {
+			"type": "string"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"daily_limit": {
+			"type": "integer"
+		},
+		"domain_id": {
+			"type": "integer"
+		},
+		"end_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"kind": {
+			"type": "string"
+		},
+		"max_bid": {
+			"type": "integer"
+		},
+		"notify_email": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
+		"schedule": {
+			"properties": {
+				"h00": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h01": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h02": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h03": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h04": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h05": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h06": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h07": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h08": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h09": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h10": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h11": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h12": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h13": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h14": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h15": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h16": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h17": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h18": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h19": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h20": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h21": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h22": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				},
+				"h23": {
+					"properties": {
+						"String": {
+							"type": "string"
+						},
+						"Valid": {
+							"type": "boolean"
+						}
+					},
+					"type": "object"
+				}
+			},
+			"type": "object"
+		},
+		"start_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"status": {
+			"type": "boolean"
+		},
+		"title": {
+			"type": "string"
+		},
+		"type": {
+			"type": "string"
+		},
+		"updated_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"user_id": {
+			"type": "integer"
+		},
+		"white_black_id": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}
