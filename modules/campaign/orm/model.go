@@ -111,7 +111,7 @@ type CampaignStatus struct {
 	Status   bool          `json:"status" db:"status"`
 	StartAt  time.Time     `json:"start_at" db:"start_at"`
 	EndAt    time.Time     `json:"end_at" db:"end_at"`
-	Title    string        `json:"title" db:"title" validate:"required,gt=5"`
+	Title    string        `json:"title" db:"title" `
 	Schedule ScheduleSheet `json:"schedule" db:"-"`
 }
 

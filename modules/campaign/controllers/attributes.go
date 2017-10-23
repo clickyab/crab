@@ -61,7 +61,7 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 // 		url = /attributes/:id
 //		method = put
 //		payload = attributesPayload
-//		200 = campaignResponse
+//		200 = orm.Campaign
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 //		middleware = authz.Authenticate
@@ -97,5 +97,5 @@ func (c *Controller) attributes(ctx context.Context, w http.ResponseWriter, r *h
 		c.BadResponse(w, errors.New("can not update attributes"))
 		return
 	}
-	c.OKResponse(w, createResponse(o))
+	c.OKResponse(w, o)
 }
