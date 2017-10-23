@@ -448,7 +448,7 @@ func (c *Controller) finalize(ctx context.Context, w http.ResponseWriter, r *htt
 // 		url = /:id
 //		method = get
 //		resource = get-campaign:self
-//		200 = campaignResponse
+//		200 = orm.Campaign
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 //		middleware = authz.Authenticate
