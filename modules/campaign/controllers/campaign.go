@@ -124,7 +124,7 @@ func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.Respon
 //		method = post
 //		payload = createCampaignPayload
 //		middleware = authz.Authenticate
-//		200 = campaignResponse
+//		200 = orm.Campaign
 //		400 = controller.ErrorResponseSimple
 // }
 func (c Controller) createBase(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -292,7 +292,7 @@ func (l *campaignStatus) ValidateExtra(ctx context.Context, w http.ResponseWrite
 //		method = put
 //		payload = campaignStatus
 //		middleware = authz.Authenticate
-//		200 = campaignResponse
+//		200 = orm.Campaign
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
 //		resource = edit-campaign:self
@@ -414,7 +414,7 @@ func (c Controller) updateBase(ctx context.Context, w http.ResponseWriter, r *ht
 		return
 	}
 
-	c.OKResponse(w, createResponse(ca))
+	c.OKResponse(w, ca)
 
 }
 
@@ -478,5 +478,5 @@ func (c *Controller) get(ctx context.Context, w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	c.OKResponse(w, createResponse(campaign))
+	c.OKResponse(w, campaign)
 }
