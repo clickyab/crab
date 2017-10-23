@@ -97,7 +97,7 @@ func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.Respon
 		return errors.New("campaign should end after start")
 	}
 
-	if !validateHours(l) {
+	if !validateHours(l.Schedule) {
 		return errors.New("at least one object in schedule should be true")
 	}
 
