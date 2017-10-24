@@ -3,6 +3,7 @@
 // db/20170829140330_time.sql
 // db/20170903102708_campaign.sql
 // db/20171018070248_schedule.sql
+// db/20171024144357_campaign.sql
 // DO NOT EDIT!
 
 package migrations
@@ -130,6 +131,26 @@ func db20171018070248_scheduleSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20171024144357_campaignSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xce\xcd\x6a\x84\x30\x14\xc5\xf1\x7d\x9e\xe2\xec\x5c\x14\x9f\xa0\xab\x14\x23\x08\xb1\x5f\x26\x8b\xae\x4a\x9a\x5c\xf4\x52\x8d\xc1\xa4\xd8\xc7\x1f\x9c\x61\x06\x66\x37\xcb\xff\xe5\x1e\xf8\x89\xba\xc6\xd3\xc2\xe3\xe6\x0a\xc1\xa6\x23\x87\x0f\x0d\x8e\xc8\xe4\x0b\xaf\x11\x95\x4d\x15\x38\x83\xfe\xc9\xff\x15\x0a\xd8\x27\x8a\x28\x13\x67\x5c\x76\xc7\x13\x67\xb8\x94\x66\xa6\x20\xa4\x36\xea\x13\x46\xbe\x68\x05\xef\x96\xe4\x78\x8c\x19\xfd\x5b\xd3\xb5\x5f\xa0\x18\xbe\x5d\x81\xe9\x7a\x35\x18\xd9\xbf\xe3\xd5\x6a\x8d\x46\xb5\xd2\x6a\x73\x8e\x67\x71\x47\x6a\xd6\x3d\x5e\x51\x37\xd1\x71\x7c\xc8\xb4\xad\xf3\x4c\x01\x3f\xce\xff\x8a\x53\x00\x00\x00\xff\xff\x12\x2f\x8f\x3e\xea\x00\x00\x00"
+
+func db20171024144357_campaignSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20171024144357_campaignSql,
+		"db/20171024144357_campaign.sql",
+	)
+}
+
+func db20171024144357_campaignSql() (*asset, error) {
+	bytes, err := db20171024144357_campaignSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20171024144357_campaign.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -185,6 +206,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20170829140330_time.sql":     db20170829140330_timeSql,
 	"db/20170903102708_campaign.sql": db20170903102708_campaignSql,
 	"db/20171018070248_schedule.sql": db20171018070248_scheduleSql,
+	"db/20171024144357_campaign.sql": db20171024144357_campaignSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -232,6 +254,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20170829140330_time.sql":     &bintree{db20170829140330_timeSql, map[string]*bintree{}},
 		"20170903102708_campaign.sql": &bintree{db20170903102708_campaignSql, map[string]*bintree{}},
 		"20171018070248_schedule.sql": &bintree{db20171018070248_scheduleSql, map[string]*bintree{}},
+		"20171024144357_campaign.sql": &bintree{db20171024144357_campaignSql, map[string]*bintree{}},
 	}},
 }}
 
