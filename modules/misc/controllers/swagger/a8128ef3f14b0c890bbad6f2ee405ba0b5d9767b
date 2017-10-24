@@ -73,8 +73,16 @@
 			"type": "integer"
 		},
 		"end_at": {
-			"format": "dateTime",
-			"type": "string"
+			"properties": {
+				"Time": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
 		},
 		"id": {
 			"type": "integer"

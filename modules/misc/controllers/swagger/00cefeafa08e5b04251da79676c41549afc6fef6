@@ -3,6 +3,13 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
@@ -15,13 +22,6 @@
 				"name": "p",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": "",

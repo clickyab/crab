@@ -39,7 +39,7 @@ type createCampaignPayload struct {
 	Type     orm.CampaignType `json:"type"`
 	Status   bool             `json:"status"`
 	StartAt  time.Time        `json:"start_at"`
-	EndAt    time.Time        `json:"end_at"`
+	EndAt    mysql.NullTime   `json:"end_at"`
 	Title    string           `json:"title" validate:"required,gt=5"`
 	Schedule struct {
 		H00 string `json:"h00" hour:""`
@@ -93,7 +93,7 @@ func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.Respon
 	if l.StartAt.IsZero() {
 		return errors.New("campaign should start in future")
 	}
-	if !l.EndAt.IsZero() && l.StartAt.Unix() > l.EndAt.Unix() {
+	if !l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
 		return errors.New("campaign should end after start")
 	}
 
@@ -239,10 +239,10 @@ func (c Controller) createBase(ctx context.Context, w http.ResponseWriter, r *ht
 // @Validate{
 //}
 type campaignStatus struct {
-	Status   bool      `json:"status" `
-	StartAt  time.Time `json:"start_at" `
-	EndAt    time.Time `json:"end_at" `
-	Title    string    `json:"title"  validate:"required,gt=5"`
+	Status   bool           `json:"status"`
+	StartAt  time.Time      `json:"start_at"`
+	EndAt    mysql.NullTime `json:"end_at"`
+	Title    string         `json:"title"  validate:"required,gt=5"`
 	Schedule struct {
 		H00 string `json:"h00" hour:""`
 		H01 string `json:"h01" hour:""`
@@ -276,7 +276,7 @@ func (l *campaignStatus) ValidateExtra(ctx context.Context, w http.ResponseWrite
 	if l.StartAt.IsZero() {
 		return errors.New("campaign should start in future")
 	}
-	if !l.EndAt.IsZero() && l.StartAt.Unix() > l.EndAt.Unix() {
+	if !l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
 		return errors.New("campaign should end after start")
 	}
 

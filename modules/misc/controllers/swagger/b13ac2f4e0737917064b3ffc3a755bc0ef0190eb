@@ -1,8 +1,16 @@
 {
 	"properties": {
 		"end_at": {
-			"format": "dateTime",
-			"type": "string"
+			"properties": {
+				"Time": {
+					"format": "dateTime",
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
 		},
 		"kind": {
 			"type": "string"
