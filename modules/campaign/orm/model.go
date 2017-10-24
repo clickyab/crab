@@ -156,5 +156,7 @@ func (m *Manager) FindCampaignByIDDomain(id, d int64) (*Campaign, error) {
 		return nil, err
 	}
 
+	m.attachAttribute(&res)
+	m.attachSchedule(&res)
 	return &res, nil
 }
