@@ -52,7 +52,7 @@ func load(data map[string]interface{}) map[string]interface{} {
 }
 
 // Routes return the route registered with this
-func (u *Controller) Routes(r router.Mux) {
+func (u *Controller) Routes(r framework.Mux) {
 	// This is a special route.
 	if !swaggerRoute.Bool() {
 		return

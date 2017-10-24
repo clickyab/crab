@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/clickyab/services/framework/middleware"
+	"github.com/clickyab/services/trans"
 	"github.com/sirupsen/logrus"
 	validator "gopkg.in/go-playground/validator.v9"
 )
@@ -31,6 +32,12 @@ func (p *assignBannerPayload) Validate(ctx context.Context, w http.ResponseWrite
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
+		case "Src":
+			res["src"] = trans.E("invalid value")
+
+		case "Utm":
+			res["utm"] = trans.E("invalid value")
+
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}

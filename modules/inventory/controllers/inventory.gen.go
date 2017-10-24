@@ -17,7 +17,7 @@ import (
 var once = sync.Once{}
 
 // Routes return the route registered with this
-func (u *Controller) Routes(r router.Mux) {
+func (u *Controller) Routes(r framework.Mux) {
 	once.Do(func() {
 
 		groupMiddleware := []framework.Middleware{

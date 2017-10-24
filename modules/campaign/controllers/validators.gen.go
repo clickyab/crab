@@ -71,7 +71,7 @@ func (l *budgetPayload) Validate(ctx context.Context, w http.ResponseWriter, r *
 	return nil
 }
 
-func (l *createCampaignPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+func (l *campaignStatus) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	err := func(in interface{}) error {
 		if v, ok := in.(interface {
 			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
@@ -103,7 +103,7 @@ func (l *createCampaignPayload) Validate(ctx context.Context, w http.ResponseWri
 	return nil
 }
 
-func (l *campaignStatus) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+func (l *createCampaignPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	err := func(in interface{}) error {
 		if v, ok := in.(interface {
 			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
