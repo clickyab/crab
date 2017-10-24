@@ -93,7 +93,7 @@ func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.Respon
 	if l.StartAt.IsZero() {
 		return errors.New("campaign should start in future")
 	}
-	if !l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
+	if l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
 		return errors.New("campaign should end after start")
 	}
 
@@ -276,7 +276,7 @@ func (l *campaignStatus) ValidateExtra(ctx context.Context, w http.ResponseWrite
 	if l.StartAt.IsZero() {
 		return errors.New("campaign should start in future")
 	}
-	if !l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
+	if l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
 		return errors.New("campaign should end after start")
 	}
 
