@@ -1,16 +1,8 @@
 {
 	"properties": {
 		"end_at": {
-			"properties": {
-				"Time": {
-					"format": "dateTime",
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"format": "dateTime",
+			"type": "string"
 		},
 		"schedule": {
 			"properties": {
