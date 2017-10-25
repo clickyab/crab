@@ -38,7 +38,7 @@ const (
 var (
 	errTooSoon = errors.New("code has been sent")
 	exp        = config.RegisterDuration("crab.modules.user.verification.ttl", 5*time.Hour, "how long the token should be saved")
-	resend     = config.RegisterDuration("crab.modules.user.verification.resend", 2*time.Minute, "Duration between resend")
+	resend     = config.RegisterDuration("crab.modules.user.verification.resend", 1*time.Minute, "Duration between resend")
 )
 
 // verifyId is verify code
