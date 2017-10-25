@@ -51,5 +51,6 @@ func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *htt
 		return
 	}
 	assert.Nil(e)
+	u.OKResponse(w, nil)
 
 }

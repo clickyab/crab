@@ -119,6 +119,7 @@ func (ctrl *Controller) verifyResend(ctx context.Context, w http.ResponseWriter,
 		return
 	}
 	assert.Nil(e)
+	ctrl.OKResponse(w, nil)
 }
 
 func verifyEmail(u *aaa.User, r *http.Request) error {
