@@ -17,6 +17,7 @@
 // db/20171010071611_platform_seed.sql
 // db/20171010072614_isp.sql
 // db/20171010073115_isp_seed.sql
+// db/20171028132903_manu_fix.sql
 // DO NOT EDIT!
 
 package migrations
@@ -424,6 +425,26 @@ func db20171010073115_isp_seedSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20171028132903_manu_fixSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xce\x41\x4b\x80\x30\x1c\x05\xf0\xfb\x3e\xc5\xbb\x59\x84\x07\x8f\xd1\x69\x99\xe4\x61\x18\x99\x76\xde\xdc\xfe\xe5\x48\xe7\xd8\x26\xf6\xf1\x43\xc4\xa0\x43\xe0\xf1\x3d\xde\x83\x1f\xcb\x73\xdc\xcd\xf6\x33\xa8\x44\xe8\xfd\x1e\xdf\x5e\x05\xac\x43\x24\x9d\xec\xe2\x90\xf5\x3e\x83\x8d\xa0\x6f\xd2\x6b\x22\x83\x6d\x24\x87\x34\xda\x88\xe3\xb7\x8f\x6c\x84\xf2\x7e\xb2\x64\x18\x17\x5d\xd5\xa2\xe3\x8f\xa2\xc2\xac\xdc\xfa\xa1\x74\x5a\x03\x85\x88\xb2\xe6\xcd\x73\x05\x39\x04\xe5\x8c\x84\x74\x6a\x26\x89\x77\xde\x96\x35\x6f\x6f\x8a\xfb\xe2\x16\xcd\x4b\x87\xa6\x17\xe2\x81\xfd\x81\x3d\x2d\x9b\x3b\x69\xbf\xae\xbd\xbc\x24\x0b\xcb\x34\x91\xc1\xa0\xf4\xd7\x05\xdd\xa1\x3a\x91\xff\xe9\xd8\x4f\x00\x00\x00\xff\xff\xb2\xf9\x57\x58\x39\x01\x00\x00"
+
+func db20171028132903_manu_fixSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20171028132903_manu_fixSql,
+		"db/20171028132903_manu_fix.sql",
+	)
+}
+
+func db20171028132903_manu_fixSql() (*asset, error) {
+	bytes, err := db20171028132903_manu_fixSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20171028132903_manu_fix.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -476,23 +497,24 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"db/20170829082211_manufacturer.sql":  db20170829082211_manufacturerSql,
-	"db/20170829095647_os.sql":            db20170829095647_osSql,
-	"db/20170829112137_isp.sql":           db20170829112137_ispSql,
-	"db/20170829113922_categories.sql":    db20170829113922_categoriesSql,
-	"db/20170902123703_browser.sql":       db20170902123703_browserSql,
-	"db/20170906122134_region.sql":        db20170906122134_regionSql,
-	"db/20171009115954_manufacturer.sql":  db20171009115954_manufacturerSql,
-	"db/20171009134101_manseed.sql":       db20171009134101_manseedSql,
-	"db/20171009151239_browser.sql":       db20171009151239_browserSql,
-	"db/20171009152052_browser_seed.sql":  db20171009152052_browser_seedSql,
-	"db/20171010063508_category.sql":      db20171010063508_categorySql,
-	"db/20171010065045_os.sql":            db20171010065045_osSql,
-	"db/20171010065452_os_seed.sql":       db20171010065452_os_seedSql,
-	"db/20171010071225_platform.sql":      db20171010071225_platformSql,
+	"db/20170829082211_manufacturer.sql": db20170829082211_manufacturerSql,
+	"db/20170829095647_os.sql": db20170829095647_osSql,
+	"db/20170829112137_isp.sql": db20170829112137_ispSql,
+	"db/20170829113922_categories.sql": db20170829113922_categoriesSql,
+	"db/20170902123703_browser.sql": db20170902123703_browserSql,
+	"db/20170906122134_region.sql": db20170906122134_regionSql,
+	"db/20171009115954_manufacturer.sql": db20171009115954_manufacturerSql,
+	"db/20171009134101_manseed.sql": db20171009134101_manseedSql,
+	"db/20171009151239_browser.sql": db20171009151239_browserSql,
+	"db/20171009152052_browser_seed.sql": db20171009152052_browser_seedSql,
+	"db/20171010063508_category.sql": db20171010063508_categorySql,
+	"db/20171010065045_os.sql": db20171010065045_osSql,
+	"db/20171010065452_os_seed.sql": db20171010065452_os_seedSql,
+	"db/20171010071225_platform.sql": db20171010071225_platformSql,
 	"db/20171010071611_platform_seed.sql": db20171010071611_platform_seedSql,
-	"db/20171010072614_isp.sql":           db20171010072614_ispSql,
-	"db/20171010073115_isp_seed.sql":      db20171010073115_isp_seedSql,
+	"db/20171010072614_isp.sql": db20171010072614_ispSql,
+	"db/20171010073115_isp_seed.sql": db20171010073115_isp_seedSql,
+	"db/20171028132903_manu_fix.sql": db20171028132903_manu_fixSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -534,26 +556,26 @@ type bintree struct {
 	Func     func() (*asset, error)
 	Children map[string]*bintree
 }
-
 var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
-		"20170829082211_manufacturer.sql":  &bintree{db20170829082211_manufacturerSql, map[string]*bintree{}},
-		"20170829095647_os.sql":            &bintree{db20170829095647_osSql, map[string]*bintree{}},
-		"20170829112137_isp.sql":           &bintree{db20170829112137_ispSql, map[string]*bintree{}},
-		"20170829113922_categories.sql":    &bintree{db20170829113922_categoriesSql, map[string]*bintree{}},
-		"20170902123703_browser.sql":       &bintree{db20170902123703_browserSql, map[string]*bintree{}},
-		"20170906122134_region.sql":        &bintree{db20170906122134_regionSql, map[string]*bintree{}},
-		"20171009115954_manufacturer.sql":  &bintree{db20171009115954_manufacturerSql, map[string]*bintree{}},
-		"20171009134101_manseed.sql":       &bintree{db20171009134101_manseedSql, map[string]*bintree{}},
-		"20171009151239_browser.sql":       &bintree{db20171009151239_browserSql, map[string]*bintree{}},
-		"20171009152052_browser_seed.sql":  &bintree{db20171009152052_browser_seedSql, map[string]*bintree{}},
-		"20171010063508_category.sql":      &bintree{db20171010063508_categorySql, map[string]*bintree{}},
-		"20171010065045_os.sql":            &bintree{db20171010065045_osSql, map[string]*bintree{}},
-		"20171010065452_os_seed.sql":       &bintree{db20171010065452_os_seedSql, map[string]*bintree{}},
-		"20171010071225_platform.sql":      &bintree{db20171010071225_platformSql, map[string]*bintree{}},
+		"20170829082211_manufacturer.sql": &bintree{db20170829082211_manufacturerSql, map[string]*bintree{}},
+		"20170829095647_os.sql": &bintree{db20170829095647_osSql, map[string]*bintree{}},
+		"20170829112137_isp.sql": &bintree{db20170829112137_ispSql, map[string]*bintree{}},
+		"20170829113922_categories.sql": &bintree{db20170829113922_categoriesSql, map[string]*bintree{}},
+		"20170902123703_browser.sql": &bintree{db20170902123703_browserSql, map[string]*bintree{}},
+		"20170906122134_region.sql": &bintree{db20170906122134_regionSql, map[string]*bintree{}},
+		"20171009115954_manufacturer.sql": &bintree{db20171009115954_manufacturerSql, map[string]*bintree{}},
+		"20171009134101_manseed.sql": &bintree{db20171009134101_manseedSql, map[string]*bintree{}},
+		"20171009151239_browser.sql": &bintree{db20171009151239_browserSql, map[string]*bintree{}},
+		"20171009152052_browser_seed.sql": &bintree{db20171009152052_browser_seedSql, map[string]*bintree{}},
+		"20171010063508_category.sql": &bintree{db20171010063508_categorySql, map[string]*bintree{}},
+		"20171010065045_os.sql": &bintree{db20171010065045_osSql, map[string]*bintree{}},
+		"20171010065452_os_seed.sql": &bintree{db20171010065452_os_seedSql, map[string]*bintree{}},
+		"20171010071225_platform.sql": &bintree{db20171010071225_platformSql, map[string]*bintree{}},
 		"20171010071611_platform_seed.sql": &bintree{db20171010071611_platform_seedSql, map[string]*bintree{}},
-		"20171010072614_isp.sql":           &bintree{db20171010072614_ispSql, map[string]*bintree{}},
-		"20171010073115_isp_seed.sql":      &bintree{db20171010073115_isp_seedSql, map[string]*bintree{}},
+		"20171010072614_isp.sql": &bintree{db20171010072614_ispSql, map[string]*bintree{}},
+		"20171010073115_isp_seed.sql": &bintree{db20171010073115_isp_seedSql, map[string]*bintree{}},
+		"20171028132903_manu_fix.sql": &bintree{db20171028132903_manu_fixSql, map[string]*bintree{}},
 	}},
 }}
 
@@ -603,3 +625,4 @@ func _filePath(dir, name string) string {
 	cannonicalName := strings.Replace(name, "\\", "/", -1)
 	return filepath.Join(append([]string{dir}, strings.Split(cannonicalName, "/")...)...)
 }
+

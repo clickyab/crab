@@ -13,7 +13,6 @@ import (
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/array"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
@@ -26,10 +25,9 @@ type attributesPayload struct {
 }
 
 func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-
 	queryGen := func(t string, s []string) string {
 		m := len(s)
-		return fmt.Sprintf(`select count(id) as total from %s where name in (%s)`, t, strings.Repeat("?,", m)[:2*m-1])
+		return fmt.Sprintf(`select count(name) as total from %s where name in (%s)`, t, strings.Repeat("?,", m)[:2*m-1])
 	}
 
 	if array.StringInArray(orm.Foreign, l.Region...) && len(l.Region) > 1 {
@@ -38,16 +36,23 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 	o := asset.NewOrmManager()
 
 	// TODO: add other validation field
-	stringArrays := map[string]mysql.StringJSONArray{asset.ISPTableFull: l.ISP, asset.OSTableFull: l.OS, asset.BrowserTableFull: l.Browser, asset.CategoryTableFull: l.IAB, asset.ManufacturerTableFull: l.Manufacturer}
+	stringArrays := map[string][]string{asset.ISPTableFull: l.ISP, asset.OSTableFull: l.OS, asset.BrowserTableFull: l.Browser, asset.CategoryTableFull: l.IAB,
+		asset.ManufacturerTableFull: l.Manufacturer}
 	for i := range stringArrays {
 		if len(stringArrays[i]) == 0 {
 			delete(stringArrays, i)
 		}
 	}
 
-	for i := range stringArrays {
-		if t, err := o.GetRDbMap().SelectInt(queryGen(i, stringArrays[i]), stringArrays[i]); err != nil && int64(len(stringArrays[i])) != t {
-			return fmt.Errorf("%s is not valid", i)
+	for k, v := range stringArrays {
+		values := make([]interface{}, 0)
+		for i := range v {
+			values = append(values, v[i])
+		}
+
+		if t, err := o.GetRDbMap().SelectInt(queryGen(k, v), values...); err != nil && int64(len(v)) != t {
+			logrus.Warn(err)
+			return fmt.Errorf("%s is not valid", k)
 		}
 	}
 
@@ -70,6 +75,7 @@ func (c *Controller) attributes(ctx context.Context, w http.ResponseWriter, r *h
 
 	if err != nil || id < 1 {
 		c.BadResponse(w, errors.New("id is not valid"))
+		return
 	}
 	db := orm.NewOrmManager()
 	o, err := db.FindCampaignByID(id)
