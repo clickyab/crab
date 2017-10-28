@@ -287,14 +287,14 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"db/20170902105059_wlbl.sql":      db20170902105059_wlblSql,
+	"db/20170902105059_wlbl.sql": db20170902105059_wlblSql,
 	"db/20170910053350_publisher.sql": db20170910053350_publisherSql,
 	"db/20170927075829_invemtory.sql": db20170927075829_invemtorySql,
 	"db/20171002100931_inventory.sql": db20171002100931_inventorySql,
-	"db/20171003071731_seed.sql":      db20171003071731_seedSql,
+	"db/20171003071731_seed.sql": db20171003071731_seedSql,
 	"db/20171003123737_inventory.sql": db20171003123737_inventorySql,
 	"db/20171007075043_inventory.sql": db20171007075043_inventorySql,
-	"db/20171007075314_seed.sql":      db20171007075314_seedSql,
+	"db/20171007075314_seed.sql": db20171007075314_seedSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -336,17 +336,16 @@ type bintree struct {
 	Func     func() (*asset, error)
 	Children map[string]*bintree
 }
-
 var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
-		"20170902105059_wlbl.sql":      &bintree{db20170902105059_wlblSql, map[string]*bintree{}},
+		"20170902105059_wlbl.sql": &bintree{db20170902105059_wlblSql, map[string]*bintree{}},
 		"20170910053350_publisher.sql": &bintree{db20170910053350_publisherSql, map[string]*bintree{}},
 		"20170927075829_invemtory.sql": &bintree{db20170927075829_invemtorySql, map[string]*bintree{}},
 		"20171002100931_inventory.sql": &bintree{db20171002100931_inventorySql, map[string]*bintree{}},
-		"20171003071731_seed.sql":      &bintree{db20171003071731_seedSql, map[string]*bintree{}},
+		"20171003071731_seed.sql": &bintree{db20171003071731_seedSql, map[string]*bintree{}},
 		"20171003123737_inventory.sql": &bintree{db20171003123737_inventorySql, map[string]*bintree{}},
 		"20171007075043_inventory.sql": &bintree{db20171007075043_inventorySql, map[string]*bintree{}},
-		"20171007075314_seed.sql":      &bintree{db20171007075314_seedSql, map[string]*bintree{}},
+		"20171007075314_seed.sql": &bintree{db20171007075314_seedSql, map[string]*bintree{}},
 	}},
 }}
 
@@ -396,3 +395,4 @@ func _filePath(dir, name string) string {
 	cannonicalName := strings.Replace(name, "\\", "/", -1)
 	return filepath.Join(append([]string{dir}, strings.Split(cannonicalName, "/")...)...)
 }
+
