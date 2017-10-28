@@ -13,6 +13,7 @@ import (
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/array"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
@@ -36,22 +37,19 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 	}
 	o := asset.NewOrmManager()
 
-	if t, err := o.GetRDbMap().SelectInt(queryGen(asset.ISPTableFull, l.ISP), l.ISP); err != nil && int64(len(l.ISP)) != t {
-		return errors.New("isp is not valid")
+	// TODO: add other validation field
+	stringArrays := map[string]mysql.StringJSONArray{asset.ISPTableFull: l.ISP, asset.OSTableFull: l.OS, asset.BrowserTableFull: l.Browser, asset.CategoryTableFull: l.IAB, asset.ManufacturerTableFull: l.Manufacturer}
+	for i := range stringArrays {
+		if len(stringArrays[i]) == 0 {
+			delete(stringArrays, i)
+		}
 	}
-	if t, err := o.GetRDbMap().SelectInt(queryGen(asset.OSTableFull, l.OS), l.OS); err != nil && int64(len(l.OS)) != t {
-		return errors.New("os is not valid")
+
+	for i := range stringArrays {
+		if t, err := o.GetRDbMap().SelectInt(queryGen(i, stringArrays[i]), stringArrays[i]); err != nil && int64(len(stringArrays[i])) != t {
+			return fmt.Errorf("%s is not valid", i)
+		}
 	}
-	if t, err := o.GetRDbMap().SelectInt(queryGen(asset.BrowserTableFull, l.Browser), l.Browser); err != nil && int64(len(l.Browser)) != t {
-		return errors.New("browsers is not valid")
-	}
-	if t, err := o.GetRDbMap().SelectInt(queryGen(asset.CategoryTableFull, l.IAB), l.IAB); err != nil && int64(len(l.IAB)) != t {
-		return errors.New("iab is not valid")
-	}
-	if t, err := o.GetRDbMap().SelectInt(queryGen(asset.ManufacturerTableFull, l.Manufacturer), l.Manufacturer); err != nil && int64(len(l.Manufacturer)) != t {
-		return errors.New("manufacturer is not valid")
-	}
-	// TODO: Validate other fields
 
 	return nil
 }
