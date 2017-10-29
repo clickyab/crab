@@ -111,13 +111,13 @@ func (m *Manager) ListManufacturersWithPagination(offset, perPage int) []Manufac
 	return m.ListManufacturersWithPaginationFilter(offset, perPage, "")
 }
 
-// FindManufacturerByBrand return the Manufacturer base on its brand
-func (m *Manager) FindManufacturerByBrand(b string) (*Manufacturer, error) {
+// FindManufacturerByName return the Manufacturer base on its name
+func (m *Manager) FindManufacturerByName(n string) (*Manufacturer, error) {
 	var res Manufacturer
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE brand=?", ManufacturerTableFull),
-		b,
+		fmt.Sprintf("SELECT * FROM %s WHERE name=?", ManufacturerTableFull),
+		n,
 	)
 
 	if err != nil {
