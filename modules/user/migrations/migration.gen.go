@@ -17,6 +17,7 @@
 // db/20170913075842_rp_seeds.sql
 // db/20170930115925_perm_seed.sql
 // db/20171006182155_avatar.sql
+// db/20171030084043_perm.sql
 // DO NOT EDIT!
 
 package migrations
@@ -424,6 +425,26 @@ func db20171006182155_avatarSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20171030084043_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xb4\x90\x3f\x4f\xc3\x30\x14\xc4\xf7\x7c\x8a\x53\x17\x37\xc2\x1d\xe8\x5a\x31\x54\x8a\x11\x91\x42\x22\xf2\x87\x8e\x91\x1b\x3f\x5a\x8b\xd4\xb6\x6c\x57\xe5\xe3\xa3\xb4\x05\x04\x53\x17\x16\xcb\x77\x7a\x4f\xf7\xee\x97\x2c\x16\xb8\x3b\xe8\x9d\x97\x91\xd0\xb9\x49\x36\x2f\x05\xb4\x41\xa0\x21\x6a\x6b\xc0\x3a\xc7\xa0\x03\xe8\x83\x86\x63\x24\x85\xd3\x9e\x0c\xe2\x5e\x07\x5c\xf6\xa6\x21\x1d\x20\x9d\x1b\x35\xa9\x24\x2f\x1b\x51\xb7\xc8\xcb\xb6\x82\xb7\x23\xf5\x8e\xfc\x41\x87\xa0\xad\x99\x9f\xb5\x56\x1c\x93\xc7\x11\x06\xeb\x88\x63\xf0\x24\x23\xa9\x5e\x46\x8e\xa3\x53\xd7\x7f\x8a\xd7\x75\xd1\x89\x06\xf3\x7b\xce\x76\x14\xfb\xad\x34\x86\x3c\xe3\x2c\xd0\xf8\xc6\x78\x59\x6d\xe6\xe9\xe5\x4d\x57\xff\x90\xba\xbc\x21\xf5\x17\xbd\xcc\x9e\xcc\x17\xbf\x6f\x78\x93\x79\x13\x3e\x6f\xc7\x91\x14\xb6\x72\x78\x4f\x32\x51\x88\x56\xe0\xb1\xae\x9e\xff\x96\xc1\xe6\x49\xd4\x02\xd7\x4a\xc8\xcb\x09\xcf\x32\xc5\xba\xcc\xce\xf5\x1e\x66\x3f\x47\xcf\x56\xc9\x67\x00\x00\x00\xff\xff\xb3\xcd\x5f\x57\xdf\x01\x00\x00"
+
+func db20171030084043_permSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20171030084043_permSql,
+		"db/20171030084043_perm.sql",
+	)
+}
+
+func db20171030084043_permSql() (*asset, error) {
+	bytes, err := db20171030084043_permSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20171030084043_perm.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -483,6 +504,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20170812113047_fixprofile.sql":         db20170812113047_fixprofileSql,
 	"db/20170812181852_users.sql":              db20170812181852_usersSql,
 	"db/20170814081543_consulary_customer.sql": db20170814081543_consulary_customerSql,
+<<<<<<< HEAD
 	"db/20170830131111_fixrolepermission.sql":  db20170830131111_fixrolepermissionSql,
 	"db/20170902055834_fix_user.sql":           db20170902055834_fix_userSql,
 	"db/20170902104216_user_fix2.sql":          db20170902104216_user_fix2Sql,
@@ -493,6 +515,19 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20170913075842_rp_seeds.sql":           db20170913075842_rp_seedsSql,
 	"db/20170930115925_perm_seed.sql":          db20170930115925_perm_seedSql,
 	"db/20171006182155_avatar.sql":             db20171006182155_avatarSql,
+=======
+	"db/20170830131111_fixrolepermission.sql": db20170830131111_fixrolepermissionSql,
+	"db/20170902055834_fix_user.sql": db20170902055834_fix_userSql,
+	"db/20170902104216_user_fix2.sql": db20170902104216_user_fix2Sql,
+	"db/20170905075616_addfieldtoprofile.sql": db20170905075616_addfieldtoprofileSql,
+	"db/20170906072419_fix_users.sql": db20170906072419_fix_usersSql,
+	"db/20170912055417_parent.sql": db20170912055417_parentSql,
+	"db/20170912065827_fixrole.sql": db20170912065827_fixroleSql,
+	"db/20170913075842_rp_seeds.sql": db20170913075842_rp_seedsSql,
+	"db/20170930115925_perm_seed.sql": db20170930115925_perm_seedSql,
+	"db/20171006182155_avatar.sql": db20171006182155_avatarSql,
+	"db/20171030084043_perm.sql": db20171030084043_permSql,
+>>>>>>> add get campaign ads route
 }
 
 // AssetDir returns the file names below a certain
@@ -544,6 +579,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20170812113047_fixprofile.sql":         &bintree{db20170812113047_fixprofileSql, map[string]*bintree{}},
 		"20170812181852_users.sql":              &bintree{db20170812181852_usersSql, map[string]*bintree{}},
 		"20170814081543_consulary_customer.sql": &bintree{db20170814081543_consulary_customerSql, map[string]*bintree{}},
+<<<<<<< HEAD
 		"20170830131111_fixrolepermission.sql":  &bintree{db20170830131111_fixrolepermissionSql, map[string]*bintree{}},
 		"20170902055834_fix_user.sql":           &bintree{db20170902055834_fix_userSql, map[string]*bintree{}},
 		"20170902104216_user_fix2.sql":          &bintree{db20170902104216_user_fix2Sql, map[string]*bintree{}},
@@ -554,6 +590,19 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20170913075842_rp_seeds.sql":           &bintree{db20170913075842_rp_seedsSql, map[string]*bintree{}},
 		"20170930115925_perm_seed.sql":          &bintree{db20170930115925_perm_seedSql, map[string]*bintree{}},
 		"20171006182155_avatar.sql":             &bintree{db20171006182155_avatarSql, map[string]*bintree{}},
+=======
+		"20170830131111_fixrolepermission.sql": &bintree{db20170830131111_fixrolepermissionSql, map[string]*bintree{}},
+		"20170902055834_fix_user.sql": &bintree{db20170902055834_fix_userSql, map[string]*bintree{}},
+		"20170902104216_user_fix2.sql": &bintree{db20170902104216_user_fix2Sql, map[string]*bintree{}},
+		"20170905075616_addfieldtoprofile.sql": &bintree{db20170905075616_addfieldtoprofileSql, map[string]*bintree{}},
+		"20170906072419_fix_users.sql": &bintree{db20170906072419_fix_usersSql, map[string]*bintree{}},
+		"20170912055417_parent.sql": &bintree{db20170912055417_parentSql, map[string]*bintree{}},
+		"20170912065827_fixrole.sql": &bintree{db20170912065827_fixroleSql, map[string]*bintree{}},
+		"20170913075842_rp_seeds.sql": &bintree{db20170913075842_rp_seedsSql, map[string]*bintree{}},
+		"20170930115925_perm_seed.sql": &bintree{db20170930115925_perm_seedSql, map[string]*bintree{}},
+		"20171006182155_avatar.sql": &bintree{db20171006182155_avatarSql, map[string]*bintree{}},
+		"20171030084043_perm.sql": &bintree{db20171030084043_permSql, map[string]*bintree{}},
+>>>>>>> add get campaign ads route
 	}},
 }}
 

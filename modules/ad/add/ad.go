@@ -3,6 +3,9 @@ package add
 import (
 	"time"
 
+	"fmt"
+
+	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
 )
 
@@ -95,4 +98,35 @@ func (m *Manager) CreateUpdateCampaignNormalBanner(ads []*Ad) ([]Ad, error) {
 		res = append(res, *ads[i])
 	}
 	return res, nil
+}
+
+// AdUser ad user obj
+type AdUser struct {
+	Ad
+	UserID int64 `json:"user_id" db:"user_id"`
+}
+
+// AdsUserSlice slice for ad user
+type AdsUserSlice []AdUser
+
+// GetAdsByCampaignID return the Ad base on its campaign id
+func (m *Manager) GetAdsByCampaignID(cpID int64, d int64) ([]AdUser, int64) {
+	var res []AdUser
+	var userID int64
+	_, err := m.GetRDbMap().Select(
+		&res,
+		fmt.Sprintf("SELECT a.*,c.user_id FROM %s AS a "+
+			"INNER JOIN %s AS c ON c.id=a.campaign_id "+
+			"WHERE a.campaign_id=? AND c.domain_id=?",
+			AdTableFull,
+			orm.CampaignTableFull,
+		),
+		cpID,
+		d,
+	)
+	assert.Nil(err)
+	if len(res) > 0 {
+		userID = res[0].UserID
+	}
+	return res, userID
 }

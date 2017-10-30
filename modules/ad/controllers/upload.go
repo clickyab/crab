@@ -119,7 +119,6 @@ func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.Response
 //		200 = add.Ad
 //		400 = controller.ErrorResponseSimple
 //		404 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
 // }
 func (c Controller) assignNormalBanner(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	currentUser := authz.MustGetUser(ctx)

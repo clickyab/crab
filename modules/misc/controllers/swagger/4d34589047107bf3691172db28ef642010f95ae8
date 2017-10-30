@@ -1,70 +1,15 @@
 {
 	"get": {
-		"description": "",
+		"description": "getCampaignAds get all campaign ads",
 		"parameters": [
 			{
-<<<<<<< HEAD
-				"description": " count per page",
-=======
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": "",
->>>>>>> add get campaign ads route
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
-				"required": false,
+				"in": "path",
+				"name": "id",
+				"required": true,
 				"type": "string"
 			},
 			{
-<<<<<<< HEAD
-				"description": " search the name field",
-				"in": "query",
-				"name": "name",
-=======
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
->>>>>>> add get campaign ads route
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-<<<<<<< HEAD
-				"description": "",
-				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-=======
->>>>>>> add get campaign ads route
 				"description": "the security token, get it from login route",
 				"in": "header",
 				"name": "token",
@@ -76,7 +21,13 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_listInventoryResponse"
+					"$ref": "#/definitions/add_AdsUserSlice"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			},
 			"401": {
@@ -123,6 +74,12 @@
 					},
 					"title": "forbidden",
 					"type": "object"
+				}
+			},
+			"404": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},
