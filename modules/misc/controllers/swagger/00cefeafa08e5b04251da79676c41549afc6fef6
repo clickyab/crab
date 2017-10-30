@@ -3,18 +3,7 @@
 		"description": "",
 		"parameters": [
 			{
-<<<<<<< HEAD
 				"description": " count per page",
-=======
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": "",
->>>>>>> add get campaign ads route
 				"in": "query",
 				"name": "c",
 				"required": false,
@@ -28,22 +17,23 @@
 				"type": "int"
 			},
 			{
-				"description": " search the domain field",
+				"description": "",
 				"in": "query",
-				"name": "domain",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
 			{
-<<<<<<< HEAD
 				"description": " search the name field",
 				"in": "query",
 				"name": "name",
-=======
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the domain field",
 				"in": "query",
 				"name": "domain",
->>>>>>> add get campaign ads route
 				"required": false,
 				"type": "string"
 			},
@@ -55,16 +45,6 @@
 				"type": "string"
 			},
 			{
-<<<<<<< HEAD
-				"description": "",
-				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-=======
->>>>>>> add get campaign ads route
 				"description": "the security token, get it from login route",
 				"in": "header",
 				"name": "token",
