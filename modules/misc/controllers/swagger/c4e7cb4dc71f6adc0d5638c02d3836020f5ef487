@@ -1,0 +1,43 @@
+{
+	"properties": {
+		"campaign_id": {
+			"type": "integer"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"height": {
+			"type": "integer"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"mime": {
+			"type": "string"
+		},
+		"src": {
+			"type": "string"
+		},
+		"status": {
+			"type": "string"
+		},
+		"target": {
+			"type": "string"
+		},
+		"type": {
+			"type": "string"
+		},
+		"updated_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"user_id": {
+			"type": "integer"
+		},
+		"width": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

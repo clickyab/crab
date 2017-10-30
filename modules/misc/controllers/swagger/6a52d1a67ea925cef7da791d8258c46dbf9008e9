@@ -5,6 +5,7 @@
 			{
 				"description": " search the domain field",
 				"in": "query",
+<<<<<<< HEAD
 				"name": "domain",
 				"required": false,
 				"type": "string"
@@ -13,6 +14,9 @@
 				"description": " page number",
 				"in": "query",
 				"name": "p",
+=======
+				"name": "status",
+>>>>>>> add get campaign ads route
 				"required": false,
 				"type": "int"
 			},
@@ -31,7 +35,18 @@
 				"type": "string"
 			},
 			{
+<<<<<<< HEAD
 				"description": " count per page",
+=======
+				"description": "",
+				"in": "query",
+				"name": "pub_type",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the domain field",
+>>>>>>> add get campaign ads route
 				"in": "query",
 				"name": "c",
 				"required": false,
