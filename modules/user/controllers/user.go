@@ -144,10 +144,9 @@ func (u Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aa
 		us.EconomicCode = c.EconomicCode.String
 	}
 
-	var l *location.CityInfo
 	if user.CityID.Valid {
 		m := location.NewLocationManager()
-		m.FindAllByCityID(user.CityID.Int64)
+		l := m.FindAllByCityID(user.CityID.Int64)
 
 		us.CityName = l.CityName
 		us.CityID = l.CityID

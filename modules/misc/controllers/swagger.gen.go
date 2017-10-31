@@ -2780,7 +2780,7 @@ var _bindata = map[string]func() (*asset, error){
 	"swagger/fa5855e5339835cccf41fe70ac6d103e51b742a7": swaggerFa5855e5339835cccf41fe70ac6d103e51b742a7,
 	"swagger/fa610eebc2abb831d36020570e9ac583f6613bc7": swaggerFa610eebc2abb831d36020570e9ac583f6613bc7,
 	"swagger/fd70d1dfdcb588367261c32f40829e1265c14207": swaggerFd70d1dfdcb588367261c32f40829e1265c14207,
-	"swagger/index.json": swaggerIndexJson,
+	"swagger/index.json":                               swaggerIndexJson,
 }
 
 // AssetDir returns the file names below a certain
@@ -2822,6 +2822,7 @@ type bintree struct {
 	Func     func() (*asset, error)
 	Children map[string]*bintree
 }
+
 var _bintree = &bintree{nil, map[string]*bintree{
 	"swagger": &bintree{nil, map[string]*bintree{
 		"00cefeafa08e5b04251da79676c41549afc6fef6": &bintree{swagger00cefeafa08e5b04251da79676c41549afc6fef6, map[string]*bintree{}},
@@ -2944,7 +2945,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"fa5855e5339835cccf41fe70ac6d103e51b742a7": &bintree{swaggerFa5855e5339835cccf41fe70ac6d103e51b742a7, map[string]*bintree{}},
 		"fa610eebc2abb831d36020570e9ac583f6613bc7": &bintree{swaggerFa610eebc2abb831d36020570e9ac583f6613bc7, map[string]*bintree{}},
 		"fd70d1dfdcb588367261c32f40829e1265c14207": &bintree{swaggerFd70d1dfdcb588367261c32f40829e1265c14207, map[string]*bintree{}},
-		"index.json": &bintree{swaggerIndexJson, map[string]*bintree{}},
+		"index.json":                               &bintree{swaggerIndexJson, map[string]*bintree{}},
 	}},
 }}
 
@@ -2994,4 +2995,3 @@ func _filePath(dir, name string) string {
 	cannonicalName := strings.Replace(name, "\\", "/", -1)
 	return filepath.Join(append([]string{dir}, strings.Split(cannonicalName, "/")...)...)
 }
-

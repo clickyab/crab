@@ -48,12 +48,16 @@ codegen: codegen-base jsonsplitter
 	$(BIN)/jsonsplitter --path=$(ROOT)/tmp/swagger/out.json --target=$(ROOT)/modules/misc/controllers/swagger/
 	#cp $(ROOT)/tmp/swagger/out.yaml $(ROOT)/modules/misc/controllers/swagger/index.yaml
 	cd $(ROOT)/modules/misc/controllers/ && $(BIN)/go-bindata -nometadata -o swagger.gen.go -nomemcopy=true -pkg=misc ./swagger/...
+	cd $(ROOT) && goimports -w ./modules/
+
 
 
 test: $(addsuffix -test,$(wildcard $(ROOT)/modules/*))
 
 # Migration as a wildcard target
 migration: $(addsuffix -migration,$(wildcard $(ROOT)/modules/*))
+	cd $(ROOT) && goimports -w ./modules/
+
 
 build-webserver:
 	$(BUILD) clickyab.com/crab/cmd/webserver
