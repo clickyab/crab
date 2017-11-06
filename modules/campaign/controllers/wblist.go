@@ -17,7 +17,7 @@ import (
 // @Validate{
 //}
 type whiteBlackPayload struct {
-	ListID int64 `json:"list_id" db:"-" validate:"required,min=1"`
+	ListID int64 `json:"list_id" db:"-" validate:"required"`
 }
 
 // updateWhiteBlackList will update campaign white/black list

@@ -8,6 +8,8 @@ import (
 
 	"time"
 
+	"regexp"
+
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/inventory/orm"
 	"clickyab.com/crab/modules/user/middleware/authz"
@@ -73,11 +75,11 @@ func (ctrl *Controller) whiteBlackList(ctx context.Context, w http.ResponseWrite
 //@Validate {
 //}
 type whiteBlackList struct {
-	Label   string                `json:"label" db:"label" validate:"gt=7"`
-	Domains mysql.StringJSONArray `json:"domains" db:"domains" validate:"gt=0"`
+	Label   string   `json:"label" db:"label" validate:"gt=7"`
+	Domains []string `json:"domains" db:"domains" validate:"gt=0"`
 	// Kind shows if it's a white list (true) or blacklist (false)
 	Kind          bool              `json:"kind" db:"kind"`
-	PublisherType orm.PublisherType `json:"publisher_type" db:"publisher_type" validate:"eg='web'|eg='app'"`
+	PublisherType orm.PublisherType `json:"publisher_type" db:"publisher_type"`
 }
 
 // addPreset get a new whitelist blacklist for user
@@ -93,11 +95,12 @@ func (ctrl *Controller) addPreset(ctx context.Context, w http.ResponseWriter, r 
 	u := authz.MustGetUser(ctx)
 	dm := domain.MustGetDomain(ctx)
 	now := time.Now()
+	resMap := FillResMap(pl.Domains)
 	d := &orm.WhiteBlackList{
 		Active:        true,
 		UpdatedAt:     now,
 		CreatedAt:     now,
-		Domains:       pl.Domains,
+		Domains:       mysql.StringMapJSONArray(resMap),
 		Label:         pl.Label,
 		Kind:          pl.Kind,
 		PublisherType: pl.PublisherType,
@@ -107,4 +110,31 @@ func (ctrl *Controller) addPreset(ctx context.Context, w http.ResponseWriter, r 
 	e := orm.NewOrmManager().CreateWhiteBlackList(d)
 	assert.Nil(e)
 	ctrl.OKResponse(w, d)
+}
+
+// FillResMap fill string map json for black white
+func FillResMap(domains []string) map[string][]string {
+	var pattern = regexp.MustCompile(`^\d+$`)
+	var resMap = make(map[string][]string)
+	var ids = []int64{}
+	for i := range domains {
+		if pattern.Match([]byte(domains[i])) {
+			idInt, err := strconv.ParseInt(domains[i], 10, 64)
+			assert.Nil(err)
+			ids = append(ids, idInt)
+		} else {
+			resMap[domains[i]] = []string{}
+		}
+	}
+	m := orm.NewOrmManager()
+	if len(ids) > 0 {
+		for _, v := range m.GetDomainPublishers(ids) {
+			if _, k := resMap[v.Publisher]; k {
+				resMap[v.Publisher] = append(resMap[v.Publisher], v.Domain)
+			} else {
+				resMap[v.Publisher] = []string{v.Domain}
+			}
+		}
+	}
+	return resMap
 }
