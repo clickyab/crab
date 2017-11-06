@@ -82,6 +82,7 @@ type Campaign struct {
 	CampaignFinance
 	UserID       int64           `json:"user_id" db:"user_id"`
 	DomainID     int64           `json:"domain_id" db:"domain_id"`
+	Exchange     bool            `json:"exchange" db:"exchange"`
 	WhiteBlackID mysql.NullInt64 `json:"-" db:"white_black_id"`
 	// WhiteBlackType true is whitelist
 	WhiteBlackType  mysql.NullBool           `json:"-" db:"white_black_type"`

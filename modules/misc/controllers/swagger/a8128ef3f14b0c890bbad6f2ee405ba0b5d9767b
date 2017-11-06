@@ -76,6 +76,9 @@
 			"format": "dateTime",
 			"type": "string"
 		},
+		"exchange": {
+			"type": "boolean"
+		},
 		"id": {
 			"type": "integer"
 		},

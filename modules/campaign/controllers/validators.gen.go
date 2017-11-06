@@ -157,6 +157,9 @@ func (pl *whiteBlackPayload) Validate(ctx context.Context, w http.ResponseWriter
 		case "ListID":
 			res["list_id"] = trans.E("invalid value")
 
+		case "Exchange":
+			res["exchange"] = trans.E("invalid value")
+
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}
