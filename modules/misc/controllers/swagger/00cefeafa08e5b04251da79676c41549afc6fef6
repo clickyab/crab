@@ -24,6 +24,13 @@
 				"type": "string"
 			},
 			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the name field",
 				"in": "query",
 				"name": "name",
@@ -34,13 +41,6 @@
 				"description": " search the domain field",
 				"in": "query",
 				"name": "domain",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
