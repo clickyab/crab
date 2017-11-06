@@ -2,7 +2,7 @@
 	"properties": {
 		"domains": {
 			"items": {
-				"type": "string"
+				"type": "integer"
 			},
 			"type": "array"
 		},

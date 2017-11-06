@@ -35,12 +35,6 @@ func (pl *whiteBlackList) Validate(ctx context.Context, w http.ResponseWriter, r
 		case "Label":
 			res["label"] = trans.E("invalid value")
 
-		case "Domains":
-			res["domains"] = trans.E("invalid value")
-
-		case "PublisherType":
-			res["publisher_type"] = trans.E("invalid value")
-
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}

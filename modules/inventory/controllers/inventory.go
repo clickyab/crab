@@ -2,19 +2,22 @@ package controllers
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"strconv"
 
 	"time"
 
+	"fmt"
+
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/inventory/orm"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
-	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
+	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 )
 
@@ -73,11 +76,11 @@ func (ctrl *Controller) whiteBlackList(ctx context.Context, w http.ResponseWrite
 //@Validate {
 //}
 type whiteBlackList struct {
-	Label   string                `json:"label" db:"label" validate:"gt=7"`
-	Domains mysql.StringJSONArray `json:"domains" db:"domains" validate:"gt=0"`
+	Label   string  `json:"label" db:"label" validate:"gt=7"`
+	Domains []int64 `json:"domains" db:"domains"`
 	// Kind shows if it's a white list (true) or blacklist (false)
 	Kind          bool              `json:"kind" db:"kind"`
-	PublisherType orm.PublisherType `json:"publisher_type" db:"publisher_type" validate:"eg='web'|eg='app'"`
+	PublisherType orm.PublisherType `json:"publisher_type" db:"publisher_type"`
 }
 
 // addPreset get a new whitelist blacklist for user
@@ -92,12 +95,27 @@ func (ctrl *Controller) addPreset(ctx context.Context, w http.ResponseWriter, r 
 	pl := ctrl.MustGetPayload(ctx).(*whiteBlackList)
 	u := authz.MustGetUser(ctx)
 	dm := domain.MustGetDomain(ctx)
-	now := time.Now()
+
+	var publisherDomains []string
+	m := orm.NewOrmManager()
+	for i := range pl.Domains {
+		inventory, err := m.FindInventoryByID(pl.Domains[i])
+		if err != nil {
+			println(err.Error())
+			xlog.GetWithField(ctx, "add preset",
+				fmt.Sprintf("couldn't find inventory with %s id", pl.Domains[i]))
+
+			ctrl.BadResponse(w, errors.New("couldn't find inventory"))
+			return
+		}
+
+		publisherDomains = append(publisherDomains, fmt.Sprintf("%s/%s", inventory.Domain, inventory.Publisher))
+	}
 	d := &orm.WhiteBlackList{
 		Active:        true,
-		UpdatedAt:     now,
-		CreatedAt:     now,
-		Domains:       pl.Domains,
+		UpdatedAt:     time.Now(),
+		CreatedAt:     time.Now(),
+		Domains:       publisherDomains,
 		Label:         pl.Label,
 		Kind:          pl.Kind,
 		PublisherType: pl.PublisherType,
