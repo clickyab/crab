@@ -6,7 +6,7 @@ import (
 )
 
 // UpdateCampaignWhiteBlackList update white/black list
-func (m *Manager) UpdateCampaignWhiteBlackList(w int64, ca *Campaign) error {
+func (m *Manager) UpdateCampaignWhiteBlackList(w int64, exchange bool, ca *Campaign) error {
 	l, err := orm.NewOrmManager().FindWhiteBlackListByID(w)
 	if err != nil {
 		return err
@@ -21,6 +21,7 @@ func (m *Manager) UpdateCampaignWhiteBlackList(w int64, ca *Campaign) error {
 		Bool:  l.Kind,
 	}
 	ca.WhiteBlackValue = l.Domains
+	ca.Exchange = exchange
 	err = m.UpdateCampaign(ca)
 	if err != nil {
 		return err

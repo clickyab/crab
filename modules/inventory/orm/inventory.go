@@ -150,14 +150,13 @@ func (m *Manager) FillInventoryDataTableArray(
 // GetDomainPublishers try to get all Inventory with ids
 func (m *Manager) GetDomainPublishers(ids []int64) []Inventory {
 	var res []Inventory
+	g := strings.Repeat("?,", len(ids))
+	gg := strings.TrimRight(g, ",")
 	_, err := m.GetRDbMap().Select(
 		&res,
 		fmt.Sprintf("SELECT * FROM %s WHERE id IN (%s)",
 			InventoryTableFull,
-			func() string {
-				g := strings.Repeat("?,", len(ids))
-				return strings.TrimRight(g, ",")
-			}(),
+			gg,
 		),
 		func(i []int64) []interface{} {
 			x := []interface{}{}

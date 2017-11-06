@@ -17,7 +17,8 @@ import (
 // @Validate{
 //}
 type whiteBlackPayload struct {
-	ListID int64 `json:"list_id" db:"-" validate:"required"`
+	ListID   int64 `json:"list_id" validate:"required"`
+	Exchange bool  `json:"exchange"  validate:"required"`
 }
 
 // updateWhiteBlackList will update campaign white/black list
@@ -46,7 +47,7 @@ func (c *Controller) updateWhiteBlackList(ctx context.Context, w http.ResponseWr
 		c.NotFoundResponse(w, nil)
 	}
 
-	err = db.UpdateCampaignWhiteBlackList(p.ListID, o)
+	err = db.UpdateCampaignWhiteBlackList(p.ListID, p.Exchange, o)
 	if err == orm.ErrInventoryID {
 		c.BadResponse(w, err)
 		return

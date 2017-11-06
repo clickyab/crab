@@ -1,5 +1,8 @@
 {
 	"properties": {
+		"exchange": {
+			"type": "boolean"
+		},
 		"list_id": {
 			"type": "integer"
 		}
