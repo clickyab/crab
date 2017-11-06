@@ -37,6 +37,7 @@
 		"location_cities": "file://279650d4225957f7b2549dc014b0919c347c4d0e",
 		"location_countries": "file://8d77ae62ccbcee3618a817b23a8131e7e458b923",
 		"location_provinces": "file://92b4594c6625acaf229159be2038e2fdf710a063",
+		"orm_BlackWhiteTyp": "file://362eb72b44ab7d87100b64198a9756f368157d71",
 		"orm_Browser": "file://801c60efcc0cfb1be874bd1eb2dfe86591db3d4c",
 		"orm_Campaign": "file://a8128ef3f14b0c890bbad6f2ee405ba0b5d9767b",
 		"orm_CampaignAttributes": "file://5c80d74edc4a9172cbf90c0081ec571b401fc298",

@@ -2,6 +2,9 @@
 	"properties": {
 		"list_id": {
 			"type": "integer"
+		},
+		"only_clickyab": {
+			"type": "boolean"
 		}
 	},
 	"type": "object"

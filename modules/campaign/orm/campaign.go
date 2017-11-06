@@ -61,7 +61,7 @@ func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *dmn.Domain) (*Camp
 		}
 		assert.Nil(m.Rollback())
 	}()
-
+	ca.WhiteBlackType = ClickyabTyp
 	if err = m.CreateCampaign(ca); err != nil {
 		return nil, err
 	}

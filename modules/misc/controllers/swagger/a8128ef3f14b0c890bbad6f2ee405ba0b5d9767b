@@ -382,6 +382,9 @@
 		},
 		"white_black_id": {
 			"type": "integer"
+		},
+		"white_black_type": {
+			"type": "string"
 		}
 	},
 	"type": "object"

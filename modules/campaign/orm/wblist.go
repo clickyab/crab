@@ -17,10 +17,14 @@ func (m *Manager) UpdateCampaignWhiteBlackList(w int64, ca *Campaign) error {
 		Valid: l.ID > 0,
 		Int64: l.ID,
 	}
-	ca.WhiteBlackType = mysql.NullBool{
-		Valid: l.ID > 0,
-		Bool:  l.Kind,
-	}
+
+	ca.WhiteBlackType = func() BlackWhiteTyp {
+		if l.Kind {
+			return WhiteTyp
+		}
+		return BlackTyp
+	}()
+
 	ca.WhiteBlackValue = l.Domains
 	err = m.UpdateCampaign(ca)
 	if err != nil {
@@ -37,9 +41,7 @@ func (m *Manager) DeleteCampaignWhiteBlackList(ca *Campaign) error {
 	ca.WhiteBlackID = mysql.NullInt64{
 		Valid: false,
 	}
-	ca.WhiteBlackType = mysql.NullBool{
-		Valid: false,
-	}
+	ca.WhiteBlackType = ClickyabTyp
 	ca.WhiteBlackValue = []string{}
 	err := m.UpdateCampaign(ca)
 	if err != nil {
