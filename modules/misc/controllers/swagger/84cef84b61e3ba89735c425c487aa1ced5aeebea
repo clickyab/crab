@@ -12,10 +12,13 @@
 				"type": "integer"
 			},
 			"domains": {
-				"items": {
-					"type": "string"
+				"additionalProperties": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
 				},
-				"type": "array"
+				"type": "object"
 			},
 			"id": {
 				"type": "integer"

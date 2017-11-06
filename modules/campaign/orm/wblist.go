@@ -7,7 +7,6 @@ import (
 
 // UpdateCampaignWhiteBlackList update white/black list
 func (m *Manager) UpdateCampaignWhiteBlackList(w int64, ca *Campaign) error {
-
 	l, err := orm.NewOrmManager().FindWhiteBlackListByID(w)
 	if err != nil {
 		return err
@@ -40,7 +39,7 @@ func (m *Manager) DeleteCampaignWhiteBlackList(ca *Campaign) error {
 	ca.WhiteBlackType = mysql.NullBool{
 		Valid: false,
 	}
-	ca.WhiteBlackValue = []string{}
+	ca.WhiteBlackValue = mysql.StringMapJSONArray(make(map[string][]string))
 	err := m.UpdateCampaign(ca)
 	if err != nil {
 		return err

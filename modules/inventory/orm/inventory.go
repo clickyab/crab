@@ -51,14 +51,14 @@ const (
 //		list = yes
 // }
 type WhiteBlackList struct {
-	ID        int64                 `json:"id" db:"id"`
-	CreatedAt time.Time             `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time             `json:"updated_at" db:"updated_at"`
-	Active    bool                  `json:"active" db:"active"`
-	UserID    int64                 `json:"user_id" db:"user_id"`
-	DomainID  int64                 `json:"domain_id" db:"domain_id"`
-	Label     string                `json:"label" db:"label"`
-	Domains   mysql.StringJSONArray `json:"domains" db:"domains"`
+	ID        int64                    `json:"id" db:"id"`
+	CreatedAt time.Time                `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time                `json:"updated_at" db:"updated_at"`
+	Active    bool                     `json:"active" db:"active"`
+	UserID    int64                    `json:"user_id" db:"user_id"`
+	DomainID  int64                    `json:"domain_id" db:"domain_id"`
+	Label     string                   `json:"label" db:"label"`
+	Domains   mysql.StringMapJSONArray `json:"domains" db:"domains"`
 	// Kind shows if it's a white list (true) or blacklist (false)
 	Kind          bool          `json:"kind" db:"kind"`
 	PublisherType PublisherType `json:"publisher_type" db:"publisher_type"`
@@ -145,4 +145,30 @@ func (m *Manager) FillInventoryDataTableArray(
 	assert.Nil(err)
 
 	return res, count
+}
+
+// GetDomainPublishers try to get all Inventory with ids
+func (m *Manager) GetDomainPublishers(ids []int64) []Inventory {
+	var res []Inventory
+	_, err := m.GetRDbMap().Select(
+		&res,
+		fmt.Sprintf("SELECT * FROM %s WHERE id IN (%s)",
+			InventoryTableFull,
+			func() string {
+				g := strings.Repeat("?,", len(ids))
+				return strings.TrimRight(g, ",")
+			}(),
+		),
+		func(i []int64) []interface{} {
+			x := []interface{}{}
+			for _, v := range ids {
+
+				x = append(x, v)
+			}
+			return x
+		}(ids)...,
+	)
+	assert.Nil(err)
+
+	return res
 }
