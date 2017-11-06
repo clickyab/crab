@@ -154,9 +154,6 @@ func (pl *whiteBlackPayload) Validate(ctx context.Context, w http.ResponseWriter
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
-		case "ListID":
-			res["list_id"] = trans.E("invalid value")
-
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}

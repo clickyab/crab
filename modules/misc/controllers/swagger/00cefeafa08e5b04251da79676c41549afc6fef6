@@ -3,18 +3,18 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": " page number",
 				"in": "query",
 				"name": "p",
 				"required": false,
 				"type": "int"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
 			},
 			{
 				"description": "",
@@ -31,16 +31,16 @@
 				"type": "string"
 			},
 			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": " search the domain field",
 				"in": "query",
 				"name": "domain",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
 				"required": false,
 				"type": "string"
 			},

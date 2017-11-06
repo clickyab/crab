@@ -61,6 +61,22 @@ const (
 	CPA CostType = "cpa"
 )
 
+// BlackWhiteTyp is type of campaign black white <black,white,clickyab,all>
+// @Enum{
+// }
+type BlackWhiteTyp string
+
+const (
+	// BlackTyp is blacklist
+	BlackTyp BlackWhiteTyp = "black"
+	// WhiteTyp is whitelist
+	WhiteTyp BlackWhiteTyp = "white"
+	// AllTyp is all kind type
+	AllTyp BlackWhiteTyp = "all"
+	// ClickyabTyp is only clickyab
+	ClickyabTyp BlackWhiteTyp = "clickyab"
+)
+
 type base struct {
 	ID        int64     `json:"id" db:"id"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
@@ -84,7 +100,7 @@ type Campaign struct {
 	DomainID     int64           `json:"domain_id" db:"domain_id"`
 	WhiteBlackID mysql.NullInt64 `json:"-" db:"white_black_id"`
 	// WhiteBlackType true is whitelist
-	WhiteBlackType  mysql.NullBool        `json:"-" db:"white_black_type"`
+	WhiteBlackType  BlackWhiteTyp         `json:"white_black_type" db:"white_black_type"`
 	WhiteBlackValue mysql.StringJSONArray `json:"-" db:"white_black_value"`
 	Progress        Progress              `json:"-" db:"progress"`
 	ListID          int64                 `json:"white_black_id,omitempty" db:"-"`

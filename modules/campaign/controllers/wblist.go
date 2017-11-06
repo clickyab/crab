@@ -9,6 +9,7 @@ import (
 
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
@@ -17,7 +18,8 @@ import (
 // @Validate{
 //}
 type whiteBlackPayload struct {
-	ListID int64 `json:"list_id" db:"-" validate:"required,min=1"`
+	ListID       int64 `json:"list_id" db:"-"`
+	OnlyClickyab bool  `json:"only_clickyab"`
 }
 
 // updateWhiteBlackList will update campaign white/black list
@@ -46,6 +48,29 @@ func (c *Controller) updateWhiteBlackList(ctx context.Context, w http.ResponseWr
 		c.NotFoundResponse(w, nil)
 	}
 
+	//check for only clickyab selected
+	if p.OnlyClickyab {
+		o.WhiteBlackType = orm.ClickyabTyp
+		o.WhiteBlackID = mysql.NullInt64{
+			Valid: false,
+		}
+		o.WhiteBlackValue = mysql.StringJSONArray{}
+		assert.Nil(db.UpdateCampaign(o))
+		c.OKResponse(w, o)
+		return
+	}
+
+	// all publishers selected
+	if p.ListID == 0 {
+		o.WhiteBlackType = orm.AllTyp
+		o.WhiteBlackID = mysql.NullInt64{
+			Valid: false,
+		}
+		o.WhiteBlackValue = mysql.StringJSONArray{}
+		assert.Nil(db.UpdateCampaign(o))
+		c.OKResponse(w, o)
+		return
+	}
 	err = db.UpdateCampaignWhiteBlackList(p.ListID, o)
 	if err == orm.ErrInventoryID {
 		c.BadResponse(w, err)

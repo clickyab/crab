@@ -157,3 +157,42 @@ func (e CostType) Value() (driver.Value, error) {
 	}
 	return string(e), nil
 }
+
+// IsValid try to validate enum value on ths type
+func (e BlackWhiteTyp) IsValid() bool {
+	return array.StringInArray(
+		string(e),
+		string(BlackTyp),
+		string(WhiteTyp),
+		string(AllTyp),
+		string(ClickyabTyp),
+	)
+}
+
+// Scan convert the json array ino string slice
+func (e *BlackWhiteTyp) Scan(src interface{}) error {
+	var b []byte
+	switch src.(type) {
+	case []byte:
+		b = src.([]byte)
+	case string:
+		b = []byte(src.(string))
+	case nil:
+		b = make([]byte, 0)
+	default:
+		return trans.E("unsupported type")
+	}
+	if !BlackWhiteTyp(b).IsValid() {
+		return trans.E("invaid value")
+	}
+	*e = BlackWhiteTyp(b)
+	return nil
+}
+
+// Value try to get the string slice representation in database
+func (e BlackWhiteTyp) Value() (driver.Value, error) {
+	if !e.IsValid() {
+		return nil, trans.E("invalid status")
+	}
+	return string(e), nil
+}
