@@ -385,6 +385,17 @@
 		},
 		"white_black_id": {
 			"type": "integer"
+		},
+		"white_black_type": {
+			"properties": {
+				"Bool": {
+					"type": "boolean"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
 		}
 	},
 	"type": "object"

@@ -85,7 +85,7 @@ type Campaign struct {
 	Exchange     bool            `json:"exchange" db:"exchange"`
 	WhiteBlackID mysql.NullInt64 `json:"-" db:"white_black_id"`
 	// WhiteBlackType true is whitelist
-	WhiteBlackType  mysql.NullBool           `json:"-" db:"white_black_type"`
+	WhiteBlackType  mysql.NullBool           `json:"white_black_type" db:"white_black_type"`
 	WhiteBlackValue mysql.StringMapJSONArray `json:"-" db:"white_black_value"`
 	Progress        Progress                 `json:"-" db:"progress"`
 	ListID          int64                    `json:"white_black_id,omitempty" db:"-"`

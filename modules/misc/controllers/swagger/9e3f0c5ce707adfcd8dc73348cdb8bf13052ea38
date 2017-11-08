@@ -4,7 +4,18 @@
 			"type": "boolean"
 		},
 		"list_id": {
-			"type": "integer"
+			"properties": {
+				"Int64": {
+					"type": "integer"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"white_typ": {
+			"type": "boolean"
 		}
 	},
 	"type": "object"

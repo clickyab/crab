@@ -22,9 +22,6 @@
 		"id": {
 			"type": "integer"
 		},
-		"kind": {
-			"type": "boolean"
-		},
 		"label": {
 			"type": "string"
 		},

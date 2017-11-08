@@ -10,13 +10,6 @@
 				"type": "int"
 			},
 			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": " page number",
 				"in": "query",
 				"name": "p",
@@ -26,14 +19,21 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the domain field",
+				"in": "query",
+				"name": "domain",
 				"required": false,
 				"type": "string"
 			},
 			{
 				"description": "",
 				"in": "query",
-				"name": "kind",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
