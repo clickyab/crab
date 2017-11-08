@@ -34,7 +34,10 @@ type NullBool struct {
 // MarshalJSON try to marshaling to json
 func (nt NullBool) MarshalJSON() ([]byte, error) {
 	if nt.Valid {
-		return []byte(fmt.Sprintf(`%d`, nt.Bool)), nil
+		if nt.Bool {
+			return []byte("true"), nil
+		}
+		return []byte("false"), nil
 	}
 
 	return []byte(nullString), nil
@@ -146,6 +149,7 @@ type StringJSONArray []string
 // StringMapJSONArray is use to handle string to string map in postgres
 type StringMapJSONArray map[string][]string
 
+// Value value func for StringMapJSONArray structure
 func (is StringMapJSONArray) Value() (driver.Value, error) {
 	b, err := json.Marshal(is)
 	if err != nil {
@@ -154,6 +158,7 @@ func (is StringMapJSONArray) Value() (driver.Value, error) {
 	return b, nil
 }
 
+// Scan func for StringMapJSONArray structure
 func (is *StringMapJSONArray) Scan(src interface{}) error {
 	var b []byte
 	switch src.(type) {
