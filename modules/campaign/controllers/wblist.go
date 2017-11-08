@@ -9,6 +9,7 @@ import (
 
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
@@ -17,8 +18,9 @@ import (
 // @Validate{
 //}
 type whiteBlackPayload struct {
-	ListID   int64 `json:"list_id" validate:"required"`
-	Exchange bool  `json:"exchange"  validate:"required"`
+	ListID   mysql.NullInt64 `json:"list_id"`
+	WhiteTyp *bool           `json:"white_typ" validate:"required"` //true for white false for black
+	Exchange *bool           `json:"exchange" validate:"required"`
 }
 
 // updateWhiteBlackList will update campaign white/black list
@@ -47,7 +49,7 @@ func (c *Controller) updateWhiteBlackList(ctx context.Context, w http.ResponseWr
 		c.NotFoundResponse(w, nil)
 	}
 
-	err = db.UpdateCampaignWhiteBlackList(p.ListID, p.Exchange, o)
+	err = db.UpdateCampaignWhiteBlackList(p.ListID, p.Exchange, p.WhiteTyp, o)
 	if err == orm.ErrInventoryID {
 		c.BadResponse(w, err)
 		return

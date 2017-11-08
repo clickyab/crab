@@ -6,23 +6,25 @@ import (
 )
 
 // UpdateCampaignWhiteBlackList update white/black list
-func (m *Manager) UpdateCampaignWhiteBlackList(w int64, exchange bool, ca *Campaign) error {
-	l, err := orm.NewOrmManager().FindWhiteBlackListByID(w)
-	if err != nil {
-		return err
+func (m *Manager) UpdateCampaignWhiteBlackList(w mysql.NullInt64, exchange *bool, white *bool, ca *Campaign) error {
+	if w.Int64 != 0 {
+		l, err := orm.NewOrmManager().FindWhiteBlackListByID(w.Int64)
+		if err != nil {
+			return err
+		}
+		ca.WhiteBlackID = mysql.NullInt64{
+			Valid: l.ID > 0,
+			Int64: l.ID,
+		}
+		ca.WhiteBlackValue = l.Domains
 	}
 
-	ca.WhiteBlackID = mysql.NullInt64{
-		Valid: l.ID > 0,
-		Int64: l.ID,
-	}
+	ca.Exchange = *exchange
 	ca.WhiteBlackType = mysql.NullBool{
-		Valid: l.ID > 0,
-		Bool:  l.Kind,
+		Valid: true,
+		Bool:  *white,
 	}
-	ca.WhiteBlackValue = l.Domains
-	ca.Exchange = exchange
-	err = m.UpdateCampaign(ca)
+	err := m.UpdateCampaign(ca)
 	if err != nil {
 		return err
 	}

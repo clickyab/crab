@@ -6,9 +6,6 @@
 			},
 			"type": "array"
 		},
-		"kind": {
-			"type": "boolean"
-		},
 		"label": {
 			"type": "string"
 		},

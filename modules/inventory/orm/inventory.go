@@ -51,17 +51,15 @@ const (
 //		list = yes
 // }
 type WhiteBlackList struct {
-	ID        int64                    `json:"id" db:"id"`
-	CreatedAt time.Time                `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time                `json:"updated_at" db:"updated_at"`
-	Active    bool                     `json:"active" db:"active"`
-	UserID    int64                    `json:"user_id" db:"user_id"`
-	DomainID  int64                    `json:"domain_id" db:"domain_id"`
-	Label     string                   `json:"label" db:"label"`
-	Domains   mysql.StringMapJSONArray `json:"domains" db:"domains"`
-	// Kind shows if it's a white list (true) or blacklist (false)
-	Kind          bool          `json:"kind" db:"kind"`
-	PublisherType PublisherType `json:"publisher_type" db:"publisher_type"`
+	ID            int64                    `json:"id" db:"id"`
+	CreatedAt     time.Time                `json:"created_at" db:"created_at"`
+	UpdatedAt     time.Time                `json:"updated_at" db:"updated_at"`
+	Active        bool                     `json:"active" db:"active"`
+	UserID        int64                    `json:"user_id" db:"user_id"`
+	DomainID      int64                    `json:"domain_id" db:"domain_id"`
+	Label         string                   `json:"label" db:"label"`
+	Domains       mysql.StringMapJSONArray `json:"domains" db:"domains"`
+	PublisherType PublisherType            `json:"publisher_type" db:"publisher_type"`
 }
 
 // Inventory is model for inventories table in database

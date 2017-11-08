@@ -75,10 +75,8 @@ func (ctrl *Controller) whiteBlackList(ctx context.Context, w http.ResponseWrite
 //@Validate {
 //}
 type whiteBlackList struct {
-	Label   string   `json:"label" db:"label" validate:"gt=7"`
-	Domains []string `json:"domains" db:"domains" validate:"gt=0"`
-	// Kind shows if it's a white list (true) or blacklist (false)
-	Kind          bool              `json:"kind" db:"kind"`
+	Label         string            `json:"label" db:"label" validate:"gt=7"`
+	Domains       []string          `json:"domains" db:"domains" validate:"gt=0"`
 	PublisherType orm.PublisherType `json:"publisher_type" db:"publisher_type"`
 }
 
@@ -102,7 +100,6 @@ func (ctrl *Controller) addPreset(ctx context.Context, w http.ResponseWriter, r 
 		CreatedAt:     now,
 		Domains:       mysql.StringMapJSONArray(resMap),
 		Label:         pl.Label,
-		Kind:          pl.Kind,
 		PublisherType: pl.PublisherType,
 		UserID:        u.ID,
 		DomainID:      dm.ID,

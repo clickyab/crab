@@ -5,6 +5,7 @@
 // db/20171018070248_schedule.sql
 // db/20171024144357_campaign.sql
 // db/20171107105208_exchange.sql
+// db/20171107122141_wb.sql
 // DO NOT EDIT!
 
 package migrations
@@ -172,6 +173,26 @@ func db20171107105208_exchangeSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20171107122141_wbSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xce\x31\x6f\x83\x30\x10\x05\xe0\xdd\xbf\xe2\x6d\x0c\x15\xbf\x80\x09\x6a\x36\xb7\x6e\x29\xcc\x08\xf0\xa9\x9c\x70\x8c\x65\x1b\x91\x9f\x1f\x91\x28\x91\x32\x25\xe3\x9d\xde\xd3\xf7\x44\x9e\xe3\xe3\xc4\xff\x61\x48\x84\xce\x1f\xe7\xdf\xaf\x02\x3b\x44\x9a\x12\xaf\x0e\x59\xe7\x33\x70\x04\x9d\x69\xda\x12\x19\xec\x33\x39\xa4\x99\x23\x6e\xbd\x23\xc4\x11\x83\xf7\x96\xc9\x88\x52\xb5\x75\x83\xb6\xac\x54\x8d\x2d\x52\xe8\x77\x3b\xda\xde\x07\x8a\x94\x22\x64\xa3\x7f\xb0\xb0\x33\x85\x78\xa2\xe5\xba\xbb\x3b\xfe\x90\x8f\xe7\x5b\x76\x58\xad\x25\x83\x71\x98\x96\x17\x7e\x29\x25\x3e\xb5\xea\xbe\xbe\xaf\x2b\x50\x69\xad\x0a\x21\x2e\x01\x00\x00\xff\xff\xec\x87\xc6\x8e\x07\x01\x00\x00"
+
+func db20171107122141_wbSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20171107122141_wbSql,
+		"db/20171107122141_wb.sql",
+	)
+}
+
+func db20171107122141_wbSql() (*asset, error) {
+	bytes, err := db20171107122141_wbSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20171107122141_wb.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -229,6 +250,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20171018070248_schedule.sql": db20171018070248_scheduleSql,
 	"db/20171024144357_campaign.sql": db20171024144357_campaignSql,
 	"db/20171107105208_exchange.sql": db20171107105208_exchangeSql,
+	"db/20171107122141_wb.sql":       db20171107122141_wbSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -278,6 +300,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20171018070248_schedule.sql": &bintree{db20171018070248_scheduleSql, map[string]*bintree{}},
 		"20171024144357_campaign.sql": &bintree{db20171024144357_campaignSql, map[string]*bintree{}},
 		"20171107105208_exchange.sql": &bintree{db20171107105208_exchangeSql, map[string]*bintree{}},
+		"20171107122141_wb.sql":       &bintree{db20171107122141_wbSql, map[string]*bintree{}},
 	}},
 }}
 
