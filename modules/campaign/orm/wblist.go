@@ -13,8 +13,8 @@ func (m *Manager) UpdateCampaignWhiteBlackList(w int64, exchange *bool, white *b
 			return err
 		}
 		ca.WhiteBlackID = mysql.NullInt64{
-			Valid: l.ID > 0,
-			Int64: l.ID,
+			Valid: w > 0,
+			Int64: w,
 		}
 		ca.WhiteBlackValue = l.Domains
 	}
