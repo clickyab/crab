@@ -46,5 +46,9 @@ func (c Controller) getCampaignAds(ctx context.Context, w http.ResponseWriter, r
 		c.ForbiddenResponse(w, errors.New("dont have access for this action"))
 		return
 	}
+	if len(ads) == 0 {
+		c.OKResponse(w, []string{})
+		return
+	}
 	c.OKResponse(w, ads)
 }
