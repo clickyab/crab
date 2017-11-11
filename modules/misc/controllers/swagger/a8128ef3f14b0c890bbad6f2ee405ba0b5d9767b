@@ -384,15 +384,7 @@
 			"type": "integer"
 		},
 		"white_black_id": {
-			"properties": {
-				"Int64": {
-					"type": "integer"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "integer"
 		},
 		"white_black_type": {
 			"properties": {
