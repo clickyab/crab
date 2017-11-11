@@ -7,18 +7,19 @@ import (
 
 // UpdateCampaignWhiteBlackList update white/black list
 func (m *Manager) UpdateCampaignWhiteBlackList(w int64, exchange *bool, white *bool, ca *Campaign) error {
+	var domains mysql.StringMapJSONArray
 	if w != 0 {
 		l, err := orm.NewOrmManager().FindWhiteBlackListByID(w)
 		if err != nil {
 			return err
 		}
-		ca.WhiteBlackID = mysql.NullInt64{
-			Valid: w > 0,
-			Int64: w,
-		}
-		ca.WhiteBlackValue = l.Domains
+		domains = l.Domains
 	}
-
+	ca.WhiteBlackValue = domains
+	ca.WhiteBlackID = mysql.NullInt64{
+		Valid: w > 0,
+		Int64: w,
+	}
 	ca.Exchange = *exchange
 	ca.WhiteBlackType = mysql.NullBool{
 		Valid: true,
