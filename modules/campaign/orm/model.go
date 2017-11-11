@@ -83,12 +83,11 @@ type Campaign struct {
 	UserID       int64           `json:"user_id" db:"user_id"`
 	DomainID     int64           `json:"domain_id" db:"domain_id"`
 	Exchange     bool            `json:"exchange" db:"exchange"`
-	WhiteBlackID mysql.NullInt64 `json:"-" db:"white_black_id"`
+	WhiteBlackID mysql.NullInt64 `json:"white_black_id" db:"white_black_id"`
 	// WhiteBlackType true is whitelist
 	WhiteBlackType  mysql.NullBool           `json:"white_black_type" db:"white_black_type"`
 	WhiteBlackValue mysql.StringMapJSONArray `json:"-" db:"white_black_value"`
 	Progress        Progress                 `json:"-" db:"progress"`
-	ListID          int64                    `json:"white_black_id,omitempty" db:"-"`
 	Attributes      *CampaignAttributes      `json:"attributes,omitempty" db:"-"`
 }
 

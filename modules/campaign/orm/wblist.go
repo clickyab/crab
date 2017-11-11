@@ -6,9 +6,9 @@ import (
 )
 
 // UpdateCampaignWhiteBlackList update white/black list
-func (m *Manager) UpdateCampaignWhiteBlackList(w mysql.NullInt64, exchange *bool, white *bool, ca *Campaign) error {
-	if w.Int64 != 0 {
-		l, err := orm.NewOrmManager().FindWhiteBlackListByID(w.Int64)
+func (m *Manager) UpdateCampaignWhiteBlackList(w int64, exchange *bool, white *bool, ca *Campaign) error {
+	if w != 0 {
+		l, err := orm.NewOrmManager().FindWhiteBlackListByID(w)
 		if err != nil {
 			return err
 		}

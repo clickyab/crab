@@ -9,7 +9,6 @@ import (
 
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
@@ -18,9 +17,9 @@ import (
 // @Validate{
 //}
 type whiteBlackPayload struct {
-	ListID   mysql.NullInt64 `json:"list_id"`
-	WhiteTyp *bool           `json:"white_typ" validate:"required"` //true for white false for black
-	Exchange *bool           `json:"exchange" validate:"required"`
+	ListID   int64 `json:"list_id"`
+	WhiteTyp *bool `json:"white_typ" validate:"required"` //true for white false for black
+	Exchange *bool `json:"exchange" validate:"required"`
 }
 
 // updateWhiteBlackList will update campaign white/black list
