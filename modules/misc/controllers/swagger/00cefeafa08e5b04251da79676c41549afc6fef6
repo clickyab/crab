@@ -3,6 +3,13 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
@@ -19,20 +26,6 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
 				"name": "sort",
 				"required": false,
 				"type": "string"
@@ -41,6 +34,13 @@
 				"description": " search the name field",
 				"in": "query",
 				"name": "name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the domain field",
+				"in": "query",
+				"name": "domain",
 				"required": false,
 				"type": "string"
 			},
