@@ -17,7 +17,7 @@ const (
 	// WebCampaign is web
 	WebCampaign CampaignKind = "web"
 	// AppCampaign is app
-	AppCampaign = "app"
+	AppCampaign CampaignKind = "app"
 )
 
 // CampaignType is type of campaign <vast,banner,native>
