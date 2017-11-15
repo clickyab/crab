@@ -14,6 +14,7 @@ func (e CampaignKind) IsValid() bool {
 	return array.StringInArray(
 		string(e),
 		string(WebCampaign),
+		string(AppCampaign),
 	)
 }
 
