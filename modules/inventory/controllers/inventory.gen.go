@@ -45,7 +45,7 @@ func (u *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/presets", framework.Mix(u.whiteBlackLists, m0...))
+		group.GET("controllers-Controller-whiteBlackLists", "/presets", framework.Mix(u.whiteBlackLists, m0...))
 		// End route with key 0
 
 		/* Route {
@@ -67,7 +67,7 @@ func (u *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/preset/:id", framework.Mix(u.whiteBlackList, m1...))
+		group.GET("controllers-Controller-whiteBlackList", "/preset/:id", framework.Mix(u.whiteBlackList, m1...))
 		// End route with key 1
 
 		/* Route {
@@ -91,7 +91,7 @@ func (u *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m2 = append(m2, middleware.PayloadUnMarshallerGenerator(whiteBlackList{}))
-		group.POST("/preset", framework.Mix(u.addPreset, m2...))
+		group.POST("controllers-Controller-addPreset", "/preset", framework.Mix(u.addPreset, m2...))
 		// End route with key 2
 
 		/* Route {
@@ -116,7 +116,7 @@ func (u *Controller) Routes(r framework.Mux) {
 		permission.Register("inventory_list", "inventory_list")
 		m3 = append(m3, authz.AuthorizeGenerator("inventory_list", "self"))
 
-		group.GET("/list", framework.Mix(u.listInventory, m3...))
+		group.GET("controllers-Controller-listInventory", "/list", framework.Mix(u.listInventory, m3...))
 		// End route with key 3
 
 		/* Route {
@@ -141,7 +141,7 @@ func (u *Controller) Routes(r framework.Mux) {
 		permission.Register("inventory_list", "inventory_list")
 		m4 = append(m4, authz.AuthorizeGenerator("inventory_list", "self"))
 
-		group.GET("/list/definition", framework.Mix(u.defInventory, m4...))
+		group.GET("controllers-Controller-defInventory", "/list/definition", framework.Mix(u.defInventory, m4...))
 		// End route with key 4
 
 		initializer.DoInitialize(u)

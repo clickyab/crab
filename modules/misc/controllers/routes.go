@@ -67,7 +67,7 @@ func (u *Controller) Routes(r framework.Mux) {
 	assert.Nil(err)
 	data = load(data)
 
-	m.GET("/panic", framework.Handler(
+	m.GET("controllers-Controller-panic", "/panic", framework.Handler(
 		func(_ context.Context, w http.ResponseWriter, r *http.Request) {
 			if r.Header.Get("token") == panicToken.String() {
 				panic("Don't worry. it's just a test")
@@ -76,7 +76,7 @@ func (u *Controller) Routes(r framework.Mux) {
 			w.Write([]byte("Noop ;)"))
 		}))
 
-	m.GET(filepath.Join("/swagger/index.json"),
+	m.GET("controllers-Controller-swagger", filepath.Join("/swagger/index.json"),
 		framework.Handler(func(_ context.Context, w http.ResponseWriter, r *http.Request) {
 			tmp := data
 			tmp["host"] = r.Host
