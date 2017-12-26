@@ -43,7 +43,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.POST("/:module", framework.Mix(c.Upload, m0...))
+		group.POST("controllers-Controller-Upload", "/:module", framework.Mix(c.Upload, m0...))
 		// End route with key 0
 
 		initializer.DoInitialize(c)

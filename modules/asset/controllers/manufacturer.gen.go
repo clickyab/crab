@@ -43,7 +43,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/browser", framework.Mix(c.browser, m0...))
+		group.GET("controllers-Controller-browser", "/browser", framework.Mix(c.browser, m0...))
 		// End route with key 0
 
 		/* Route {
@@ -65,7 +65,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/category", framework.Mix(c.category, m1...))
+		group.GET("controllers-Controller-category", "/category", framework.Mix(c.category, m1...))
 		// End route with key 1
 
 		/* Route {
@@ -87,7 +87,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/isp/:kind", framework.Mix(c.isp, m2...))
+		group.GET("controllers-Controller-isp", "/isp/:kind", framework.Mix(c.isp, m2...))
 		// End route with key 2
 
 		/* Route {
@@ -109,7 +109,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/manufacturers", framework.Mix(c.manufacturer, m3...))
+		group.GET("controllers-Controller-manufacturer", "/manufacturers", framework.Mix(c.manufacturer, m3...))
 		// End route with key 3
 
 		/* Route {
@@ -131,7 +131,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/os", framework.Mix(c.os, m4...))
+		group.GET("controllers-Controller-os", "/os", framework.Mix(c.os, m4...))
 		// End route with key 4
 
 		/* Route {
@@ -153,7 +153,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/platform", framework.Mix(c.platform, m5...))
+		group.GET("controllers-Controller-platform", "/platform", framework.Mix(c.platform, m5...))
 		// End route with key 5
 
 		/* Route {
@@ -175,7 +175,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/region", framework.Mix(c.region, m6...))
+		group.GET("controllers-Controller-region", "/region", framework.Mix(c.region, m6...))
 		// End route with key 6
 
 		initializer.DoInitialize(c)

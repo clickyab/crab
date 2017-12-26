@@ -47,7 +47,7 @@ func (c *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(attributesPayload{}))
-		group.PUT("/attributes/:id", framework.Mix(c.attributes, m0...))
+		group.PUT("controllers-Controller-attributes", "/attributes/:id", framework.Mix(c.attributes, m0...))
 		// End route with key 0
 
 		/* Route {
@@ -71,7 +71,7 @@ func (c *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(budgetPayload{}))
-		group.PUT("/budget/:id", framework.Mix(c.budget, m1...))
+		group.PUT("controllers-Controller-budget", "/budget/:id", framework.Mix(c.budget, m1...))
 		// End route with key 1
 
 		/* Route {
@@ -95,7 +95,7 @@ func (c *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m2 = append(m2, middleware.PayloadUnMarshallerGenerator(createCampaignPayload{}))
-		group.POST("/create", framework.Mix(c.createBase, m2...))
+		group.POST("controllers-Controller-createBase", "/create", framework.Mix(c.createBase, m2...))
 		// End route with key 2
 
 		/* Route {
@@ -122,7 +122,7 @@ func (c *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m3 = append(m3, middleware.PayloadUnMarshallerGenerator(campaignStatus{}))
-		group.PUT("/base/:id", framework.Mix(c.updateBase, m3...))
+		group.PUT("controllers-Controller-updateBase", "/base/:id", framework.Mix(c.updateBase, m3...))
 		// End route with key 3
 
 		/* Route {
@@ -144,7 +144,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.PUT("/finalize/:id", framework.Mix(c.finalize, m4...))
+		group.PUT("controllers-Controller-finalize", "/finalize/:id", framework.Mix(c.finalize, m4...))
 		// End route with key 4
 
 		/* Route {
@@ -169,7 +169,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		permission.Register("get-campaign", "get-campaign")
 		m5 = append(m5, authz.AuthorizeGenerator("get-campaign", "self"))
 
-		group.GET("/:id", framework.Mix(c.get, m5...))
+		group.GET("controllers-Controller-get", "/:id", framework.Mix(c.get, m5...))
 		// End route with key 5
 
 		/* Route {
@@ -194,7 +194,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		permission.Register("get_banner", "get_banner")
 		m6 = append(m6, authz.AuthorizeGenerator("get_banner", "self"))
 
-		group.GET("/:id/ad", framework.Mix(c.getCampaignAds, m6...))
+		group.GET("controllers-Controller-getCampaignAds", "/:id/ad", framework.Mix(c.getCampaignAds, m6...))
 		// End route with key 6
 
 		/* Route {
@@ -218,7 +218,7 @@ func (c *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m7 = append(m7, middleware.PayloadUnMarshallerGenerator(whiteBlackPayload{}))
-		group.PUT("/wb/:id", framework.Mix(c.updateWhiteBlackList, m7...))
+		group.PUT("controllers-Controller-updateWhiteBlackList", "/wb/:id", framework.Mix(c.updateWhiteBlackList, m7...))
 		// End route with key 7
 
 		/* Route {
@@ -240,7 +240,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.DELETE("/wblist/:id", framework.Mix(c.deleteWhiteBlackList, m8...))
+		group.DELETE("controllers-Controller-deleteWhiteBlackList", "/wblist/:id", framework.Mix(c.deleteWhiteBlackList, m8...))
 		// End route with key 8
 
 		initializer.DoInitialize(c)
