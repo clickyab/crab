@@ -276,6 +276,14 @@
 			"Rev": "eb71ad9bd329b5ac0fd0148dd99bd62e8be8e035"
 		},
 		{
+			"ImportPath": "golang.org/x/net/html",
+			"Rev": "8351a756f30f1297fe94bbf4b767ec589c6ea6d0"
+		},
+		{
+			"ImportPath": "golang.org/x/net/html/atom",
+			"Rev": "8351a756f30f1297fe94bbf4b767ec589c6ea6d0"
+		},
+		{
 			"ImportPath": "golang.org/x/sys/unix",
 			"Rev": "9f7170bcd8e9f4d3691c06401119c46a769a1e03"
 		},
