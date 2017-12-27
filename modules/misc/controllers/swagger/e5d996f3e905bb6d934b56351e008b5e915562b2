@@ -1,0 +1,20 @@
+{
+	"properties": {
+		"description": {
+			"type": "string"
+		},
+		"image": {
+			"type": "string"
+		},
+		"site_name": {
+			"type": "string"
+		},
+		"title": {
+			"type": "string"
+		},
+		"url": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
