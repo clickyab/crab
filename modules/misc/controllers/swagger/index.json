@@ -6,6 +6,7 @@
 	"definitions": {
 		"add_Ad": "file://5bdd9331fb5af5d80c4b688ff17fb211350db45b",
 		"add_AdActiveStatus": "file://7ee36ebb3c41c60c06ea47afc55446475d459cca",
+		"add_AdAttr": "file://e9d2c7b0bbe7f4972fb5be0c1da394442efe2480",
 		"add_AdType": "file://5c684b432ed4ef39dfba91e38ba4dc5aaf9246ca",
 		"add_AdUser": "file://c4e7cb4dc71f6adc0d5638c02d3836020f5ef487",
 		"add_AdsUserSlice": "file://35f02c7ffd9c22a540335d1db5c99162ac24f4b1",
@@ -84,7 +85,7 @@
 		"version": "\"0.0.1-pre-alpha\""
 	},
 	"paths": {
-		"/ad/banner/{id}": "file://6f1801e2965261b129569e1e26e1487a8630e0ba",
+		"/ad/{banner_type}/{id}": "file://32a669e73841b82dbdd08132b66e8c26c3a7bad6",
 		"/asset/browser": "file://51ed0d2b16f961f1c662b8562855fb73e686f3e7",
 		"/asset/category": "file://43778246185a5bb9f41d8af9600450880dd5bbe2",
 		"/asset/isp/{kind}": "file://ed579612ca0fe58cadf9a1b7c07bf1f29bb86158",

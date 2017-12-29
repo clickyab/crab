@@ -41,7 +41,7 @@ const (
 type Progress string
 
 const (
-	// ProgressInProgress is inprogress
+	// ProgressInProgress is in progress
 	ProgressInProgress Progress = "inprogress"
 	// ProgressFinalized is finalized
 	ProgressFinalized Progress = "finalized"

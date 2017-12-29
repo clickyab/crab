@@ -36,11 +36,17 @@ type Upload struct {
 	Size      int64     `json:"size"  db:"size"`
 	UserID    int64     `json:"user_id"  db:"user_id"`
 	Section   string    `json:"section" db:"section"`
-	Attr      AdAttr    `json:"attr"`
+	Attr      FileAttr  `json:"attr"`
 }
 
 // BannerAttr banner ad type attr
 type BannerAttr struct {
+	Width  int `json:"width"`
+	Height int `json:"height"`
+}
+
+// AvatarAttr avatar  type attr
+type AvatarAttr struct {
 	Width  int `json:"width"`
 	Height int `json:"height"`
 }
@@ -56,15 +62,16 @@ type NativeAttr struct {
 	Height int `json:"height"`
 }
 
-// AdAttr ad attribute
-type AdAttr struct {
+// FileAttr ad attribute
+type FileAttr struct {
+	Avatar *AvatarAttr `json:"avatar,omitempty"`
 	Banner *BannerAttr `json:"banner,omitempty"`
 	Video  *VideoAttr  `json:"vast,omitempty"`
 	Native *NativeAttr `json:"native,omitempty"`
 }
 
 // Scan for add attr
-func (b *AdAttr) Scan(src interface{}) error {
+func (b *FileAttr) Scan(src interface{}) error {
 	var c []byte
 	switch src.(type) {
 	case []byte:
@@ -82,20 +89,28 @@ func (b *AdAttr) Scan(src interface{}) error {
 }
 
 // Value for ad attr
-func (b AdAttr) Value() (driver.Value, error) {
+func (b FileAttr) Value() (driver.Value, error) {
 	if b.Banner != nil {
 		b.Native = nil
 		b.Video = nil
+		b.Avatar = nil
 	} else if b.Native != nil {
 		b.Banner = nil
-		b.Native = nil
+		b.Video = nil
+		b.Avatar = nil
 	} else if b.Video != nil {
 		b.Banner = nil
 		b.Video = nil
+		b.Avatar = nil
+	} else if b.Avatar != nil {
+		b.Native = nil
+		b.Video = nil
+		b.Banner = nil
 	} else {
 		b.Native = nil
 		b.Video = nil
 		b.Banner = nil
+		b.Avatar = nil
 	}
 	return json.Marshal(b)
 }

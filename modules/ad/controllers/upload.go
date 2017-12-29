@@ -4,10 +4,9 @@ import (
 	"context"
 	"net/http"
 	"strconv"
+	"sync"
 
 	"strings"
-
-	"sync"
 
 	"errors"
 
@@ -28,22 +27,26 @@ type bannerSize struct {
 	Height int
 }
 
-var lock = sync.Mutex{}
+var (
+	bannerValidSizes = config.RegisterString("crab.modules.ad.banner",
+		"120x600,160x600,300x250,336x280,468x60,728x90,120x240,320x50,800x440,300x600,970x90,970x250,250x250,300x1050,320x480,480x320,128x128",
+		"valid banner sizes separated by x",
+	)
+	minNativeBannerRation = config.RegisterFloat64("crab.modules.ad.native.ratio.min", 1.55, "minimum native banner ration")
+	maxNativeBannerRation = config.RegisterFloat64("crab.modules.ad.native.ratio.max", 1.65, "maximum native banner ration")
+	lock                  = sync.Mutex{}
 
-var bannerValid []bannerSize
-
-var bannerValidSizes = config.RegisterString("crab.modules.ad.banner",
-	"120x600,160x600,300x250,336x280,468x60,728x90,120x240,320x50,800x440,300x600,970x90,970x250,250x250,300x1050,320x480,480x320,128x128",
-	"valid banner sizes separated by x",
+	bannerValid []bannerSize
 )
 
 // @Validate{
 //}
 type assignBannerPayload struct {
 	Banners []struct {
-		ID  int64  `json:"id,omitempty"`
-		Src string `json:"src" validate:"required"`
-		Utm string `json:"utm" validate:"required"`
+		ID    int64  `json:"id,omitempty"`
+		Src   string `json:"src" validate:"required"`
+		Utm   string `json:"utm" validate:"required"`
+		Title string `json:"title,omitempty"`
 	} `json:"banners"`
 	input    []*add.Ad     `json:"-"`
 	campaign *orm.Campaign `json:"-"`
@@ -55,6 +58,10 @@ func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.Response
 	if err != nil {
 		return errors.New("campaign id not valid")
 	}
+	bannerType := add.AdType(xmux.Param(ctx, "banner_type"))
+	if bannerType != add.NativeAdType && bannerType != add.BannerAdType {
+		return errors.New("only native or banner is allowed")
+	}
 	cpManager := orm.NewOrmManager()
 	d := domain.MustGetDomain(ctx)
 	p.domain = d
@@ -63,15 +70,15 @@ func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.Response
 		return errors.New("campaign not found")
 	}
 	p.campaign = campaign
-	if p.campaign.Type != orm.BannerType {
-		return errors.New("campaign is not banner type")
+	if string(p.campaign.Type) != string(bannerType) {
+		return errors.New("campaign is not the right type")
 	}
 	m := add.NewAddManager()
 	if len(p.Banners) == 0 {
 		return errors.New("no banners selected")
 	}
 	for i := range p.Banners {
-		mime, width, height, err := checkBannerImage(p.Banners[i].Src)
+		mime, width, height, err := checkBannerImage(p.Banners[i].Src, bannerType)
 		if err != nil {
 			return err
 		}
@@ -90,11 +97,21 @@ func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.Response
 			bannerAd.Src = p.Banners[i].Src
 			bannerAd.Target = p.Banners[i].Utm
 			bannerAd.Status = add.PendingAdStatus
-			bannerAd.Type = add.BannerAdType
+			bannerAd.Type = bannerType
+			if bannerType == add.NativeAdType {
+				if p.Banners[i].Title == "" { // title is required in native ad
+					return errors.New("title is required for native ad")
+				}
+				bannerAd.Attr = add.AdAttr{
+					Native: &add.NativeAdAttr{
+						Title: p.Banners[i].Title,
+					},
+				}
+			}
 			p.input = append(p.input, bannerAd)
 		} else { //create selected
 			//TODO check access for create banner
-			p.input = append(p.input, &add.Ad{
+			newAd := &add.Ad{
 				Target:     p.Banners[i].Utm,
 				Src:        p.Banners[i].Src,
 				CampaignID: campaign.ID,
@@ -102,16 +119,27 @@ func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.Response
 				Height:     height,
 				Mime:       mime,
 				Status:     add.PendingAdStatus,
-				Type:       add.BannerAdType,
-			})
+				Type:       bannerType,
+			}
+			if bannerType == add.NativeAdType {
+				if p.Banners[i].Title == "" { // title is required in native ad
+					return errors.New("title is required for native ad")
+				}
+				newAd.Attr = add.AdAttr{
+					Native: &add.NativeAdAttr{
+						Title: p.Banners[i].Title,
+					},
+				}
+			}
+			p.input = append(p.input, newAd)
 		}
 	}
 	return nil
 }
 
-// assignNormalBanner assignNormalBanner
+// assignNormalBanner assignNormalBanner module is banner type (banner/native)
 // @Route {
-// 		url = /banner/:id
+// 		url = /:banner_type/:id
 //		method = post
 //		payload = assignBannerPayload
 //		resource = assign_banner:self
@@ -128,7 +156,7 @@ func (c Controller) assignNormalBanner(ctx context.Context, w http.ResponseWrite
 	assert.Nil(err)
 	_, ok := aaa.CheckPermOn(owner, currentUser, "assign_banner", p.domain.ID)
 	if !ok {
-		c.ForbiddenResponse(w, errors.New("dont have access for this action"))
+		c.ForbiddenResponse(w, errors.New("don't have access for this action"))
 		return
 	}
 
@@ -140,36 +168,53 @@ func (c Controller) assignNormalBanner(ctx context.Context, w http.ResponseWrite
 	c.OKResponse(w, res)
 }
 
-func checkBannerDimension(width, height int) bool {
-	for i := range bannerValid {
-		if bannerValid[i].Width == width && bannerValid[i].Height == height {
+func checkBannerDimension(width, height int, bannerType add.AdType) bool {
+	switch bannerType {
+	case add.BannerAdType:
+		for i := range bannerValid {
+			if bannerValid[i].Width == width && bannerValid[i].Height == height {
+				return true
+			}
+		}
+	case add.NativeAdType:
+		rate := float64(float64(width) / float64(height))
+		if rate < maxNativeBannerRation.Float64() && rate > minNativeBannerRation.Float64() {
 			return true
 		}
+
 	}
+
 	return false
 }
 
-func checkBannerImage(srcID string) (mime string, width int, height int, err error) {
+func checkBannerImage(srcID string, bannerType add.AdType) (mime string, width int, height int, err error) {
 	file, err := model.NewModelManager().FindUploadByID(srcID)
 
-	if err != nil || file.Attr.Banner == nil {
+	if err != nil || (file.Attr.Banner == nil && file.Attr.Native == nil) {
 		err = errors.New("invalid uploaded file")
 		return
 	}
 	//check banner type
-	if file.Section != "banner" {
+	if file.Section != string(bannerType) {
 		err = errors.New("banner not selected")
 		return
 	}
 	//TODO check access to file
 	mime = file.MIME
-	ok := checkBannerDimension(file.Attr.Banner.Width, file.Attr.Banner.Height)
+
+	switch bannerType {
+	case add.BannerAdType:
+		width = file.Attr.Banner.Width
+		height = file.Attr.Banner.Height
+	case add.NativeAdType:
+		width = file.Attr.Native.Width
+		height = file.Attr.Native.Height
+	}
+	ok := checkBannerDimension(width, height, bannerType)
 	if !ok {
 		err = errors.New("dimensions not valid")
 		return
 	}
-	width = file.Attr.Banner.Width
-	height = file.Attr.Banner.Height
 	return
 }
 
