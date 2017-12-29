@@ -1,7 +1,14 @@
 {
 	"post": {
-		"description": "assignNormalBanner assignNormalBanner",
+		"description": "assignNormalBanner assignNormalBanner module is banner type (banner/native)",
 		"parameters": [
+			{
+				"description": "",
+				"in": "path",
+				"name": "banner_type",
+				"required": true,
+				"type": "string"
+			},
 			{
 				"description": "",
 				"in": "path",

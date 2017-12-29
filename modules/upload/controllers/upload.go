@@ -28,17 +28,18 @@ import (
 	"github.com/rs/xmux"
 )
 
-var routes = make(map[model.Mime]kind)
-var lock = sync.RWMutex{}
+var (
+	routes = make(map[model.Mime]kind)
+	lock   = sync.RWMutex{}
+	// UPath default upload path
+	UPath = config.RegisterString("crab.modules.upload.path", "/statics/uploads", "a path to the location that uploaded file should save")
+	perm  = config.RegisterInt("crab.modules.upload.perm", 0777, "file will save with this permission")
+)
 
 type kind struct {
 	maxSize int64
 	mimes   []model.Mime
 }
-
-// UPath upload path in system
-var UPath = config.RegisterString("crab.modules.upload.path", "/statics/uploads", "a path to the location that uploaded file should save")
-var perm = config.RegisterInt("crab.modules.upload.perm", 0777, "file will save with this permission")
 
 // Register add a route and settings for uploads
 // name will be the route, maxsize is maximum allowed size for file upload file and the mimes is alloed mime types
@@ -71,7 +72,8 @@ type Controller struct {
 //		middleware = authz.Authenticate
 // }
 func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	m := model.Mime(xmux.Param(ctx, "module"))
+	fileType := xmux.Param(ctx, "module")
+	m := model.Mime(fileType)
 	u := authz.MustGetUser(ctx)
 	lock.RLock()
 	defer lock.RUnlock()
@@ -98,12 +100,12 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	io.Copy(multiHandler, file)
 	ac, mime := validMIME(handler.Header, s.mimes)
 	if !ac {
-		c.BadResponse(w, fmt.Errorf("The file type is not valid"))
+		c.BadResponse(w, fmt.Errorf("the file type is not valid"))
 		return
 	}
-	var attr *model.AdAttr
+	var attr *model.FileAttr
 	if mime == model.JPGMime || mime == model.PNGMime || mime == model.GifMime || mime == model.PJPGMime {
-		attr, err = getDimension(mime, dimensionHandler)
+		attr, err = getDimension(mime, dimensionHandler, fileType)
 		if err != nil {
 			c.BadResponse(w, fmt.Errorf("cant get file dimensions"))
 			return
@@ -163,8 +165,8 @@ func validMIME(a textproto.MIMEHeader, b []model.Mime) (bool, model.Mime) {
 	return false, ""
 }
 
-func getDimension(mime model.Mime, dimensionHandler *bytes.Buffer) (*model.AdAttr, error) {
-	a := model.AdAttr{}
+func getDimension(mime model.Mime, dimensionHandler *bytes.Buffer, bannerType string) (*model.FileAttr, error) {
+	a := model.FileAttr{}
 	var imgConf image.Config
 	var err error
 	switch mime {
@@ -191,11 +193,29 @@ func getDimension(mime model.Mime, dimensionHandler *bytes.Buffer) (*model.AdAtt
 		}
 	}
 
-	a = model.AdAttr{
-		Banner: &model.BannerAttr{
-			Width:  imgConf.Width,
-			Height: imgConf.Height,
-		},
+	switch bannerType {
+	case "banner":
+		a = model.FileAttr{
+			Banner: &model.BannerAttr{
+				Width:  imgConf.Width,
+				Height: imgConf.Height,
+			},
+		}
+	case "native":
+		a = model.FileAttr{
+			Native: &model.NativeAttr{
+				Width:  imgConf.Width,
+				Height: imgConf.Height,
+			},
+		}
+	case "avatar":
+		a = model.FileAttr{
+			Avatar: &model.AvatarAttr{
+				Width:  imgConf.Width,
+				Height: imgConf.Height,
+			},
+		}
 	}
+
 	return &a, nil
 }

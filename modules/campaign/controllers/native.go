@@ -7,9 +7,8 @@ import (
 
 	"strings"
 
-	"io"
+	"errors"
 
-	"github.com/sirupsen/logrus"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 )
@@ -17,7 +16,7 @@ import (
 // @Validate{
 //}
 type getNativeDataPayload struct {
-	URL string `json:"url" validate:"required,gt=5,url"`
+	URL string `json:"url" validate:"required,url"`
 }
 
 // getNativeData getNativeData
@@ -32,31 +31,30 @@ type getNativeDataPayload struct {
 // }
 func (c Controller) getNativeData(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	p := c.MustGetPayload(ctx).(*getNativeDataPayload)
-	link := p.URL
-	resp, err := http.Get(link)
-	if err != nil {
-		logrus.Warn(err)
+	res := getMetaTags(p.URL)
+	if res == nil {
+		c.BadResponse(w, errors.New("error fetching the link"))
 	}
-	bytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		logrus.Warn(err)
-	}
-	resp.Body.Close()
-	res := getMetaTags(strings.NewReader(string(bytes)))
 	c.OKResponse(w, res)
 }
 
-func getMetaTags(reader io.Reader) *getNativeDataResp {
+func getMetaTags(url string) *getNativeDataResp {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil
+	}
+	defer resp.Body.Close()
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil
+	}
 	var res = &getNativeDataResp{}
-	z := html.NewTokenizer(reader)
+	z := html.NewTokenizer(strings.NewReader(string(bytes)))
 bigLoop:
 	for {
 		tt := z.Next()
 		switch tt {
 		case html.ErrorToken:
-			if z.Err() == io.EOF {
-				break bigLoop
-			}
 			break bigLoop
 		case html.StartTagToken, html.SelfClosingTagToken, html.EndTagToken:
 			name, hasAttr := z.TagName()
@@ -72,7 +70,7 @@ bigLoop:
 				key, val, hasAttr = z.TagAttr()
 				m[atom.String(key)] = string(val)
 			}
-			res = processMeta(res, m)
+			processMeta(res, m)
 		}
 	}
 
@@ -87,7 +85,7 @@ type getNativeDataResp struct {
 	SiteName    string `json:"site_name"`
 }
 
-func processMeta(r *getNativeDataResp, attrs map[string]string) *getNativeDataResp {
+func processMeta(r *getNativeDataResp, attrs map[string]string) {
 	switch attrs["property"] {
 	case "og:description":
 		r.Description = attrs["content"]
@@ -100,5 +98,4 @@ func processMeta(r *getNativeDataResp, attrs map[string]string) *getNativeDataRe
 	case "og:site_name":
 		r.SiteName = attrs["content"]
 	}
-	return r
 }

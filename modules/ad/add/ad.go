@@ -1,9 +1,13 @@
 package add
 
 import (
+	"encoding/json"
+	"errors"
 	"time"
 
 	"fmt"
+
+	"database/sql/driver"
 
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
@@ -43,6 +47,43 @@ const (
 	NativeAdType AdType = "native"
 )
 
+// NativeAdAttr native ad attribute
+type NativeAdAttr struct {
+	Title string `json:"title"`
+}
+
+// AdAttr ad attribute
+type AdAttr struct {
+	Native *NativeAdAttr `json:"native,omitempty"`
+}
+
+// Scan for add attr
+func (b *AdAttr) Scan(src interface{}) error {
+	var c []byte
+	switch src.(type) {
+	case []byte:
+		c = src.([]byte)
+	case string:
+		c = []byte(src.(string))
+	case nil:
+		c = make([]byte, 0)
+		return nil
+	default:
+		return errors.New("unsupported type")
+	}
+
+	return json.Unmarshal(c, b)
+}
+
+// Value for ad attr
+func (b AdAttr) Value() (driver.Value, error) {
+	e, err := json.Marshal(b)
+	if err != nil {
+		return nil, err
+	}
+	return e, nil
+}
+
 // Ad Ad model in database
 // @Model {
 //		table = ads
@@ -60,19 +101,10 @@ type Ad struct {
 	Height     int            `json:"height" db:"height"`
 	Status     AdActiveStatus `json:"status" db:"status"`
 	Type       AdType         `json:"type" db:"type"`
+	Attr       AdAttr         `json:"attr" db:"attr"`
 	CreatedAt  time.Time      `json:"created_at" db:"created_at"`
 	UpdatedAt  time.Time      `json:"updated_at" db:"updated_at"`
 }
-
-// BannerMethod either create or update
-type BannerMethod string
-
-var (
-	// CreateBannerMethod creation selected
-	CreateBannerMethod BannerMethod = "create"
-	// UpdateBannerMethod update selected
-	UpdateBannerMethod BannerMethod = "update"
-)
 
 // CreateUpdateCampaignNormalBanner assign banner to campaign either create or update
 func (m *Manager) CreateUpdateCampaignNormalBanner(ads []*Ad) ([]Ad, error) {

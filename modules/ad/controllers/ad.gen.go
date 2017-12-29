@@ -27,7 +27,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		group := r.NewGroup("/ad")
 
 		/* Route {
-			"Route": "/banner/:id",
+			"Route": "/:banner_type/:id",
 			"Method": "POST",
 			"Function": "Controller.assignNormalBanner",
 			"RoutePkg": "controllers",
@@ -50,7 +50,7 @@ func (c *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(assignBannerPayload{}))
-		group.POST("controllers-Controller-assignNormalBanner", "/banner/:id", framework.Mix(c.assignNormalBanner, m0...))
+		group.POST("controllers-Controller-assignNormalBanner", "/:banner_type/:id", framework.Mix(c.assignNormalBanner, m0...))
 		// End route with key 0
 
 		initializer.DoInitialize(c)

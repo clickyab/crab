@@ -1,5 +1,8 @@
 {
 	"properties": {
+		"attr": {
+			"type": "string"
+		},
 		"campaign_id": {
 			"type": "integer"
 		},

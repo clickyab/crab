@@ -2,6 +2,7 @@
 // sources:
 // db/20170924113721_ad.sql
 // db/20170926112439_ads.sql
+// db/20171229201129_addattr.sql
 // DO NOT EDIT!
 
 package migrations
@@ -109,6 +110,26 @@ func db20170926112439_adsSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20171229201129_addattrSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xce\x31\x4b\xc4\x30\x18\xc6\xf1\x3d\x9f\xe2\xe1\x96\x53\xe4\x86\x1b\x9c\x8a\x43\x6c\x02\x0e\xd1\xd6\x34\x71\x8f\xcd\x8b\x0d\xd6\x34\x34\x91\x0a\xe2\x77\x97\x2a\x4a\xc5\xe5\xc6\xf7\xe5\xff\xc0\x8f\x1d\x0e\xb8\x78\x09\x4f\xb3\x2b\x04\x9b\xd6\xb3\xbb\x57\x08\x11\x99\xfa\x12\xa6\x88\xbd\x4d\x7b\x84\x0c\x7a\xa3\xfe\xb5\x90\xc7\x32\x50\x44\x19\x42\xc6\xf7\x6e\x8d\x42\x86\x4b\x69\x0c\xe4\x19\x57\x46\x6a\x18\x7e\xad\x24\x9c\xcf\xe0\x42\xa0\x6e\x94\xbd\xbd\x83\x2b\x65\xc6\x03\xd7\xf5\x0d\xd7\x67\x97\xc7\xe3\x79\xc5\x6c\x2b\xb8\x91\x9b\xbc\x93\xe6\xab\xbb\xda\xbd\x7f\xec\x2a\xf6\xc7\x27\xa6\x25\xfe\x08\x7f\x79\xeb\xf3\x24\xe0\x3c\x8d\x23\x79\x3c\xba\xfe\xf9\x1f\x52\xe8\xa6\xdd\x2a\x2b\xc6\x3e\x03\x00\x00\xff\xff\xaf\x7f\x93\x8c\x1a\x01\x00\x00"
+
+func db20171229201129_addattrSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20171229201129_addattrSql,
+		"db/20171229201129_addattr.sql",
+	)
+}
+
+func db20171229201129_addattrSql() (*asset, error) {
+	bytes, err := db20171229201129_addattrSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20171229201129_addattr.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -161,8 +182,9 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"db/20170924113721_ad.sql":  db20170924113721_adSql,
-	"db/20170926112439_ads.sql": db20170926112439_adsSql,
+	"db/20170924113721_ad.sql":      db20170924113721_adSql,
+	"db/20170926112439_ads.sql":     db20170926112439_adsSql,
+	"db/20171229201129_addattr.sql": db20171229201129_addattrSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -207,8 +229,9 @@ type bintree struct {
 
 var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
-		"20170924113721_ad.sql":  &bintree{db20170924113721_adSql, map[string]*bintree{}},
-		"20170926112439_ads.sql": &bintree{db20170926112439_adsSql, map[string]*bintree{}},
+		"20170924113721_ad.sql":      &bintree{db20170924113721_adSql, map[string]*bintree{}},
+		"20170926112439_ads.sql":     &bintree{db20170926112439_adsSql, map[string]*bintree{}},
+		"20171229201129_addattr.sql": &bintree{db20171229201129_addattrSql, map[string]*bintree{}},
 	}},
 }}
 
