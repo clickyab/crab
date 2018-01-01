@@ -4,7 +4,7 @@
 CREATE TABLE `regions` (
   `id` varchar(20) PRIMARY KEY,
   `name` VARCHAR(40) NOT NULL,
-  `active` boolean NOT NULL,
+  `active` boolean NOT NULL DEFAULT true,
   created_at timestamp not null,
   updated_at timestamp not null
 );
