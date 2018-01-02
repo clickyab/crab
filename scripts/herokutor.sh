@@ -69,38 +69,39 @@ TEMPORARY=$(mktemp -d)
 
 # Create Rockerfile to build with rocker (the Dockerfile enhancer tool)
 cat > ${TEMPORARY}/Rockerfile <<EOF
-FROM gliderlabs/herokuish
+FROM alpine:latest
 
-MOUNT {{ .Build }}:/tmp/app
-MOUNT {{ .EnvDir }}:/tmp/env
-MOUNT {{ .Target }}:/tmp/build
-MOUNT {{ .Cache }}:/tmp/cache
+ENV LONG_HASH ${LONG_HASH}
+ENV SHORT_HASH ${SHORT_HASH}
+ENV COMMIT_DATE ${COMMIT_DATE}
+ENV IMP_DATE ${IMP_DATE}
+ENV COMMIT_COUNT ${COMMIT_COUNT}
+ENV BUILD_DATE ${BUILD_DATE}
 
-ENV TZ=Asia/Tehran
-RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
-
-RUN /bin/herokuish buildpack build
-EXPORT /app/bin /app
-
-
-FROM ubuntu:16.04
-IMPORT /app
+MOUNT {{ .Build }}:/crab
 
 ENV TZ=Asia/Tehran
-RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
 
-RUN apt-get update && apt-get install -y tzdata ca-certificates && apt-get clean
-
-CMD ["bash", "/app/bin/run_order.sh"]
+RUN apk add --no-cache --virtual .build-deps git go libc-dev make tzdata \
+    && cp /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone \
+    && apk add --no-cache ca-certificates bash ffmpeg wget && update-ca-certificates \
+    && mkdir -p /gopath/src/clickyab.com/ && cp -r /crane /gopath/src/clickyab.com/ \
+    && cd /gopath/src/clickyab.com/crane && make \
+    && apk del .build-deps \
+    && mkdir -p /app/bin \
+    && mv /gopath/src/clickyab.com/crane/bin/* /app/bin/ \
+    && rm -rf /gopath /go
 
 TAG registry.clickyab.ae/clickyab/{{ .App }}:{{ .Version }}
 PUSH registry.clickyab.ae/clickyab/{{ .App }}:{{ .Version }}
+TAG registry.clickyab.ae/clickyab/{{ .App }}:latest
+PUSH registry.clickyab.ae/clickyab/{{ .App }}:latest
 EOF
 
 TARGET=$(mktemp -d)
 pushd ${TEMPORARY}
 # Actual build
-rocker build ${PUSH} -var Build=${BUILD} -var EnvDir=${VARS} -var Cache=${CACHE} -var Target=${TARGET} -var Version=${BRANCH}.${COMMIT_COUNT} -var App=${APP}
+rocker build ${PUSH} --no-cache -var Build=${BUILD} -var EnvDir=${VARS} -var Cache=${CACHE} -var Target=${TARGET} -var Version=${COMMIT_COUNT} -var App=${APP}_${BRANCH}
 popd
 
 echo "${VARS}" >> /tmp/kill-me
@@ -115,6 +116,6 @@ if [[ ( "${BRANCH}" != "master" ) && ( "${BRANCH}" != "deploy" ) ]]; then
 fi
 echo "The branch ${BRANCH} build finished, try to deploy it" >> ${OUT_LOG}
 echo "If there is no report after this for successful deploy, it means the deploy failed. report it please." >> ${OUT_LOG}
-kubectl -n ${PROJECT} set image deployment  ${APP}-${BRANCH} ${APP}-${BRANCH}=registry.clickyab.ae/clickyab/${APP}:${BRANCH}.${COMMIT_COUNT} --record
-echo "Deploy done successfully to image registry.clickyab.ae/clickyab/${APP}:${BRANCH}.${COMMIT_COUNT}" >> ${OUT_LOG}
+kubectl -n ${PROJECT} set image deployment  ${APP}-${BRANCH} ${APP}-${BRANCH}=registry.clickyab.ae/clickyab/${APP}_${BRANCH}:${COMMIT_COUNT} --record
+echo "Deploy done successfully to image registry.clickyab.ae/clickyab/${APP}_${BRANCH}.${COMMIT_COUNT}" >> ${OUT_LOG}
 echo "green" > ${OUT_LOG_COLOR}
