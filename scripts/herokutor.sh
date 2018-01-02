@@ -6,9 +6,10 @@ set -eo pipefail
 exit_message() {
     echo ${1:-'exiting...'}
     code=${2:-1}
+    app=${3}
     if [ "${code}" == "0" ]
     then
-        echo "Build was OK, but its not the correct branch. ignore this" >> ${OUT_LOG}
+        echo -e "${app}\nBuild was OK, but its not the correct branch. ignore this" >> ${OUT_LOG}
         echo "green" > ${OUT_LOG_COLOR}
     else
         echo "Build was NOT OK. verify with dev team" >> ${OUT_LOG}
@@ -29,12 +30,12 @@ BRANCH=${CHANGE_TARGET:-${BRANCH}}
 
 PUSH="--push"
 [ -z ${CHANGE_AUTHOR} ] || PUSH=""
-[ -z ${APP} ] && exit_message "The APP is not defined." # WTF, the APP NAME is important
+[ -z ${APP} ] && exit_message "The APP is not defined." 1 ${APP}_${BRANCH}:${COMMIT_COUNT} # WTF, the APP NAME is important
 
 SCRIPT_DIR=$(readlink -f $(dirname ${BASH_SOURCE[0]}))
 
 SOURCE_DIR=${1:-}
-[ -z ${SOURCE_DIR} ] && exit_message "Must pass the source directory as the first parameter" 1
+[ -z ${SOURCE_DIR} ] && exit_message "Must pass the source directory as the first parameter" 1 ${APP}_${BRANCH}:${COMMIT_COUNT}
 SOURCE_DIR=$(cd "${SOURCE_DIR}/" && pwd)
 
 BUILD_DIR=${2:-$(mktemp -d)}
@@ -110,9 +111,9 @@ echo "${TEMPORARY}" >> /tmp/kill-me
 echo "${BUILD_DIR}" >> /tmp/kill-me
 echo "${BUILD_PACKS_DIR}" >> /tmp/kill-me
 
-[ -z ${CHANGE_AUTHOR} ] || exit_message "It's a PR, bail out" 0
+[ -z ${CHANGE_AUTHOR} ] || exit_message "It's a PR, bail out" 0 ${APP}_${BRANCH}:${COMMIT_COUNT}
 if [[ ( "${BRANCH}" != "master" ) && ( "${BRANCH}" != "deploy" ) ]]; then
-    exit_message "Its not on correct branch, bail out" 0
+    exit_message "Its not on correct branch, bail out" 0 ${APP}_${BRANCH}:${COMMIT_COUNT}
 fi
 echo "The branch ${BRANCH} build finished, try to deploy it" >> ${OUT_LOG}
 echo "If there is no report after this for successful deploy, it means the deploy failed. report it please." >> ${OUT_LOG}
