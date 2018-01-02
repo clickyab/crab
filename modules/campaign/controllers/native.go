@@ -9,6 +9,16 @@ import (
 
 	"errors"
 
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"time"
+
+	"clickyab.com/crab/modules/upload/controllers"
+	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/random"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 )
@@ -31,10 +41,43 @@ type getNativeDataPayload struct {
 // }
 func (c Controller) getNativeData(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	p := c.MustGetPayload(ctx).(*getNativeDataPayload)
+	u := authz.MustGetUser(ctx)
 	res := getMetaTags(p.URL)
 	if res == nil {
 		c.BadResponse(w, errors.New("error fetching the link"))
+		return
 	}
+	//upload if image exists
+	if res.Image != "" {
+		extension := strings.ToLower(filepath.Ext(res.Image))
+		now := time.Now()
+		fp := filepath.Join(controllers.UPath.String(), "temp", now.Format("2006/01/02"))
+		err := os.MkdirAll(fp, os.FileMode(controllers.Perm.Int64()))
+		assert.Nil(err)
+		fn := func() string {
+			for {
+				tmp := fmt.Sprintf("%d_%s%s", u.ID, <-random.ID, extension)
+				if _, err := os.Stat(fp + tmp); os.IsNotExist(err) {
+					return tmp
+				}
+			}
+		}()
+		f, err := os.OpenFile(filepath.Join(fp, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(controllers.Perm.Int64()))
+		assert.Nil(err)
+		defer f.Close()
+		resp, err := http.Get(res.Image)
+		if err != nil {
+			return
+		}
+		defer func() {
+			assert.Nil(resp.Body.Close())
+		}()
+		_, err = io.Copy(f, resp.Body)
+		assert.Nil(err)
+		finalPath := filepath.Join("temp", now.Format("2006/01/02"), fn)
+		res.Image = finalPath
+	}
+
 	c.OKResponse(w, res)
 }
 
