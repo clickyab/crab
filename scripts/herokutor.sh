@@ -85,11 +85,11 @@ ENV TZ=Asia/Tehran
 RUN apk add --no-cache --virtual .build-deps git go libc-dev make tzdata \
     && cp /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone \
     && apk add --no-cache ca-certificates bash ffmpeg wget && update-ca-certificates \
-    && mkdir -p /gopath/src/clickyab.com/ && cp -r /crane /gopath/src/clickyab.com/ \
-    && cd /gopath/src/clickyab.com/crane && make \
+    && mkdir -p /gopath/src/clickyab.com/ && cp -r /crab /gopath/src/clickyab.com/ \
+    && cd /gopath/src/clickyab.com/crab && make \
     && apk del .build-deps \
     && mkdir -p /app/bin \
-    && mv /gopath/src/clickyab.com/crane/bin/* /app/bin/ \
+    && mv /gopath/src/clickyab.com/crab/bin/* /app/bin/ \
     && rm -rf /gopath /go
 
 TAG registry.clickyab.ae/clickyab/{{ .App }}:{{ .Version }}
