@@ -33,7 +33,8 @@ var (
 	lock   = sync.RWMutex{}
 	// UPath default upload path
 	UPath = config.RegisterString("crab.modules.upload.path", "/statics/uploads", "a path to the location that uploaded file should save")
-	perm  = config.RegisterInt("crab.modules.upload.perm", 0777, "file will save with this permission")
+	// Perm file perm
+	Perm = config.RegisterInt("crab.modules.upload.Perm", 0777, "file will save with this permission")
 )
 
 type kind struct {
@@ -114,7 +115,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	ext := filepath.Ext(handler.Filename)
 	now := time.Now()
 	fp := filepath.Join(UPath.String(), string(m), now.Format("2006/01/02"))
-	err = os.MkdirAll(fp, os.FileMode(perm.Int64()))
+	err = os.MkdirAll(fp, os.FileMode(Perm.Int64()))
 	assert.Nil(err)
 	fn := func() string {
 		for {
@@ -124,7 +125,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 			}
 		}
 	}()
-	f, err := os.OpenFile(filepath.Join(fp, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(perm.Int64()))
+	f, err := os.OpenFile(filepath.Join(fp, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(Perm.Int64()))
 	assert.Nil(err)
 	defer f.Close()
 
