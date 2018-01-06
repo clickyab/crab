@@ -1,3 +1,13 @@
 {
-	"type": "string"
+	"properties": {
+		"native": {
+			"properties": {
+				"title": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		}
+	},
+	"type": "object"
 }

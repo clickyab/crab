@@ -19,13 +19,7 @@
 					"$ref": "#/definitions/user_ResponseLoginOK"
 				}
 			},
-			"401": {
-				"description": "",
-				"schema": {
-					"$ref": "#/definitions/controller_ErrorResponseSimple"
-				}
-			},
-			"403": {
+			"400": {
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/controller_ErrorResponseSimple"
