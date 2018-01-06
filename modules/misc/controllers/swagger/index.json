@@ -10,6 +10,7 @@
 		"add_AdType": "file://5c684b432ed4ef39dfba91e38ba4dc5aaf9246ca",
 		"add_AdUser": "file://c4e7cb4dc71f6adc0d5638c02d3836020f5ef487",
 		"add_AdsUserSlice": "file://35f02c7ffd9c22a540335d1db5c99162ac24f4b1",
+		"add_NativeAdAttr": "file://2e95636208f4af680c3fd43dcbb6f5b1192f9566",
 		"controller_ErrorResponseSimple": "file://035d0d82ff8e72fec8d60b07faa9b516e0ab40c0",
 		"controller_NormalResponse": "file://79ffc6e5cd8d5b843aa71b6e8c5ff43c8ee12e76",
 		"controllers_assignBannerPayload": "file://d5228bef4380a114eaa063171e6807aa3817157b",

@@ -2,7 +2,17 @@
 	"items": {
 		"properties": {
 			"attr": {
-				"type": "string"
+				"properties": {
+					"native": {
+						"properties": {
+							"title": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					}
+				},
+				"type": "object"
 			},
 			"campaign_id": {
 				"type": "integer"
