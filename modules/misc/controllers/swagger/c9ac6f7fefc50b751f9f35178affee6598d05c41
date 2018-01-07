@@ -1,0 +1,23 @@
+{
+	"properties": {
+		"data": {
+			"items": {
+				"type": "integer"
+			},
+			"type": "array"
+		},
+		"hidden": {
+			"type": "boolean"
+		},
+		"name": {
+			"type": "string"
+		},
+		"title": {
+			"type": "string"
+		},
+		"type": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
