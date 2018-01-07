@@ -1,0 +1,16 @@
+{
+	"get": {
+		"description": "GraphRoute return all user inventories",
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controllers_graphResponse"
+				}
+			}
+		},
+		"tags": [
+			"controllers"
+		]
+	}
+}
