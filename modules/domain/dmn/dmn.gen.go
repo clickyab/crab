@@ -3,6 +3,8 @@
 package dmn
 
 import (
+	"fmt"
+
 	"github.com/clickyab/services/mysql"
 	gorp "gopkg.in/gorp.v2"
 )
@@ -16,6 +18,22 @@ const (
 	// DomainTableFull is the Domain table name
 	DomainTableFull = "domains"
 )
+
+func getSelectFields(tb string, alias string) string {
+	if alias != "" {
+		alias += "."
+	}
+	switch tb {
+
+	case DomainUserTableFull:
+		return fmt.Sprintf(`%[1]s&#34;domain_id&#34;,%[1]s&#34;user_id&#34;`, alias)
+
+	case DomainTableFull:
+		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;name&#34;,%[1]s&#34;description&#34;,%[1]s&#34;active&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;`, alias)
+
+	}
+	return ""
+}
 
 // Manager is the model manager for dmn package
 type Manager struct {

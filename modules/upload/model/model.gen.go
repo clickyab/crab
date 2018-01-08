@@ -3,6 +3,8 @@
 package model
 
 import (
+	"fmt"
+
 	"github.com/clickyab/services/mysql"
 	gorp "gopkg.in/gorp.v2"
 )
@@ -13,6 +15,19 @@ const (
 	// UploadTableFull is the Upload table name
 	UploadTableFull = "uploads"
 )
+
+func getSelectFields(tb string, alias string) string {
+	if alias != "" {
+		alias += "."
+	}
+	switch tb {
+
+	case UploadTableFull:
+		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;mime&#34;,%[1]s&#34;size&#34;,%[1]s&#34;user_id&#34;,%[1]s&#34;section&#34;,%[1]s&#34;Attr&#34;`, alias)
+
+	}
+	return ""
+}
 
 // Manager is the model manager for model package
 type Manager struct {

@@ -50,7 +50,7 @@ func (m *Manager) ListCampaignsWithFilter(filter string, params ...interface{}) 
 	var res []Campaign
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", CampaignTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CampaignTableFull, ""), CampaignTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -98,7 +98,7 @@ func (m *Manager) ListCampaignsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", CampaignTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CampaignTableFull, ""), CampaignTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -116,7 +116,7 @@ func (m *Manager) FindCampaignByID(id int64) (*Campaign, error) {
 	var res Campaign
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", CampaignTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(CampaignTableFull, ""), CampaignTableFull),
 		id,
 	)
 

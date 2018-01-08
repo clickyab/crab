@@ -3,6 +3,8 @@
 package add
 
 import (
+	"fmt"
+
 	"github.com/clickyab/services/mysql"
 	gorp "gopkg.in/gorp.v2"
 )
@@ -13,6 +15,19 @@ const (
 	// AdTableFull is the Ad table name
 	AdTableFull = "ads"
 )
+
+func getSelectFields(tb string, alias string) string {
+	if alias != "" {
+		alias += "."
+	}
+	switch tb {
+
+	case AdTableFull:
+		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;campaign_id&#34;,%[1]s&#34;src&#34;,%[1]s&#34;mime&#34;,%[1]s&#34;target&#34;,%[1]s&#34;width&#34;,%[1]s&#34;height&#34;,%[1]s&#34;status&#34;,%[1]s&#34;type&#34;,%[1]s&#34;attr&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;`, alias)
+
+	}
+	return ""
+}
 
 // Manager is the model manager for add package
 type Manager struct {

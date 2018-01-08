@@ -49,7 +49,7 @@ func (m *Manager) ListNotificationsWithFilter(filter string, params ...interface
 	var res []Notification
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", NotificationTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(NotificationTableFull, ""), NotificationTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -97,7 +97,7 @@ func (m *Manager) ListNotificationsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", NotificationTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(NotificationTableFull, ""), NotificationTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -115,7 +115,7 @@ func (m *Manager) FindNotificationByID(id int64) (*Notification, error) {
 	var res Notification
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", NotificationTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(NotificationTableFull, ""), NotificationTableFull),
 		id,
 	)
 
