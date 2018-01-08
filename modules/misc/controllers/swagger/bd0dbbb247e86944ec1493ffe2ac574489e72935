@@ -1,61 +1,12 @@
 {
 	"get": {
-		"description": "",
+		"description": "getVideoReady find video into the system",
 		"parameters": [
 			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the name field",
-				"in": "query",
-				"name": "name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
-				"required": false,
+				"in": "path",
+				"name": "id",
+				"required": true,
 				"type": "string"
 			},
 			{
@@ -67,10 +18,10 @@
 			}
 		],
 		"responses": {
-			"200": {
+			"400": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_listInventoryResponse"
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			},
 			"401": {
@@ -117,6 +68,12 @@
 					},
 					"title": "forbidden",
 					"type": "object"
+				}
+			},
+			"404": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},

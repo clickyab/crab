@@ -66,7 +66,7 @@ type NativeAttr struct {
 type FileAttr struct {
 	Avatar *AvatarAttr `json:"avatar,omitempty"`
 	Banner *BannerAttr `json:"banner,omitempty"`
-	Video  *VideoAttr  `json:"vast,omitempty"`
+	Video  *VideoAttr  `json:"video,omitempty"`
 	Native *NativeAttr `json:"native,omitempty"`
 }
 
@@ -100,7 +100,7 @@ func (b FileAttr) Value() (driver.Value, error) {
 		b.Avatar = nil
 	} else if b.Video != nil {
 		b.Banner = nil
-		b.Video = nil
+		b.Native = nil
 		b.Avatar = nil
 	} else if b.Avatar != nil {
 		b.Native = nil

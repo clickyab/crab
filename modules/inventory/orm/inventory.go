@@ -102,6 +102,7 @@ type InventoryDataTable struct {
 func (m *Manager) FillInventoryDataTableArray(
 	pc permission.InterfaceComplete,
 	filters map[string]string,
+	dateRange map[string]string,
 	search map[string]string,
 	contextparams map[string]string,
 	sort, order string, p, c int) (InventoryDataTableArray, int64) {
