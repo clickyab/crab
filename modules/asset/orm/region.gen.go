@@ -50,7 +50,7 @@ func (m *Manager) ListRegionsWithFilter(filter string, params ...interface{}) []
 	var res []Region
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", RegionTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(RegionTableFull, ""), RegionTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -98,7 +98,7 @@ func (m *Manager) ListRegionsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", RegionTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(RegionTableFull, ""), RegionTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)

@@ -3,6 +3,8 @@
 package orm
 
 import (
+	"fmt"
+
 	"github.com/clickyab/services/mysql"
 	gorp "gopkg.in/gorp.v2"
 )
@@ -31,6 +33,37 @@ const (
 	// RegionTableFull is the Region table name
 	RegionTableFull = "regions"
 )
+
+func getSelectFields(tb string, alias string) string {
+	if alias != "" {
+		alias += "."
+	}
+	switch tb {
+
+	case BrowserTableFull:
+		return fmt.Sprintf(`%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;,%[1]s&#34;active&#34;,%[1]s&#34;name&#34;`, alias)
+
+	case CategoryTableFull:
+		return fmt.Sprintf(`%[1]s&#34;name&#34;,%[1]s&#34;description&#34;,%[1]s&#34;active&#34;`, alias)
+
+	case ISPTableFull:
+		return fmt.Sprintf(`%[1]s&#34;name&#34;,%[1]s&#34;kind&#34;,%[1]s&#34;active&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;`, alias)
+
+	case ManufacturerTableFull:
+		return fmt.Sprintf(`%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;,%[1]s&#34;active&#34;,%[1]s&#34;name&#34;`, alias)
+
+	case OSTableFull:
+		return fmt.Sprintf(`%[1]s&#34;name&#34;,%[1]s&#34;active&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;`, alias)
+
+	case PlatformTableFull:
+		return fmt.Sprintf(`%[1]s&#34;name&#34;,%[1]s&#34;active&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;`, alias)
+
+	case RegionTableFull:
+		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;,%[1]s&#34;active&#34;,%[1]s&#34;name&#34;`, alias)
+
+	}
+	return ""
+}
 
 // Manager is the model manager for orm package
 type Manager struct {

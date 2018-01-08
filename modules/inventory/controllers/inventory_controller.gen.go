@@ -32,6 +32,7 @@ type listInventoryDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
+	DateFilter  string             `json:"datefilter"`
 	Columns     permission.Columns `json:"columns"`
 }
 
@@ -45,6 +46,8 @@ var (
 //		method = get
 //		_c_ = int , count per page
 //		_p_ = int , page number
+//		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
+//		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		resource = inventory_list:self
 //		_sort_ = string, the sort and order like id:asc or id:desc available column "created_at","publisher"
 //		_kind_ = string , filter the kind field valid values are "web","app"
@@ -59,9 +62,19 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 	p, c := framework.GetPageAndCount(r, false)
 
 	filter := make(map[string]string)
+	dateRange := make(map[string]string)
 
 	if e := r.URL.Query().Get("kind"); e != "" && orm.PublisherType(e).IsValid() {
 		filter["inventories.kind"] = e
+	}
+
+	//add date filter
+	if e := r.URL.Query().Get("from"); e != "" {
+		dateRange["from-"] = e
+	}
+
+	if e := r.URL.Query().Get("to"); e != "" {
+		dateRange["to-"] = e
 	}
 
 	search := make(map[string]string)
@@ -94,7 +107,7 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 	}
 
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "inventory_list", "self", domain.ID)
-	dt, cnt := m.FillInventoryDataTableArray(pc, filter, search, params, sort, order, p, c)
+	dt, cnt := m.FillInventoryDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
 	res := listInventoryResponse{
 		Total:   cnt,
 		Data:    dt.Filter(usr),
@@ -124,7 +137,7 @@ func (u *Controller) defInventory(ctx context.Context, w http.ResponseWriter, r 
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listInventoryDefResponse{Checkable: true, Multiselect: true, Hash: hash, Columns: listInventoryDefinition},
+		listInventoryDefResponse{Checkable: true, Multiselect: true, DateFilter: "", Hash: hash, Columns: listInventoryDefinition},
 	)
 }
 

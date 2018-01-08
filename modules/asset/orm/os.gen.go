@@ -50,7 +50,7 @@ func (m *Manager) ListOSWithFilter(filter string, params ...interface{}) []OS {
 	var res []OS
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", OSTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(OSTableFull, ""), OSTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -98,7 +98,7 @@ func (m *Manager) ListOSWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", OSTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(OSTableFull, ""), OSTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -116,7 +116,7 @@ func (m *Manager) FindOSByName(n string) (*OS, error) {
 	var res OS
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE name=?", OSTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(OSTableFull, ""), OSTableFull),
 		n,
 	)
 

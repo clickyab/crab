@@ -50,7 +50,7 @@ func (m *Manager) ListAdsWithFilter(filter string, params ...interface{}) []Ad {
 	var res []Ad
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", AdTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(AdTableFull, ""), AdTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -98,7 +98,7 @@ func (m *Manager) ListAdsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", AdTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(AdTableFull, ""), AdTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -116,7 +116,7 @@ func (m *Manager) FindAdByID(id int64) (*Ad, error) {
 	var res Ad
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", AdTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(AdTableFull, ""), AdTableFull),
 		id,
 	)
 
@@ -132,7 +132,7 @@ func (m *Manager) FindAdBySrc(s string) (*Ad, error) {
 	var res Ad
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE src=?", AdTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE src=?", getSelectFields(AdTableFull, ""), AdTableFull),
 		s,
 	)
 

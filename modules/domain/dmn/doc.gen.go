@@ -75,7 +75,7 @@ func (m *Manager) ListDomainsWithFilter(filter string, params ...interface{}) []
 	var res []Domain
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", DomainTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(DomainTableFull, ""), DomainTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -123,7 +123,7 @@ func (m *Manager) ListDomainsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", DomainTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(DomainTableFull, ""), DomainTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -141,7 +141,7 @@ func (m *Manager) FindDomainByID(id int64) (*Domain, error) {
 	var res Domain
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", DomainTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(DomainTableFull, ""), DomainTableFull),
 		id,
 	)
 
@@ -157,7 +157,7 @@ func (m *Manager) FindDomainByName(n string) (*Domain, error) {
 	var res Domain
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE name=?", DomainTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(DomainTableFull, ""), DomainTableFull),
 		n,
 	)
 

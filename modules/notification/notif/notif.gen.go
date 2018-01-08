@@ -3,6 +3,8 @@
 package notif
 
 import (
+	"fmt"
+
 	"github.com/clickyab/services/mysql"
 	gorp "gopkg.in/gorp.v2"
 )
@@ -13,6 +15,19 @@ const (
 	// NotificationTableFull is the Notification table name
 	NotificationTableFull = "notification"
 )
+
+func getSelectFields(tb string, alias string) string {
+	if alias != "" {
+		alias += "."
+	}
+	switch tb {
+
+	case NotificationTableFull:
+		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;user_id&#34;,%[1]s&#34;title&#34;,%[1]s&#34;message&#34;,%[1]s&#34;type&#34;,%[1]s&#34;created_at&#34;`, alias)
+
+	}
+	return ""
+}
 
 // Manager is the model manager for notif package
 type Manager struct {
