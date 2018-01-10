@@ -89,6 +89,7 @@ type Inventory struct {
 //		view = inventory_list:self
 //		checkable = true
 //		multiselect = true
+//		datefilter = created_at
 //		map_prefix = inventories
 //		controller = clickyab.com/crab/modules/inventory/controllers
 //		fill = FillInventoryDataTableArray
