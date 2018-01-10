@@ -445,7 +445,7 @@ func (c *Controller) finalize(ctx context.Context, w http.ResponseWriter, r *htt
 
 // get gets a campaign by id
 // @Route {
-// 		url = /:id
+// 		url = /get/:id
 //		method = get
 //		resource = get-campaign:self
 //		200 = orm.Campaign

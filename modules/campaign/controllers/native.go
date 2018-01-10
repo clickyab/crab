@@ -78,6 +78,10 @@ func (c Controller) getNativeData(ctx context.Context, w http.ResponseWriter, r 
 		res.Image = finalPath
 	}
 
+	if res.URL == "" {
+		res.URL = p.URL
+	}
+
 	c.OKResponse(w, res)
 }
 

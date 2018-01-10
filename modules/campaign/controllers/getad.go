@@ -16,7 +16,7 @@ import (
 
 // getCampaignAds get all campaign ads
 // @Route {
-// 		url = /:id/ad
+// 		url = /get/:id/ad
 //		method = get
 //		middleware = authz.Authenticate
 //		resource = get_banner:self

@@ -27,3 +27,16 @@ func (m *Manager) GetUserParentsIDDomain(id, d int64) []ParentUser {
 	assert.Nil(err)
 	return res
 }
+
+// GetUserChildesIDDomain get user child ids
+func (m *Manager) GetUserChildesIDDomain(id, d int64) []int64 {
+	var res []ParentUser
+	var final []int64
+	q := fmt.Sprintf(`SELECT user_id FROM %s AS pu WHERE pu.parent_id=? AND pu.domain_id=?`, ParentUserTableFull)
+	_, err := m.GetRDbMap().Select(&res, q, id, d)
+	assert.Nil(err)
+	for i := range res {
+		final = append(final, res[i].UserID)
+	}
+	return final
+}
