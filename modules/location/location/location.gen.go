@@ -29,13 +29,13 @@ func getSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case CityTableFull:
-		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;name&#34;,%[1]s&#34;province_id&#34;`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]sname,%[1]sprovince_id`, alias)
 
 	case CountryTableFull:
-		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;name&#34;`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]sname`, alias)
 
 	case ProvinceTableFull:
-		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;name&#34;,%[1]s&#34;country_id&#34;`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]sname,%[1]scountry_id`, alias)
 
 	}
 	return ""

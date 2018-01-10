@@ -23,7 +23,7 @@ func getSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case UploadTableFull:
-		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;mime&#34;,%[1]s&#34;size&#34;,%[1]s&#34;user_id&#34;,%[1]s&#34;section&#34;,%[1]s&#34;Attr&#34;`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]smime,%[1]ssize,%[1]suser_id,%[1]ssection,%[1]sAttr`, alias)
 
 	}
 	return ""

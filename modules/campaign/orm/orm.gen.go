@@ -15,6 +15,9 @@ const (
 	// CampaignAttributesTableFull is the CampaignAttributes table name
 	CampaignAttributesTableFull = "campaign_attributes"
 
+	// CampaignDetailTableFull is the CampaignDetail table name
+	CampaignDetailTableFull = "campaign_detail"
+
 	// CampaignTableFull is the Campaign table name
 	CampaignTableFull = "campaigns"
 
@@ -29,13 +32,16 @@ func getSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case CampaignAttributesTableFull:
-		return fmt.Sprintf(`%[1]s&#34;campaign_id&#34;,%[1]s&#34;device&#34;,%[1]s&#34;manufacturer&#34;,%[1]s&#34;os&#34;,%[1]s&#34;browser&#34;,%[1]s&#34;iab&#34;,%[1]s&#34;region&#34;,%[1]s&#34;cellular&#34;,%[1]s&#34;isp&#34;`, alias)
+		return fmt.Sprintf(`%[1]scampaign_id,%[1]sdevice,%[1]smanufacturer,%[1]sos,%[1]sbrowser,%[1]siab,%[1]sregion,%[1]scellular,%[1]sisp`, alias)
+
+	case CampaignDetailTableFull:
+		return fmt.Sprintf(`%[1]scampaign_id,%[1]sdaily_id,%[1]sfake_imp,%[1]sfake_click,%[1]simp,%[1]sclick,%[1]scpc,%[1]sconv,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case CampaignTableFull:
-		return fmt.Sprintf(`%[1]s&#34;user_id&#34;,%[1]s&#34;domain_id&#34;,%[1]s&#34;exchange&#34;,%[1]s&#34;white_black_id&#34;,%[1]s&#34;white_black_type&#34;,%[1]s&#34;white_black_value&#34;,%[1]s&#34;progress&#34;,%[1]s&#34;Attributes&#34;`, alias)
+		return fmt.Sprintf(`%[1]suser_id,%[1]sdomain_id,%[1]sexchange,%[1]swhite_black_id,%[1]swhite_black_type,%[1]swhite_black_value,%[1]sprogress,%[1]sAttributes`, alias)
 
 	case ScheduleTableFull:
-		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;campaign_id&#34;,%[1]s&#34;updated_at&#34;`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]scampaign_id,%[1]supdated_at`, alias)
 
 	}
 	return ""
@@ -71,6 +77,15 @@ func (m *Manager) Initialize() {
 	).SetKeys(
 		false,
 		"CampaignID",
+	)
+
+	m.AddTableWithName(
+		CampaignDetail{},
+		CampaignDetailTableFull,
+	).SetKeys(
+		false,
+		"CampaignID",
+		"DailyID",
 	)
 
 	m.AddTableWithName(

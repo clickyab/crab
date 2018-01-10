@@ -26,10 +26,10 @@ func getSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case InventoryTableFull:
-		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;,%[1]s&#34;active&#34;,%[1]s&#34;name&#34;,%[1]s&#34;domain&#34;,%[1]s&#34;cat&#34;,%[1]s&#34;publisher&#34;,%[1]s&#34;kind&#34;,%[1]s&#34;status&#34;`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname,%[1]sdomain,%[1]scat,%[1]spublisher,%[1]skind,%[1]sstatus`, alias)
 
 	case WhiteBlackListTableFull:
-		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;,%[1]s&#34;active&#34;,%[1]s&#34;user_id&#34;,%[1]s&#34;domain_id&#34;,%[1]s&#34;label&#34;,%[1]s&#34;domains&#34;,%[1]s&#34;publisher_type&#34;`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]suser_id,%[1]sdomain_id,%[1]slabel,%[1]sdomains,%[1]spublisher_type`, alias)
 
 	}
 	return ""

@@ -23,7 +23,7 @@ func getSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case NotificationTableFull:
-		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;user_id&#34;,%[1]s&#34;title&#34;,%[1]s&#34;message&#34;,%[1]s&#34;type&#34;,%[1]s&#34;created_at&#34;`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]suser_id,%[1]stitle,%[1]smessage,%[1]stype,%[1]screated_at`, alias)
 
 	}
 	return ""

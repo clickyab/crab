@@ -70,11 +70,11 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 
 	//add date filter
 	if e := r.URL.Query().Get("from"); e != "" {
-		dateRange["from-"] = e
+		dateRange["from-created_at"] = e
 	}
 
 	if e := r.URL.Query().Get("to"); e != "" {
-		dateRange["to-"] = e
+		dateRange["to-created_at"] = e
 	}
 
 	search := make(map[string]string)
@@ -137,7 +137,7 @@ func (u *Controller) defInventory(ctx context.Context, w http.ResponseWriter, r 
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listInventoryDefResponse{Checkable: true, Multiselect: true, DateFilter: "", Hash: hash, Columns: listInventoryDefinition},
+		listInventoryDefResponse{Checkable: true, Multiselect: true, DateFilter: "created_at", Hash: hash, Columns: listInventoryDefinition},
 	)
 }
 
