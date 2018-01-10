@@ -23,7 +23,7 @@ func getSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case AdTableFull:
-		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;campaign_id&#34;,%[1]s&#34;src&#34;,%[1]s&#34;mime&#34;,%[1]s&#34;target&#34;,%[1]s&#34;width&#34;,%[1]s&#34;height&#34;,%[1]s&#34;status&#34;,%[1]s&#34;type&#34;,%[1]s&#34;attr&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]scampaign_id,%[1]ssrc,%[1]smime,%[1]starget,%[1]swidth,%[1]sheight,%[1]sstatus,%[1]stype,%[1]sattr,%[1]screated_at,%[1]supdated_at`, alias)
 
 	}
 	return ""

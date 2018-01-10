@@ -41,25 +41,25 @@ func getSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case BrowserTableFull:
-		return fmt.Sprintf(`%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;,%[1]s&#34;active&#34;,%[1]s&#34;name&#34;`, alias)
+		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname`, alias)
 
 	case CategoryTableFull:
-		return fmt.Sprintf(`%[1]s&#34;name&#34;,%[1]s&#34;description&#34;,%[1]s&#34;active&#34;`, alias)
+		return fmt.Sprintf(`%[1]sname,%[1]sdescription,%[1]sactive`, alias)
 
 	case ISPTableFull:
-		return fmt.Sprintf(`%[1]s&#34;name&#34;,%[1]s&#34;kind&#34;,%[1]s&#34;active&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;`, alias)
+		return fmt.Sprintf(`%[1]sname,%[1]skind,%[1]sactive,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case ManufacturerTableFull:
-		return fmt.Sprintf(`%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;,%[1]s&#34;active&#34;,%[1]s&#34;name&#34;`, alias)
+		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname`, alias)
 
 	case OSTableFull:
-		return fmt.Sprintf(`%[1]s&#34;name&#34;,%[1]s&#34;active&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;`, alias)
+		return fmt.Sprintf(`%[1]sname,%[1]sactive,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case PlatformTableFull:
-		return fmt.Sprintf(`%[1]s&#34;name&#34;,%[1]s&#34;active&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;`, alias)
+		return fmt.Sprintf(`%[1]sname,%[1]sactive,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case RegionTableFull:
-		return fmt.Sprintf(`%[1]s&#34;id&#34;,%[1]s&#34;created_at&#34;,%[1]s&#34;updated_at&#34;,%[1]s&#34;active&#34;,%[1]s&#34;name&#34;`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname`, alias)
 
 	}
 	return ""

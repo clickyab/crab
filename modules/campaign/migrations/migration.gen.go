@@ -6,6 +6,8 @@
 // db/20171024144357_campaign.sql
 // db/20171107105208_exchange.sql
 // db/20171107122141_wb.sql
+// db/20180106144021_details.sql
+// db/20180106150131_listperms.sql
 // DO NOT EDIT!
 
 package migrations
@@ -193,6 +195,46 @@ func db20171107122141_wbSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180106144021_detailsSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x9c\x93\x41\x6f\x9c\x30\x10\x85\xef\xfe\x15\x73\xdb\x45\x4d\xa4\xe6\x9c\x13\x65\xbd\x15\x2a\x0b\x5b\x63\x0e\x39\x19\xc7\x76\x92\x11\x60\xac\xc5\x69\xd2\x7f\x5f\xb9\x2d\x25\x64\xbb\xaa\xd5\x23\xf6\xf7\xe6\x3d\x6b\x78\xe4\xfa\x1a\x3e\x0c\xf8\x78\x92\xde\x40\xe3\xc2\x67\xfd\xb5\x00\xb4\x30\x19\xe5\x71\xb4\xb0\x69\xdc\x06\x70\x02\xf3\x6a\xd4\xb3\x37\x1a\x5e\x9e\x8c\x05\xff\x84\x13\xfc\xd2\x05\x08\x27\x90\xce\xf5\x68\x34\xc9\x18\x4d\x39\x05\x9e\x7e\x2a\x28\xb4\x4a\x0e\x4e\xe2\xa3\x15\xda\x78\x89\x7d\x0b\x5b\x02\x6f\x4e\x51\xb7\x80\xd6\x6f\x6f\x6e\x12\x28\x2b\x0e\x65\x53\x14\x57\x81\xd0\x12\xfb\xef\x97\xaf\x1f\x64\x67\x04\x0e\xee\xfc\x1a\x76\x74\x9f\x36\x05\x87\xcd\xc7\xcd\x82\xaa\x1e\x55\x17\x01\xc7\x8d\x8c\x9d\xa6\x46\xfb\x2d\x06\x73\x2a\x8a\x1a\x62\xa8\x93\x91\xde\x68\x21\x7d\x0b\x1e\x07\x33\x79\x39\xb8\x73\x3c\x6b\x18\xa3\x25\x17\x3c\x3f\xd0\x9a\xa7\x87\xe3\x4f\xf1\xb3\xd3\xff\x2d\x3e\xb2\xfc\x90\xb2\x3b\xf8\x42\xef\x60\xbb\x5a\xf0\xd5\xb2\xcc\x24\x90\x81\x78\xff\x5f\x88\x60\x2c\xbc\xbc\xef\x8d\x40\x2d\x1e\xba\x16\xb6\x31\xb2\x37\x3e\x62\xc6\x05\x5a\x6d\x5e\xdb\x7f\xa4\xc8\xaa\xb2\xe6\x2c\xcd\x4b\x7e\x79\xea\x34\x67\xd9\x57\x8c\xe6\x9f\xcb\xbf\x3c\x2e\x01\x46\xf7\x94\xd1\x32\xa3\xf5\x32\x68\x0a\xee\x31\x4e\xe7\xcf\x5e\x5b\x2d\x99\x57\x3e\x8b\x6c\x36\x22\xc9\x2d\x59\x75\x79\x37\xbe\xd8\xb9\xcd\x7f\xaa\x1c\x0e\xa3\xca\x7c\x1a\xfb\xde\x68\xb8\x97\xaa\x23\x3b\x56\x1d\x7f\xd7\xf9\x5d\xfc\x5b\x42\x7e\x04\x00\x00\xff\xff\xf7\x46\xd7\x7a\x40\x04\x00\x00"
+
+func db20180106144021_detailsSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180106144021_detailsSql,
+		"db/20180106144021_details.sql",
+	)
+}
+
+func db20180106144021_detailsSql() (*asset, error) {
+	bytes, err := db20180106144021_detailsSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180106144021_details.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _db20180106150131_listpermsSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xc4\x93\x4f\x4f\x02\x31\x14\xc4\xef\x7c\x8a\xc9\x5e\xba\xc4\x72\xd0\xab\x27\x13\x6a\x24\xc1\x25\xf2\x47\x8e\xa4\xb6\x4f\x78\xb1\xb4\xcd\xb6\x04\xfd\xf6\xa6\xa0\x06\x3c\x18\x2f\xba\x97\xa6\xf3\xd2\x66\xe6\x97\x76\x7a\x83\x01\x2e\xb6\xbc\x6e\x75\x26\x2c\x62\x91\xb3\x87\x31\xd8\x23\x91\xc9\x1c\x3c\xc4\x22\x0a\x70\x02\xbd\x92\xd9\x65\xb2\xd8\x6f\xc8\x23\x6f\x38\xe1\x78\xaf\x1c\xe2\x04\x1d\xa3\x63\xb2\xbd\x51\x33\x53\xd3\x39\x46\xcd\x7c\x82\x36\x38\x5a\x45\x6a\xb7\x9c\x12\x07\x5f\x1f\x34\x5b\x89\x32\x93\x48\x26\x44\x92\x30\x2d\xe9\x4c\x76\xa5\xb3\xc4\x2e\xda\x8f\x7d\x1f\x8f\x37\xe3\x85\x9a\xa1\xbe\x94\xc2\xe8\x6d\xd4\xbc\xf6\x2b\xc7\x29\x0b\x29\x12\xb9\x67\x21\x9b\xc9\xb2\xee\x1f\xd7\xfe\xf5\x1f\x18\x5f\x75\x65\x7c\x4a\x4c\x96\xbb\x21\xfe\x57\xe3\x53\x62\x13\xe2\x5b\x27\xc4\x3f\x18\x9f\xf5\x64\x18\xf6\xfe\xb3\x29\x5f\x35\x29\xc3\x5f\x15\xa5\x0d\xce\x91\xc5\x93\x36\x2f\xbd\xa1\x1a\xab\xb9\xc2\xed\x74\x72\xff\x9d\x07\xcb\x3b\x35\x55\x07\x18\x8c\x1a\xd4\xd5\xd9\xc3\x54\xb2\x3a\x8b\x7d\xaa\xcb\x57\xad\x4a\xe6\xf7\x00\x00\x00\xff\xff\x9c\x4e\x24\x51\xdd\x03\x00\x00"
+
+func db20180106150131_listpermsSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180106150131_listpermsSql,
+		"db/20180106150131_listperms.sql",
+	)
+}
+
+func db20180106150131_listpermsSql() (*asset, error) {
+	bytes, err := db20180106150131_listpermsSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180106150131_listperms.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -245,12 +287,14 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"db/20170829140330_time.sql":     db20170829140330_timeSql,
-	"db/20170903102708_campaign.sql": db20170903102708_campaignSql,
-	"db/20171018070248_schedule.sql": db20171018070248_scheduleSql,
-	"db/20171024144357_campaign.sql": db20171024144357_campaignSql,
-	"db/20171107105208_exchange.sql": db20171107105208_exchangeSql,
-	"db/20171107122141_wb.sql":       db20171107122141_wbSql,
+	"db/20170829140330_time.sql":      db20170829140330_timeSql,
+	"db/20170903102708_campaign.sql":  db20170903102708_campaignSql,
+	"db/20171018070248_schedule.sql":  db20171018070248_scheduleSql,
+	"db/20171024144357_campaign.sql":  db20171024144357_campaignSql,
+	"db/20171107105208_exchange.sql":  db20171107105208_exchangeSql,
+	"db/20171107122141_wb.sql":        db20171107122141_wbSql,
+	"db/20180106144021_details.sql":   db20180106144021_detailsSql,
+	"db/20180106150131_listperms.sql": db20180106150131_listpermsSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -295,12 +339,14 @@ type bintree struct {
 
 var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
-		"20170829140330_time.sql":     &bintree{db20170829140330_timeSql, map[string]*bintree{}},
-		"20170903102708_campaign.sql": &bintree{db20170903102708_campaignSql, map[string]*bintree{}},
-		"20171018070248_schedule.sql": &bintree{db20171018070248_scheduleSql, map[string]*bintree{}},
-		"20171024144357_campaign.sql": &bintree{db20171024144357_campaignSql, map[string]*bintree{}},
-		"20171107105208_exchange.sql": &bintree{db20171107105208_exchangeSql, map[string]*bintree{}},
-		"20171107122141_wb.sql":       &bintree{db20171107122141_wbSql, map[string]*bintree{}},
+		"20170829140330_time.sql":      &bintree{db20170829140330_timeSql, map[string]*bintree{}},
+		"20170903102708_campaign.sql":  &bintree{db20170903102708_campaignSql, map[string]*bintree{}},
+		"20171018070248_schedule.sql":  &bintree{db20171018070248_scheduleSql, map[string]*bintree{}},
+		"20171024144357_campaign.sql":  &bintree{db20171024144357_campaignSql, map[string]*bintree{}},
+		"20171107105208_exchange.sql":  &bintree{db20171107105208_exchangeSql, map[string]*bintree{}},
+		"20171107122141_wb.sql":        &bintree{db20171107122141_wbSql, map[string]*bintree{}},
+		"20180106144021_details.sql":   &bintree{db20180106144021_detailsSql, map[string]*bintree{}},
+		"20180106150131_listperms.sql": &bintree{db20180106150131_listpermsSql, map[string]*bintree{}},
 	}},
 }}
 
