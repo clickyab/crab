@@ -81,6 +81,7 @@ func (c *Controller) attributes(ctx context.Context, w http.ResponseWriter, r *h
 	o, err := db.FindCampaignByID(id)
 	if err != nil {
 		c.NotFoundResponse(w, nil)
+		return
 	}
 
 	err = db.UpdateAttribute(p.CampaignAttributes, o)

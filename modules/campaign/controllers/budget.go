@@ -54,11 +54,13 @@ func (c *Controller) budget(ctx context.Context, w http.ResponseWriter, r *http.
 
 	if err != nil || id < 1 {
 		c.BadResponse(w, errors.New("id is not valid"))
+		return
 	}
 	db := orm.NewOrmManager()
 	o, err := db.FindCampaignByID(id)
 	if err != nil {
 		c.NotFoundResponse(w, nil)
+		return
 	}
 
 	err = db.UpdateCampaignBudget(p.CampaignFinance, o)
