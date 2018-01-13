@@ -107,12 +107,12 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 		c.BadResponse(w, fmt.Errorf(`file not found, the key for file should be "file"`))
 		return
 	}
-	defer file.Close()
+	defer assert.Nil(file.Close())
 
 	buff := &bytes.Buffer{}
 	dimensionHandler := &bytes.Buffer{}
 	multiHandler := io.MultiWriter(dimensionHandler, buff)
-	io.Copy(multiHandler, file)
+	assert.Nil(io.Copy(multiHandler, file))
 	ac, mime := validMIME(handler.Header, s.mimes)
 	if !ac {
 		c.BadResponse(w, fmt.Errorf("the file type is not valid"))
@@ -141,7 +141,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	}()
 	f, err := os.OpenFile(filepath.Join(fp, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(Perm.Int64()))
 	assert.Nil(err)
-	defer f.Close()
+	defer assert.Nil(f.Close())
 
 	finalPath := filepath.Join(string(m), now.Format("2006/01/02"), fn)
 	size, er := io.Copy(f, buff)
@@ -204,7 +204,7 @@ func (c Controller) videoUpload(ctx context.Context, w http.ResponseWriter, r *h
 	}
 	chunkPathDir, file, err := chunkUpload(tempDir, flowData, r)
 	if err != nil {
-		os.RemoveAll(chunkPathDir)
+		_ = os.RemoveAll(chunkPathDir)
 		c.BadResponse(w, errors.New("failed to upload chunks"))
 		return
 	}
@@ -241,45 +241,38 @@ func (c Controller) videoUpload(ctx context.Context, w http.ResponseWriter, r *h
 		return false
 	}()
 	if !isValidMime {
-		os.RemoveAll(chunkPathDir)
-		c.BadResponse(w, errors.New("video mime type not valid"))
+		c.uploadErrorResponse(w, chunkPathDir, "video mime type not valid")
 		return
 	}
 	size := fileInfo.Size()
 	//check size
 	if size > VideoMaxSize.Int64() {
-		os.RemoveAll(chunkPathDir)
-		c.BadResponse(w, errors.New("video is too large to be uploaded"))
+		c.uploadErrorResponse(w, chunkPathDir, "video is too large to be uploaded")
 		return
 	}
 
 	info, err := getVideoInfo(file)
 	if err != nil {
-		os.RemoveAll(chunkPathDir)
-		c.BadResponse(w, errors.New("uploaded file is not readable"))
+		c.uploadErrorResponse(w, chunkPathDir, "uploaded file is not readable")
 		return
 	}
 
 	if _, ok := info["format"]; !ok {
-		os.RemoveAll(chunkPathDir)
-		c.BadResponse(w, errors.New("file format is not readable"))
+		c.uploadErrorResponse(w, chunkPathDir, "file format is not readable")
 		return
 	}
 	format := info["format"].(map[string]interface{})
 	if _, ok := format["duration"]; !ok {
-		os.RemoveAll(chunkPathDir)
-		c.BadResponse(w, errors.New("cant get duration from file"))
+		c.uploadErrorResponse(w, chunkPathDir, "cant get duration from file")
 		return
 	}
 	duration, err := strconv.ParseFloat(format["duration"].(string), 64)
 	if err != nil {
-		os.RemoveAll(chunkPathDir)
-		c.BadResponse(w, errors.New("error parsing duration from video"))
+		c.uploadErrorResponse(w, chunkPathDir, "error parsing duration from video")
 		return
 	}
 	if int64(duration) > MaxVideoDuration.Int64() {
-		os.RemoveAll(chunkPathDir)
-		c.BadResponse(w, fmt.Errorf("maximum duration is %d seconds", MaxVideoDuration.Int64()))
+		c.uploadErrorResponse(w, chunkPathDir, fmt.Sprintf("maximum duration is %d seconds", MaxVideoDuration.Int64()))
 		return
 	}
 	convertedPath := strings.TrimRight(file, extension) + videoSaveFormat.String()
@@ -290,11 +283,13 @@ func (c Controller) videoUpload(ctx context.Context, w http.ResponseWriter, r *h
 	fn := generateFileName(currentUser.ID, basePath, videoSaveFormat.String())
 	f, err := os.OpenFile(filepath.Join(basePath, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(Perm.Int64()))
 	assert.Nil(err)
-	defer f.Close()
+	defer assert.Nil(f.Close())
 
 	//converting the video
 	safe.GoRoutine(ctx, func() {
-		doConvert(file, convertedPath, chunkPathDir, f.Name())
+		err := doConvert(file, convertedPath, chunkPathDir, f.Name())
+		_ = os.RemoveAll(chunkPathDir)
+		assert.Nil(err)
 	})
 
 	dbSavePath := filepath.Join("video", now.Format("2006/01/02"), fn)
@@ -320,17 +315,20 @@ func (c Controller) videoUpload(ctx context.Context, w http.ResponseWriter, r *h
 
 }
 
+func (c Controller) uploadErrorResponse(w http.ResponseWriter, chunkDirPath string, errorMsg string) {
+	_ = os.RemoveAll(chunkDirPath)
+	c.BadResponse(w, errors.New(errorMsg))
+}
+
 func doConvert(file, convertedPath, chunkPathDir, f string) error {
 	err := convertVideo(file, convertedPath)
 	if err != nil {
-		os.RemoveAll(chunkPathDir)
 		return errors.New("cant convert video")
 	}
 	err = os.Rename(convertedPath, f)
-	assert.Nil(err)
+
 	//remove chunk dir
-	os.RemoveAll(chunkPathDir)
-	return nil
+	return err
 }
 
 func getDimension(mime model.Mime, dimensionHandler *bytes.Buffer, bannerType string) (*model.FileAttr, error) {

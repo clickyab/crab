@@ -30,11 +30,11 @@ type CampaignAttributes struct {
 // UpdateAttribute will update campaign attributes
 func (m *Manager) UpdateAttribute(attributes CampaignAttributes, ca *Campaign) error {
 
-	at, err := m.FindCampaignAttributesByCampaignID(ca.ID)
+	_, err := m.FindCampaignAttributesByCampaignID(ca.ID)
 	if err != sql.ErrNoRows {
 		assert.Nil(err)
 	}
-	at = &attributes
+	at := &attributes
 	at.CampaignID = ca.ID
 
 	if err != nil {
@@ -42,6 +42,7 @@ func (m *Manager) UpdateAttribute(attributes CampaignAttributes, ca *Campaign) e
 	} else {
 		err = m.UpdateCampaignAttributes(at)
 	}
+
 	if err != nil {
 		return err
 	}

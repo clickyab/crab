@@ -32,6 +32,17 @@ func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *htt
 	m := aaa.NewAaaManager()
 	d := domain.MustGetDomain(ctx)
 
+	isUnique, err := m.CheckEmailUniqueness(pl.Email)
+	if err != nil {
+		u.BadResponse(w, trans.E(err.Error()))
+		return
+	}
+
+	if !isUnique {
+		u.BadResponse(w, trans.E("Duplicate email"))
+		return
+	}
+
 	res := aaa.RegisterUserPayload{
 		Email:     pl.Email,
 		Password:  pl.Password,

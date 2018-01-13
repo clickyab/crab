@@ -78,9 +78,6 @@ func (b *FileAttr) Scan(src interface{}) error {
 		c = src.([]byte)
 	case string:
 		c = []byte(src.(string))
-	case nil:
-		c = make([]byte, 0)
-		return nil
 	default:
 		return errors.New("unsupported type")
 	}
@@ -92,25 +89,14 @@ func (b *FileAttr) Scan(src interface{}) error {
 func (b FileAttr) Value() (driver.Value, error) {
 	if b.Banner != nil {
 		b.Native = nil
-		b.Video = nil
-		b.Avatar = nil
 	} else if b.Native != nil {
-		b.Banner = nil
 		b.Video = nil
-		b.Avatar = nil
 	} else if b.Video != nil {
 		b.Banner = nil
-		b.Native = nil
-		b.Avatar = nil
 	} else if b.Avatar != nil {
 		b.Native = nil
-		b.Video = nil
-		b.Banner = nil
 	} else {
 		b.Native = nil
-		b.Video = nil
-		b.Banner = nil
-		b.Avatar = nil
 	}
 	return json.Marshal(b)
 }

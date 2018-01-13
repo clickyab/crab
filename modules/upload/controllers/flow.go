@@ -209,8 +209,6 @@ func getVideoInfo(path string) (map[string]interface{}, error) {
 func convertVideo(path, convertedPath string) error {
 	cmd := exec.Command(ffmpeg.String(), "-i", ""+path+"", "-filter:v", "scale=480:-2", "-strict", "-2", "-f", "mp4", ""+convertedPath+"")
 	_, err := cmd.Output()
-	if err != nil {
-		return err
-	}
-	return nil
+
+	return err
 }

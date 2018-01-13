@@ -14,14 +14,13 @@ type authContextKey string
 
 const (
 	scopeGranted authContextKey = "__granted_scope__"
-	permGranted  authContextKey = "__granted_perm__"
 )
 
 // AuthorizeGenerator is a middleware used for authorization in exchange console
 func AuthorizeGenerator(resource permission.Token, scope permission.UserScope) framework.Middleware {
 	return func(next framework.Handler) framework.Handler {
 		return func(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-			var permGranted permission.Token = resource
+			permGranted := resource
 			u := MustGetUser(ctx)
 			currentDomain := domain.MustGetDomain(ctx)
 			grantedScope, ok := u.Has(scope, resource, currentDomain.ID)

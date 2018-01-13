@@ -73,7 +73,7 @@ func (u *Controller) Routes(r framework.Mux) {
 				panic("Don't worry. it's just a test")
 			}
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("Noop ;)"))
+			_, _ = w.Write([]byte("Noop ;)"))
 		}))
 
 	m.GET("controllers-Controller-swagger", filepath.Join("/swagger/index.json"),

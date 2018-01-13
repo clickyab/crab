@@ -179,7 +179,7 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 	}
 	role, err := m.FindRoleByNameDomain(ucfg.DefaultRole.String(), domainID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("user role %s with domain id %d not found with error: %s", ucfg.DefaultRole.String(), domainID, err.Error())
 	}
 	ur := &RoleUser{RoleID: role.ID, UserID: u.ID}
 	err = m.CreateRoleUser(ur)
@@ -208,6 +208,20 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 		return nil, err
 	}
 	return u, nil
+}
+
+// CheckEmailUniqueness function for check email uniquness validation
+func (m *Manager) CheckEmailUniqueness(email string) (bool, error) {
+	cnt, err := m.GetRDbMap().SelectInt(
+		fmt.Sprintf("SELECT count(1) FROM %s WHERE email=?", UserTableFull),
+		email,
+	)
+
+	if err != nil {
+		return false, err
+	}
+
+	return (cnt == 0), nil
 }
 
 // FindRoleByNameDomain return the Role base on its name and domain
@@ -306,10 +320,7 @@ func (u *User) UpdatePassword(c, p string) error {
 
 // ValidatePassword return true if the given password is the user current password.
 func (u *User) ValidatePassword(p string) bool {
-	if bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(p)) == nil {
-		return true
-	}
-	return false
+	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(p)) == nil
 }
 
 // ChangePassword get user and password and will update oldpassword column

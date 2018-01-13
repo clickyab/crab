@@ -47,7 +47,7 @@ func (ctrl *Controller) whiteBlackLists(ctx context.Context, w http.ResponseWrit
 		ctrl.NotFoundResponse(w, trans.E("User doesn't have any list"))
 		return
 	}
-	ctrl.OKResponse(w, res)
+	ctrl.OKResponse(w, whiteBlackLists(res))
 }
 
 // whiteBlackList return a user inventory

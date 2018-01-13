@@ -25,7 +25,9 @@ func main() {
 	assert.Nil(os.MkdirAll(*target, 0777))
 	in, err := os.OpenFile(*path, os.O_RDONLY, 0666)
 	assert.Nil(err)
-	defer in.Close()
+	defer func() {
+		_ = in.Close()
+	}()
 	dec := json.NewDecoder(in)
 	var data = make(map[string]interface{})
 	assert.Nil(dec.Decode(&data))
@@ -70,7 +72,9 @@ func save(path string, data interface{}) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() {
+		_ = f.Close()
+	}()
 
 	enc := json.NewEncoder(f)
 	enc.SetIndent("", "\t")

@@ -135,10 +135,20 @@ func (c Controller) changeForgetPassword(ctx context.Context, w http.ResponseWri
 
 	u, e := verifyCode(t)
 	if e != nil {
-		c.ForbiddenResponse(w, nil)
+		c.ForbiddenResponse(w, e)
 		return
 	}
-	u.ChangePassword(p.NewPassword)
+
+	err := u.ChangePassword(p.NewPassword)
+	if err != nil {
+		if err == aaa.ErrorOldPass {
+			c.BadResponse(w, trans.EE(err))
+			return
+		}
+		c.BadResponse(w, trans.E("Can't change password!"))
+		return
+	}
+
 	c.createLoginResponse(w, u)
 }
 
