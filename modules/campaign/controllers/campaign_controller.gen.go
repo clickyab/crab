@@ -38,7 +38,7 @@ type listCampaignDefResponse struct {
 
 var (
 	listCampaignDefinition permission.Columns
-	tmp                    = []byte{}
+	Campaigntmp            = []byte{}
 )
 
 // @Route {
@@ -126,7 +126,7 @@ func (u *Controller) listCampaign(ctx context.Context, w http.ResponseWriter, r 
 	}
 
 	h := sha1.New()
-	_, _ = h.Write(tmp)
+	_, _ = h.Write(Campaigntmp)
 	res.Hash = fmt.Sprintf("%x", h.Sum(nil))
 
 	u.OKResponse(
@@ -143,7 +143,7 @@ func (u *Controller) listCampaign(ctx context.Context, w http.ResponseWriter, r 
 // }
 func (u *Controller) defCampaign(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	h := sha1.New()
-	_, _ = h.Write(tmp)
+	_, _ = h.Write(Campaigntmp)
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
@@ -152,7 +152,7 @@ func (u *Controller) defCampaign(ctx context.Context, w http.ResponseWriter, r *
 }
 
 func init() {
-	tmp = []byte(` [
+	Campaigntmp = []byte(` [
 		{
 			"data": "id",
 			"name": "ID",
@@ -495,5 +495,5 @@ func init() {
 			"filter_valid_map": null
 		}
 	] `)
-	assert.Nil(json.Unmarshal(tmp, &listCampaignDefinition))
+	assert.Nil(json.Unmarshal(Campaigntmp, &listCampaignDefinition))
 }
