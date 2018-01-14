@@ -38,7 +38,7 @@ type listInventoryDefResponse struct {
 
 var (
 	listInventoryDefinition permission.Columns
-	tmp                     = []byte{}
+	Inventorytmp            = []byte{}
 )
 
 // @Route {
@@ -116,7 +116,7 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 	}
 
 	h := sha1.New()
-	_, _ = h.Write(tmp)
+	_, _ = h.Write(Inventorytmp)
 	res.Hash = fmt.Sprintf("%x", h.Sum(nil))
 
 	u.OKResponse(
@@ -133,7 +133,7 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 // }
 func (u *Controller) defInventory(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	h := sha1.New()
-	_, _ = h.Write(tmp)
+	_, _ = h.Write(Inventorytmp)
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
@@ -142,7 +142,7 @@ func (u *Controller) defInventory(ctx context.Context, w http.ResponseWriter, r 
 }
 
 func init() {
-	tmp = []byte(` [
+	Inventorytmp = []byte(` [
 		{
 			"data": "_actions",
 			"name": "Actions",
@@ -268,5 +268,5 @@ func init() {
 			"filter_valid_map": null
 		}
 	] `)
-	assert.Nil(json.Unmarshal(tmp, &listInventoryDefinition))
+	assert.Nil(json.Unmarshal(Inventorytmp, &listInventoryDefinition))
 }
