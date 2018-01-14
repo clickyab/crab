@@ -100,6 +100,7 @@ type Campaign struct {
 	WhiteBlackValue mysql.StringMapJSONArray `json:"-" db:"white_black_value"`
 	Progress        Progress                 `json:"-" db:"progress"`
 	Attributes      *CampaignAttributes      `json:"attributes,omitempty" db:"-"`
+	ArchiveAt       mysql.NullTime           `json:"archive_at" db:"archive_at"`
 }
 
 // CampaignDataTable is the campaign full data in data table

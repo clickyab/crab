@@ -1,7 +1,21 @@
 {
-	"get": {
-		"description": "",
+	"patch": {
+		"description": "budget will update campaign finance stat=archive,start,pause",
 		"parameters": [
+			{
+				"description": "",
+				"in": "path",
+				"name": "id",
+				"required": true,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "path",
+				"name": "stat",
+				"required": true,
+				"type": "string"
+			},
 			{
 				"description": "the security token, get it from login route",
 				"in": "header",
@@ -11,10 +25,10 @@
 			}
 		],
 		"responses": {
-			"200": {
+			"400": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_listPublisherDefResponse"
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			},
 			"401": {
@@ -41,26 +55,15 @@
 				}
 			},
 			"403": {
-				"description": "forbidden, you have no access here",
+				"description": "",
 				"schema": {
-					"properties": {
-						"error": {
-							"properties": {
-								"params": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						}
-					},
-					"title": "forbidden",
-					"type": "object"
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			},
+			"404": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},
