@@ -82,7 +82,7 @@ type Controller struct {
 
 // Upload into the system
 // @Route {
-// 		url = /banner/:module
+// 		url = /upload/:module
 //		method = post
 //		middleware = authz.Authenticate
 // }

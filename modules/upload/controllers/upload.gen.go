@@ -25,7 +25,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		group := r.NewGroup("/upload")
 
 		/* Route {
-			"Route": "/banner/:module",
+			"Route": "/upload/:module",
 			"Method": "POST",
 			"Function": "Controller.Upload",
 			"RoutePkg": "controllers",
@@ -43,7 +43,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.POST("controllers-Controller-Upload", "/banner/:module", framework.Mix(c.Upload, m0...))
+		group.POST("controllers-Controller-Upload", "/upload/:module", framework.Mix(c.Upload, m0...))
 		// End route with key 0
 
 		/* Route {
