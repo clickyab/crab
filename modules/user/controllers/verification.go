@@ -30,9 +30,12 @@ import (
 )
 
 const (
-	verifyKeyPrefix    = "VERIFY"
-	emailVerifyPath    = "user/email/verify"
-	passwordVerifyPath = "user/password/verify"
+	verifyKeyPrefix         = "VERIFY"
+	verifyTokenRedisKey     = "verifyToken"
+	verifyShortCodeRedisKey = "verifyShortCode"
+	userIDRedisKey          = "userId"
+	emailVerifyPath         = "user/email/verify"
+	passwordVerifyPath      = "user/password/verify"
 )
 
 var (
@@ -85,9 +88,7 @@ type verifyEmailCodePayload struct {
 func (ctrl *Controller) verifyEmailCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	p := ctrl.MustGetPayload(ctx).(*verifyEmailCodePayload)
-	logrus.Warn("1")
 	u, e := verifyCode(fmt.Sprintf("%s%s%s", hasher(p.Email+emailVerifyPath), delimiter, p.Code))
-	logrus.Warn("2")
 
 	if e != nil || u.Status != aaa.RegisteredUserStatus || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
 		ctrl.ForbiddenResponse(w, nil)
@@ -166,11 +167,11 @@ func verifyCode(c string) (*aaa.User, error) {
 
 	kw := kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKeyPrefix, userEmailHash))
 
-	if kw.SubKey("verifyToken") != verifyToken {
+	if kw.SubKey(verifyTokenRedisKey) != verifyToken {
 		return nil, errors.New("code is not valid")
 	}
 
-	userID := kw.SubKey("userId")
+	userID := kw.SubKey(userIDRedisKey)
 	if userID == "" {
 		return nil, errors.New("Can't find user")
 	}
@@ -216,9 +217,9 @@ func genVerifyCode(user *aaa.User, salt string) (string, string, error) {
 
 	verifyShortCode := fmt.Sprintf("%d", intToken)[:8]
 
-	kw.SetSubKey("verifyToken", verifyToken)
-	kw.SetSubKey("verifyShortCode", verifyShortCode)
-	kw.SetSubKey("userId", fmt.Sprintf("%d", user.ID))
+	kw.SetSubKey(verifyTokenRedisKey, verifyToken)
+	kw.SetSubKey(verifyShortCodeRedisKey, verifyShortCode)
+	kw.SetSubKey(userIDRedisKey, fmt.Sprintf("%d", user.ID))
 
 	return fmt.Sprintf("%s%s%s", emailHash, delimiter, verifyToken), verifyShortCode, kw.Save(exp.Duration())
 }
