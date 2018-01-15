@@ -72,7 +72,7 @@ func save(path string, data interface{}) error {
 	if err != nil {
 		return err
 	}
-	defer func() { _ = f.Close() }()
+	defer func() { assert.Nil(f.Close()) }()
 
 	enc := json.NewEncoder(f)
 	enc.SetIndent("", "\t")
