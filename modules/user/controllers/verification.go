@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/sirupsen/logrus"
-
 	"errors"
 
 	"time"
@@ -17,6 +15,7 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/kv"
+	"github.com/clickyab/services/xlog"
 
 	"strings"
 
@@ -34,14 +33,14 @@ const (
 	verifyTokenRedisKey     = "vt"
 	verifyShortCodeRedisKey = "vsc"
 	userIDRedisKey          = "uid"
-	emailVerifyPath         = "user/email/verify"
-	passwordVerifyPath      = "user/password/verify"
 )
 
 var (
-	errTooSoon = errors.New("code has been sent")
-	exp        = config.RegisterDuration("crab.modules.user.verification.ttl", 5*time.Hour, "how long the token should be saved")
-	resend     = config.RegisterDuration("crab.modules.user.verification.resend", 1*time.Minute, "Duration between resend")
+	errTooSoon         = errors.New("code has been sent")
+	exp                = config.RegisterDuration("crab.modules.user.verification.ttl", 5*time.Hour, "how long the token should be saved")
+	resend             = config.RegisterDuration("crab.modules.user.verification.resend", 1*time.Minute, "Duration between resend")
+	emailVerifyPath    = config.RegisterString("crab.modules.user.verification.email.path", "user/email/verify", "email verify client url")
+	passwordVerifyPath = config.RegisterString("crab.modules.user.verification.password.path", "user/password/verify", "password verify client url")
 )
 
 // verifyId is verify code
@@ -53,7 +52,7 @@ var (
 //		403 = controller.ErrorResponseSimple
 // }
 func (ctrl *Controller) verifyEmail(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	u, e := verifyCode(xmux.Param(ctx, "token"))
+	u, e := verifyCode(ctx, xmux.Param(ctx, "token"))
 
 	if e != nil {
 		ctrl.BadResponse(w, e)
@@ -88,7 +87,7 @@ type verifyEmailCodePayload struct {
 func (ctrl *Controller) verifyEmailCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	p := ctrl.MustGetPayload(ctx).(*verifyEmailCodePayload)
-	u, e := verifyCode(fmt.Sprintf("%s%s%s", hasher(p.Email+emailVerifyPath), delimiter, p.Code))
+	u, e := verifyCode(ctx, fmt.Sprintf("%s%s%s", hasher(p.Email+emailVerifyPath.String()), delimiter, p.Code))
 
 	if e != nil || u.Status != aaa.RegisteredUserStatus || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
 		ctrl.ForbiddenResponse(w, nil)
@@ -132,7 +131,7 @@ func (ctrl *Controller) verifyResend(ctx context.Context, w http.ResponseWriter,
 }
 
 func verifyEmail(u *aaa.User, r *http.Request) error {
-	h, c, e := genVerifyCode(u, emailVerifyPath)
+	h, c, e := genVerifyCode(u, emailVerifyPath.String())
 	if e != nil {
 		return e
 	}
@@ -157,7 +156,7 @@ func verifyEmail(u *aaa.User, r *http.Request) error {
 
 const delimiter = "-"
 
-func verifyCode(c string) (*aaa.User, error) {
+func verifyCode(ctx context.Context, c string) (*aaa.User, error) {
 	data := strings.Split(c, delimiter)
 	if len(data) != 2 {
 		return nil, errors.New("code is not valid")
@@ -187,7 +186,7 @@ func verifyCode(c string) (*aaa.User, error) {
 	if err == nil {
 		_ = kw.Drop()
 	} else {
-		logrus.Debug(err)
+		xlog.GetWithError(ctx, err).Debug("can't find user in check verify code")
 
 		err = errors.New("Can't find user")
 	}

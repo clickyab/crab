@@ -43,7 +43,7 @@ func (c Controller) forgetPassword(ctx context.Context, w http.ResponseWriter, r
 		return
 	}
 
-	ur, co, e := genVerifyCode(u, passwordVerifyPath)
+	ur, co, e := genVerifyCode(u, passwordVerifyPath.String())
 	if e == errTooSoon {
 		c.OKResponse(w, nil)
 		return
@@ -80,7 +80,7 @@ func (c Controller) forgetPassword(ctx context.Context, w http.ResponseWriter, r
 // }
 func (c Controller) checkForgetHash(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	t := xmux.Param(ctx, "token")
-	u, e := verifyCode(t)
+	u, e := verifyCode(ctx, t)
 	if e != nil {
 		c.ForbiddenResponse(w, nil)
 		return
@@ -107,7 +107,7 @@ type forgetCodePayload struct {
 // }
 func (c Controller) checkForgetCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	p := c.MustGetPayload(ctx).(*forgetCodePayload)
-	u, e := verifyCode(fmt.Sprintf("%s%s%s", hasher(p.Email+passwordVerifyPath), delimiter, p.Code))
+	u, e := verifyCode(ctx, fmt.Sprintf("%s%s%s", hasher(p.Email+passwordVerifyPath.String()), delimiter, p.Code))
 	if e != nil || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
 		c.ForbiddenResponse(w, nil)
 		return
@@ -135,7 +135,7 @@ func (c Controller) changeForgetPassword(ctx context.Context, w http.ResponseWri
 	t := xmux.Param(ctx, "token")
 	p := c.MustGetPayload(ctx).(*callBackPayload)
 
-	u, e := verifyCode(t)
+	u, e := verifyCode(ctx, t)
 	if e != nil {
 		c.ForbiddenResponse(w, e)
 		return
