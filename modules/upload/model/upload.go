@@ -87,16 +87,5 @@ func (b *FileAttr) Scan(src interface{}) error {
 
 // Value for ad attr
 func (b FileAttr) Value() (driver.Value, error) {
-	if b.Banner != nil {
-		b.Native = nil
-	} else if b.Native != nil {
-		b.Video = nil
-	} else if b.Video != nil {
-		b.Banner = nil
-	} else if b.Avatar != nil {
-		b.Native = nil
-	} else {
-		b.Native = nil
-	}
 	return json.Marshal(b)
 }
