@@ -134,16 +134,16 @@ type CampaignDataTable struct {
 	CostType   CostType `json:"cost_type" db:"cost_type" type:"enum" filter:"true" map:"cp.cost_type"`
 	MaxBid     int64    `json:"max_bid" db:"max_bid" type:"number" sort:"true"`
 
-	AvgCPC     float64 `json:"avg_cpc" db:"avg_cpc"`
+	AvgCPC     float64 `json:"avg_cpc" db:"avg_cpc" graph:"avg_cpc,Avg. CPC,line,false"`
 	AvgCPM     float64 `json:"avg_cpm" db:"avg_cpm"`
-	Ctr        float64 `json:"ctr" db:"ctr"`
-	TotalImp   int64   `json:"total_imp" db:"total_imp"`
-	TotalClick int64   `json:"total_click" db:"total_click"`
+	Ctr        float64 `json:"ctr" db:"ctr" graph:"ctr,CTR,line,false"`
+	TotalImp   int64   `json:"total_imp" db:"total_imp" graph:"imp,Total Impression,bar,true"`
+	TotalClick int64   `json:"total_click" db:"total_click" graph:"click,Click,line,true"`
 	TotalConv  int64   `json:"total_conv" db:"total_conv"`
 	TotalCpc   int64   `json:"total_cpc" db:"total_cpc"`
 	TotalCpm   int64   `json:"total_cpm" db:"total_cpm"`
 
-	TotalSpent int64 `json:"total_spent" db:"-"`
+	TotalSpent int64 `json:"total_spent" db:"-" graph:"total_spent,Total spent,line,false"`
 
 	TodayImp   int64   `json:"today_imp" db:"today_imp"`
 	TodayClick int64   `json:"today_click" db:"today_click"`
@@ -227,6 +227,103 @@ func (m *Manager) FindCampaignByIDDomain(id, d int64) (*Campaign, error) {
 	return &res, nil
 }
 
+// CampaignGraph is the campaign full data in data table
+// @Graph {
+//		url = /graph/all
+//		entity = chart
+//		view = campaign_graph:self
+//		key = ID
+//		controller = clickyab.com/crab/modules/campaign/controllers
+//		fill = FillCampaignGraph
+// }
+type CampaignGraph struct {
+	OwnerEmail string       `db:"owner_email" json:"owner_email" type:"string" search:"true" map:"owner.email"`
+	Kind       CampaignKind `json:"kind" db:"kind" type:"enum" filter:"true" map:"cp.kind"`
+	Type       CampaignType `json:"type" db:"type" type:"enum" filter:"true" map:"cp.type"`
+	Title      string       `json:"title" db:"title" type:"string" search:"true" map:"cp.title"`
+
+	ID         int64   `json:"id" db:"id" type:"number"`
+	AvgCPC     float64 `json:"avg_cpc" db:"avg_cpc" graph:"avg_cpc,Avg. CPC,line,false"`
+	AvgCPM     float64 `json:"avg_cpm" db:"avg_cpm" graph:"avg_cpm,Avg. CPM,line,false"`
+	Ctr        float64 `json:"ctr" db:"ctr" graph:"ctr,CTR,line,false"`
+	TotalImp   int64   `json:"total_imp" db:"total_imp" graph:"imp,Total Impression,bar,true"`
+	TotalClick int64   `json:"total_click" db:"total_click" graph:"click,Click,line,true"`
+	TotalSpent int64   `json:"total_spent" db:"total_spent" graph:"total_spent,Total spent,line,false"`
+}
+
+// FillCampaignGraph is the function to handle
+func (m *Manager) FillCampaignGraph(
+	pc permission.InterfaceComplete,
+	filters map[string]string,
+	search map[string]string,
+	contextparams map[string]string,
+	from, to time.Time) []CampaignGraph {
+	res := make([]CampaignGraph, 0)
+
+	query := fmt.Sprintf(`SELECT cd.daily_id as id,
+	COALESCE(AVG(cd.cpc),0) AS avg_cpc,
+	COALESCE(AVG(cd.cpm),0) AS avg_cpm,
+	COALESCE(SUM(cd.click),0) AS total_click,
+	COALESCE(SUM(cd.imp),0) AS total_imp,
+	COALESCE((SUM(cd.click)/SUM(cd.imp))*10,0) AS ctr,
+	COALESCE(SUM(cd.cpc)+SUM(cd.cpm),0) AS total_spent
+	FROM %s AS cp INNER JOIN %s AS owner ON owner.id=cp.user_id
+	LEFT JOIN %s AS pu ON (pu.user_id=owner.id AND cp.domain_id=?)
+	LEFT JOIN %s AS parent ON parent.id=pu.parent_id
+	LEFT JOIN %s AS cd ON cd.campaign_id=cp.id `,
+		CampaignTableFull, aaa.UserTableFull, aaa.ParentUserTableFull, aaa.UserTableFull, CampaignDetailTableFull)
+
+	var where []string
+	wh := " WHERE "
+
+	where = append(where, fmt.Sprintf(`%s BETWEEN %d AND %d`, "cd.daily_id",
+		libs.TimeToID(from),
+		libs.TimeToID(to)))
+	var params []interface{}
+	params = append(params, pc.GetDomainID())
+
+	for field, value := range filters {
+		where = append(where, fmt.Sprintf("%s=?", field))
+		params = append(params, value)
+	}
+	for column, val := range search {
+		where = append(where, fmt.Sprintf("%s LIKE ?", column))
+		params = append(params, "%"+val+"%")
+	}
+	currentUserID := pc.GetID()
+	highestScope := pc.GetCurrentScope()
+
+	// find current user childes
+	userManager := aaa.NewAaaManager()
+	childes := userManager.GetUserChildesIDDomain(currentUserID, pc.GetDomainID())
+	childes = append(childes, currentUserID)
+	// self or parent
+	if highestScope == permission.ScopeSelf {
+		//check if parent or owner
+		where = append(where, fmt.Sprintf("cp.user_id IN (%s)",
+			func() string {
+				return strings.TrimRight(strings.Repeat("?,", len(childes)), ",")
+			}(),
+		),
+		)
+		for i := range childes {
+			params = append(params, childes[i])
+		}
+
+	}
+	//check for perm
+	if len(where) > 0 {
+		query += wh
+	}
+	query += strings.Join(where, " AND ")
+
+	query += " GROUP BY cd.daily_id"
+	_, err := m.GetRDbMap().Select(&res, query, params...)
+	assert.Nil(err)
+
+	return res
+}
+
 // FillCampaignDataTableArray is the function to handle
 func (m *Manager) FillCampaignDataTableArray(
 	pc permission.InterfaceComplete,
@@ -299,7 +396,10 @@ func (m *Manager) FillCampaignDataTableArray(
 		toTime, err2 := time.Parse(time.RFC3339, to)
 
 		if err1 == nil && err2 == nil {
-			where = append(where, fmt.Sprintf(`%s BETWEEN "%s" AND "%s"`, dateRangeField, fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00"), toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")))
+			where = append(where,
+				fmt.Sprintf(`%s BETWEEN "%s" AND "%s"`, dateRangeField,
+					fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00"),
+					toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")))
 		}
 	}
 
@@ -334,11 +434,11 @@ func (m *Manager) FillCampaignDataTableArray(
 		}
 
 	}
-
+	wh := " WHERE "
 	//check for perm
 	if len(where) > 0 {
-		query += " WHERE "
-		countQuery += " WHERE "
+		query += wh
+		countQuery += wh
 	}
 	query += strings.Join(where, " AND ")
 	countQuery += strings.Join(where, " AND ")
