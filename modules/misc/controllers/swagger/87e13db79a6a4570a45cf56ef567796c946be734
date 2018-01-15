@@ -1,0 +1,45 @@
+{
+	"properties": {
+		"data": {
+			"items": {
+				"properties": {
+					"data": {
+						"items": {
+							"type": "number"
+						},
+						"type": "array"
+					},
+					"hidden": {
+						"type": "boolean"
+					},
+					"name": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"format": {
+			"type": "string"
+		},
+		"from": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"to": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"type": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

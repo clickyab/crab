@@ -177,7 +177,7 @@ func extractValidFilter(p humanize.Package, t humanize.Type) (map[string]string,
 	return res, `"` + strings.Join(comma, `","`) + `"`
 }
 
-func (g graphPlugin) Finalize(c interface{}, p humanize.Package) error {
+func (g graphPlugin) Finalize(c interface{}, p *humanize.Package) error {
 	var ctx context
 	if c != nil {
 		var ok bool
@@ -239,7 +239,7 @@ func (g graphPlugin) Finalize(c interface{}, p humanize.Package) error {
 			if !isExported(f.Name) {
 				continue
 			}
-			c, err := handleFilter(p, *f, mapPrefix)
+			c, err := handleFilter(*p, *f, mapPrefix)
 			if err != nil {
 				return err
 			}
