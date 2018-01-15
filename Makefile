@@ -44,7 +44,7 @@ codegen-base: tools-go-bindata $(addsuffix -codegen,$(wildcard $(ROOT)/modules/*
 	@echo "Done"
 
 codegen: codegen-base jsonsplitter
-	rm $(ROOT)/modules/misc/controllers/swagger/*
+	rm -f $(ROOT)/modules/misc/controllers/swagger/*
 	$(BIN)/jsonsplitter --path=$(ROOT)/tmp/swagger/out.json --target=$(ROOT)/modules/misc/controllers/swagger/
 	#cp $(ROOT)/tmp/swagger/out.yaml $(ROOT)/modules/misc/controllers/swagger/index.yaml
 	cd $(ROOT)/modules/misc/controllers/ && $(BIN)/go-bindata -nometadata -o swagger.gen.go -nomemcopy=true -pkg=misc ./swagger/...

@@ -26,7 +26,7 @@ func main() {
 	in, err := os.OpenFile(*path, os.O_RDONLY, 0666)
 	assert.Nil(err)
 
-	defer assert.Nil(in.Close())
+	defer func() { assert.Nil(in.Close()) }()
 
 	dec := json.NewDecoder(in)
 	var data = make(map[string]interface{})

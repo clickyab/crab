@@ -107,7 +107,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 		c.BadResponse(w, fmt.Errorf(`file not found, the key for file should be "file"`))
 		return
 	}
-	defer assert.Nil(file.Close())
+	defer func() { assert.Nil(file.Close()) }()
 
 	buff := &bytes.Buffer{}
 	dimensionHandler := &bytes.Buffer{}
@@ -141,7 +141,7 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	}()
 	f, err := os.OpenFile(filepath.Join(fp, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(Perm.Int64()))
 	assert.Nil(err)
-	defer assert.Nil(f.Close())
+	defer func() { assert.Nil(f.Close()) }()
 
 	finalPath := filepath.Join(string(m), now.Format("2006/01/02"), fn)
 	size, er := io.Copy(f, buff)
@@ -283,7 +283,7 @@ func (c Controller) videoUpload(ctx context.Context, w http.ResponseWriter, r *h
 	fn := generateFileName(currentUser.ID, basePath, videoSaveFormat.String())
 	f, err := os.OpenFile(filepath.Join(basePath, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(Perm.Int64()))
 	assert.Nil(err)
-	defer assert.Nil(f.Close())
+	defer func() { assert.Nil(f.Close()) }()
 
 	//converting the video
 	safe.GoRoutine(ctx, func() {
