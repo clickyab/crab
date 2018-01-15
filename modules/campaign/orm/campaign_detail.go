@@ -10,6 +10,7 @@ import "time"
 type CampaignDetail struct {
 	CampaignID int64     `json:"campaign_id" db:"campaign_id"`
 	DailyID    int64     `json:"daily_id" db:"daily_id"`
+	HourID     int64     `json:"hour_id" db:"hour_id"`
 	FakeImp    int64     `json:"fake_imp" db:"fake_imp"`
 	FakeClick  int64     `json:"fake_click" db:"fake_click"`
 	Imp        int64     `json:"imp" db:"imp"`
