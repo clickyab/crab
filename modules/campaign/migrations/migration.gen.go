@@ -11,6 +11,7 @@
 // db/20180108171642_archive.sql
 // db/20180108180619_perm.sql
 // db/20180109100912_copy.sql
+// db/20180115165909_detailhour.sql
 // DO NOT EDIT!
 
 package migrations
@@ -298,6 +299,26 @@ func db20180109100912_copySql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180115165909_detailhourSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\x90\xbd\x6e\xc2\x30\x14\x85\x77\x3f\xc5\xd9\x00\x55\x3c\x01\x53\x4a\x4c\x85\x1a\x39\xad\x93\x0c\x9d\x22\x13\xdf\x92\x2b\x8c\x63\x25\x46\xf4\xf1\xab\x00\xfd\x1d\xd2\x8e\xb6\xce\x77\xec\xf3\x89\xe5\x12\x77\x47\xde\xf7\x26\x12\xaa\x30\x1e\x8b\xe7\x0c\xec\x31\x50\x13\xb9\xf3\x98\x55\x61\x06\x1e\x40\x6f\xd4\x9c\x22\x59\x9c\x5b\xf2\x88\x2d\x0f\xb8\x72\x63\x88\x07\x98\x10\x1c\x93\x15\x49\x56\x4a\x8d\x32\xb9\xcf\x24\x1a\x73\x0c\x86\xf7\xbe\xb6\x14\x0d\x3b\x24\x69\x8a\xb6\x3b\xf5\x35\x5b\x6c\x55\x09\x95\x97\x50\x55\x96\xad\xa6\x28\x81\x0b\xb7\xce\x55\x51\xea\x64\xc4\x7e\x05\xea\x4b\x65\x34\x3b\x47\x35\xdb\xfa\xf5\x20\x36\xb9\x96\xdb\x07\x85\x47\xf9\x82\xf9\xed\xc1\x05\xb4\xdc\x48\x2d\xd5\x5a\x16\xf8\x22\x30\x67\xbb\x58\x89\x1f\x1e\xd2\xee\xec\x3f\x4c\x7c\x6a\x18\x2f\xff\x25\xa2\xef\x9c\x23\x8b\x9d\x69\x0e\x93\x32\x52\x9d\x3f\xe1\xfb\x4f\xff\x9a\x35\x69\xe9\x5a\x77\xdb\xba\x12\xe2\x3d\x00\x00\xff\xff\x85\x3a\xfb\x32\xd9\x01\x00\x00"
+
+func db20180115165909_detailhourSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180115165909_detailhourSql,
+		"db/20180115165909_detailhour.sql",
+	)
+}
+
+func db20180115165909_detailhourSql() (*asset, error) {
+	bytes, err := db20180115165909_detailhourSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180115165909_detailhour.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -350,17 +371,18 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"db/20170829140330_time.sql":      db20170829140330_timeSql,
-	"db/20170903102708_campaign.sql":  db20170903102708_campaignSql,
-	"db/20171018070248_schedule.sql":  db20171018070248_scheduleSql,
-	"db/20171024144357_campaign.sql":  db20171024144357_campaignSql,
-	"db/20171107105208_exchange.sql":  db20171107105208_exchangeSql,
-	"db/20171107122141_wb.sql":        db20171107122141_wbSql,
-	"db/20180106144021_details.sql":   db20180106144021_detailsSql,
-	"db/20180106150131_listperms.sql": db20180106150131_listpermsSql,
-	"db/20180108171642_archive.sql":   db20180108171642_archiveSql,
-	"db/20180108180619_perm.sql":      db20180108180619_permSql,
-	"db/20180109100912_copy.sql":      db20180109100912_copySql,
+	"db/20170829140330_time.sql":       db20170829140330_timeSql,
+	"db/20170903102708_campaign.sql":   db20170903102708_campaignSql,
+	"db/20171018070248_schedule.sql":   db20171018070248_scheduleSql,
+	"db/20171024144357_campaign.sql":   db20171024144357_campaignSql,
+	"db/20171107105208_exchange.sql":   db20171107105208_exchangeSql,
+	"db/20171107122141_wb.sql":         db20171107122141_wbSql,
+	"db/20180106144021_details.sql":    db20180106144021_detailsSql,
+	"db/20180106150131_listperms.sql":  db20180106150131_listpermsSql,
+	"db/20180108171642_archive.sql":    db20180108171642_archiveSql,
+	"db/20180108180619_perm.sql":       db20180108180619_permSql,
+	"db/20180109100912_copy.sql":       db20180109100912_copySql,
+	"db/20180115165909_detailhour.sql": db20180115165909_detailhourSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -405,17 +427,18 @@ type bintree struct {
 
 var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
-		"20170829140330_time.sql":      &bintree{db20170829140330_timeSql, map[string]*bintree{}},
-		"20170903102708_campaign.sql":  &bintree{db20170903102708_campaignSql, map[string]*bintree{}},
-		"20171018070248_schedule.sql":  &bintree{db20171018070248_scheduleSql, map[string]*bintree{}},
-		"20171024144357_campaign.sql":  &bintree{db20171024144357_campaignSql, map[string]*bintree{}},
-		"20171107105208_exchange.sql":  &bintree{db20171107105208_exchangeSql, map[string]*bintree{}},
-		"20171107122141_wb.sql":        &bintree{db20171107122141_wbSql, map[string]*bintree{}},
-		"20180106144021_details.sql":   &bintree{db20180106144021_detailsSql, map[string]*bintree{}},
-		"20180106150131_listperms.sql": &bintree{db20180106150131_listpermsSql, map[string]*bintree{}},
-		"20180108171642_archive.sql":   &bintree{db20180108171642_archiveSql, map[string]*bintree{}},
-		"20180108180619_perm.sql":      &bintree{db20180108180619_permSql, map[string]*bintree{}},
-		"20180109100912_copy.sql":      &bintree{db20180109100912_copySql, map[string]*bintree{}},
+		"20170829140330_time.sql":       &bintree{db20170829140330_timeSql, map[string]*bintree{}},
+		"20170903102708_campaign.sql":   &bintree{db20170903102708_campaignSql, map[string]*bintree{}},
+		"20171018070248_schedule.sql":   &bintree{db20171018070248_scheduleSql, map[string]*bintree{}},
+		"20171024144357_campaign.sql":   &bintree{db20171024144357_campaignSql, map[string]*bintree{}},
+		"20171107105208_exchange.sql":   &bintree{db20171107105208_exchangeSql, map[string]*bintree{}},
+		"20171107122141_wb.sql":         &bintree{db20171107122141_wbSql, map[string]*bintree{}},
+		"20180106144021_details.sql":    &bintree{db20180106144021_detailsSql, map[string]*bintree{}},
+		"20180106150131_listperms.sql":  &bintree{db20180106150131_listpermsSql, map[string]*bintree{}},
+		"20180108171642_archive.sql":    &bintree{db20180108171642_archiveSql, map[string]*bintree{}},
+		"20180108180619_perm.sql":       &bintree{db20180108180619_permSql, map[string]*bintree{}},
+		"20180109100912_copy.sql":       &bintree{db20180109100912_copySql, map[string]*bintree{}},
+		"20180115165909_detailhour.sql": &bintree{db20180115165909_detailhourSql, map[string]*bintree{}},
 	}},
 }}
 

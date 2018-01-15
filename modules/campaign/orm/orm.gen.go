@@ -35,7 +35,7 @@ func getSelectFields(tb string, alias string) string {
 		return fmt.Sprintf(`%[1]scampaign_id,%[1]sdevice,%[1]smanufacturer,%[1]sos,%[1]sbrowser,%[1]siab,%[1]sregion,%[1]scellular,%[1]sisp`, alias)
 
 	case CampaignDetailTableFull:
-		return fmt.Sprintf(`%[1]scampaign_id,%[1]sdaily_id,%[1]sfake_imp,%[1]sfake_click,%[1]simp,%[1]sclick,%[1]scpc,%[1]sconv,%[1]screated_at,%[1]supdated_at`, alias)
+		return fmt.Sprintf(`%[1]scampaign_id,%[1]sdaily_id,%[1]shour_id,%[1]sfake_imp,%[1]sfake_click,%[1]simp,%[1]sclick,%[1]scpc,%[1]sconv,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case CampaignTableFull:
 		return fmt.Sprintf(`%[1]suser_id,%[1]sdomain_id,%[1]sexchange,%[1]swhite_black_id,%[1]swhite_black_type,%[1]swhite_black_value,%[1]sprogress,%[1]sarchive_at`, alias)
