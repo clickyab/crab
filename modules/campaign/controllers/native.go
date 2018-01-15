@@ -64,14 +64,14 @@ func (c Controller) getNativeData(ctx context.Context, w http.ResponseWriter, r 
 		}()
 		f, err := os.OpenFile(filepath.Join(fp, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(controllers.Perm.Int64()))
 		assert.Nil(err)
-		defer f.Close()
+		defer func() { assert.Nil(f.Close()) }()
+
 		resp, err := http.Get(res.Image)
 		if err != nil {
 			return
 		}
-		defer func() {
-			assert.Nil(resp.Body.Close())
-		}()
+		defer func() { _ = resp.Body.Close() }()
+
 		_, err = io.Copy(f, resp.Body)
 		assert.Nil(err)
 		finalPath := filepath.Join("temp", now.Format("2006/01/02"), fn)
@@ -90,7 +90,7 @@ func getMetaTags(url string) *getNativeDataResp {
 	if err != nil {
 		return nil
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	bytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil

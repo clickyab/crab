@@ -60,14 +60,12 @@ type AdAttr struct {
 // Scan for add attr
 func (b *AdAttr) Scan(src interface{}) error {
 	var c []byte
+
 	switch src.(type) {
 	case []byte:
 		c = src.([]byte)
 	case string:
 		c = []byte(src.(string))
-	case nil:
-		c = make([]byte, 0)
-		return nil
 	default:
 		return errors.New("unsupported type")
 	}

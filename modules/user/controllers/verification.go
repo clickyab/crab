@@ -15,6 +15,7 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/kv"
+	"github.com/clickyab/services/xlog"
 
 	"strings"
 
@@ -28,17 +29,18 @@ import (
 )
 
 const (
-	verifyKey          = "VERIFY"
-	subID              = "ID"
-	dump               = "d"
-	emailVerifyPath    = "user/email/verify"
-	passwordVerifyPath = "user/password/verify"
+	verifyKeyPrefix         = "VERIFY"
+	verifyTokenRedisKey     = "vt"
+	verifyShortCodeRedisKey = "vsc"
+	userIDRedisKey          = "uid"
 )
 
 var (
-	errTooSoon = errors.New("code has been sent")
-	exp        = config.RegisterDuration("crab.modules.user.verification.ttl", 5*time.Hour, "how long the token should be saved")
-	resend     = config.RegisterDuration("crab.modules.user.verification.resend", 1*time.Minute, "Duration between resend")
+	errTooSoon         = errors.New("code has been sent")
+	exp                = config.RegisterDuration("crab.modules.user.verification.ttl", 5*time.Hour, "how long the token should be saved")
+	resend             = config.RegisterDuration("crab.modules.user.verification.resend", 1*time.Minute, "Duration between resend")
+	emailVerifyPath    = config.RegisterString("crab.modules.user.verification.email.path", "user/email/verify", "email verify client url")
+	passwordVerifyPath = config.RegisterString("crab.modules.user.verification.password.path", "user/password/verify", "password verify client url")
 )
 
 // verifyId is verify code
@@ -50,12 +52,18 @@ var (
 //		403 = controller.ErrorResponseSimple
 // }
 func (ctrl *Controller) verifyEmail(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	u, e := verifyCode(xmux.Param(ctx, "token"))
+	u, e := verifyCode(ctx, xmux.Param(ctx, "token"))
 
-	if e != nil || u.Status != aaa.RegisteredUserStatus {
-		ctrl.ForbiddenResponse(w, nil)
+	if e != nil {
+		ctrl.BadResponse(w, e)
 		return
 	}
+
+	if u.Status != aaa.RegisteredUserStatus {
+		ctrl.BadResponse(w, errors.New("User status is not registered"))
+		return
+	}
+
 	u.Status = aaa.ActiveUserStatus
 	assert.Nil(aaa.NewAaaManager().UpdateUser(u))
 	ctrl.createLoginResponse(w, u)
@@ -79,7 +87,7 @@ type verifyEmailCodePayload struct {
 func (ctrl *Controller) verifyEmailCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	p := ctrl.MustGetPayload(ctx).(*verifyEmailCodePayload)
-	u, e := verifyCode(fmt.Sprintf("%s%s%s", hasher(p.Email+emailVerifyPath), delimiter, p.Code))
+	u, e := verifyCode(ctx, fmt.Sprintf("%s%s%s", hasher(p.Email+emailVerifyPath.String()), delimiter, p.Code))
 
 	if e != nil || u.Status != aaa.RegisteredUserStatus || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
 		ctrl.ForbiddenResponse(w, nil)
@@ -123,7 +131,7 @@ func (ctrl *Controller) verifyResend(ctx context.Context, w http.ResponseWriter,
 }
 
 func verifyEmail(u *aaa.User, r *http.Request) error {
-	h, c, e := genVerifyCode(u, emailVerifyPath)
+	h, c, e := genVerifyCode(u, emailVerifyPath.String())
 	if e != nil {
 		return e
 	}
@@ -148,33 +156,51 @@ func verifyEmail(u *aaa.User, r *http.Request) error {
 
 const delimiter = "-"
 
-func verifyCode(c string) (*aaa.User, error) {
-	s := strings.Split(c, delimiter)
-	if len(s) != 2 {
+func verifyCode(ctx context.Context, c string) (*aaa.User, error) {
+	data := strings.Split(c, delimiter)
+	if len(data) != 2 {
 		return nil, errors.New("code is not valid")
 	}
 
-	hash, key := s[0], s[1]
+	userEmailHash, verifyToken := data[0], data[1]
 
-	kw := kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKey, hash))
+	kw := kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKeyPrefix, userEmailHash))
 
-	if kw.SubKey(key) != dump {
+	if kw.SubKey(verifyTokenRedisKey) != verifyToken {
 		return nil, errors.New("code is not valid")
 	}
-	defer kw.Drop()
-	id, e := strconv.ParseInt(kw.SubKey(subID), 10, 64)
-	assert.Nil(e)
+
+	userID := kw.SubKey(userIDRedisKey)
+	if userID == "" {
+		return nil, errors.New("Can't find user")
+	}
+
+	id, err := strconv.ParseInt(userID, 10, 64)
+	if err != nil {
+		return nil, errors.New("invalid user id")
+	}
+
 	m := aaa.NewAaaManager()
-	cu, e := m.FindUserByID(id)
-	assert.Nil(e)
-	return cu, nil
+	user, err := m.FindUserByID(id)
+
+	if err == nil {
+		_ = kw.Drop()
+	} else {
+		xlog.GetWithError(ctx, err).Debug("can't find user in check verify code")
+
+		err = errors.New("Can't find user")
+	}
+
+	return user, err
 }
 
-func genVerifyCode(u *aaa.User, salt string) (string, string, error) {
+func genVerifyCode(user *aaa.User, salt string) (string, string, error) {
 	assert.True(salt != "")
 
-	hash := hasher(u.Email + salt)
-	kw := kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKey, hash))
+	emailHash := hasher(user.Email + salt)
+	redisKey := fmt.Sprintf("%s_%s", verifyKeyPrefix, emailHash)
+
+	kw := kv.NewEavStore(redisKey)
 
 	if len(kw.AllKeys()) != 0 {
 		if exp.Duration()-resend.Duration() < kw.TTL() {
@@ -182,21 +208,26 @@ func genVerifyCode(u *aaa.User, salt string) (string, string, error) {
 		}
 	}
 
-	key := fmt.Sprintf("%s%s", <-random.ID, <-random.ID)
-	kw.SetSubKey(subID, fmt.Sprintf("%d", u.ID))
-	kw.SetSubKey(key, dump)
+	verifyToken := fmt.Sprintf("%s%s", <-random.ID, <-random.ID)
+	intToken, err := strconv.ParseInt(verifyToken[:10], 16, 64)
+	if err != nil {
+		return "", "", errors.New("Can't generate verify short code")
+	}
 
-	cc, ee := strconv.ParseInt(key[:10], 16, 64)
-	assert.Nil(ee)
-	code := fmt.Sprintf("%d", cc)[:8]
-	kw.SetSubKey(code, dump)
+	verifyShortCode := fmt.Sprintf("%d", intToken)[:8]
 
-	return fmt.Sprintf("%s%s%s", hash, delimiter, key), code, kw.Save(exp.Duration())
+	kw.SetSubKey(verifyTokenRedisKey, verifyToken)
+	kw.SetSubKey(verifyShortCodeRedisKey, verifyShortCode)
+	kw.SetSubKey(userIDRedisKey, fmt.Sprintf("%d", user.ID))
 
+	return fmt.Sprintf("%s%s%s", emailHash, delimiter, verifyToken), verifyShortCode, kw.Save(exp.Duration())
 }
 
 func hasher(s string) string {
 	h := sha1.New()
-	h.Write([]byte(s))
+
+	_, err := h.Write([]byte(s))
+	assert.Nil(err)
+
 	return fmt.Sprintf("%x", h.Sum(nil))
 }

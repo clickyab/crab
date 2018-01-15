@@ -8,10 +8,7 @@ import (
 	"clickyab.com/crab/modules/location/location"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
-	"clickyab.com/crab/modules/user/ucfg"
-	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/controller"
-	"github.com/clickyab/services/kv"
 )
 
 // Controller is the controller for the userPayload package
@@ -57,13 +54,13 @@ func (u Controller) MustGetUser(ctx context.Context) *aaa.User {
 //	return authz.MustGetCurrentScope(ctx)
 //}
 
-func (u Controller) storeData(r *http.Request, token string) error {
+/* func (u Controller) storeData(r *http.Request, token string) error {
 	err := kv.NewEavStore(token).SetSubKey("ua", r.UserAgent()).Save(ucfg.TokenTimeout.Duration())
 	if err != nil {
 		return err
 	}
 	return kv.NewEavStore(token).SetSubKey("ip", framework.RealIP(r)).Save(ucfg.TokenTimeout.Duration())
-}
+} */
 
 //// PermDoubleCheck try to double check perm on the object base on its owner id
 //// TODO : write code generator for this if you can

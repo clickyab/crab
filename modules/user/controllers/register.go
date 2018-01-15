@@ -8,6 +8,7 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/trans"
+	gom "github.com/go-sql-driver/mysql"
 )
 
 // @Validate {
@@ -42,9 +43,17 @@ func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *htt
 	}
 	usr, err := m.RegisterUser(res, d.ID)
 	if err != nil {
-		u.BadResponse(w, trans.E("error registering userPayload"))
-		return
+		mysqlError, ok := err.(*gom.MySQLError)
+		if !ok {
+			u.BadResponse(w, trans.E("error registering user"))
+			return
+		}
+		if mysqlError.Number == 1062 {
+			u.BadResponse(w, trans.E("Duplicate email %s", pl.Email))
+			return
+		}
 	}
+
 	e := verifyEmail(usr, r)
 	if e == errTooSoon {
 		u.OKResponse(w, "user has been created")
