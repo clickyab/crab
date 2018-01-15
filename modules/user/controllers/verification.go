@@ -31,9 +31,9 @@ import (
 
 const (
 	verifyKeyPrefix         = "VERIFY"
-	verifyTokenRedisKey     = "verifyToken"
-	verifyShortCodeRedisKey = "verifyShortCode"
-	userIDRedisKey          = "userId"
+	verifyTokenRedisKey     = "vt"
+	verifyShortCodeRedisKey = "vsc"
+	userIDRedisKey          = "uid"
 	emailVerifyPath         = "user/email/verify"
 	passwordVerifyPath      = "user/password/verify"
 )
@@ -144,7 +144,7 @@ func verifyEmail(u *aaa.User, r *http.Request) error {
 			return "http"
 		}(),
 		Host: r.Host,
-		Path: fmt.Sprintf("/api/user/email/verify/%s", h),
+		Path: fmt.Sprintf("/user/register/verification/%s", h),
 	}
 	temp := fmt.Sprintf(`
 	%s

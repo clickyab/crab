@@ -64,7 +64,7 @@ func (c Controller) getNativeData(ctx context.Context, w http.ResponseWriter, r 
 		}()
 		f, err := os.OpenFile(filepath.Join(fp, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(controllers.Perm.Int64()))
 		assert.Nil(err)
-		defer func() { assert.Nil(f.Close()) }()
+		defer assert.Nil(f.Close())
 
 		resp, err := http.Get(res.Image)
 		if err != nil {

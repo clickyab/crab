@@ -7,7 +7,6 @@ import (
 	"errors"
 
 	"clickyab.com/crab/modules/domain/dmn"
-
 	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
@@ -184,7 +183,7 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 	ur := &RoleUser{RoleID: role.ID, UserID: u.ID}
 	err = m.CreateRoleUser(ur)
 	if err != nil {
-		return nil, err
+		return u, err
 	}
 
 	if pl.LegalName != "" {
@@ -208,20 +207,6 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 		return nil, err
 	}
 	return u, nil
-}
-
-// CheckEmailUniqueness function for check email uniquness validation
-func (m *Manager) CheckEmailUniqueness(email string) (bool, error) {
-	cnt, err := m.GetRDbMap().SelectInt(
-		fmt.Sprintf("SELECT count(1) FROM %s WHERE email=?", UserTableFull),
-		email,
-	)
-
-	if err != nil {
-		return false, err
-	}
-
-	return (cnt == 0), nil
 }
 
 // FindRoleByNameDomain return the Role base on its name and domain

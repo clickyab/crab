@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/clickyab/services/xlog"
+
 	"github.com/clickyab/services/assert"
 	"github.com/rs/xmux"
 
@@ -145,6 +147,8 @@ func (c Controller) changeForgetPassword(ctx context.Context, w http.ResponseWri
 			c.BadResponse(w, trans.EE(err))
 			return
 		}
+
+		xlog.GetWithError(ctx, err).Debug("database error on change user password")
 		c.BadResponse(w, trans.E("Can't change password!"))
 		return
 	}
