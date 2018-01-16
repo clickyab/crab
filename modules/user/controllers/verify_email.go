@@ -2,29 +2,24 @@ package user
 
 import (
 	"context"
-	"fmt"
-	"net/http"
-	"strconv"
-
 	"errors"
-
+	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
 	"time"
 
 	"crypto/sha1"
+	"fmt"
 
 	"clickyab.com/crab/modules/user/aaa"
-	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/kv"
-	"github.com/clickyab/services/xlog"
-
-	"strings"
-
-	"net/url"
-
 	"clickyab.com/crab/modules/user/mailer"
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
+	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/trans"
+	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 )
 
@@ -42,93 +37,6 @@ var (
 	emailVerifyPath    = config.RegisterString("crab.modules.user.verification.email.path", "user/email/verify", "email verify client url")
 	passwordVerifyPath = config.RegisterString("crab.modules.user.verification.password.path", "user/password/verify", "password verify client url")
 )
-
-// verifyId is verify code
-// @Route {
-// 		url = /email/verify/:token
-//		method = get
-//		200 = ResponseLoginOK
-//		401 = controller.ErrorResponseSimple
-//		403 = controller.ErrorResponseSimple
-// }
-func (ctrl *Controller) verifyEmail(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	u, e := verifyCode(ctx, xmux.Param(ctx, "token"))
-
-	if e != nil {
-		ctrl.BadResponse(w, e)
-		return
-	}
-
-	if u.Status != aaa.RegisteredUserStatus {
-		ctrl.BadResponse(w, errors.New("User status is not registered"))
-		return
-	}
-
-	u.Status = aaa.ActiveUserStatus
-	assert.Nil(aaa.NewAaaManager().UpdateUser(u))
-	ctrl.createLoginResponse(w, u)
-}
-
-// @Validate {
-// }
-type verifyEmailCodePayload struct {
-	Email string `json:"email" validate:"required,email"`
-	Code  string `json:"code" validate:"required"`
-}
-
-// @Route {
-// 		url = /email/verify
-//		method = post
-//		payload = verifyEmailCodePayload
-//		200 = ResponseLoginOK
-//		401 = controller.ErrorResponseSimple
-//		403 = controller.ErrorResponseSimple
-// }
-func (ctrl *Controller) verifyEmailCode(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-
-	p := ctrl.MustGetPayload(ctx).(*verifyEmailCodePayload)
-	u, e := verifyCode(ctx, fmt.Sprintf("%s%s%s", hasher(p.Email+emailVerifyPath.String()), delimiter, p.Code))
-
-	if e != nil || u.Status != aaa.RegisteredUserStatus || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
-		ctrl.ForbiddenResponse(w, nil)
-		return
-	}
-
-	u.Status = aaa.ActiveUserStatus
-	assert.Nil(aaa.NewAaaManager().UpdateUser(u))
-	ctrl.createLoginResponse(w, u)
-}
-
-// @Validate{
-// }
-type verifyResendPayload struct {
-	Email string `json:"email" validate:"required,email"`
-}
-
-// verifyResend will send an email again
-// @Route {
-// 		url = /email/verify/resend
-//		method = post
-//		payload = verifyResendPayload
-//      200 = controller.NormalResponse
-//		404 = controller.ErrorResponseSimple
-// }
-func (ctrl *Controller) verifyResend(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := ctrl.MustGetPayload(ctx).(*verifyResendPayload)
-
-	u, e := aaa.NewAaaManager().FindUserByEmail(pl.Email)
-	if e != nil {
-		ctrl.NotFoundResponse(w, nil)
-		return
-	}
-	e = verifyEmail(u, r)
-	if e == errTooSoon {
-		ctrl.OKResponse(w, nil)
-		return
-	}
-	assert.Nil(e)
-	ctrl.OKResponse(w, nil)
-}
 
 func verifyEmail(u *aaa.User, r *http.Request) error {
 	h, c, e := genVerifyCode(u, emailVerifyPath.String())
@@ -172,7 +80,7 @@ func verifyCode(ctx context.Context, c string) (*aaa.User, error) {
 
 	userID := kw.SubKey(userIDRedisKey)
 	if userID == "" {
-		return nil, errors.New("Can't find user")
+		return nil, errors.New("can't find user")
 	}
 
 	id, err := strconv.ParseInt(userID, 10, 64)
@@ -188,7 +96,7 @@ func verifyCode(ctx context.Context, c string) (*aaa.User, error) {
 	} else {
 		xlog.GetWithError(ctx, err).Debug("can't find user in check verify code")
 
-		err = errors.New("Can't find user")
+		err = errors.New("can't find user")
 	}
 
 	return user, err
@@ -211,7 +119,7 @@ func genVerifyCode(user *aaa.User, salt string) (string, string, error) {
 	verifyToken := fmt.Sprintf("%s%s", <-random.ID, <-random.ID)
 	intToken, err := strconv.ParseInt(verifyToken[:10], 16, 64)
 	if err != nil {
-		return "", "", errors.New("Can't generate verify short code")
+		return "", "", errors.New("can't generate verify short code")
 	}
 
 	verifyShortCode := fmt.Sprintf("%d", intToken)[:8]
@@ -230,4 +138,25 @@ func hasher(s string) string {
 	assert.Nil(err)
 
 	return fmt.Sprintf("%x", h.Sum(nil))
+}
+
+// verifyEmail is verify code
+// @Rest {
+// 		url = /email/verify/:token
+// 		method = get
+// }
+func (c *Controller) verifyEmail(ctx context.Context, r *http.Request) (*ResponseLoginOK, error) {
+	u, e := verifyCode(ctx, xmux.Param(ctx, "token"))
+
+	if e != nil {
+		return nil, e
+	}
+
+	if u.Status != aaa.RegisteredUserStatus {
+		return nil, errors.New("user status is not registered")
+	}
+
+	u.Status = aaa.ActiveUserStatus
+	assert.Nil(aaa.NewAaaManager().UpdateUser(u))
+	return c.createLoginResponse(u), nil
 }

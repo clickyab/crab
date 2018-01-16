@@ -2,12 +2,15 @@ package user
 
 import (
 	"context"
+	"errors"
 	"net/http"
+
+	"fmt"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/trans"
+	"github.com/clickyab/services/framework/controller"
 	gom "github.com/go-sql-driver/mysql"
 )
 
@@ -22,44 +25,37 @@ type registerPayload struct {
 	LegalName string `json:"legal_name" validate:"omitempty,gt=5"`
 }
 
-// @Route {
+// register is for register user
+// @Rest {
 // 		url = /register
-//		method = post
-//		payload = registerPayload
-//		400 = controller.ErrorResponseSimple
+// 		method = post
 // }
-func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := u.MustGetPayload(ctx).(*registerPayload)
+func (c *Controller) register(ctx context.Context, r *http.Request, p *registerPayload) (*controller.NormalResponse, error) {
 	m := aaa.NewAaaManager()
 	d := domain.MustGetDomain(ctx)
 
 	res := aaa.RegisterUserPayload{
-		Email:     pl.Email,
-		Password:  pl.Password,
-		FirstName: pl.FirstName,
-		LastName:  pl.LastName,
-		Mobile:    pl.Mobile,
-		LegalName: pl.LegalName,
+		Email:     p.Email,
+		Password:  p.Password,
+		FirstName: p.FirstName,
+		LastName:  p.LastName,
+		Mobile:    p.Mobile,
+		LegalName: p.LegalName,
 	}
 	usr, err := m.RegisterUser(res, d.ID)
 	if err != nil {
 		mysqlError, ok := err.(*gom.MySQLError)
 		if !ok {
-			u.BadResponse(w, trans.E("error registering user"))
-			return
+			return nil, errors.New("error registering user")
 		}
 		if mysqlError.Number == 1062 {
-			u.BadResponse(w, trans.E("Duplicate email %s", pl.Email))
-			return
+			return nil, fmt.Errorf("duplicate email %s", p.Email)
 		}
 	}
-
 	e := verifyEmail(usr, r)
 	if e == errTooSoon {
-		u.OKResponse(w, "user has been created")
-		return
+		return nil, nil
 	}
 	assert.Nil(e)
-	u.OKResponse(w, nil)
-
+	return nil, nil
 }

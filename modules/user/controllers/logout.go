@@ -7,32 +7,31 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/random"
 )
 
 // closeSession closes current session
-// @Route {
+// @Rest {
 // 		url = /logout
+//		protected = true
 // 		method = get
-//		middleware = authz.Authenticate
-// 		200 = controller.NormalResponse
 // }
-func (c Controller) closeSession(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) closeSession(ctx context.Context, r *http.Request) (*controller.NormalResponse, error) {
 	token := authz.MustGetToken(ctx)
 	err := kv.NewEavStore(token).Drop()
 	assert.Nil(err)
-	c.OKResponse(w, nil)
+	return nil, nil
 }
 
-// closeAllOtherSession closes all of clients sessions but current one
-// @Route {
+// closeSession closes current session
+// @Rest {
 // 		url = /logout/closeother
-//		method = get
-//		middleware = authz.Authenticate
-//		200 = ResponseLoginOK
+//		protected = true
+// 		method = get
 // }
-func (c Controller) closeAllOtherSession(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) closeAllOtherSession(ctx context.Context, r *http.Request) (*ResponseLoginOK, error) {
 	token := authz.MustGetToken(ctx)
 	store := kv.NewEavStore(token)
 	dbToken := store.SubKey("token")
@@ -48,5 +47,5 @@ func (c Controller) closeAllOtherSession(ctx context.Context, w http.ResponseWri
 	err = m.UpdateUser(user)
 	assert.Nil(err)
 
-	c.createLoginResponse(w, user)
+	return c.createLoginResponse(user), nil
 }

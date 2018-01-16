@@ -18,33 +18,25 @@ type loginPayload struct {
 }
 
 // login userPayload in system
-// @Route {
+// @Rest {
 // 		url = /login
 //		method = post
-//		payload = loginPayload
-//		200 = ResponseLoginOK
-//		400 = controller.ErrorResponseSimple
 // }
-func (c Controller) login(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := c.MustGetPayload(ctx).(*loginPayload)
+func (c *Controller) login(ctx context.Context, r *http.Request, p *loginPayload) (*ResponseLoginOK, error) {
 	uDomain := domain.MustGetDomain(ctx)
-	currentUser, err := aaa.NewAaaManager().FindUserByEmailDomain(pl.Email, uDomain)
+	currentUser, err := aaa.NewAaaManager().FindUserByEmailDomain(p.Email, uDomain)
 
-	if err != nil || bcrypt.CompareHashAndPassword([]byte(currentUser.Password), []byte(pl.Password)) != nil {
-		c.BadResponse(w, errors.New("wrong email or password"))
-		return
+	if err != nil || bcrypt.CompareHashAndPassword([]byte(currentUser.Password), []byte(p.Password)) != nil {
+		return nil, errors.New("wrong email or password")
 	}
 
 	if currentUser.Status == aaa.RegisteredUserStatus {
-		c.BadResponse(w, errors.New("not verified"))
-		return
+		return nil, errors.New("not verified")
 	}
 
 	if currentUser.Status == aaa.BlockedUserStatus {
-		c.BadResponse(w, errors.New("this account has been blocked"))
-		return
+		return nil, errors.New("this account has been blocked")
 	}
 
-	c.createLoginResponse(w, currentUser)
-
+	return c.createLoginResponse(currentUser), nil
 }
