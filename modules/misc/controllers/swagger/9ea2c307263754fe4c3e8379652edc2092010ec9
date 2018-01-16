@@ -1,6 +1,6 @@
 {
 	"put": {
-		"description": "\t\t@Route { \t\turl = /password/change/:token \t\tmethod = put \t\tpayload = callBackPayload \t\t200 = ResponseLoginOK \t\t400 = controller.ErrorResponseSimple }",
+		"description": "changeForgetPassword change forget password",
 		"parameters": [
 			{
 				"description": "",
