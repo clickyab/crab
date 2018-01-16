@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"net/http"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/location/location"
@@ -20,13 +19,6 @@ type Controller struct {
 	controller.Base
 }
 
-//type auditData struct {
-//	Username string      `json:"username"`
-//	Action   string      `json:"action"`
-//	Class    string      `json:"class"`
-//	Data     interface{} `json:"data"`
-//}
-
 // ResponseLoginOK login or ping or other response
 type ResponseLoginOK struct {
 	Token   string       `json:"token"`
@@ -43,57 +35,6 @@ var (
 func (u Controller) MustGetUser(ctx context.Context) *aaa.User {
 	return authz.MustGetUser(ctx)
 }
-
-//// MustGetPerm try to get back the perm granted to system
-//func (u Controller) MustGetPerm(ctx context.Context) base.Permission {
-//	return authz.MustGetCurrentPerm(ctx)
-//}
-
-//// MustGetScope try to get back the scope granted to system
-//func (u Controller) MustGetScope(ctx echo.Context) base.UserScope {
-//	return authz.MustGetCurrentScope(ctx)
-//}
-
-/* func (u Controller) storeData(r *http.Request, token string) error {
-	err := kv.NewEavStore(token).SetSubKey("ua", r.UserAgent()).Save(ucfg.TokenTimeout.Duration())
-	if err != nil {
-		return err
-	}
-	return kv.NewEavStore(token).SetSubKey("ip", framework.RealIP(r)).Save(ucfg.TokenTimeout.Duration())
-} */
-
-//// PermDoubleCheck try to double check perm on the object base on its owner id
-//// TODO : write code generator for this if you can
-//func (u Controller) PermDoubleCheck(ctx echo.Context, objectUserID int64) (base.UserScope, bool) {
-//	usr := u.MustGetUser(ctx)
-//	perm := u.MustGetPerm(ctx)
-//	other := usr
-//	if usr.ID != objectUserID {
-//		var err error
-//		other, err = aaa.NewAaaManager().FindUserByID(objectUserID)
-//		assert.Nil(err)
-//	}
-//	return usr.HasPermOn(perm, other.ID, other.ResellerID.Int64)
-//}
-
-// String make this one a stringer
-//func (u auditData) String() string {
-//	r, _ := json.Marshal(u)
-//
-//	return string(r)
-//}
-
-//func audit(username, action, class string, data interface{}) {
-//	hub.Publish(
-//		"audit",
-//		auditData{
-//			Username: username,
-//			Action:   action,
-//			Class:    class,
-//			Data:     data,
-//		},
-//	)
-//}
 
 type userResponse struct {
 	ID            int64          `json:"id"`
@@ -118,7 +59,7 @@ type userResponse struct {
 	EconomicCode  string         `json:"economic_code,omitempty"`
 }
 
-func (u Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aaa.User, token string) {
+func (u Controller) createLoginResponseWithToken(user *aaa.User, token string) *ResponseLoginOK {
 	us := userResponse{}
 
 	us.ID = user.ID
@@ -152,15 +93,14 @@ func (u Controller) createLoginResponseWithToken(w http.ResponseWriter, user *aa
 		us.CountryName = l.CountryName
 		us.CountryID = l.CountryID
 	}
-	res := ResponseLoginOK{
+	return &ResponseLoginOK{
 		Token:   token,
 		Account: us,
 	}
 
-	u.OKResponse(w, res)
 }
 
-func (u Controller) createLoginResponse(w http.ResponseWriter, user *aaa.User) {
+func (u Controller) createLoginResponse(user *aaa.User) *ResponseLoginOK {
 	token := aaa.GetNewToken(user)
-	u.createLoginResponseWithToken(w, user, token)
+	return u.createLoginResponseWithToken(user, token)
 }

@@ -21,18 +21,15 @@ type checkMailResponse struct {
 }
 
 // checkMail check mail in system
-// @Route {
+// @Rest {
 // 		url = /mail/check
-//		method = post
-//		payload = checkMailPayload
-//		200 = checkMailResponse
+// 		method = post
 // }
-func (u Controller) checkMail(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := u.MustGetPayload(ctx).(*checkMailPayload)
+func (c *Controller) checkMail(ctx context.Context, r *http.Request, p *checkMailPayload) (*checkMailResponse, error) {
 	currentDomain := domain.MustGetDomain(ctx)
 	m := aaa.NewAaaManager()
 	// find userPayload domains
-	domains := m.FindUserDomainsByEmail(pl.Email)
+	domains := m.FindUserDomainsByEmail(p.Email)
 	var currentDomainFound bool
 	for i := range domains {
 		if domains[i].Name == currentDomain.Name {
@@ -40,8 +37,8 @@ func (u Controller) checkMail(ctx context.Context, w http.ResponseWriter, r *htt
 			break
 		}
 	}
-	u.OKResponse(w, checkMailResponse{
+	return &checkMailResponse{
 		CurrentDomain: currentDomainFound,
 		Domains:       domains,
-	})
+	}, nil
 }
