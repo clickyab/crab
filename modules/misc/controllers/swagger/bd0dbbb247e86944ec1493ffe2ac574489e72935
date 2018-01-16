@@ -18,6 +18,12 @@
 			}
 		],
 		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controllers_getVideoResponse"
+				}
+			},
 			"400": {
 				"description": "",
 				"schema": {
@@ -25,26 +31,9 @@
 				}
 			},
 			"401": {
-				"description": "you are not authorized",
+				"description": "",
 				"schema": {
-					"properties": {
-						"error": {
-							"properties": {
-								"params": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						}
-					},
-					"title": "not_authorized",
-					"type": "object"
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			},
 			"403": {
@@ -68,12 +57,6 @@
 					},
 					"title": "forbidden",
 					"type": "object"
-				}
-			},
-			"404": {
-				"description": "",
-				"schema": {
-					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},

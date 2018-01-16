@@ -1,6 +1,6 @@
 {
 	"post": {
-		"description": "Upload video into the system",
+		"description": "videoUpload video into the system",
 		"parameters": [
 			{
 				"description": "the security token, get it from login route",
@@ -11,27 +11,22 @@
 			}
 		],
 		"responses": {
-			"401": {
-				"description": "you are not authorized",
+			"200": {
+				"description": "",
 				"schema": {
-					"properties": {
-						"error": {
-							"properties": {
-								"params": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						}
-					},
-					"title": "not_authorized",
-					"type": "object"
+					"$ref": "#/definitions/controllers_uploadResponse"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			},
+			"401": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			},
 			"403": {

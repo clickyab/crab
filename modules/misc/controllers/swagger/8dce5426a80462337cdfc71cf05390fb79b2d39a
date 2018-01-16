@@ -1,0 +1,8 @@
+{
+	"properties": {
+		"ready": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

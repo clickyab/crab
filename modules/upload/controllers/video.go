@@ -13,40 +13,31 @@ import (
 	"github.com/rs/xmux"
 )
 
+type getVideoResponse struct {
+	Ready string `json:"ready"`
+}
+
 // getVideoReady find video into the system
-// @Route {
+// @Rest {
 // 		url = /video/:id
-//		method = get
-//		middleware = authz.Authenticate
-//		400 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
+//		protected = true
+// 		method = get
 // }
-func (c Controller) getVideoReady(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) getVideoReady(ctx context.Context, r *http.Request) (*getVideoResponse, error) {
 	authz.MustGetUser(ctx)
 	m := model.NewModelManager()
 	decURL, err := base64.URLEncoding.DecodeString(xmux.Param(ctx, "id"))
 	if err != nil {
-		c.BadResponse(w, errors.New("wrong id"))
-		return
+		return nil, errors.New("wrong id")
 	}
 	file, err := m.FindUploadByID(string(decURL))
 	if err != nil {
-		c.BadResponse(w, errors.New("wrong id"))
-		return
+		return nil, errors.New("wrong id")
 	}
 	//check if file ready or not
 	_, err = os.Stat(filepath.Join(UPath.String(), file.ID))
 	if err != nil {
-		c.JSON(w, http.StatusOK, struct {
-			Ready string `json:"ready"`
-		}{
-			Ready: "pending",
-		})
-		return
+		return &getVideoResponse{Ready: "pending"}, nil
 	}
-	c.JSON(w, http.StatusOK, struct {
-		Ready string `json:"ready"`
-	}{
-		Ready: "done",
-	})
+	return &getVideoResponse{Ready: "done"}, nil
 }
