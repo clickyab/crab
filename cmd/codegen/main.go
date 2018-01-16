@@ -12,6 +12,7 @@ import (
 	_ "github.com/clickyab/services/codegen/gin"          // Gin plugin
 	_ "github.com/clickyab/services/codegen/models_mysql" // Models plugin
 	"github.com/clickyab/services/codegen/plugins"
+	_ "github.com/clickyab/services/codegen/restful"  // Datatable
 	_ "github.com/clickyab/services/codegen/swagger"  // Raml plugin
 	_ "github.com/clickyab/services/codegen/validate" // Validateor
 
@@ -51,8 +52,4 @@ func main() {
 		logrus.Fatal(err)
 	}
 
-	err = plugins.Finalize(*p)
-	if err != nil {
-		logrus.Fatal(err)
-	}
 }

@@ -15,14 +15,14 @@ import (
 
 	"bytes"
 
+	"strings"
+
+	"mime"
+
 	"image"
 	"image/gif"
 	"image/jpeg"
 	"image/png"
-
-	"strings"
-
-	"mime"
 
 	"clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/middleware/authz"
@@ -56,37 +56,17 @@ type kind struct {
 	mimes   []model.Mime
 }
 
-// Register add a route and settings for uploads
-// name will be the route, maxsize is maximum allowed size for file upload file and the mimes is alloed mime types
-func Register(name model.Mime, maxSize int64, mimes ...model.Mime) {
-	assert.True(len(mimes) > 0)
-	lock.Lock()
-	defer lock.Unlock()
-
-	_, ok := routes[name]
-	assert.False(ok)
-	routes[name] = kind{
-		maxSize: maxSize,
-		mimes:   mimes,
-	}
+type uploadResponse struct {
+	Src string `json:"src"`
 }
 
-// Controller is the controller for the user package
-// @Route {
-//		group = /upload
-//		middleware = domain.Access
-// }
-type Controller struct {
-	controller.Base
-}
-
-// Upload into the system
-// @Route {
+// upload route for upload banner,native,avatar,...
+// @Rest {
 // 		url = /module/:module
-//		method = post
-//		middleware = authz.Authenticate
+//		protected = true
+// 		method = post
 // }
-func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) upload(ctx context.Context, r *http.Request) (*uploadResponse, error) {
 	fileType := xmux.Param(ctx, "module")
 	m := model.Mime(fileType)
 	u := authz.MustGetUser(ctx)
@@ -94,36 +74,32 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	defer lock.RUnlock()
 	s, ok := routes[m]
 	if !ok {
-		c.NotFoundResponse(w, errors.New("not found"))
-		return
+		return nil, errors.New("not found")
 	}
 	err := r.ParseMultipartForm(s.maxSize)
 	if err != nil {
-		c.BadResponse(w, fmt.Errorf("max upload size is : %d", s.maxSize))
-		return
+		return nil, fmt.Errorf("max upload size is : %d", s.maxSize)
 	}
 	file, handler, err := r.FormFile("file")
 	if err != nil {
-		c.BadResponse(w, fmt.Errorf(`file not found, the key for file should be "file"`))
-		return
+		return nil, fmt.Errorf(`file not found, the key for file should be "file"`)
 	}
 	defer func() { assert.Nil(file.Close()) }()
 
 	buff := &bytes.Buffer{}
 	dimensionHandler := &bytes.Buffer{}
 	multiHandler := io.MultiWriter(dimensionHandler, buff)
-	assert.Nil(io.Copy(multiHandler, file))
+	_, err = io.Copy(multiHandler, file)
+	assert.Nil(err)
 	ac, mime := validMIME(handler.Header, s.mimes)
 	if !ac {
-		c.BadResponse(w, fmt.Errorf("the file type is not valid"))
-		return
+		return nil, fmt.Errorf("the file type is not valid")
 	}
 	var attr *model.FileAttr
 	if mime == model.JPGMime || mime == model.PNGMime || mime == model.GifMime || mime == model.PJPGMime {
 		attr, err = getDimension(mime, dimensionHandler, fileType)
 		if err != nil {
-			c.BadResponse(w, fmt.Errorf("cant get file dimensions"))
-			return
+			return nil, fmt.Errorf("cant get file dimensions")
 		}
 	}
 	ext := filepath.Ext(handler.Filename)
@@ -157,11 +133,33 @@ func (c Controller) Upload(ctx context.Context, w http.ResponseWriter, r *http.R
 	}
 	e := model.NewModelManager().CreateUpload(g)
 	assert.Nil(e)
-	c.JSON(w, http.StatusOK, struct {
-		Src string `json:"src"`
-	}{
+	return &uploadResponse{
 		Src: g.ID,
-	})
+	}, nil
+}
+
+// Register add a route and settings for uploads
+// name will be the route, maxsize is maximum allowed size for file upload file and the mimes is alloed mime types
+func Register(name model.Mime, maxSize int64, mimes ...model.Mime) {
+	assert.True(len(mimes) > 0)
+	lock.Lock()
+	defer lock.Unlock()
+
+	_, ok := routes[name]
+	assert.False(ok)
+	routes[name] = kind{
+		maxSize: maxSize,
+		mimes:   mimes,
+	}
+}
+
+// Controller is the controller for the user package
+// @Route {
+//		group = /upload
+//		middleware = domain.Access
+// }
+type Controller struct {
+	controller.Base
 }
 
 func validMIME(a textproto.MIMEHeader, b []model.Mime) (bool, model.Mime) {
@@ -180,22 +178,20 @@ func validMIME(a textproto.MIMEHeader, b []model.Mime) (bool, model.Mime) {
 	return false, ""
 }
 
-// Upload video into the system
-// @Route {
+// videoUpload video into the system
+// @Rest {
 // 		url = /video
-//		method = post
-//		middleware = authz.Authenticate
+//		protected = true
+// 		method = post
 // }
-func (c Controller) videoUpload(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadResponse, error) {
 	currentUser := authz.MustGetUser(ctx)
 	flowData, err := getChunkFlowData(r)
 	if err != nil {
-		c.BadResponse(w, nil)
-		return
+		return nil, errors.New("error in uploading video chunks")
 	}
 	if flowData.totalChunks > videoMaxChunkCount.Int() {
-		c.BadResponse(w, errors.New("file size not valid"))
-		return
+		return nil, errors.New("file size not valid")
 	}
 	var tempDir = filepath.Join(os.TempDir(), "uploads")
 	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
@@ -205,12 +201,10 @@ func (c Controller) videoUpload(ctx context.Context, w http.ResponseWriter, r *h
 	chunkPathDir, file, err := chunkUpload(tempDir, flowData, r)
 	if err != nil {
 		_ = os.RemoveAll(chunkPathDir)
-		c.BadResponse(w, errors.New("failed to upload chunks"))
-		return
+		return nil, errors.New("failed to upload chunks")
 	}
 	if file == "" {
-		c.OKResponse(w, errors.New("failed storing chunks"))
-		return
+		return nil, errors.New("failed storing chunks")
 	}
 	// open uploaded file in tmp folder
 	fileObj, err := os.Open(file)
@@ -220,13 +214,11 @@ func (c Controller) videoUpload(ctx context.Context, w http.ResponseWriter, r *h
 	}()
 
 	if err != nil {
-		c.BadResponse(w, nil)
-		return
+		return nil, errors.New("error while uploading file")
 	}
 	fileInfo, err := fileObj.Stat()
 	if err != nil {
-		c.BadResponse(w, errors.New("cant open uploaded file"))
-		return
+		return nil, errors.New("cant open uploaded file")
 	}
 	extension := strings.ToLower(filepath.Ext(fileObj.Name()))
 	//check if file extension is valid
@@ -241,39 +233,40 @@ func (c Controller) videoUpload(ctx context.Context, w http.ResponseWriter, r *h
 		return false
 	}()
 	if !isValidMime {
-		c.uploadErrorResponse(w, chunkPathDir, "video mime type not valid")
-		return
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, errors.New("video mime type not valid")
+
 	}
 	size := fileInfo.Size()
 	//check size
 	if size > VideoMaxSize.Int64() {
-		c.uploadErrorResponse(w, chunkPathDir, "video is too large to be uploaded")
-		return
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, errors.New("video is too large to be uploaded")
 	}
 
 	info, err := getVideoInfo(file)
 	if err != nil {
-		c.uploadErrorResponse(w, chunkPathDir, "uploaded file is not readable")
-		return
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, errors.New("uploaded file is not readable")
 	}
 
 	if _, ok := info["format"]; !ok {
-		c.uploadErrorResponse(w, chunkPathDir, "file format is not readable")
-		return
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, errors.New("file format is not readable")
 	}
 	format := info["format"].(map[string]interface{})
 	if _, ok := format["duration"]; !ok {
-		c.uploadErrorResponse(w, chunkPathDir, "cant get duration from file")
-		return
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, errors.New("cant get duration from file")
 	}
 	duration, err := strconv.ParseFloat(format["duration"].(string), 64)
 	if err != nil {
-		c.uploadErrorResponse(w, chunkPathDir, "error parsing duration from video")
-		return
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, errors.New("error parsing duration from video")
 	}
 	if int64(duration) > MaxVideoDuration.Int64() {
-		c.uploadErrorResponse(w, chunkPathDir, fmt.Sprintf("maximum duration is %d seconds", MaxVideoDuration.Int64()))
-		return
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, fmt.Errorf("maximum duration is %d seconds", MaxVideoDuration.Int64())
 	}
 	convertedPath := strings.TrimRight(file, extension) + videoSaveFormat.String()
 	now := time.Now()
@@ -307,17 +300,7 @@ func (c Controller) videoUpload(ctx context.Context, w http.ResponseWriter, r *h
 	}
 	e := model.NewModelManager().CreateUpload(g)
 	assert.Nil(e)
-	c.JSON(w, http.StatusOK, struct {
-		Src string `json:"src"`
-	}{
-		Src: g.ID,
-	})
-
-}
-
-func (c Controller) uploadErrorResponse(w http.ResponseWriter, chunkDirPath string, errorMsg string) {
-	_ = os.RemoveAll(chunkDirPath)
-	c.BadResponse(w, errors.New(errorMsg))
+	return &uploadResponse{Src: g.ID}, nil
 }
 
 func doConvert(file, convertedPath, chunkPathDir, f string) error {

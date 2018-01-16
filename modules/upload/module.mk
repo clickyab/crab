@@ -1,6 +1,8 @@
 export UPLOAD_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(UPLOAD_ROOT)-codegen: tools-codegen
+	rm -rf $(UPLOAD_ROOT)/model/*.gen.go
+	rm -rf $(UPLOAD_ROOT)/controllers/*.gen.go
 	$(BIN)/codegen -p clickyab.com/crab/modules/upload/model
 	$(BIN)/codegen -p clickyab.com/crab/modules/upload/controllers
 
