@@ -27,7 +27,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		/* Route {
 			"Route": "/module/:module",
 			"Method": "POST",
-			"Function": "Controller.Upload",
+			"Function": "Controller.uploadPost",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -43,13 +43,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.POST("controllers-Controller-Upload", "/module/:module", framework.Mix(c.Upload, m0...))
+		group.POST("controllers-Controller-uploadPost", "/module/:module", framework.Mix(c.uploadPost, m0...))
 		// End route with key 0
 
 		/* Route {
 			"Route": "/video",
 			"Method": "POST",
-			"Function": "Controller.videoUpload",
+			"Function": "Controller.videoUploadPost",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -65,13 +65,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.POST("controllers-Controller-videoUpload", "/video", framework.Mix(c.videoUpload, m1...))
+		group.POST("controllers-Controller-videoUploadPost", "/video", framework.Mix(c.videoUploadPost, m1...))
 		// End route with key 1
 
 		/* Route {
 			"Route": "/video/:id",
 			"Method": "GET",
-			"Function": "Controller.getVideoReady",
+			"Function": "Controller.getVideoReadyGet",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -87,7 +87,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-getVideoReady", "/video/:id", framework.Mix(c.getVideoReady, m2...))
+		group.GET("controllers-Controller-getVideoReadyGet", "/video/:id", framework.Mix(c.getVideoReadyGet, m2...))
 		// End route with key 2
 
 		initializer.DoInitialize(c)
