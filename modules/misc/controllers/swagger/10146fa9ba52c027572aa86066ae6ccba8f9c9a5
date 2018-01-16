@@ -1,6 +1,6 @@
 {
 	"post": {
-		"description": "forgetCallBack is the url coming from sent email \t\t@Route { \t\turl = /password/verify \t\tmethod = post \t\tpayload = forgetCodePayload \t\t200 = ResponseLoginOK \t\t403 = controller.ErrorResponseSimple }",
+		"description": "forgetCallBack is the url coming from sent email",
 		"parameters": [
 			{
 				"description": "",
@@ -19,7 +19,7 @@
 					"$ref": "#/definitions/user_ResponseLoginOK"
 				}
 			},
-			"403": {
+			"400": {
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/controller_ErrorResponseSimple"

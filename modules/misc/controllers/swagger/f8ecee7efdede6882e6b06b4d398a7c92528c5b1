@@ -1,6 +1,6 @@
 {
 	"post": {
-		"description": "",
+		"description": "register is for register user",
 		"parameters": [
 			{
 				"description": "",
@@ -13,6 +13,12 @@
 			}
 		],
 		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_NormalResponse"
+				}
+			},
 			"400": {
 				"description": "",
 				"schema": {

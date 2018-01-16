@@ -18,6 +18,12 @@
 				"schema": {
 					"$ref": "#/definitions/user_checkMailResponse"
 				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
 			}
 		},
 		"tags": [

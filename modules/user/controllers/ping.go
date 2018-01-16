@@ -7,14 +7,13 @@ import (
 	"clickyab.com/crab/modules/user/middleware/authz"
 )
 
-// logout is for the logout from the system
-// @Route {
+// ping is for ping
+// @Rest {
 // 		url = /ping
-//		method = get
-//		middleware = authz.Authenticate
-//		200 = ResponseLoginOK
+//		protected = true
+// 		method = get
 // }
-func (c Controller) ping(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) ping(ctx context.Context, r *http.Request) (*ResponseLoginOK, error) {
 	user := authz.MustGetUser(ctx)
-	c.createLoginResponseWithToken(w, user, authz.MustGetToken(ctx))
+	return c.createLoginResponseWithToken(user, authz.MustGetToken(ctx)), nil
 }
