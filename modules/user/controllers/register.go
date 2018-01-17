@@ -20,7 +20,7 @@ type registerPayload struct {
 	Email     string `json:"email" validate:"email" error:"email is invalid"`
 	Password  string `json:"password" validate:"gt=5" error:"password is too short"`
 	FirstName string `json:"first_name" validate:"required" error:"first name is invalid"`
-	Mobile    string `json:"mobile"`
+	Mobile    string `json:"mobile" validate:"lt=15"`
 	LastName  string `json:"last_name" validate:"required" error:"last name is invalid"`
 	LegalName string `json:"legal_name" validate:"omitempty,gt=5"`
 }
