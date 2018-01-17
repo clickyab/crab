@@ -24,10 +24,9 @@ import (
 )
 
 const (
-	verifyKeyPrefix         = "VERIFY"
-	verifyTokenRedisKey     = "vt"
-	verifyShortCodeRedisKey = "vsc"
-	userIDRedisKey          = "uid"
+	verifyKeyPrefix = "VERIFY"
+	checkToken      = "vk"
+	userIDRedisKey  = "uid"
 )
 
 var (
@@ -74,7 +73,7 @@ func verifyCode(ctx context.Context, c string) (*aaa.User, error) {
 
 	kw := kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKeyPrefix, userEmailHash))
 
-	if kw.SubKey(verifyTokenRedisKey) != verifyToken {
+	if kw.SubKey(verifyToken) != checkToken {
 		return nil, errors.New("code is not valid")
 	}
 
@@ -124,8 +123,8 @@ func genVerifyCode(user *aaa.User, salt string) (string, string, error) {
 
 	verifyShortCode := fmt.Sprintf("%d", intToken)[:8]
 
-	kw.SetSubKey(verifyTokenRedisKey, verifyToken)
-	kw.SetSubKey(verifyShortCodeRedisKey, verifyShortCode)
+	kw.SetSubKey(verifyToken, checkToken)
+	kw.SetSubKey(verifyShortCode, checkToken)
 	kw.SetSubKey(userIDRedisKey, fmt.Sprintf("%d", user.ID))
 
 	return fmt.Sprintf("%s%s%s", emailHash, delimiter, verifyToken), verifyShortCode, kw.Save(exp.Duration())
