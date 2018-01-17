@@ -3,6 +3,13 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": "",
+				"in": "path",
+				"name": "id",
+				"required": true,
+				"type": "string"
+			},
+			{
 				"description": "the security token, get it from login route",
 				"in": "header",
 				"name": "token",
@@ -14,7 +21,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_listPublisherDefResponse"
+					"$ref": "#/definitions/controllers_listCampaigndailyDefResponse"
 				}
 			},
 			"401": {

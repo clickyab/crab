@@ -3,10 +3,10 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
-				"required": false,
+				"description": "",
+				"in": "path",
+				"name": "id",
+				"required": true,
 				"type": "string"
 			},
 			{
@@ -17,16 +17,16 @@
 				"type": "int"
 			},
 			{
-				"description": "",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "pub_type",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
 			{
 				"description": "",
 				"in": "query",
-				"name": "status",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
@@ -36,6 +36,13 @@
 				"name": "c",
 				"required": false,
 				"type": "int"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
+				"required": false,
+				"type": "string"
 			},
 			{
 				"description": "the security token, get it from login route",
@@ -49,7 +56,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_listPublisherResponse"
+					"$ref": "#/definitions/controllers_listCampaigndailyResponse"
 				}
 			},
 			"401": {
