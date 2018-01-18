@@ -27,7 +27,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		/* Route {
 			"Route": "/browser",
 			"Method": "GET",
-			"Function": "Controller.browser",
+			"Function": "Controller.browserGet",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -43,13 +43,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-browser", "/browser", framework.Mix(c.browser, m0...))
+		group.GET("controllers-Controller-browserGet", "/browser", framework.Mix(c.browserGet, m0...))
 		// End route with key 0
 
 		/* Route {
 			"Route": "/category",
 			"Method": "GET",
-			"Function": "Controller.category",
+			"Function": "Controller.categoryGet",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -65,13 +65,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-category", "/category", framework.Mix(c.category, m1...))
+		group.GET("controllers-Controller-categoryGet", "/category", framework.Mix(c.categoryGet, m1...))
 		// End route with key 1
 
 		/* Route {
 			"Route": "/isp/:kind",
 			"Method": "GET",
-			"Function": "Controller.isp",
+			"Function": "Controller.ispGet",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -87,13 +87,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-isp", "/isp/:kind", framework.Mix(c.isp, m2...))
+		group.GET("controllers-Controller-ispGet", "/isp/:kind", framework.Mix(c.ispGet, m2...))
 		// End route with key 2
 
 		/* Route {
 			"Route": "/manufacturers",
 			"Method": "GET",
-			"Function": "Controller.manufacturer",
+			"Function": "Controller.manufacturerGet",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -109,13 +109,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-manufacturer", "/manufacturers", framework.Mix(c.manufacturer, m3...))
+		group.GET("controllers-Controller-manufacturerGet", "/manufacturers", framework.Mix(c.manufacturerGet, m3...))
 		// End route with key 3
 
 		/* Route {
 			"Route": "/os",
 			"Method": "GET",
-			"Function": "Controller.os",
+			"Function": "Controller.osGet",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -131,13 +131,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-os", "/os", framework.Mix(c.os, m4...))
+		group.GET("controllers-Controller-osGet", "/os", framework.Mix(c.osGet, m4...))
 		// End route with key 4
 
 		/* Route {
 			"Route": "/platform",
 			"Method": "GET",
-			"Function": "Controller.platform",
+			"Function": "Controller.platformGet",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -153,13 +153,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-platform", "/platform", framework.Mix(c.platform, m5...))
+		group.GET("controllers-Controller-platformGet", "/platform", framework.Mix(c.platformGet, m5...))
 		// End route with key 5
 
 		/* Route {
 			"Route": "/region",
 			"Method": "GET",
-			"Function": "Controller.region",
+			"Function": "Controller.regionGet",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -175,7 +175,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-region", "/region", framework.Mix(c.region, m6...))
+		group.GET("controllers-Controller-regionGet", "/region", framework.Mix(c.regionGet, m6...))
 		// End route with key 6
 
 		initializer.DoInitialize(c)
