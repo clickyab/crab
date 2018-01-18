@@ -2,6 +2,7 @@ package location
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"strconv"
@@ -22,62 +23,52 @@ type Controller struct {
 
 type countries []location.Country
 
-// @Route {
+// @Rest {
 // 		url = /countries
 //		method = get
-//		200 = countries
 // }
-func (ctrl *Controller) countries(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	m := location.NewLocationManager()
-	ctrl.JSON(w, http.StatusOK, m.ListCountries())
+func (ctrl *Controller) countries(ctx context.Context, r *http.Request) (countries, error) {
+	res := location.NewLocationManager().ListCountries()
+	return countries(res), nil
 }
 
 type provinces []location.Province
 
-// @Route {
+// @Rest {
 // 		url = /provinces/:country_id
 //		method = get
-//		200 = provinces
-//		400 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
 // }
-func (ctrl *Controller) provinces(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (ctrl *Controller) provinces(ctx context.Context, r *http.Request) (provinces, error) {
 	d, e := strconv.ParseInt(xmux.Param(ctx, "country_id"), 10, 64)
 	if e != nil || d == 0 {
-		ctrl.BadResponse(w, nil)
-		return
+		return nil, errors.New("country id is not correct")
 	}
 	m := location.NewLocationManager()
 	c := &location.Country{ID: d}
 	res := m.GetCountryProvinces(c)
 	if len(res) == 0 {
-		ctrl.NotFoundResponse(w, nil)
-		return
+		return nil, errors.New("country id is not correct")
 	}
-	ctrl.JSON(w, http.StatusOK, res)
+	return provinces(res), nil
 }
 
 type cities []location.City
 
-// @Route {
+// @Rest {
 // 		url = /cities/:provinces_id
 //		method = get
-//		200 = cities
-//		400 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
 // }
-func (ctrl *Controller) cities(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (ctrl *Controller) cities(ctx context.Context, r *http.Request) (cities, error) {
 	d, e := strconv.ParseInt(xmux.Param(ctx, "provinces_id"), 10, 64)
 	if e != nil || d == 0 {
-		ctrl.BadResponse(w, nil)
-		return
+		return nil, errors.New("city id is not correct")
 	}
 	m := location.NewLocationManager()
 	c := &location.Province{ID: d}
 	res := m.GetProvinceCities(c)
 	if len(res) == 0 {
-		ctrl.NotFoundResponse(w, nil)
-		return
+		return nil, errors.New("city id is not correct")
+
 	}
-	ctrl.JSON(w, http.StatusOK, res)
+	return cities(res), nil
 }
