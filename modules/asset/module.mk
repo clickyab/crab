@@ -1,6 +1,8 @@
 export ASSET_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(ASSET_ROOT)-codegen: tools-codegen
+	rm -rf $(ASSET_ROOT)/orm/*.gen.go
+	rm -rf $(ASSET_ROOT)/controllers/*.gen.go
 	$(BIN)/codegen -p clickyab.com/crab/modules/asset/orm
 	$(BIN)/codegen -p clickyab.com/crab/modules/asset/controllers
 

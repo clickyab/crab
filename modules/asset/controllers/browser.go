@@ -11,14 +11,13 @@ import (
 type browserResponse []orm.Browser
 
 // browser return list all browsers
-// @Route {
+// @Rest {
 // 		url = /browser
 //		method = get
-//		200 = browserResponse
-//		middleware = authz.Authenticate
+//		protected = true
 // }
-func (c *Controller) browser(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) browser(ctx context.Context, r *http.Request) (browserResponse, error) {
 	browsers, err := orm.NewOrmManager().ListActiveBrowsers()
 	assert.Nil(err)
-	c.OKResponse(w, browsers)
+	return browserResponse(browsers), nil
 }
