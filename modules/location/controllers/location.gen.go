@@ -26,7 +26,7 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		/* Route {
 			"Route": "/countries",
 			"Method": "GET",
-			"Function": "Controller.countries",
+			"Function": "Controller.countriesGet",
 			"RoutePkg": "location",
 			"RouteMiddleware": null,
 			"RouteFuncMiddleware": "",
@@ -38,13 +38,13 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		} with key 0 */
 		m0 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("location-Controller-countries", "/countries", framework.Mix(ctrl.countries, m0...))
+		group.GET("location-Controller-countriesGet", "/countries", framework.Mix(ctrl.countriesGet, m0...))
 		// End route with key 0
 
 		/* Route {
 			"Route": "/provinces/:country_id",
 			"Method": "GET",
-			"Function": "Controller.provinces",
+			"Function": "Controller.provincesGet",
 			"RoutePkg": "location",
 			"RouteMiddleware": null,
 			"RouteFuncMiddleware": "",
@@ -56,13 +56,13 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		} with key 1 */
 		m1 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("location-Controller-provinces", "/provinces/:country_id", framework.Mix(ctrl.provinces, m1...))
+		group.GET("location-Controller-provincesGet", "/provinces/:country_id", framework.Mix(ctrl.provincesGet, m1...))
 		// End route with key 1
 
 		/* Route {
 			"Route": "/cities/:provinces_id",
 			"Method": "GET",
-			"Function": "Controller.cities",
+			"Function": "Controller.citiesGet",
 			"RoutePkg": "location",
 			"RouteMiddleware": null,
 			"RouteFuncMiddleware": "",
@@ -74,7 +74,7 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		} with key 2 */
 		m2 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("location-Controller-cities", "/cities/:provinces_id", framework.Mix(ctrl.cities, m2...))
+		group.GET("location-Controller-citiesGet", "/cities/:provinces_id", framework.Mix(ctrl.citiesGet, m2...))
 		// End route with key 2
 
 		initializer.DoInitialize(ctrl)

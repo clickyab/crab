@@ -23,6 +23,7 @@ type Controller struct {
 
 type countries []location.Country
 
+// list of countries
 // @Rest {
 // 		url = /countries
 //		method = get
@@ -34,6 +35,7 @@ func (ctrl *Controller) countries(ctx context.Context, r *http.Request) (countri
 
 type provinces []location.Province
 
+// list of provinces
 // @Rest {
 // 		url = /provinces/:country_id
 //		method = get
@@ -54,6 +56,7 @@ func (ctrl *Controller) provinces(ctx context.Context, r *http.Request) (provinc
 
 type cities []location.City
 
+// list of cities
 // @Rest {
 // 		url = /cities/:provinces_id
 //		method = get
