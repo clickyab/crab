@@ -17,7 +17,7 @@ import (
 var once = sync.Once{}
 
 // Routes return the route registered with this
-func (u *Controller) Routes(r framework.Mux) {
+func (ctrl *Controller) Routes(r framework.Mux) {
 	once.Do(func() {
 
 		groupMiddleware := []framework.Middleware{
@@ -25,74 +25,6 @@ func (u *Controller) Routes(r framework.Mux) {
 		}
 
 		group := r.NewGroup("/inventory")
-
-		/* Route {
-			"Route": "/presets",
-			"Method": "GET",
-			"Function": "Controller.whiteBlackLists",
-			"RoutePkg": "controllers",
-			"RouteMiddleware": [
-				"authz.Authenticate"
-			],
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "ctrl",
-			"Payload": "",
-			"Resource": "",
-			"Scope": ""
-		} with key 0 */
-		m0 := append(groupMiddleware, []framework.Middleware{
-			authz.Authenticate,
-		}...)
-
-		group.GET("controllers-Controller-whiteBlackLists", "/presets", framework.Mix(u.whiteBlackLists, m0...))
-		// End route with key 0
-
-		/* Route {
-			"Route": "/preset/:id",
-			"Method": "GET",
-			"Function": "Controller.whiteBlackList",
-			"RoutePkg": "controllers",
-			"RouteMiddleware": [
-				"authz.Authenticate"
-			],
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "ctrl",
-			"Payload": "",
-			"Resource": "",
-			"Scope": ""
-		} with key 1 */
-		m1 := append(groupMiddleware, []framework.Middleware{
-			authz.Authenticate,
-		}...)
-
-		group.GET("controllers-Controller-whiteBlackList", "/preset/:id", framework.Mix(u.whiteBlackList, m1...))
-		// End route with key 1
-
-		/* Route {
-			"Route": "/preset",
-			"Method": "POST",
-			"Function": "Controller.addPreset",
-			"RoutePkg": "controllers",
-			"RouteMiddleware": [
-				"authz.Authenticate"
-			],
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "ctrl",
-			"Payload": "whiteBlackList",
-			"Resource": "",
-			"Scope": ""
-		} with key 2 */
-		m2 := append(groupMiddleware, []framework.Middleware{
-			authz.Authenticate,
-		}...)
-
-		// Make sure payload is the last middleware
-		m2 = append(m2, middleware.PayloadUnMarshallerGenerator(whiteBlackList{}))
-		group.POST("controllers-Controller-addPreset", "/preset", framework.Mix(u.addPreset, m2...))
-		// End route with key 2
 
 		/* Route {
 			"Route": "/list",
@@ -108,16 +40,16 @@ func (u *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "inventory_list",
 			"Scope": "self"
-		} with key 3 */
-		m3 := append(groupMiddleware, []framework.Middleware{
+		} with key 0 */
+		m0 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("inventory_list", "inventory_list")
-		m3 = append(m3, authz.AuthorizeGenerator("inventory_list", "self"))
+		m0 = append(m0, authz.AuthorizeGenerator("inventory_list", "self"))
 
-		group.GET("controllers-Controller-listInventory", "/list", framework.Mix(u.listInventory, m3...))
-		// End route with key 3
+		group.GET("controllers-Controller-listInventory", "/list", framework.Mix(ctrl.listInventory, m0...))
+		// End route with key 0
 
 		/* Route {
 			"Route": "/list/definition",
@@ -133,18 +65,86 @@ func (u *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "inventory_list",
 			"Scope": "self"
+		} with key 1 */
+		m1 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("inventory_list", "inventory_list")
+		m1 = append(m1, authz.AuthorizeGenerator("inventory_list", "self"))
+
+		group.GET("controllers-Controller-defInventory", "/list/definition", framework.Mix(ctrl.defInventory, m1...))
+		// End route with key 1
+
+		/* Route {
+			"Route": "/presets",
+			"Method": "GET",
+			"Function": "Controller.whiteBlackListsGet",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "ctrl",
+			"Payload": "",
+			"Resource": "",
+			"Scope": ""
+		} with key 2 */
+		m2 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		group.GET("controllers-Controller-whiteBlackListsGet", "/presets", framework.Mix(ctrl.whiteBlackListsGet, m2...))
+		// End route with key 2
+
+		/* Route {
+			"Route": "/preset/:id",
+			"Method": "GET",
+			"Function": "Controller.whiteBlackListGet",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "ctrl",
+			"Payload": "",
+			"Resource": "",
+			"Scope": ""
+		} with key 3 */
+		m3 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		group.GET("controllers-Controller-whiteBlackListGet", "/preset/:id", framework.Mix(ctrl.whiteBlackListGet, m3...))
+		// End route with key 3
+
+		/* Route {
+			"Route": "/preset",
+			"Method": "POST",
+			"Function": "Controller.addPresetPost",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "ctrl",
+			"Payload": "whiteBlackList",
+			"Resource": "",
+			"Scope": ""
 		} with key 4 */
 		m4 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("inventory_list", "inventory_list")
-		m4 = append(m4, authz.AuthorizeGenerator("inventory_list", "self"))
-
-		group.GET("controllers-Controller-defInventory", "/list/definition", framework.Mix(u.defInventory, m4...))
+		// Make sure payload is the last middleware
+		m4 = append(m4, middleware.PayloadUnMarshallerGenerator(whiteBlackList{}))
+		group.POST("controllers-Controller-addPresetPost", "/preset", framework.Mix(ctrl.addPresetPost, m4...))
 		// End route with key 4
 
-		initializer.DoInitialize(u)
+		initializer.DoInitialize(ctrl)
 	})
 }
 
