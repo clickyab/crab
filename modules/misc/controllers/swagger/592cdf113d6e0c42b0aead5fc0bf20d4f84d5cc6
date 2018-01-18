@@ -1,11 +1,17 @@
 {
 	"get": {
-		"description": "",
+		"description": "list of countries",
 		"responses": {
 			"200": {
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/location_countries"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},

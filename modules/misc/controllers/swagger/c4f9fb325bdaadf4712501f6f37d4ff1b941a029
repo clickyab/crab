@@ -1,6 +1,6 @@
 {
 	"get": {
-		"description": "",
+		"description": "list of provinces",
 		"parameters": [
 			{
 				"description": "",
@@ -18,12 +18,6 @@
 				}
 			},
 			"400": {
-				"description": "",
-				"schema": {
-					"$ref": "#/definitions/controller_ErrorResponseSimple"
-				}
-			},
-			"404": {
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/controller_ErrorResponseSimple"
