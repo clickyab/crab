@@ -10,13 +10,12 @@ import (
 type regionList []orm.Region
 
 // region return list iab categories
-// @Route {
+// @Rest {
 // 		url = /region
 //		method = get
-//		200 = regionList
-//		middleware = authz.Authenticate
+//		protected = true
 // }
-func (c *Controller) region(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) region(ctx context.Context, r *http.Request) (regionList, error) {
 	m := orm.NewOrmManager()
-	c.OKResponse(w, regionList(m.ListRegions()))
+	return regionList(m.ListRegions()), nil
 }

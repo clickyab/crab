@@ -2,9 +2,8 @@ package controllers
 
 import (
 	"context"
-	"net/http"
-
 	"errors"
+	"net/http"
 
 	"clickyab.com/crab/modules/asset/orm"
 	"github.com/rs/xmux"
@@ -13,19 +12,17 @@ import (
 type ispResponse []orm.ISP
 
 // isp return list all is (e.g. irancell, ...)
-// @Route {
+// @Rest {
 // 		url = /isp/:kind
 //		method = get
-//		200 = ispResponse
-//		400 = controller.ErrorResponseSimple
-//		middleware = authz.Authenticate
+//		protected = true
 // }
-func (c *Controller) isp(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) isp(ctx context.Context, r *http.Request) (ispResponse, error) {
 	m := orm.NewOrmManager()
 	kind := xmux.Param(ctx, "kind")
 	if !orm.ISPKind(kind).IsValid() {
-		c.BadResponse(w, errors.New("not valid isp kind"))
-		return
+		return nil, errors.New("not valid isp kind")
+
 	}
-	c.OKResponse(w, m.ListISPSWithFilter("active=? AND kind=? OR kind=?", true, kind, orm.BothISPKind))
+	return ispResponse(m.ListISPSWithFilter("active=? AND kind=? OR kind=?", true, kind, orm.BothISPKind)), nil
 }

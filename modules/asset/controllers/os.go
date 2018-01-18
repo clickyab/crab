@@ -10,13 +10,12 @@ import (
 type osResponse []orm.OS
 
 // os return list all is (e.g. linux, ...)
-// @Route {
+// @Rest {
 // 		url = /os
 //		method = get
-//		200 = osResponse
-//		middleware = authz.Authenticate
+//		protected = true
 // }
-func (c *Controller) os(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) os(ctx context.Context, r *http.Request) (osResponse, error) {
 	m := orm.NewOrmManager()
-	c.OKResponse(w, m.ListOSWithFilter("active=?", true))
+	return osResponse(m.ListOSWithFilter("active=?", true)), nil
 }
