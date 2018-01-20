@@ -71,7 +71,7 @@ const (
 	// CPA is cpa
 	CPA CostType = "cpa"
 
-	wh string = "where"
+	wh string = " WHERE "
 )
 
 type base struct {
@@ -276,7 +276,6 @@ func (m *Manager) FillCampaignGraph(
 		CampaignTableFull, aaa.UserTableFull, aaa.ParentUserTableFull, aaa.UserTableFull, CampaignDetailTableFull)
 
 	var where []string
-	wh := " WHERE "
 
 	where = append(where, fmt.Sprintf(`%s BETWEEN %d AND %d`, "cd.daily_id",
 		libs.TimeToID(from),
@@ -437,6 +436,7 @@ func (m *Manager) FillCampaignDataTableArray(
 
 	}
 	//check for perm
+
 	if len(where) > 0 {
 		query += wh
 		countQuery += wh
