@@ -70,6 +70,8 @@ const (
 	CPC CostType = "cpc"
 	// CPA is cpa
 	CPA CostType = "cpa"
+
+	wh string = "where"
 )
 
 type base struct {
@@ -434,7 +436,6 @@ func (m *Manager) FillCampaignDataTableArray(
 		}
 
 	}
-	wh := " WHERE "
 	//check for perm
 	if len(where) > 0 {
 		query += wh

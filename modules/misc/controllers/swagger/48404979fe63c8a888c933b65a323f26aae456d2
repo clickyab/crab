@@ -1,0 +1,56 @@
+{
+	"properties": {
+		"data": {
+			"items": {
+				"properties": {
+					"_actions": {
+						"type": "string"
+					},
+					"click": {
+						"type": "integer"
+					},
+					"conv": {
+						"type": "integer"
+					},
+					"cpa": {
+						"type": "integer"
+					},
+					"cpc": {
+						"type": "integer"
+					},
+					"cpm": {
+						"type": "integer"
+					},
+					"created_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"ctr": {
+						"type": "number"
+					},
+					"imp": {
+						"type": "integer"
+					},
+					"spent": {
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"hash": {
+			"type": "string"
+		},
+		"page": {
+			"type": "integer"
+		},
+		"per_page": {
+			"type": "integer"
+		},
+		"total": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}
