@@ -91,6 +91,7 @@ func (b AdAttr) Value() (driver.Value, error) {
 // }
 type Ad struct {
 	ID         int64          `json:"id" db:"id"`
+	Title      string         `json:"title" db:"title"`
 	CampaignID int64          `json:"campaign_id" db:"campaign_id"`
 	Src        string         `json:"src" db:"src"`
 	Mime       string         `json:"mime" db:"mime"`

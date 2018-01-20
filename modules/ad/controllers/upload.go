@@ -19,6 +19,7 @@ import (
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
+	"github.com/go-sql-driver/mysql"
 	"github.com/rs/xmux"
 )
 
@@ -46,7 +47,7 @@ type assignBannerPayload struct {
 		ID    int64  `json:"id,omitempty"`
 		Src   string `json:"src" validate:"required"`
 		Utm   string `json:"utm" validate:"required"`
-		Title string `json:"title,omitempty"`
+		Title string `json:"title" validate:"required"`
 	} `json:"banners"`
 	input    []*add.Ad     `json:"-"`
 	campaign *orm.Campaign `json:"-"`
@@ -96,18 +97,10 @@ func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.Response
 			bannerAd.Width = width
 			bannerAd.Src = p.Banners[i].Src
 			bannerAd.Target = p.Banners[i].Utm
+			bannerAd.Title = p.Banners[i].Title
 			bannerAd.Status = add.PendingAdStatus
 			bannerAd.Type = bannerType
-			if bannerType == add.NativeAdType {
-				if p.Banners[i].Title == "" { // title is required in native ad
-					return errors.New("title is required for native ad")
-				}
-				bannerAd.Attr = add.AdAttr{
-					Native: &add.NativeAdAttr{
-						Title: p.Banners[i].Title,
-					},
-				}
-			}
+
 			p.input = append(p.input, bannerAd)
 		} else { //create selected
 			//TODO check access for create banner
@@ -118,18 +111,9 @@ func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.Response
 				Width:      width,
 				Height:     height,
 				Mime:       mime,
+				Title:      p.Banners[i].Title,
 				Status:     add.PendingAdStatus,
 				Type:       bannerType,
-			}
-			if bannerType == add.NativeAdType {
-				if p.Banners[i].Title == "" { // title is required in native ad
-					return errors.New("title is required for native ad")
-				}
-				newAd.Attr = add.AdAttr{
-					Native: &add.NativeAdAttr{
-						Title: p.Banners[i].Title,
-					},
-				}
 			}
 			p.input = append(p.input, newAd)
 		}
@@ -162,6 +146,11 @@ func (c Controller) assignNormalBanner(ctx context.Context, w http.ResponseWrite
 
 	res, err := add.NewAddManager().CreateUpdateCampaignNormalBanner(p.input)
 	if err != nil {
+		f, ok := err.(*mysql.MySQLError)
+		if ok && f.Number == 1062 {
+			c.BadResponse(w, errors.New("duplicate src in ads"))
+			return
+		}
 		c.BadResponse(w, errors.New("cant create/update campaign"))
 		return
 	}
