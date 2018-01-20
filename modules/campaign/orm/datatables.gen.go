@@ -9,8 +9,52 @@ import (
 )
 
 type (
+	CampaignDailyDataTableArray []CampaignDailyDataTable
+
 	CampaignDataTableArray []CampaignDataTable
 )
+
+func (cddta CampaignDailyDataTableArray) Filter(u permission.Interface) CampaignDailyDataTableArray {
+	res := make(CampaignDailyDataTableArray, len(cddta))
+	for i := range cddta {
+		res[i] = cddta[i].Filter(u)
+	}
+
+	return res
+}
+
+// Filter is for filtering base on permission
+func (cddt CampaignDailyDataTable) Filter(u permission.Interface) CampaignDailyDataTable {
+	action := []string{}
+	res := CampaignDailyDataTable{}
+
+	res.CreatedAt = cddt.CreatedAt
+
+	res.Imp = cddt.Imp
+
+	res.Click = cddt.Click
+
+	res.Conv = cddt.Conv
+
+	res.Cpm = cddt.Cpm
+
+	res.Cpc = cddt.Cpc
+
+	res.Spent = cddt.Spent
+
+	res.Cpa = cddt.Cpa
+
+	res.Ctr = cddt.Ctr
+
+	res.Actions = cddt.Actions
+
+	res.Actions = strings.Join(action, ",")
+	return res
+}
+
+func init() {
+
+}
 
 func (cdta CampaignDataTableArray) Filter(u permission.Interface) CampaignDataTableArray {
 	res := make(CampaignDataTableArray, len(cdta))
