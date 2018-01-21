@@ -2,7 +2,6 @@ package add
 
 import (
 	"encoding/json"
-	"errors"
 	"time"
 
 	"fmt"
@@ -11,6 +10,7 @@ import (
 
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/gettext/t9e"
 )
 
 // AdActiveStatus is the ad active status
@@ -67,7 +67,7 @@ func (b *AdAttr) Scan(src interface{}) error {
 	case string:
 		c = []byte(src.(string))
 	default:
-		return errors.New("unsupported type")
+		return t9e.G("unsupported type")
 	}
 
 	return json.Unmarshal(c, b)

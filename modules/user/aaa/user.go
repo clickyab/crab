@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"errors"
-
 	"clickyab.com/crab/modules/domain/dmn"
 	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
@@ -289,9 +288,9 @@ var allowOldPassword = config.RegisterBoolean("crab.user.allow_old_pass", true,
 
 var (
 	// ErrorOldPass when The password was used before
-	ErrorOldPass = errors.New("this password was used before, please try another one")
+	ErrorOldPass error = t9e.G("this password was used before, please try another one")
 	// ErrorWrongPassword when The current user password and claimed password doesn't match
-	ErrorWrongPassword = errors.New("current password is not correct")
+	ErrorWrongPassword error = t9e.G("current password is not correct")
 )
 
 // UpdatePassword will change password (p param) if the current given password (c param) be correct.

@@ -6,11 +6,10 @@ import (
 
 	"time"
 
-	"errors"
-
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework/middleware"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
 )
@@ -52,7 +51,7 @@ type userPayload struct {
 // }
 func (c *Controller) edit(ctx context.Context, r *http.Request, p *userPayload) (*ResponseLoginOK, error) {
 	if !p.Gender.IsValid() || p.Gender == aaa.NotSpecifiedGender {
-		return nil, errors.New("gender is invalid")
+		return nil, t9e.G("gender is invalid")
 	}
 
 	cu := c.MustGetUser(ctx)
@@ -63,7 +62,7 @@ func (c *Controller) edit(ctx context.Context, r *http.Request, p *userPayload) 
 	if p.LegalName != "" {
 		cc, e = m.FindCorporationByUserID(cu.ID)
 		if e != nil {
-			return nil, errors.New("personal userPayload not allowed to update corporate account")
+			return nil, t9e.G("personal userPayload not allowed to update corporate account")
 		}
 	}
 

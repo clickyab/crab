@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -11,6 +10,7 @@ import (
 	"clickyab.com/crab/modules/user/mailer"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
+	"github.com/clickyab/services/gettext/t9e"
 )
 
 // @Validate {
@@ -27,7 +27,7 @@ type forgetPayload struct {
 func (c *Controller) forgetPassword(ctx context.Context, r *http.Request, p *forgetPayload) (*controller.NormalResponse, error) {
 	u, err := aaa.NewAaaManager().FindUserByEmail(p.Email)
 	if err != nil {
-		return nil, errors.New("email not found")
+		return nil, t9e.G("email not found")
 	}
 
 	ur, co, e := genVerifyCode(u, passwordVerifyPath.String())

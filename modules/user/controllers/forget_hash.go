@@ -2,10 +2,10 @@ package user
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/rs/xmux"
 )
 
@@ -18,7 +18,7 @@ func (c *Controller) checkForgetHash(ctx context.Context, r *http.Request) (*Res
 	t := xmux.Param(ctx, "token")
 	u, e := verifyCode(ctx, t)
 	if e != nil {
-		return nil, errors.New("verify code mismatch")
+		return nil, t9e.G("verify code mismatch")
 
 	}
 	s, _, e := genVerifyCode(u, "change password")

@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -29,6 +28,7 @@ import (
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/framework/controller"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/safe"
 	"github.com/rs/xmux"
@@ -74,7 +74,7 @@ func (c *Controller) upload(ctx context.Context, r *http.Request) (*uploadRespon
 	defer lock.RUnlock()
 	s, ok := routes[m]
 	if !ok {
-		return nil, errors.New("not found")
+		return nil, t9e.G("not found")
 	}
 	err := r.ParseMultipartForm(s.maxSize)
 	if err != nil {
@@ -188,10 +188,10 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	currentUser := authz.MustGetUser(ctx)
 	flowData, err := getChunkFlowData(r)
 	if err != nil {
-		return nil, errors.New("error in uploading video chunks")
+		return nil, t9e.G("error in uploading video chunks")
 	}
 	if flowData.totalChunks > videoMaxChunkCount.Int() {
-		return nil, errors.New("file size not valid")
+		return nil, t9e.G("file size not valid")
 	}
 	var tempDir = filepath.Join(os.TempDir(), "uploads")
 	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
@@ -201,10 +201,10 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	chunkPathDir, file, err := chunkUpload(tempDir, flowData, r)
 	if err != nil {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, errors.New("failed to upload chunks")
+		return nil, t9e.G("failed to upload chunks")
 	}
 	if file == "" {
-		return nil, errors.New("failed storing chunks")
+		return nil, t9e.G("failed storing chunks")
 	}
 	// open uploaded file in tmp folder
 	fileObj, err := os.Open(file)
@@ -214,11 +214,11 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	}()
 
 	if err != nil {
-		return nil, errors.New("error while uploading file")
+		return nil, t9e.G("error while uploading file")
 	}
 	fileInfo, err := fileObj.Stat()
 	if err != nil {
-		return nil, errors.New("cant open uploaded file")
+		return nil, t9e.G("cant open uploaded file")
 	}
 	extension := strings.ToLower(filepath.Ext(fileObj.Name()))
 	//check if file extension is valid
@@ -234,35 +234,35 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	}()
 	if !isValidMime {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, errors.New("video mime type not valid")
+		return nil, t9e.G("video mime type not valid")
 
 	}
 	size := fileInfo.Size()
 	//check size
 	if size > VideoMaxSize.Int64() {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, errors.New("video is too large to be uploaded")
+		return nil, t9e.G("video is too large to be uploaded")
 	}
 
 	info, err := getVideoInfo(file)
 	if err != nil {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, errors.New("uploaded file is not readable")
+		return nil, t9e.G("uploaded file is not readable")
 	}
 
 	if _, ok := info["format"]; !ok {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, errors.New("file format is not readable")
+		return nil, t9e.G("file format is not readable")
 	}
 	format := info["format"].(map[string]interface{})
 	if _, ok := format["duration"]; !ok {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, errors.New("cant get duration from file")
+		return nil, t9e.G("cant get duration from file")
 	}
 	duration, err := strconv.ParseFloat(format["duration"].(string), 64)
 	if err != nil {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, errors.New("error parsing duration from video")
+		return nil, t9e.G("error parsing duration from video")
 	}
 	if int64(duration) > MaxVideoDuration.Int64() {
 		_ = os.RemoveAll(chunkPathDir)
@@ -306,7 +306,7 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 func doConvert(file, convertedPath, chunkPathDir, f string) error {
 	err := convertVideo(file, convertedPath)
 	if err != nil {
-		return errors.New("cant convert video")
+		return t9e.G("cant convert video")
 	}
 	err = os.Rename(convertedPath, f)
 
@@ -322,23 +322,23 @@ func getDimension(mime model.Mime, dimensionHandler *bytes.Buffer, bannerType st
 	case model.JPGMime:
 		imgConf, err = jpeg.DecodeConfig(dimensionHandler)
 		if err != nil {
-			return nil, errors.New("cant get file dimensions")
+			return nil, t9e.G("cant get file dimensions")
 		}
 
 	case model.PJPGMime:
 		imgConf, err = jpeg.DecodeConfig(dimensionHandler)
 		if err != nil {
-			return nil, errors.New("cant get file dimensions")
+			return nil, t9e.G("cant get file dimensions")
 		}
 	case model.GifMime:
 		imgConf, err = gif.DecodeConfig(dimensionHandler)
 		if err != nil {
-			return nil, errors.New("cant get file dimensions")
+			return nil, t9e.G("cant get file dimensions")
 		}
 	case model.PNGMime:
 		imgConf, err = png.DecodeConfig(dimensionHandler)
 		if err != nil {
-			return nil, errors.New("cant get file dimensions")
+			return nil, t9e.G("cant get file dimensions")
 		}
 	}
 

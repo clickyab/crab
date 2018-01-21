@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -16,9 +15,9 @@ import (
 	"clickyab.com/crab/modules/user/mailer"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/random"
-	"github.com/clickyab/services/trans"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 )
@@ -30,11 +29,11 @@ const (
 )
 
 var (
-	errTooSoon         = errors.New("code has been sent")
-	exp                = config.RegisterDuration("crab.modules.user.verification.ttl", 5*time.Hour, "how long the token should be saved")
-	resend             = config.RegisterDuration("crab.modules.user.verification.resend", 1*time.Minute, "Duration between resend")
-	emailVerifyPath    = config.RegisterString("crab.modules.user.verification.email.path", "user/email/verify", "email verify client url")
-	passwordVerifyPath = config.RegisterString("crab.modules.user.verification.password.path", "user/password/verify", "password verify client url")
+	errTooSoon         error = t9e.G("code has been sent")
+	exp                      = config.RegisterDuration("crab.modules.user.verification.ttl", 5*time.Hour, "how long the token should be saved")
+	resend                   = config.RegisterDuration("crab.modules.user.verification.resend", 1*time.Minute, "Duration between resend")
+	emailVerifyPath          = config.RegisterString("crab.modules.user.verification.email.path", "user/email/verify", "email verify client url")
+	passwordVerifyPath       = config.RegisterString("crab.modules.user.verification.password.path", "user/password/verify", "password verify client url")
 )
 
 func verifyEmail(u *aaa.User, r *http.Request) error {
@@ -57,7 +56,7 @@ func verifyEmail(u *aaa.User, r *http.Request) error {
 	code: %s
 	`, ul.String(), c)
 	// TODO: Change email template
-	mailer.SendMail(u, trans.T("Welcome to Clickyab!").String(), temp)
+	mailer.SendMail(u, t9e.G("Welcome to Clickyab!").String(), temp)
 	return nil
 }
 
@@ -66,7 +65,7 @@ const delimiter = "-"
 func verifyCode(ctx context.Context, c string) (*aaa.User, error) {
 	data := strings.Split(c, delimiter)
 	if len(data) != 2 {
-		return nil, errors.New("code is not valid")
+		return nil, t9e.G("code is not valid")
 	}
 
 	userEmailHash, verifyToken := data[0], data[1]
@@ -74,17 +73,17 @@ func verifyCode(ctx context.Context, c string) (*aaa.User, error) {
 	kw := kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKeyPrefix, userEmailHash))
 
 	if kw.SubKey(verifyToken) != checkToken {
-		return nil, errors.New("code is not valid")
+		return nil, t9e.G("code is not valid")
 	}
 
 	userID := kw.SubKey(userIDRedisKey)
 	if userID == "" {
-		return nil, errors.New("can't find user")
+		return nil, t9e.G("can't find user")
 	}
 
 	id, err := strconv.ParseInt(userID, 10, 64)
 	if err != nil {
-		return nil, errors.New("invalid user id")
+		return nil, t9e.G("invalid user id")
 	}
 
 	m := aaa.NewAaaManager()
@@ -95,7 +94,7 @@ func verifyCode(ctx context.Context, c string) (*aaa.User, error) {
 	} else {
 		xlog.GetWithError(ctx, err).Debug("can't find user in check verify code")
 
-		err = errors.New("can't find user")
+		err = t9e.G("can't find user")
 	}
 
 	return user, err
@@ -118,7 +117,7 @@ func genVerifyCode(user *aaa.User, salt string) (string, string, error) {
 	verifyToken := fmt.Sprintf("%s%s", <-random.ID, <-random.ID)
 	intToken, err := strconv.ParseInt(verifyToken[:10], 16, 64)
 	if err != nil {
-		return "", "", errors.New("can't generate verify short code")
+		return "", "", t9e.G("can't generate verify short code")
 	}
 
 	verifyShortCode := fmt.Sprintf("%d", intToken)[:8]
@@ -152,7 +151,7 @@ func (c *Controller) verifyEmail(ctx context.Context, r *http.Request) (*Respons
 	}
 
 	if u.Status != aaa.RegisteredUserStatus {
-		return nil, errors.New("user status is not registered")
+		return nil, t9e.G("user status is not registered")
 	}
 
 	u.Status = aaa.ActiveUserStatus

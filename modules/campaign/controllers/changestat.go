@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -13,6 +12,7 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
 	"github.com/rs/xmux"
 )
@@ -32,13 +32,13 @@ func (c *Controller) archive(ctx context.Context, w http.ResponseWriter, r *http
 	d := domain.MustGetDomain(ctx)
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if err != nil {
-		c.BadResponse(w, errors.New("id not valid"))
+		c.BadResponse(w, t9e.G("id not valid"))
 		return
 	}
 	//get and validate action name
 	stat := xmux.Param(ctx, "stat")
 	if stat == "" || (stat != "archive" && stat != "start" && stat != "pause") {
-		c.BadResponse(w, errors.New("invalid stat detected"))
+		c.BadResponse(w, t9e.G("invalid stat detected"))
 		return
 	}
 
@@ -46,7 +46,7 @@ func (c *Controller) archive(ctx context.Context, w http.ResponseWriter, r *http
 	cpManager := orm.NewOrmManager()
 	campaign, err := cpManager.FindCampaignByIDDomain(id, d.ID)
 	if err != nil {
-		c.NotFoundResponse(w, errors.New("campaign not found"))
+		c.NotFoundResponse(w, t9e.G("campaign not found"))
 		return
 	}
 	userManager := aaa.NewAaaManager()
@@ -54,13 +54,13 @@ func (c *Controller) archive(ctx context.Context, w http.ResponseWriter, r *http
 	assert.Nil(err)
 	_, ok := aaa.CheckPermOn(owner, currentUser, "change_campaign", campaign.DomainID)
 	if !ok {
-		c.ForbiddenResponse(w, errors.New("don't have access for this action"))
+		c.ForbiddenResponse(w, t9e.G("don't have access for this action"))
 		return
 	}
 	// if campaign current mode is archive nothing can be done
 	if campaign.ArchiveAt.Valid && campaign.ArchiveAt.Time.Before(time.Now()) {
 		//nothing can do
-		c.BadResponse(w, errors.New("cant manipulate archived campaign"))
+		c.BadResponse(w, t9e.G("cant manipulate archived campaign"))
 		return
 	}
 

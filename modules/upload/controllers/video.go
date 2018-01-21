@@ -3,13 +3,13 @@ package controllers
 import (
 	"context"
 	"encoding/base64"
-	"errors"
 	"net/http"
 	"os"
 	"path/filepath"
 
 	"clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/rs/xmux"
 )
 
@@ -28,11 +28,11 @@ func (c *Controller) getVideoReady(ctx context.Context, r *http.Request) (*getVi
 	m := model.NewModelManager()
 	decURL, err := base64.URLEncoding.DecodeString(xmux.Param(ctx, "id"))
 	if err != nil {
-		return nil, errors.New("wrong id")
+		return nil, t9e.G("wrong id")
 	}
 	file, err := m.FindUploadByID(string(decURL))
 	if err != nil {
-		return nil, errors.New("wrong id")
+		return nil, t9e.G("wrong id")
 	}
 	//check if file ready or not
 	_, err = os.Stat(filepath.Join(UPath.String(), file.ID))

@@ -50,7 +50,6 @@ func GetUser(ctx context.Context) (*aaa.User, bool) {
 	if !ok {
 		return nil, false
 	}
-
 	return rd, true
 }
 

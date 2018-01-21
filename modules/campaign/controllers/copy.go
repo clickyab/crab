@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"errors"
-
 	"time"
 
 	"clickyab.com/crab/modules/campaign/orm"
@@ -14,6 +12,7 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/rs/xmux"
 )
 
@@ -40,13 +39,13 @@ func (c Controller) copyCampaign(ctx context.Context, w http.ResponseWriter, r *
 	d := domain.MustGetDomain(ctx)
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if err != nil {
-		c.BadResponse(w, errors.New("id not valid"))
+		c.BadResponse(w, t9e.G("id not valid"))
 	}
 	p := c.MustGetPayload(ctx).(*copyCampaignPayload)
 	cpManager := orm.NewOrmManager()
 	campaign, err := cpManager.FindCampaignByIDDomain(id, d.ID)
 	if err != nil {
-		c.NotFoundResponse(w, errors.New("campaign not found"))
+		c.NotFoundResponse(w, t9e.G("campaign not found"))
 		return
 	}
 	userManager := aaa.NewAaaManager()
@@ -54,13 +53,13 @@ func (c Controller) copyCampaign(ctx context.Context, w http.ResponseWriter, r *
 	assert.Nil(err)
 	_, ok := aaa.CheckPermOn(owner, currentUser, "copy_campaign", campaign.DomainID)
 	if !ok {
-		c.ForbiddenResponse(w, errors.New("don't have access for this action"))
+		c.ForbiddenResponse(w, t9e.G("don't have access for this action"))
 		return
 	}
 
 	// check for archive campaign
 	if campaign.ArchiveAt.Valid && campaign.ArchiveAt.Time.Before(time.Now()) {
-		c.BadResponse(w, errors.New("cant copy the archived campaign"))
+		c.BadResponse(w, t9e.G("cant copy the archived campaign"))
 		return
 	}
 
@@ -68,7 +67,7 @@ func (c Controller) copyCampaign(ctx context.Context, w http.ResponseWriter, r *
 	campaign.ID = 0
 	err = cpManager.CreateCampaign(campaign)
 	if err != nil {
-		c.BadResponse(w, errors.New("cant create campaign duplicate name error"))
+		c.BadResponse(w, t9e.G("cant create campaign duplicate name error"))
 		return
 	}
 

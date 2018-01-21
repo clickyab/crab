@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -17,6 +16,7 @@ import (
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
@@ -91,14 +91,14 @@ func validateHours(m interface{}) bool {
 
 func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	if l.StartAt.IsZero() {
-		return errors.New("campaign should start in future")
+		return t9e.G("campaign should start in future")
 	}
 	if l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
-		return errors.New("campaign should end after start")
+		return t9e.G("campaign should end after start")
 	}
 
 	if !validateHours(l.Schedule) {
-		return errors.New("at least one object in schedule should be true")
+		return t9e.G("at least one object in schedule should be true")
 	}
 
 	if !l.Kind.IsValid() {
@@ -112,7 +112,7 @@ func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.Respon
 	today, err := time.Parse("02-01-03", time.Now().Format("02-01-03"))
 	assert.Nil(err)
 	if l.StartAt.Unix() < today.Unix() {
-		return errors.New("campaign should start in future")
+		return t9e.G("campaign should start in future")
 	}
 
 	return nil
@@ -274,14 +274,14 @@ type campaignStatus struct {
 func (l *campaignStatus) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 
 	if l.StartAt.IsZero() {
-		return errors.New("campaign should start in future")
+		return t9e.G("campaign should start in future")
 	}
 	if l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
-		return errors.New("campaign should end after start")
+		return t9e.G("campaign should end after start")
 	}
 
 	if !validateHours(l.Schedule) {
-		return errors.New("at least one object in schedule should be true")
+		return t9e.G("at least one object in schedule should be true")
 	}
 	return nil
 }
@@ -300,7 +300,7 @@ func (l *campaignStatus) ValidateExtra(ctx context.Context, w http.ResponseWrite
 func (c Controller) updateBase(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if err != nil {
-		c.BadResponse(w, errors.New("id is not valid"))
+		c.BadResponse(w, t9e.G("id is not valid"))
 	}
 
 	d := domain.MustGetDomain(ctx)
@@ -431,7 +431,7 @@ func (c *Controller) finalize(ctx context.Context, w http.ResponseWriter, r *htt
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 
 	if err != nil || id < 1 {
-		c.BadResponse(w, errors.New("id is not valid"))
+		c.BadResponse(w, t9e.G("id is not valid"))
 	}
 	db := orm.NewOrmManager()
 	ca, err := db.FindCampaignByID(id)
@@ -459,7 +459,7 @@ func (c *Controller) get(ctx context.Context, w http.ResponseWriter, r *http.Req
 	id := xmux.Param(ctx, "id")
 	campID, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.BadResponse(w, errors.New("bad id"))
+		c.BadResponse(w, t9e.G("bad id"))
 		return
 	}
 
@@ -474,7 +474,7 @@ func (c *Controller) get(ctx context.Context, w http.ResponseWriter, r *http.Req
 
 	_, ok := aaa.CheckPermOn(owner, currentUser, "get-campaign", userDomain.ID)
 	if !ok {
-		c.ForbiddenResponse(w, errors.New("don't have access for this action"))
+		c.ForbiddenResponse(w, t9e.G("don't have access for this action"))
 		return
 	}
 

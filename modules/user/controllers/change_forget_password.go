@@ -2,10 +2,10 @@ package user
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"clickyab.com/crab/modules/user/aaa"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 )
@@ -26,7 +26,7 @@ func (c *Controller) changeForgetPassword(ctx context.Context, r *http.Request, 
 
 	u, e := verifyCode(ctx, t)
 	if e != nil {
-		return nil, errors.New("error while verifying code")
+		return nil, t9e.G("error while verifying code")
 	}
 
 	err := u.ChangePassword(p.NewPassword)
@@ -36,7 +36,7 @@ func (c *Controller) changeForgetPassword(ctx context.Context, r *http.Request, 
 		}
 
 		xlog.GetWithError(ctx, err).Debug("database error on change user password")
-		return nil, errors.New("cant change password")
+		return nil, t9e.G("cant change password")
 	}
 
 	return c.createLoginResponse(u), nil

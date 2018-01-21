@@ -7,8 +7,6 @@ import (
 
 	"strings"
 
-	"errors"
-
 	"fmt"
 	"io"
 	"os"
@@ -18,6 +16,7 @@ import (
 	"clickyab.com/crab/modules/upload/controllers"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/random"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
@@ -44,7 +43,7 @@ func (c Controller) getNativeData(ctx context.Context, w http.ResponseWriter, r 
 	u := authz.MustGetUser(ctx)
 	res := getMetaTags(p.URL)
 	if res == nil {
-		c.BadResponse(w, errors.New("error fetching the link"))
+		c.BadResponse(w, t9e.G("error fetching the link"))
 		return
 	}
 	//upload if image exists

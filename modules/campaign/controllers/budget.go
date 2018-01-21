@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/mail"
@@ -11,6 +10,7 @@ import (
 
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
@@ -32,7 +32,7 @@ func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter
 		return fmt.Errorf("cost type %s is not valid. options are %s,%s or %s", l.CostType, orm.CPC, orm.CPM, orm.CPA)
 	}
 	if l.Budget < 0 || l.DailyLimit < 0 || l.MaxBid < 0 {
-		return errors.New("budget, daily limit and max bid can not be a negative number")
+		return t9e.G("budget, daily limit and max bid can not be a negative number")
 	}
 
 	return nil
@@ -53,7 +53,7 @@ func (c *Controller) budget(ctx context.Context, w http.ResponseWriter, r *http.
 	p := c.MustGetPayload(ctx).(*budgetPayload)
 
 	if err != nil || id < 1 {
-		c.BadResponse(w, errors.New("id is not valid"))
+		c.BadResponse(w, t9e.G("id is not valid"))
 		return
 	}
 	db := orm.NewOrmManager()
@@ -78,7 +78,7 @@ func (c *Controller) budget(ctx context.Context, w http.ResponseWriter, r *http.
 			WithField("campaign", string(j)).
 			Debug("update base campaign ")
 		w.Header().Set("x-error-id", eid)
-		c.BadResponse(w, errors.New("can not update budget"))
+		c.BadResponse(w, t9e.G("can not update budget"))
 		return
 	}
 	c.OKResponse(w, o)

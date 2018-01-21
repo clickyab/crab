@@ -2,12 +2,12 @@ package user
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/gettext/t9e"
 )
 
 type avatarPayload struct {
@@ -29,7 +29,7 @@ func (c *Controller) avatar(ctx context.Context, r *http.Request, p *avatarPaylo
 	} else {
 		up, err := model.NewModelManager().FindUploadByID(p.Avatar)
 		if err != nil {
-			return nil, errors.New("avatar not found")
+			return nil, t9e.G("avatar not found")
 		}
 		cu.Avatar = stringToNullString(up.ID)
 	}
