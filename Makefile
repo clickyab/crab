@@ -72,3 +72,8 @@ run-webserver: all
 debuger:
 	$(GO) get -v github.com/derekparker/delve/cmd/dlv
 	$(GO) install -v github.com/derekparker/delve/cmd/dlv
+
+po:
+	$(GO) get -v github.com/Sam-Izdat/pogo
+	$(GO) install -v github.com/Sam-Izdat/pogo
+	cd $(ROOT) && mkdir -p contrib && pogo build -o pot
