@@ -1,5 +1,8 @@
 {
 	"properties": {
+		"avg": {
+			"type": "number"
+		},
 		"data": {
 			"items": {
 				"type": "number"
@@ -9,8 +12,17 @@
 		"hidden": {
 			"type": "boolean"
 		},
+		"max": {
+			"type": "number"
+		},
+		"min": {
+			"type": "number"
+		},
 		"name": {
 			"type": "string"
+		},
+		"sum": {
+			"type": "number"
 		},
 		"title": {
 			"type": "string"
