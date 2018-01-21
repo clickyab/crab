@@ -63,6 +63,7 @@ type layout struct {
 	Title     string
 	Name      string
 	Type      string
+	OmitEmpty bool
 }
 
 var errorNoGraphField = errors.New("not a graph field")
@@ -121,7 +122,7 @@ func handleField(f humanize.Field) (layout, error) {
 
 	t := f.Tags.Get("graph")
 	s := strings.Split(t, ",")
-	if len(t) < 4 {
+	if len(s) < 4 {
 		return l, fmt.Errorf("graph tag is wrong for field %s", f.Name)
 	}
 
@@ -138,7 +139,9 @@ func handleField(f humanize.Field) (layout, error) {
 	l.Title = s[1]
 	l.Type = s[2]
 	l.Hidden = strings.ToLower(s[3]) == "true"
-
+	if len(s) == 5 {
+		l.OmitEmpty = s[4] == "true"
+	}
 	return l, nil
 }
 
@@ -175,6 +178,19 @@ func extractValidFilter(p humanize.Package, t humanize.Type) (map[string]string,
 	}
 
 	return res, `"` + strings.Join(comma, `","`) + `"`
+}
+
+func appendToPkg(pkg *humanize.Package, f string) error {
+	b, err := ioutil.ReadFile(f)
+	if err != nil {
+		return err
+	}
+	fl, err := humanize.ParseFile(string(b), pkg)
+	if err != nil {
+		return err
+	}
+	pkg.Files = append(pkg.Files, fl)
+	return nil
 }
 
 func (g graphPlugin) Finalize(c interface{}, p *humanize.Package) error {
@@ -273,6 +289,9 @@ func (g graphPlugin) Finalize(c interface{}, p *humanize.Package) error {
 	if err != nil {
 		return err
 	}
+	if err := appendToPkg(p, f); err != nil {
+		return err
+	}
 
 	for i := range ctx {
 		pp, err := humanize.ParsePackage(ctx[i].Ann.Items["controller"])
@@ -312,6 +331,10 @@ func (g graphPlugin) Finalize(c interface{}, p *humanize.Package) error {
 		if err != nil {
 			return err
 		}
+		//if err := appendToPkg(p, f); err != nil {
+		//	return err
+		//}
+
 	}
 	return nil
 }
@@ -407,7 +430,7 @@ func (g graphPlugin) ProcessStructure(
 			return nil, errors.New("scale should be one of number or percent")
 		}
 	}
-	epoch := "2008010100"
+	epoch := "2018010100"
 	if x := a.Items["epoch"]; x != "" {
 		y, err := time.Parse("2006-01-02", x)
 		if err != nil {
