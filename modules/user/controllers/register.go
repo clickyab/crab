@@ -2,15 +2,13 @@ package user
 
 import (
 	"context"
-	"errors"
 	"net/http"
-
-	"fmt"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
+	"github.com/clickyab/services/trans"
 	gom "github.com/go-sql-driver/mysql"
 )
 
@@ -46,10 +44,10 @@ func (c *Controller) register(ctx context.Context, r *http.Request, p *registerP
 	if err != nil {
 		mysqlError, ok := err.(*gom.MySQLError)
 		if !ok {
-			return nil, errors.New("error registering user")
+			return nil, trans.E("error registering user")
 		}
 		if mysqlError.Number == 1062 {
-			return nil, fmt.Errorf("duplicate email %s", p.Email)
+			return nil, trans.E("duplicate email %s", p.Email)
 		}
 	}
 	e := verifyEmail(usr, r)

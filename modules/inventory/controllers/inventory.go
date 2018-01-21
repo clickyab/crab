@@ -12,6 +12,7 @@ import (
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
 	"github.com/rs/xmux"
@@ -54,11 +55,11 @@ func (ctrl *Controller) whiteBlackLists(ctx context.Context, r *http.Request) (w
 func (ctrl *Controller) whiteBlackList(ctx context.Context, r *http.Request) (*orm.WhiteBlackList, error) {
 	id, e := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if e != nil {
-		return nil, trans.E("not valid id")
+		return nil, t9e.G("not valid id")
 	}
 	res, e := orm.NewOrmManager().FindWhiteBlackListByID(id)
 	if e != nil {
-		return nil, trans.E("Inventory with id %d does not exists!", id)
+		return nil, t9e.G("Inventory with id %d does not exists!", id)
 	}
 	return res, nil
 }

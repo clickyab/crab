@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -18,6 +17,7 @@ import (
 
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
+	"github.com/clickyab/services/gettext/t9e"
 )
 
 var (
@@ -61,31 +61,31 @@ func getChunkFlowData(r *http.Request) (ngFlowData, error) {
 	ngfd := ngFlowData{}
 	ngfd.chunkNumber, err = strconv.Atoi(r.FormValue("flowChunkNumber"))
 	if err != nil {
-		return ngfd, errors.New("bad ChunkNumber")
+		return ngfd, t9e.G("bad ChunkNumber")
 	}
 	ngfd.totalChunks, err = strconv.Atoi(r.FormValue("flowTotalChunks"))
 	if err != nil {
-		return ngfd, errors.New("bad TotalChunks")
+		return ngfd, t9e.G("bad TotalChunks")
 	}
 	ngfd.chunkSize, err = strconv.Atoi(r.FormValue("flowChunkSize"))
 	if err != nil {
-		return ngfd, errors.New("bad ChunkSize")
+		return ngfd, t9e.G("bad ChunkSize")
 	}
 	ngfd.totalSize, err = strconv.Atoi(r.FormValue("flowTotalSize"))
 	if err != nil {
-		return ngfd, errors.New("bad TotalSize")
+		return ngfd, t9e.G("bad TotalSize")
 	}
 	ngfd.identifier = r.FormValue("flowIdentifier")
 	if ngfd.identifier == "" {
-		return ngfd, errors.New("bad Identifier")
+		return ngfd, t9e.G("bad Identifier")
 	}
 	ngfd.filename = strings.Trim(r.FormValue("flowFilename"), " \n\t")
 	if ngfd.filename == "" {
-		return ngfd, errors.New("bad Filename")
+		return ngfd, t9e.G("bad Filename")
 	}
 	ngfd.relativePath = r.FormValue("flowRelativePath")
 	if ngfd.relativePath == "" {
-		return ngfd, errors.New("bad RelativePath")
+		return ngfd, t9e.G("bad RelativePath")
 	}
 	return ngfd, nil
 }
@@ -142,7 +142,7 @@ func chunkUpload(tempDir string, ngfd ngFlowData, r *http.Request) (string, stri
 	fileDir, chunkFile := buildPathChunks(tempDir, ngfd)
 	err := storeChunk(fileDir, chunkFile, ngfd, r)
 	if err != nil {
-		return fileDir, "", errors.New("Unable to store chunk" + err.Error())
+		return fileDir, "", t9e.G("Unable to store chunk" + err.Error())
 	}
 	if allChunksUploaded(tempDir, ngfd) {
 		file, err := combineChunks(fileDir, ngfd)
@@ -158,19 +158,19 @@ func chunkUpload(tempDir string, ngfd ngFlowData, r *http.Request) (string, stri
 func storeChunk(tempDir string, tempFile string, ngfd ngFlowData, r *http.Request) error {
 	err := os.MkdirAll(tempDir, os.FileMode(Perm.Int()))
 	if err != nil {
-		return errors.New("bad directory")
+		return t9e.G("bad directory")
 	}
 	file, _, err := r.FormFile("file")
 	if err != nil {
-		return errors.New("can't access file field")
+		return t9e.G("can't access file field")
 	}
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
-		return errors.New("can't read file")
+		return t9e.G("can't read file")
 	}
 	err = ioutil.WriteFile(tempFile, data, os.FileMode(Perm.Int()))
 	if err != nil {
-		return errors.New("can't write file")
+		return t9e.G("can't write file")
 	}
 	return nil
 }

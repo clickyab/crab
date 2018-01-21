@@ -2,10 +2,11 @@ package model
 
 import (
 	"encoding/json"
-	"errors"
 	"time"
 
 	"database/sql/driver"
+
+	"github.com/clickyab/services/gettext/t9e"
 )
 
 // Mime all mime type
@@ -79,7 +80,7 @@ func (b *FileAttr) Scan(src interface{}) error {
 	case string:
 		c = []byte(src.(string))
 	default:
-		return errors.New("unsupported type")
+		return t9e.G("unsupported type")
 	}
 
 	return json.Unmarshal(c, b)

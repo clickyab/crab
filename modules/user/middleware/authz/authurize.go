@@ -6,8 +6,8 @@ import (
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"github.com/clickyab/services/framework"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/permission"
-	"github.com/clickyab/services/trans"
 )
 
 type authContextKey string
@@ -31,9 +31,9 @@ func AuthorizeGenerator(resource permission.Token, scope permission.UserScope) f
 
 			if !ok {
 				framework.JSON(w, http.StatusForbidden, struct {
-					Error trans.T9String `json:"error"`
+					Error error `json:"error"`
 				}{
-					Error: trans.T("unauthorised user"),
+					Error: t9e.G("unauthorised user"),
 				})
 				return
 			}
