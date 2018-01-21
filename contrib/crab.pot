@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: crab\n"
 "Report-Msgid-Bugs-To: Nobody\n"
-"POT-Creation-Date: 2018-01-21 15:06:57.416103369 +0000 UTC\n"
+"POT-Creation-Date: 2018-01-21 15:36:32.613228975 +0000 UTC\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: TEAM NAME <EMAIL@ADDRESS>\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
 
+#: modules/ad/add/ad.go:70
 #: modules/ad/add/pkg_enums.gen.go:33
 #: modules/ad/add/pkg_enums.gen.go:71
 #: modules/asset/orm/pkg_enums.gen.go:33
@@ -26,6 +27,7 @@ msgstr ""
 #: modules/inventory/orm/pkg_enums.gen.go:32
 #: modules/inventory/orm/pkg_enums.gen.go:70
 #: modules/notification/notif/pkg_enums.gen.go:32
+#: modules/upload/model/upload.go:83
 #: modules/user/aaa/pkg_enums.gen.go:33
 #: modules/user/aaa/pkg_enums.gen.go:71
 #: vendor/github.com/clickyab/services/permission/pkg_enums.gen.go:32
@@ -64,6 +66,163 @@ msgstr ""
 msgid "invalid status"
 msgstr ""
 
+#: modules/ad/controllers/upload.go:59
+#: modules/campaign/controllers/getad.go:30
+msgid "campaign id not valid"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:63
+msgid "only native or banner is allowed"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:70
+#: modules/campaign/controllers/copy.go:48
+#: modules/campaign/controllers/changestat.go:49
+msgid "campaign not found"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:74
+msgid "campaign is not the right type"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:78
+msgid "no banners selected"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:89
+msgid "ad not found"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:92
+msgid "ad not belong to campaign"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:142
+#: modules/campaign/controllers/campaign.go:477
+#: modules/campaign/controllers/copy.go:56
+#: modules/campaign/controllers/changestat.go:57
+msgid "don't have access for this action"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:150
+msgid "duplicate src in ads"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:153
+msgid "cant create/update campaign"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:182
+msgid "invalid uploaded file"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:187
+msgid "banner not selected"
+msgstr ""
+
+#: modules/ad/controllers/upload.go:203
+msgid "dimensions not valid"
+msgstr ""
+
+#: modules/asset/controllers/isp.go:24
+msgid "not valid isp kind"
+msgstr ""
+
+#: modules/campaign/controllers/attributes.go:34
+msgid "region is not valid"
+msgstr ""
+
+#: modules/campaign/controllers/attributes.go:77
+#: modules/campaign/controllers/campaign.go:303
+#: modules/campaign/controllers/campaign.go:434
+#: modules/campaign/controllers/wblist.go:38
+#: modules/campaign/controllers/wblist.go:43
+#: modules/campaign/controllers/wblist.go:87
+#: modules/campaign/controllers/budget.go:56
+msgid "id is not valid"
+msgstr ""
+
+#: modules/campaign/controllers/attributes.go:102
+msgid "can not update attributes"
+msgstr ""
+
+#: modules/campaign/controllers/native.go:46
+msgid "error fetching the link"
+msgstr ""
+
+#: modules/campaign/controllers/campaign.go:94
+#: modules/campaign/controllers/campaign.go:115
+#: modules/campaign/controllers/campaign.go:277
+msgid "campaign should start in future"
+msgstr ""
+
+#: modules/campaign/controllers/campaign.go:97
+#: modules/campaign/controllers/campaign.go:280
+msgid "campaign should end after start"
+msgstr ""
+
+#: modules/campaign/controllers/campaign.go:101
+#: modules/campaign/controllers/campaign.go:284
+msgid "at least one object in schedule should be true"
+msgstr ""
+
+#: modules/campaign/controllers/campaign.go:462
+msgid "bad id"
+msgstr ""
+
+#: modules/campaign/controllers/getad.go:37
+msgid "no ads found"
+msgstr ""
+
+#: modules/campaign/controllers/getad.go:46
+msgid "dont have access for this action"
+msgstr ""
+
+#: modules/campaign/controllers/wblist.go:69
+msgid "can not update white/black list"
+msgstr ""
+
+#: modules/campaign/controllers/wblist.go:110
+msgid "can not delete white/black list"
+msgstr ""
+
+#: modules/campaign/controllers/copy.go:42
+#: modules/campaign/controllers/changestat.go:35
+msgid "id not valid"
+msgstr ""
+
+#: modules/campaign/controllers/copy.go:62
+msgid "cant copy the archived campaign"
+msgstr ""
+
+#: modules/campaign/controllers/copy.go:70
+msgid "cant create campaign duplicate name error"
+msgstr ""
+
+#: modules/campaign/controllers/changestat.go:41
+msgid "invalid stat detected"
+msgstr ""
+
+#: modules/campaign/controllers/changestat.go:63
+msgid "cant manipulate archived campaign"
+msgstr ""
+
+#: modules/campaign/controllers/budget.go:35
+msgid "budget, daily limit and max bid can not be a negative number"
+msgstr ""
+
+#: modules/campaign/controllers/budget.go:81
+msgid "can not update budget"
+msgstr ""
+
+#: modules/campaign/orm/campaign.go:20
+msgid "there is no inventory with this id"
+msgstr ""
+
+#: modules/campaign/orm/campaign.go:78
+msgid "start date can't be past"
+msgstr ""
+
 #: modules/inventory/controllers/inventory.go:58
 msgid "not valid id"
 msgstr ""
@@ -72,39 +231,220 @@ msgstr ""
 msgid "Inventory with id %d does not exists!"
 msgstr ""
 
-#: modules/user/controllers/verification.go:153
+#: modules/location/controllers/location.go:46
+#: modules/location/controllers/location.go:52
+msgid "country id is not correct"
+msgstr ""
+
+#: modules/location/controllers/location.go:67
+#: modules/location/controllers/location.go:73
+msgid "city id is not correct"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:77
+msgid "not found"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:191
+msgid "error in uploading video chunks"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:194
+msgid "file size not valid"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:204
+msgid "failed to upload chunks"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:207
+msgid "failed storing chunks"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:217
+msgid "error while uploading file"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:221
+msgid "cant open uploaded file"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:237
+msgid "video mime type not valid"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:244
+msgid "video is too large to be uploaded"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:250
+msgid "uploaded file is not readable"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:255
+msgid "file format is not readable"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:260
+msgid "cant get duration from file"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:265
+msgid "error parsing duration from video"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:309
+msgid "cant convert video"
+msgstr ""
+
+#: modules/upload/controllers/upload.go:325
+#: modules/upload/controllers/upload.go:331
+#: modules/upload/controllers/upload.go:336
+#: modules/upload/controllers/upload.go:341
+msgid "cant get file dimensions"
+msgstr ""
+
+#: modules/upload/controllers/video.go:31
+#: modules/upload/controllers/video.go:35
+msgid "wrong id"
+msgstr ""
+
+#: modules/upload/controllers/flow.go:64
+msgid "bad ChunkNumber"
+msgstr ""
+
+#: modules/upload/controllers/flow.go:68
+msgid "bad TotalChunks"
+msgstr ""
+
+#: modules/upload/controllers/flow.go:72
+msgid "bad ChunkSize"
+msgstr ""
+
+#: modules/upload/controllers/flow.go:76
+msgid "bad TotalSize"
+msgstr ""
+
+#: modules/upload/controllers/flow.go:80
+msgid "bad Identifier"
+msgstr ""
+
+#: modules/upload/controllers/flow.go:84
+msgid "bad Filename"
+msgstr ""
+
+#: modules/upload/controllers/flow.go:88
+msgid "bad RelativePath"
+msgstr ""
+
+#: modules/upload/controllers/flow.go:161
+msgid "bad directory"
+msgstr ""
+
+#: modules/upload/controllers/flow.go:165
+msgid "can't access file field"
+msgstr ""
+
+#: modules/upload/controllers/flow.go:169
+msgid "can't read file"
+msgstr ""
+
+#: modules/upload/controllers/flow.go:173
+msgid "can't write file"
+msgstr ""
+
+#: modules/user/aaa/user.go:291
+msgid "this password was used before, please try another one"
+msgstr ""
+
+#: modules/user/aaa/user.go:293
+msgid "current password is not correct"
+msgstr ""
+
+#: modules/user/controllers/forget_code.go:28
+#: modules/user/controllers/verify_emailcode.go:30
+msgid "bad request data"
+msgstr ""
+
+#: modules/user/controllers/forget_hash.go:21
+msgid "verify code mismatch"
+msgstr ""
+
+#: modules/user/controllers/verify_email.go:32
+msgid "code has been sent"
+msgstr ""
+
+#: modules/user/controllers/verify_email.go:59
 msgid "Welcome to Clickyab!"
 msgstr ""
 
-#: modules/user/controllers/edit.go:78
-msgid "Gender is not valid"
+#: modules/user/controllers/verify_email.go:68
+#: modules/user/controllers/verify_email.go:76
+msgid "code is not valid"
 msgstr ""
 
-#: modules/user/controllers/edit.go:99
+#: modules/user/controllers/verify_email.go:81
+#: modules/user/controllers/verify_email.go:97
+msgid "can't find user"
+msgstr ""
+
+#: modules/user/controllers/verify_email.go:86
+msgid "invalid user id"
+msgstr ""
+
+#: modules/user/controllers/verify_email.go:120
+msgid "can't generate verify short code"
+msgstr ""
+
+#: modules/user/controllers/verify_email.go:154
+msgid "user status is not registered"
+msgstr ""
+
+#: modules/user/controllers/avatar.go:32
+msgid "avatar not found"
+msgstr ""
+
+#: modules/user/controllers/login.go:30
+msgid "wrong email or password"
+msgstr ""
+
+#: modules/user/controllers/login.go:34
+msgid "not verified"
+msgstr ""
+
+#: modules/user/controllers/login.go:38
+msgid "this account has been blocked"
+msgstr ""
+
+#: modules/user/controllers/change_forget_password.go:29
+msgid "error while verifying code"
+msgstr ""
+
+#: modules/user/controllers/change_forget_password.go:39
+msgid "cant change password"
+msgstr ""
+
+#: modules/user/controllers/verify_resend.go:27
+msgid "cant find user"
+msgstr ""
+
+#: modules/user/controllers/verify_resend.go:31
+msgid "verify too soon error"
+msgstr ""
+
+#: modules/user/controllers/edit.go:54
 msgid "gender is invalid"
 msgstr ""
 
-#: modules/user/controllers/edit.go:112
-msgid "Personal userPayload not allowed to update corporate account"
+#: modules/user/controllers/edit.go:65
+msgid "personal userPayload not allowed to update corporate account"
 msgstr ""
 
-#: modules/user/controllers/register.go:48
-msgid "error registering user"
+#: modules/user/controllers/forget_password.go:30
+msgid "email not found"
 msgstr ""
 
-#: modules/user/controllers/register.go:52
-msgid "Duplicate email %s"
-msgstr ""
-
-#: modules/user/controllers/password.go:153
-msgid "Can't change password!"
-msgstr ""
-
-#: modules/user/middleware/authz/authz.go:43
-msgid "Unauthorized"
-msgstr ""
-
-#: modules/user/middleware/authz/authurize.go:37
+#: modules/user/middleware/authz/authurize.go:36
 msgid "unauthorised user"
 msgstr ""
 
