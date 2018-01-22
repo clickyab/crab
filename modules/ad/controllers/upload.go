@@ -136,7 +136,7 @@ func (c *Controller) assignNormalBanner(ctx context.Context, r *http.Request, p 
 	assert.Nil(err)
 	_, ok := aaa.CheckPermOn(owner, currentUser, "assign_banner", p.domain.ID)
 	if !ok {
-		return adResponse{}, framework.NewForbiddenError(t9e.G("don't have access for this action").Text)
+		return adResponse{}, framework.NewForbiddenError(t9e.G("don't have access for this action").String())
 	}
 
 	res, err := add.NewAddManager().CreateUpdateCampaignNormalBanner(p.input)

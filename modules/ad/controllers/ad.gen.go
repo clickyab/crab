@@ -29,7 +29,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		/* Route {
 			"Route": "/:banner_type/:id",
 			"Method": "POST",
-			"Function": "Controller.assignNormalBanner",
+			"Function": "Controller.assignNormalBannerPost",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -50,7 +50,7 @@ func (c *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(assignBannerPayload{}))
-		group.POST("controllers-Controller-assignNormalBanner", "/:banner_type/:id", framework.Mix(c.assignNormalBanner, m0...))
+		group.POST("controllers-Controller-assignNormalBannerPost", "/:banner_type/:id", framework.Mix(c.assignNormalBannerPost, m0...))
 		// End route with key 0
 
 		initializer.DoInitialize(c)
