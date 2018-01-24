@@ -4,9 +4,8 @@ import (
 	"context"
 	"net/http"
 	"strconv"
-	"sync"
-
 	"strings"
+	"sync"
 
 	"clickyab.com/crab/modules/ad/add"
 	"clickyab.com/crab/modules/campaign/orm"
@@ -17,6 +16,7 @@ import (
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
+	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/gettext/t9e"
 	"github.com/go-sql-driver/mysql"
 	"github.com/rs/xmux"
@@ -120,40 +120,34 @@ func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.Response
 	return nil
 }
 
+type adResponse []add.Ad
+
 // assignNormalBanner assignNormalBanner module is banner type (banner/native)
-// @Route {
+// @Rest {
 // 		url = /:banner_type/:id
-//		method = post
-//		payload = assignBannerPayload
+//		protected = true
 //		resource = assign_banner:self
-//		middleware = authz.Authenticate
-//		200 = add.Ad
-//		400 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
+// 		method = post
 // }
-func (c Controller) assignNormalBanner(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) assignNormalBanner(ctx context.Context, r *http.Request, p *assignBannerPayload) (adResponse, error) {
 	currentUser := authz.MustGetUser(ctx)
-	p := c.MustGetPayload(ctx).(*assignBannerPayload)
 	userManager := aaa.NewAaaManager()
 	owner, err := userManager.FindUserWithParentsByID(p.campaign.UserID, p.domain.ID)
 	assert.Nil(err)
 	_, ok := aaa.CheckPermOn(owner, currentUser, "assign_banner", p.domain.ID)
 	if !ok {
-		c.ForbiddenResponse(w, t9e.G("don't have access for this action"))
-		return
+		return adResponse{}, framework.NewForbiddenError(t9e.G("don't have access for this action").String())
 	}
 
 	res, err := add.NewAddManager().CreateUpdateCampaignNormalBanner(p.input)
 	if err != nil {
 		f, ok := err.(*mysql.MySQLError)
 		if ok && f.Number == 1062 {
-			c.BadResponse(w, t9e.G("duplicate src in ads"))
-			return
+			return adResponse{}, t9e.G("duplicate src in ads")
 		}
-		c.BadResponse(w, t9e.G("cant create/update campaign"))
-		return
+		return adResponse{}, t9e.G("cant create/update campaign")
 	}
-	c.OKResponse(w, res)
+	return res, nil
 }
 
 func checkBannerDimension(width, height int, bannerType add.AdType) bool {
