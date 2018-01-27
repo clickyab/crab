@@ -38,6 +38,7 @@ type graphChartData struct {
 	Name      string    `json:"name"`
 	Hidden    bool      `json:"hidden"`
 	Type      string    `json:"type"`
+	Order     int64     `json:"order"`
 	Data      []float64 `json:"data"`
 	Sum       float64   `json:"sum"`
 	Avg       float64   `json:"avg"`
@@ -98,6 +99,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		Title:     "Avg. CPC",
 		Type:      "line",
 		Hidden:    false,
+		Order:     4,
 		OmitEmpty: false,
 		Data:      make([]float64, l),
 	}
@@ -107,6 +109,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		Title:     "Avg. CPM",
 		Type:      "line",
 		Hidden:    false,
+		Order:     5,
 		OmitEmpty: false,
 		Data:      make([]float64, l),
 	}
@@ -116,6 +119,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		Title:     "CTR",
 		Type:      "line",
 		Hidden:    false,
+		Order:     3,
 		OmitEmpty: false,
 		Data:      make([]float64, l),
 	}
@@ -125,6 +129,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		Title:     "Total Impression",
 		Type:      "bar",
 		Hidden:    true,
+		Order:     2,
 		OmitEmpty: false,
 		Data:      make([]float64, l),
 	}
@@ -134,6 +139,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		Title:     "Click",
 		Type:      "line",
 		Hidden:    true,
+		Order:     1,
 		OmitEmpty: false,
 		Data:      make([]float64, l),
 	}
@@ -143,6 +149,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		Title:     "Total spent",
 		Type:      "line",
 		Hidden:    false,
+		Order:     6,
 		OmitEmpty: false,
 		Data:      make([]float64, l),
 	}

@@ -24,6 +24,9 @@
 					"name": {
 						"type": "string"
 					},
+					"order": {
+						"type": "integer"
+					},
 					"sum": {
 						"type": "number"
 					},
