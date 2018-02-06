@@ -6,49 +6,46 @@ import (
 	"strconv"
 
 	"clickyab.com/crab/modules/ad/add"
+	AdsErr "clickyab.com/crab/modules/ad/errors"
+	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/gettext/t9e"
 	"github.com/rs/xmux"
 )
 
+type sliceAds []add.AdUser
+
 // getCampaignAds get all campaign ads
-// @Route {
+// @Rest {
 // 		url = /get/:id/ad
-//		method = get
-//		middleware = authz.Authenticate
+//		protected = true
+// 		method = get
 //		resource = get_banner:self
-//		200 = add.AdsUserSlice
-//		400 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
 // }
-func (c Controller) getCampaignAds(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c Controller) getCampaignAds(ctx context.Context, r *http.Request) (sliceAds, error) {
 	campaignIDInt, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if err != nil {
-		c.BadResponse(w, t9e.G("campaign id not valid"))
-		return
+		return nil, errors.InvalidIDErr
 	}
 	d := domain.MustGetDomain(ctx)
 	adManager := add.NewAddManager()
 	ads, ownerID := adManager.GetAdsByCampaignID(campaignIDInt, d.ID)
 	if len(ads) == 0 {
-		c.NotFoundResponse(w, t9e.G("no ads found"))
-		return
+		return ads, AdsErr.AdNotFound(campaignIDInt)
 	}
 	currentUser := authz.MustGetUser(ctx)
 	userManager := aaa.NewAaaManager()
 	owner, err := userManager.FindUserWithParentsByID(ownerID, d.ID)
-	assert.Nil(err)
+	if err != nil {
+		return ads, err
+	}
+
 	_, ok := aaa.CheckPermOn(owner, currentUser, "get_banner", d.ID)
 	if !ok {
-		c.ForbiddenResponse(w, t9e.G("dont have access for this action"))
-		return
+		return ads, t9e.G("access denied. can't get campaign banner data")
 	}
-	if len(ads) == 0 {
-		c.OKResponse(w, []string{})
-		return
-	}
-	c.OKResponse(w, ads)
+
+	return ads, nil
 }

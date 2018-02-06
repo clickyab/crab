@@ -61,6 +61,18 @@ func (l *budgetPayload) Validate(ctx context.Context, w http.ResponseWriter, r *
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
+		case "Budget":
+			res["budget"] = trans.E("invalid value")
+
+		case "DailyLimit":
+			res["daily_limit"] = trans.E("invalid value")
+
+		case "MaxBid":
+			res["max_bid"] = trans.E("invalid value")
+
+		case "NotifyEmail":
+			res["notify_email"] = trans.E("invalid value")
+
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}
@@ -90,6 +102,9 @@ func (l *campaignStatus) Validate(ctx context.Context, w http.ResponseWriter, r 
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
+		case "Status":
+			res["status"] = trans.E("invalid value")
+
 		case "Title":
 			res["title"] = trans.E("invalid value")
 
@@ -154,6 +169,12 @@ func (l *createCampaignPayload) Validate(ctx context.Context, w http.ResponseWri
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
+		case "Status":
+			res["status"] = trans.E("invalid value")
+
+		case "EndAt":
+			res["end_at"] = trans.E("invalid value")
+
 		case "Title":
 			res["title"] = trans.E("invalid value")
 

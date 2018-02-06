@@ -2,28 +2,25 @@ package controllers
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
 
 	"reflect"
 
+	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
-	"github.com/clickyab/services/random"
+	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
-	"github.com/sirupsen/logrus"
 )
 
-// Controller is the controller for the campaign package
+// Controller is the controller for the user package
 // @Route {
 //		group = /campaign
 //		middleware = domain.Access
@@ -37,9 +34,9 @@ type Controller struct {
 type createCampaignPayload struct {
 	Kind     orm.CampaignKind `json:"kind"`
 	Type     orm.CampaignType `json:"type"`
-	Status   bool             `json:"status"`
+	Status   bool             `json:"status" validate:"required"`
 	StartAt  time.Time        `json:"start_at"`
-	EndAt    mysql.NullTime   `json:"end_at"`
+	EndAt    mysql.NullTime   `json:"end_at" validate:"omitempty"`
 	Title    string           `json:"title" validate:"required,gt=5"`
 	Schedule struct {
 		H00 string `json:"h00" hour:""`
@@ -91,46 +88,40 @@ func validateHours(m interface{}) bool {
 
 func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	if l.StartAt.IsZero() {
-		return t9e.G("campaign should start in future")
+		return errors.StartTimeError
 	}
 	if l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
-		return t9e.G("campaign should end after start")
+		return errors.EndTimeError
 	}
 
 	if !validateHours(l.Schedule) {
-		return t9e.G("at least one object in schedule should be true")
+		return errors.TimeScheduleError
 	}
 
 	if !l.Kind.IsValid() {
-		return fmt.Errorf("%s is not a valid campaign kind. choose from %s or %s", l.Kind, orm.AppCampaign, orm.WebCampaign)
+		return errors.KindError
 
 	}
 	if !l.Type.IsValid() {
-		return fmt.Errorf("%s is not a valid campaign type. choose from %s, %s or %s", l.Type, orm.BannerType, orm.VastType, orm.NativeType)
+		return errors.TypeError
 	}
 
-	today, err := time.Parse("02-01-03", time.Now().Format("02-01-03"))
-	assert.Nil(err)
-	if l.StartAt.Unix() < today.Unix() {
-		return t9e.G("campaign should start in future")
+	if l.StartAt.Unix() < time.Now().Unix() {
+		return errors.StartTimeError
 	}
 
 	return nil
 }
 
 // createBase campaign
-// @Route {
+// @Rest {
 // 		url = /create
-//		method = post
-//		payload = createCampaignPayload
-//		middleware = authz.Authenticate
-//		200 = orm.Campaign
-//		400 = controller.ErrorResponseSimple
+//		protected = true
+// 		method = post
 // }
-func (c Controller) createBase(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCampaignPayload) (*orm.Campaign, error) {
 	u := authz.MustGetUser(ctx)
 	d := domain.MustGetDomain(ctx)
-	p := c.MustGetPayload(ctx).(*createCampaignPayload)
 	ca, err := orm.NewOrmManager().AddCampaign(orm.CampaignBase{
 		CampaignBaseType: orm.CampaignBaseType{
 			Kind: p.Kind,
@@ -219,27 +210,18 @@ func (c Controller) createBase(ctx context.Context, w http.ResponseWriter, r *ht
 		},
 	}, u, d)
 	if err != nil {
-		j, e := json.MarshalIndent(ca, " ", "  ")
-		assert.Nil(e)
-		pj, e := json.MarshalIndent(p, " ", "  ")
-		assert.Nil(e)
-		eid := <-random.ID
-		logrus.WithField("error", err).
-			WithField("payload", string(pj)).
-			WithField("eid", eid).
-			WithField("campaign", string(j)).
-			Debug("update base campaign ")
-		w.Header().Set("x-error-id", eid)
-		c.BadResponse(w, nil)
-		return
+		xlog.GetWithError(ctx, err).Debug("can't insert new campaign")
+
+		return nil, t9e.G("can't create new campaign, db error")
 	}
-	c.OKResponse(w, ca)
+
+	return ca, nil
 }
 
 // @Validate{
 //}
 type campaignStatus struct {
-	Status   bool           `json:"status"`
+	Status   bool           `json:"status" validate:"required"`
 	StartAt  time.Time      `json:"start_at"`
 	EndAt    mysql.NullTime `json:"end_at"`
 	Title    string         `json:"title"  validate:"required,gt=5"`
@@ -272,45 +254,37 @@ type campaignStatus struct {
 }
 
 func (l *campaignStatus) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-
 	if l.StartAt.IsZero() {
-		return t9e.G("campaign should start in future")
+		return errors.StartTimeError
 	}
 	if l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
-		return t9e.G("campaign should end after start")
+		return errors.EndTimeError
 	}
 
 	if !validateHours(l.Schedule) {
-		return t9e.G("at least one object in schedule should be true")
+		return errors.TimeScheduleError
 	}
 	return nil
 }
 
 // updateBase campaign
-// @Route {
+// @Rest {
 // 		url = /base/:id
-//		method = put
-//		payload = campaignStatus
-//		middleware = authz.Authenticate
-//		200 = orm.Campaign
-//		400 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
+//		protected = true
+// 		method = put
 //		resource = edit-campaign:self
 // }
-func (c Controller) updateBase(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaignStatus) (*orm.Campaign, error) {
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if err != nil {
-		c.BadResponse(w, t9e.G("id is not valid"))
+		return nil, errors.InvalidIDErr
 	}
-
 	d := domain.MustGetDomain(ctx)
-	p := c.MustGetPayload(ctx).(*campaignStatus)
 
 	o := orm.NewOrmManager()
 	ca, e := o.FindCampaignByID(id)
-	if e != nil || ca.DomainID != d.ID {
-		c.NotFoundResponse(w, nil)
-		return
+	if e != nil || ca.DomainID != d.ID || ca != nil {
+		return nil, errors.NotFoundError(id)
 	}
 	// TODO: check access
 	//u.HasOn("edit-campaign",ca.UserID,[],d.ID)
@@ -393,90 +367,69 @@ func (c Controller) updateBase(ctx context.Context, w http.ResponseWriter, r *ht
 				String: p.Schedule.H23,
 				Valid:  p.Schedule.H23 != "",
 			}}}, ca)
-	if err == orm.ErrorStartDate {
-		c.BadResponse(w, e)
-		return
-	}
 	if err != nil {
-		j, e := json.MarshalIndent(o, " ", "  ")
-		assert.Nil(e)
-		pj, e := json.MarshalIndent(p, " ", "  ")
-		assert.Nil(e)
-
-		eid := <-random.ID
-		logrus.WithField("error", err).
-			WithField("payload", string(pj)).
-			WithField("eid", eid).
-			WithField("campaign", string(j)).
-			Debug("update base campaign ")
-		w.Header().Set("x-error-id", eid)
-		c.BadResponse(w, nil)
-		return
+		if err != errors.StartTimeError {
+			xlog.GetWithError(ctx, err).Debug("can't update base info of campaign")
+		}
+		return nil, t9e.G("can't update base info of campaign")
 	}
 
-	c.OKResponse(w, ca)
-
+	return ca, nil
 }
 
 // finalize
-// @Route {
+// @Rest {
 // 		url = /finalize/:id
-//		method = put
-//		200 = controller.NormalResponse
-//		400 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
-//		middleware = authz.Authenticate
+//		protected = true
+// 		method = put
 // }
-func (c *Controller) finalize(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) finalize(ctx context.Context, r *http.Request) (*orm.Campaign, error) {
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 
 	if err != nil || id < 1 {
-		c.BadResponse(w, t9e.G("id is not valid"))
+		return nil, errors.InvalidIDErr
 	}
 	db := orm.NewOrmManager()
 	ca, err := db.FindCampaignByID(id)
 	if err != nil {
-		c.NotFoundResponse(w, nil)
+		return ca, err
 	}
 
-	db.Finalize(ca)
-	c.OKResponse(w, nil)
+	err = db.Finalize(ca)
+
+	return ca, err
 }
 
 // get gets a campaign by id
-// @Route {
+// @Rest {
 // 		url = /get/:id
-//		method = get
+//		protected = true
+// 		method = get
 //		resource = get-campaign:self
-//		200 = orm.Campaign
-//		400 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
-//		middleware = authz.Authenticate
 // }
-func (c *Controller) get(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) get(ctx context.Context, r *http.Request) (*orm.Campaign, error) {
 	userDomain := domain.MustGetDomain(ctx)
 	currentUser := authz.MustGetUser(ctx)
 	id := xmux.Param(ctx, "id")
 	campID, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.BadResponse(w, t9e.G("bad id"))
-		return
+		return nil, errors.InvalidIDErr
 	}
 
 	campaign, err := orm.NewOrmManager().FindCampaignByIDDomain(campID, userDomain.ID)
 	if err != nil {
-		c.NotFoundResponse(w, nil)
-		return
+		return campaign, err
 	}
 
 	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(campaign.UserID, userDomain.ID)
-	assert.Nil(err)
+	if err != nil {
+		return campaign, err
+	}
 
 	_, ok := aaa.CheckPermOn(owner, currentUser, "get-campaign", userDomain.ID)
 	if !ok {
-		c.ForbiddenResponse(w, t9e.G("don't have access for this action"))
-		return
+		return campaign, t9e.G("access denied. you can't get campaign information")
 	}
 
-	c.OKResponse(w, campaign)
+	return campaign, nil
 }

@@ -2,18 +2,16 @@ package controllers
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/mail"
 	"strconv"
 
+	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
-	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/gettext/t9e"
-	"github.com/clickyab/services/random"
+	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
-	"github.com/sirupsen/logrus"
 )
 
 // @Validate{
@@ -28,58 +26,39 @@ func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter
 			return err
 		}
 	}
+
 	if !l.CostType.IsValid() {
 		return fmt.Errorf("cost type %s is not valid. options are %s,%s or %s", l.CostType, orm.CPC, orm.CPM, orm.CPA)
-	}
-	if l.Budget < 0 || l.DailyLimit < 0 || l.MaxBid < 0 {
-		return t9e.G("budget, daily limit and max bid can not be a negative number")
 	}
 
 	return nil
 }
 
 // budget will update campaign finance
-// @Route {
+// @Rest {
 // 		url = /budget/:id
-//		method = put
-//		payload = budgetPayload
-//		200 = orm.Campaign
-//		400 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
-//		middleware = authz.Authenticate
+//		protected = true
+// 		method = put
 // }
-func (c *Controller) budget(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) budget(ctx context.Context, r *http.Request, p *budgetPayload) (*orm.Campaign, error) {
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
-	p := c.MustGetPayload(ctx).(*budgetPayload)
-
 	if err != nil || id < 1 {
-		c.BadResponse(w, t9e.G("id is not valid"))
-		return
+		return nil, errors.InvalidIDErr
 	}
+
 	db := orm.NewOrmManager()
 	o, err := db.FindCampaignByID(id)
 	if err != nil {
-		c.NotFoundResponse(w, nil)
-		return
+		return nil, errors.NotFoundError(id)
 	}
 
 	err = db.UpdateCampaignBudget(p.CampaignFinance, o)
 
 	if err != nil {
-		j, e := json.MarshalIndent(o, " ", "  ")
-		assert.Nil(e)
-		pj, e := json.MarshalIndent(p, " ", "  ")
-		assert.Nil(e)
+		xlog.GetWithError(ctx, err).Debug("update base campaign")
 
-		eid := <-random.ID
-		logrus.WithField("error", err).
-			WithField("payload", string(pj)).
-			WithField("eid", eid).
-			WithField("campaign", string(j)).
-			Debug("update base campaign ")
-		w.Header().Set("x-error-id", eid)
-		c.BadResponse(w, t9e.G("can not update budget"))
-		return
+		return nil, t9e.G("can't update campaign budget")
 	}
-	c.OKResponse(w, o)
+
+	return o, nil
 }

@@ -29,22 +29,16 @@ type getNativeDataPayload struct {
 }
 
 // getNativeData getNativeData
-// @Route {
+// @Rest {
 // 		url = /native/fetch
-//		method = post
-//		payload = getNativeDataPayload
-//		middleware = authz.Authenticate
-//		200 = getNativeDataResp
-//		400 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
+//		protected = true
+// 		method = post
 // }
-func (c Controller) getNativeData(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	p := c.MustGetPayload(ctx).(*getNativeDataPayload)
+func (c Controller) getNativeData(ctx context.Context, r *http.Request, p *getNativeDataPayload) (*getNativeDataResp, error) {
 	u := authz.MustGetUser(ctx)
 	res := getMetaTags(p.URL)
 	if res == nil {
-		c.BadResponse(w, t9e.G("error fetching the link"))
-		return
+		return res, t9e.G("error fetching the link")
 	}
 	//upload if image exists
 	if res.Image != "" {
@@ -67,7 +61,7 @@ func (c Controller) getNativeData(ctx context.Context, w http.ResponseWriter, r 
 
 		resp, err := http.Get(res.Image)
 		if err != nil {
-			return
+			return res, err
 		}
 		defer func() { _ = resp.Body.Close() }()
 
@@ -81,7 +75,7 @@ func (c Controller) getNativeData(ctx context.Context, w http.ResponseWriter, r 
 		res.URL = p.URL
 	}
 
-	c.OKResponse(w, res)
+	return res, nil
 }
 
 func getMetaTags(url string) *getNativeDataResp {
