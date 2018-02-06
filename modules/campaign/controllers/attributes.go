@@ -2,18 +2,16 @@ package controllers
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
 
 	asset "clickyab.com/crab/modules/asset/orm"
+	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/array"
-	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/gettext/t9e"
-	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
 )
@@ -31,7 +29,7 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 	}
 
 	if array.StringInArray(orm.Foreign, l.Region...) && len(l.Region) > 1 {
-		return t9e.G("region is not valid")
+		return errors.InvalidError("region")
 	}
 	o := asset.NewOrmManager()
 
@@ -50,9 +48,9 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 			values = append(values, v[i])
 		}
 
-		if t, err := o.GetRDbMap().SelectInt(queryGen(k, v), values...); err != nil && int64(len(v)) != t {
+		if t, err := o.GetRDbMap().SelectInt(queryGen(k, v), values...); err != nil || int64(len(v)) != t {
 			logrus.Warn(err)
-			return fmt.Errorf("%s is not valid", k)
+			return errors.InvalidError(k)
 		}
 	}
 
@@ -60,47 +58,28 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 }
 
 // attributes will update campaign attribute
-// @Route {
+// @Rest {
 // 		url = /attributes/:id
-//		method = put
-//		payload = attributesPayload
-//		200 = orm.Campaign
-//		400 = controller.ErrorResponseSimple
-//		404 = controller.ErrorResponseSimple
-//		middleware = authz.Authenticate
+//		protected = true
+// 		method = put
 // }
-func (c *Controller) attributes(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) attributes(ctx context.Context, r *http.Request, p *attributesPayload) (*orm.Campaign, error) {
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
-	p := c.MustGetPayload(ctx).(*attributesPayload)
-
 	if err != nil || id < 1 {
-		c.BadResponse(w, t9e.G("id is not valid"))
-		return
+		return nil, errors.InvalidIDErr
 	}
+
 	db := orm.NewOrmManager()
 	o, err := db.FindCampaignByID(id)
 	if err != nil {
-		c.NotFoundResponse(w, nil)
-		return
+		return o, errors.NotFoundError(id)
 	}
 
 	err = db.UpdateAttribute(p.CampaignAttributes, o)
 
 	if err != nil {
-		j, e := json.MarshalIndent(o, " ", "  ")
-		assert.Nil(e)
-		pj, e := json.MarshalIndent(p, " ", "  ")
-		assert.Nil(e)
-
-		eid := <-random.ID
-		logrus.WithField("error", err).
-			WithField("payload", string(pj)).
-			WithField("eid", eid).
-			WithField("campaign", string(j)).
-			Debug("update base campaign ")
-		w.Header().Set("x-error-id", eid)
-		c.BadResponse(w, t9e.G("can not update attributes"))
-		return
+		return o, t9e.G("can't update campaign attributes")
 	}
-	c.OKResponse(w, o)
+
+	return o, nil
 }
