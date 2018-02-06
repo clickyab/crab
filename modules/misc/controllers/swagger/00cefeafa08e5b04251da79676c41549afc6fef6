@@ -3,16 +3,23 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": "",
+				"description": " search the name field",
 				"in": "query",
-				"name": "sort",
+				"name": "name",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the domain field",
 				"in": "query",
-				"name": "kind",
+				"name": "domain",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -38,23 +45,16 @@
 				"type": "string"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "to",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the name field",
+				"description": "",
 				"in": "query",
-				"name": "name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},

@@ -21,6 +21,7 @@ import (
 	"image/jpeg"
 	"image/png"
 
+	"clickyab.com/crab/modules/upload/errors"
 	"clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
@@ -71,7 +72,7 @@ func (c *Controller) upload(ctx context.Context, r *http.Request) (*uploadRespon
 	defer lock.RUnlock()
 	s, ok := routes[m]
 	if !ok {
-		return nil, t9e.G("not found")
+		return nil, errors.InvalidFileTypeError
 	}
 	err := r.ParseMultipartForm(s.maxSize)
 	if err != nil {
@@ -90,7 +91,7 @@ func (c *Controller) upload(ctx context.Context, r *http.Request) (*uploadRespon
 	assert.Nil(err)
 	ac, mime := validMIME(handler.Header, s.mimes)
 	if !ac {
-		return nil, fmt.Errorf("the file type is not valid")
+		return nil, errors.InvalidFileTypeError
 	}
 	var attr *model.FileAttr
 	if mime == model.JPGMime || mime == model.PNGMime || mime == model.GifMime || mime == model.PJPGMime {
@@ -188,7 +189,7 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 		return nil, t9e.G("error in uploading video chunks")
 	}
 	if flowData.totalChunks > videoMaxChunkCount.Int() {
-		return nil, t9e.G("file size not valid")
+		return nil, errors.InvalidError("file size")
 	}
 	var tempDir = filepath.Join(UPath.String(), "temp")
 	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
@@ -222,6 +223,21 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 		return nil, t9e.G("cant open uploaded file")
 	}
 	extension := strings.ToLower(filepath.Ext(fileObj.Name()))
+	//check if file extension is valid
+	/* mimeType := mime.TypeByExtension(extension)
+	validMimeArr := strings.Split(ValidVideoMime.String(), ",")
+	isValidMime := func() bool {
+		for i := range validMimeArr {
+			if validMimeArr[i] == mimeType {
+				return true
+			}
+		}
+		return false
+	}()
+	if !isValidMime {
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, errors.InvalidFileTypeError
+	} */
 	size := fileInfo.Size()
 	//check size
 	if size > VideoMaxSize.Int64() {
@@ -308,23 +324,23 @@ func getDimension(mime model.Mime, dimensionHandler *bytes.Buffer, bannerType st
 	case model.JPGMime:
 		imgConf, err = jpeg.DecodeConfig(dimensionHandler)
 		if err != nil {
-			return nil, t9e.G("cant get file dimensions")
+			return nil, errors.FileDimensionError
 		}
 
 	case model.PJPGMime:
 		imgConf, err = jpeg.DecodeConfig(dimensionHandler)
 		if err != nil {
-			return nil, t9e.G("cant get file dimensions")
+			return nil, errors.FileDimensionError
 		}
 	case model.GifMime:
 		imgConf, err = gif.DecodeConfig(dimensionHandler)
 		if err != nil {
-			return nil, t9e.G("cant get file dimensions")
+			return nil, errors.FileDimensionError
 		}
 	case model.PNGMime:
 		imgConf, err = png.DecodeConfig(dimensionHandler)
 		if err != nil {
-			return nil, t9e.G("cant get file dimensions")
+			return nil, errors.FileDimensionError
 		}
 	}
 

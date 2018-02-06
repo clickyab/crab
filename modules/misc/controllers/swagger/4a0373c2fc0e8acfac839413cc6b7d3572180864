@@ -1,6 +1,6 @@
 {
 	"patch": {
-		"description": "assignNormalBanner assignNormalBanner module is banner type (banner/native)",
+		"description": "copy a campaign by id",
 		"parameters": [
 			{
 				"description": "",
@@ -40,35 +40,12 @@
 				}
 			},
 			"401": {
-				"description": "you are not authorized",
-				"schema": {
-					"properties": {
-						"error": {
-							"properties": {
-								"params": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						}
-					},
-					"title": "not_authorized",
-					"type": "object"
-				}
-			},
-			"403": {
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			},
-			"404": {
+			"403": {
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/controller_ErrorResponseSimple"

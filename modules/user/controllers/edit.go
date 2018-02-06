@@ -51,7 +51,7 @@ type userPayload struct {
 // }
 func (c *Controller) edit(ctx context.Context, r *http.Request, p *userPayload) (*ResponseLoginOK, error) {
 	if !p.Gender.IsValid() || p.Gender == aaa.NotSpecifiedGender {
-		return nil, t9e.G("gender is invalid")
+		return nil, t9e.G("invalid user gender")
 	}
 
 	cu := c.MustGetUser(ctx)

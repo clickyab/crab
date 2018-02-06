@@ -27,7 +27,7 @@ type forgetPayload struct {
 func (c *Controller) forgetPassword(ctx context.Context, r *http.Request, p *forgetPayload) (*controller.NormalResponse, error) {
 	u, err := aaa.NewAaaManager().FindUserByEmail(p.Email)
 	if err != nil {
-		return nil, t9e.G("email not found")
+		return nil, t9e.G("user with email %s not found", p.Email)
 	}
 
 	ur, co, e := genVerifyCode(u, passwordVerifyPath.String())

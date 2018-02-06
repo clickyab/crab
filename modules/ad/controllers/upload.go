@@ -9,6 +9,8 @@ import (
 	"strings"
 
 	"clickyab.com/crab/modules/ad/add"
+	"clickyab.com/crab/modules/ad/errors"
+	campignErr "clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/domain/dmn"
 	"clickyab.com/crab/modules/domain/middleware/domain"
@@ -56,26 +58,26 @@ type assignBannerPayload struct {
 func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	campaignIDInt, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if err != nil {
-		return t9e.G("campaign id not valid")
+		return errors.InvalidIDErr
 	}
 	bannerType := add.AdType(xmux.Param(ctx, "banner_type"))
 	if bannerType != add.NativeAdType && bannerType != add.BannerAdType {
-		return t9e.G("only native or banner is allowed")
+		return errors.TypeError
 	}
 	cpManager := orm.NewOrmManager()
 	d := domain.MustGetDomain(ctx)
 	p.domain = d
 	campaign, err := cpManager.FindCampaignByIDDomain(campaignIDInt, d.ID)
 	if err != nil {
-		return t9e.G("campaign not found")
+		return campignErr.NotFoundError(d.ID)
 	}
 	p.campaign = campaign
 	if string(p.campaign.Type) != string(bannerType) {
-		return t9e.G("campaign is not the right type")
+		return campignErr.TypeError
 	}
 	m := add.NewAddManager()
 	if len(p.Banners) == 0 {
-		return t9e.G("no banners selected")
+		return errors.NoBannerError
 	}
 	for i := range p.Banners {
 		mime, width, height, err := checkBannerImage(p.Banners[i].Src, bannerType)
@@ -86,10 +88,10 @@ func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.Response
 			//TODO check access for update banner
 			bannerAd, err := m.FindAdByID(p.Banners[i].ID)
 			if err != nil {
-				return t9e.G("ad not found")
+				return errors.BannerNotFound(p.Banners[i].ID)
 			}
 			if bannerAd.CampaignID != campaign.ID {
-				return t9e.G("ad not belong to campaign")
+				return errors.BannerInvalidCampaignError
 			}
 			bannerAd.Mime = mime
 			bannerAd.Height = height
@@ -139,7 +141,7 @@ func (c Controller) assignNormalBanner(ctx context.Context, w http.ResponseWrite
 	assert.Nil(err)
 	_, ok := aaa.CheckPermOn(owner, currentUser, "assign_banner", p.domain.ID)
 	if !ok {
-		c.ForbiddenResponse(w, t9e.G("don't have access for this action"))
+		c.ForbiddenResponse(w, t9e.G("Access Denied! can't assign banner"))
 		return
 	}
 
@@ -147,10 +149,10 @@ func (c Controller) assignNormalBanner(ctx context.Context, w http.ResponseWrite
 	if err != nil {
 		f, ok := err.(*mysql.MySQLError)
 		if ok && f.Number == 1062 {
-			c.BadResponse(w, t9e.G("duplicate src in ads"))
+			c.BadResponse(w, errors.DuplicateAdSrc)
 			return
 		}
-		c.BadResponse(w, t9e.G("cant create/update campaign"))
+		c.BadResponse(w, t9e.G("can't update/create campaign banner"))
 		return
 	}
 	c.OKResponse(w, res)
@@ -179,12 +181,12 @@ func checkBannerImage(srcID string, bannerType add.AdType) (mime string, width i
 	file, err := model.NewModelManager().FindUploadByID(srcID)
 
 	if err != nil || (file.Attr.Banner == nil && file.Attr.Native == nil) {
-		err = t9e.G("invalid uploaded file")
+		err = errors.InvalidUploadedFile
 		return
 	}
 	//check banner type
 	if file.Section != string(bannerType) {
-		err = t9e.G("banner not selected")
+		err = errors.NoBannerError
 		return
 	}
 	//TODO check access to file
@@ -200,7 +202,7 @@ func checkBannerImage(srcID string, bannerType add.AdType) (mime string, width i
 	}
 	ok := checkBannerDimension(width, height, bannerType)
 	if !ok {
-		err = t9e.G("dimensions not valid")
+		err = errors.InvalidDimension
 		return
 	}
 	return

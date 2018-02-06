@@ -5,19 +5,16 @@ import (
 
 	"database/sql"
 
+	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/domain/dmn"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/gettext/t9e"
 )
 
 const (
 	// Foreign is filter for region is every where except iran
 	Foreign = "foreign"
 )
-
-// ErrInventoryID of insert or update campaign
-var ErrInventoryID error = t9e.G("there is no inventory with this id")
 
 // AddCampaign for creating campaign with minimum info
 func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *dmn.Domain) (*Campaign, error) {
@@ -73,20 +70,13 @@ func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *dmn.Domain) (*Camp
 	return ca, err
 }
 
-var (
-	// ErrorStartDate should raise if campaign start date is not valid
-	ErrorStartDate error = t9e.G("start date can't be past")
-)
-
 // UpdateCampaignByID for updating campaign with minimum info
 func (m *Manager) UpdateCampaignByID(c CampaignStatus, ca *Campaign) error {
 
 	ca.Status = c.Status
 	if ca.StartAt != c.StartAt {
-		today, err := time.Parse("02-01-03", time.Now().Format("02-01-03"))
-		assert.Nil(err)
-		if c.StartAt.Unix() < today.Unix() {
-			return ErrorStartDate
+		if c.StartAt.Unix() < time.Now().Unix() {
+			return errors.StartTimeError
 		}
 	}
 	ca.StartAt = c.StartAt
@@ -104,41 +94,65 @@ func (m *Manager) UpdateCampaignByID(c CampaignStatus, ca *Campaign) error {
 	}()
 
 	s, err := m.FindScheduleByCampaignID(ca.ID)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		return err
 	}
-	s.ScheduleSheet = c.Schedule
 
+	if err == sql.ErrNoRows {
+		s = &Schedule{}
+	}
+	s.ScheduleSheet = c.Schedule
 	err = m.UpdateCampaign(ca)
 	if err != nil {
 		return err
 	}
 
-	m.attachAttribute(ca)
+	err = m.attachAttribute(ca)
+	if err != nil {
+		return err
+	}
+
 	err = m.UpdateSchedule(s)
 	return err
 }
 
 // Finalize will mark campaign ready for publish
-func (m *Manager) Finalize(ca *Campaign) {
+func (m *Manager) Finalize(ca *Campaign) error {
 
 	ca.Progress = ProgressFinalized
-	assert.Nil(m.UpdateCampaign(ca))
-	m.attachAttribute(ca)
-	m.attachSchedule(ca)
+	err := m.UpdateCampaign(ca)
+	if err != nil {
+		return err
+	}
 
+	err = m.attachAttribute(ca)
+	if err != nil {
+		return err
+	}
+
+	err = m.attachSchedule(ca)
+
+	return err
 }
 
-func (m *Manager) attachSchedule(c *Campaign) {
+func (m *Manager) attachSchedule(c *Campaign) error {
 	s, err := m.FindScheduleByCampaignID(c.ID)
-	assert.Nil(err)
+	if err != sql.ErrNoRows {
+		return err
+	}
+
 	c.Schedule = s.ScheduleSheet
+
+	return nil
 }
 
-func (m *Manager) attachAttribute(c *Campaign) {
+func (m *Manager) attachAttribute(c *Campaign) error {
 	s, err := m.FindCampaignAttributesByCampaignID(c.ID)
 	if err != sql.ErrNoRows {
-		assert.Nil(err)
+		return err
 	}
+
 	c.Attributes = s
+
+	return nil
 }

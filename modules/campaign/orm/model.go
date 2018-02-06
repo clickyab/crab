@@ -161,11 +161,11 @@ type CampaignDataTable struct {
 
 // CampaignFinance is the financial
 type CampaignFinance struct {
-	Budget      int64                 `json:"budget" db:"budget"`
-	DailyLimit  int64                 `json:"daily_limit" db:"daily_limit"`
+	Budget      int64                 `json:"budget" db:"budget" validate:"required,gt=0"`
+	DailyLimit  int64                 `json:"daily_limit" db:"daily_limit" validate:"required,gt=0"`
 	CostType    CostType              `json:"cost_type" db:"cost_type"`
-	MaxBid      int64                 `json:"max_bid" db:"max_bid"`
-	NotifyEmail mysql.StringJSONArray `json:"notify_email" db:"notify_email"`
+	MaxBid      int64                 `json:"max_bid" db:"max_bid" validate:"required,gt=0"`
+	NotifyEmail mysql.StringJSONArray `json:"notify_email" db:"notify_email" validate:"required"`
 }
 
 // CampaignBaseType is fundamental data of campaign
@@ -224,9 +224,13 @@ func (m *Manager) FindCampaignByIDDomain(id, d int64) (*Campaign, error) {
 		return nil, err
 	}
 
-	m.attachAttribute(&res)
-	m.attachSchedule(&res)
-	return &res, nil
+	err = m.attachAttribute(&res)
+	if err != nil {
+		return &res, err
+	}
+
+	err = m.attachSchedule(&res)
+	return &res, err
 }
 
 // CampaignGraph is the campaign full data in data table

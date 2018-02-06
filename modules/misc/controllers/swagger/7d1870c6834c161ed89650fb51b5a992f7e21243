@@ -21,7 +21,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/add_AdsUserSlice"
+					"$ref": "#/definitions/controllers_sliceAds"
 				}
 			},
 			"400": {
@@ -31,52 +31,12 @@
 				}
 			},
 			"401": {
-				"description": "you are not authorized",
+				"description": "",
 				"schema": {
-					"properties": {
-						"error": {
-							"properties": {
-								"params": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						}
-					},
-					"title": "not_authorized",
-					"type": "object"
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			},
 			"403": {
-				"description": "forbidden, you have no access here",
-				"schema": {
-					"properties": {
-						"error": {
-							"properties": {
-								"params": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						}
-					},
-					"title": "forbidden",
-					"type": "object"
-				}
-			},
-			"404": {
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/controller_ErrorResponseSimple"

@@ -6,9 +6,9 @@ import (
 
 	"strconv"
 
+	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/location/location"
 	"github.com/clickyab/services/framework/controller"
-	"github.com/clickyab/services/gettext/t9e"
 	"github.com/rs/xmux"
 )
 
@@ -43,13 +43,13 @@ type provinces []location.Province
 func (ctrl *Controller) provinces(ctx context.Context, r *http.Request) (provinces, error) {
 	d, e := strconv.ParseInt(xmux.Param(ctx, "country_id"), 10, 64)
 	if e != nil || d == 0 {
-		return nil, t9e.G("country id is not correct")
+		return nil, errors.InvalidIDErr
 	}
 	m := location.NewLocationManager()
 	c := &location.Country{ID: d}
 	res := m.GetCountryProvinces(c)
 	if len(res) == 0 {
-		return nil, t9e.G("country id is not correct")
+		return nil, errors.NotFoundError(d)
 	}
 	return provinces(res), nil
 }
@@ -64,13 +64,13 @@ type cities []location.City
 func (ctrl *Controller) cities(ctx context.Context, r *http.Request) (cities, error) {
 	d, e := strconv.ParseInt(xmux.Param(ctx, "provinces_id"), 10, 64)
 	if e != nil || d == 0 {
-		return nil, t9e.G("city id is not correct")
+		return nil, errors.InvalidIDErr
 	}
 	m := location.NewLocationManager()
 	c := &location.Province{ID: d}
 	res := m.GetProvinceCities(c)
 	if len(res) == 0 {
-		return nil, t9e.G("city id is not correct")
+		return nil, errors.InvalidIDErr
 
 	}
 	return cities(res), nil

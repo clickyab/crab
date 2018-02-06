@@ -8,9 +8,9 @@ import (
 
 	"database/sql/driver"
 
+	"clickyab.com/crab/modules/ad/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/gettext/t9e"
 )
 
 // AdActiveStatus is the ad active status
@@ -67,7 +67,7 @@ func (b *AdAttr) Scan(src interface{}) error {
 	case string:
 		c = []byte(src.(string))
 	default:
-		return t9e.G("unsupported type")
+		return errors.UnsupportTypeError
 	}
 
 	return json.Unmarshal(c, b)

@@ -48,7 +48,7 @@ func (m *Manager) UpdateAttribute(attributes CampaignAttributes, ca *Campaign) e
 	}
 
 	ca.Attributes = at
-	m.attachSchedule(ca)
-	return nil
+	err = m.attachSchedule(ca)
+	return err
 
 }

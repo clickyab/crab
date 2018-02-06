@@ -106,7 +106,7 @@ func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.Respon
 		return errors.TypeError
 	}
 
-	if l.StartAt.Unix() < time.Now().Unix() {
+	if l.StartAt.Before(time.Now()) {
 		return errors.StartTimeError
 	}
 
@@ -392,12 +392,15 @@ func (c *Controller) finalize(ctx context.Context, r *http.Request) (*orm.Campai
 	db := orm.NewOrmManager()
 	ca, err := db.FindCampaignByID(id)
 	if err != nil {
-		return ca, err
+		return ca, errors.NotFoundError(id)
 	}
 
 	err = db.Finalize(ca)
+	if err != nil {
+		return ca, t9e.G("can't finalize campaign data")
+	}
 
-	return ca, err
+	return ca, nil
 }
 
 // get gets a campaign by id
@@ -418,12 +421,12 @@ func (c *Controller) get(ctx context.Context, r *http.Request) (*orm.Campaign, e
 
 	campaign, err := orm.NewOrmManager().FindCampaignByIDDomain(campID, userDomain.ID)
 	if err != nil {
-		return campaign, err
+		return campaign, errors.NotFoundError(campID)
 	}
 
 	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(campaign.UserID, userDomain.ID)
 	if err != nil {
-		return campaign, err
+		return campaign, t9e.G("can't find user with id %s and domain id %s", campaign.UserID, userDomain.ID)
 	}
 
 	_, ok := aaa.CheckPermOn(owner, currentUser, "get-campaign", userDomain.ID)

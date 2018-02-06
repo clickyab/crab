@@ -7,6 +7,7 @@ $(LOCATION_ROOT)-codegen: tools-codegen
 	$(BIN)/codegen -p clickyab.com/crab/modules/location/controllers
 
 $(LOCATION_ROOT)-migration: tools-go-bindata
+	rm -rf $(LOCATION_ROOT)/migrations/*.gen.go
 	cd $(LOCATION_ROOT)/migrations && $(BIN)/go-bindata -nometadata -o $(LOCATION_ROOT)/migrations/migration.gen.go -nomemcopy=true -pkg=migrations ./db/...
 
 $(LOCATION_ROOT)-test:

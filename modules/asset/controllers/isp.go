@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
+	"clickyab.com/crab/modules/asset/errors"
 	"clickyab.com/crab/modules/asset/orm"
-	"github.com/clickyab/services/gettext/t9e"
 	"github.com/rs/xmux"
 )
 
@@ -21,7 +21,7 @@ func (c *Controller) isp(ctx context.Context, r *http.Request) (ispResponse, err
 	m := orm.NewOrmManager()
 	kind := xmux.Param(ctx, "kind")
 	if !orm.ISPKind(kind).IsValid() {
-		return nil, t9e.G("not valid isp kind")
+		return nil, errors.ISPKidError
 
 	}
 	return ispResponse(m.ListISPSWithFilter("active=? AND kind=? OR kind=?", true, kind, orm.BothISPKind)), nil

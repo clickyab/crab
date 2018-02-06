@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/errors"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/gettext/t9e"
@@ -24,7 +25,7 @@ type verifyResendPayload struct {
 func (c *Controller) verifyResend(ctx context.Context, r *http.Request, p *verifyResendPayload) (*controller.NormalResponse, error) {
 	u, e := aaa.NewAaaManager().FindUserByEmail(p.Email)
 	if e != nil {
-		return nil, t9e.G("cant find user")
+		return nil, errors.NotFoundError(0)
 	}
 	e = verifyEmail(u, r)
 	if e == errTooSoon {
