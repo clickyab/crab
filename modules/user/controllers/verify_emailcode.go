@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/errors"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/gettext/t9e"
 )
 
 // @Validate {
@@ -27,7 +27,7 @@ func (c *Controller) verifyEmailCode(ctx context.Context, r *http.Request, p *ve
 	u, e := verifyCode(ctx, fmt.Sprintf("%s%s%s", hasher(p.Email+emailVerifyPath.String()), delimiter, p.Code))
 
 	if e != nil || u.Status != aaa.RegisteredUserStatus || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
-		return nil, t9e.G("bad request data")
+		return nil, errors.InvalidEmailError
 	}
 
 	u.Status = aaa.ActiveUserStatus

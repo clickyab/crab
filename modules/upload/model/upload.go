@@ -6,7 +6,7 @@ import (
 
 	"database/sql/driver"
 
-	"github.com/clickyab/services/gettext/t9e"
+	"clickyab.com/crab/modules/upload/errors"
 )
 
 // Mime all mime type
@@ -80,7 +80,7 @@ func (b *FileAttr) Scan(src interface{}) error {
 	case string:
 		c = []byte(src.(string))
 	default:
-		return t9e.G("unsupported type")
+		return errors.InvalidFileTypeError
 	}
 
 	return json.Unmarshal(c, b)

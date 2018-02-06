@@ -7,6 +7,7 @@ $(UPLOAD_ROOT)-codegen: tools-codegen
 	$(BIN)/codegen -p clickyab.com/crab/modules/upload/controllers
 
 $(UPLOAD_ROOT)-migration: tools-go-bindata
+	rm -rf $(UPLOAD_ROOT)/migrations/*.gen.go
 	cd $(UPLOAD_ROOT)/migrations && $(BIN)/go-bindata -nometadata -o $(UPLOAD_ROOT)/migrations/migration.gen.go -nomemcopy=true -pkg=migrations ./db/...
 
 $(UPLOAD_ROOT)-test:

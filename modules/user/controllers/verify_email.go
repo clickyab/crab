@@ -12,6 +12,7 @@ import (
 	"fmt"
 
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/mailer"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
@@ -65,7 +66,7 @@ const delimiter = "-"
 func verifyCode(ctx context.Context, c string) (*aaa.User, error) {
 	data := strings.Split(c, delimiter)
 	if len(data) != 2 {
-		return nil, t9e.G("code is not valid")
+		return nil, errors.InvalidVerifyCodeError
 	}
 
 	userEmailHash, verifyToken := data[0], data[1]
@@ -73,17 +74,17 @@ func verifyCode(ctx context.Context, c string) (*aaa.User, error) {
 	kw := kv.NewEavStore(fmt.Sprintf("%s_%s", verifyKeyPrefix, userEmailHash))
 
 	if kw.SubKey(verifyToken) != checkToken {
-		return nil, t9e.G("code is not valid")
+		return nil, errors.InvalidVerifyCodeError
 	}
 
 	userID := kw.SubKey(userIDRedisKey)
 	if userID == "" {
-		return nil, t9e.G("can't find user")
+		return nil, errors.NotFoundError(0)
 	}
 
 	id, err := strconv.ParseInt(userID, 10, 64)
 	if err != nil {
-		return nil, t9e.G("invalid user id")
+		return nil, errors.InvalidIDErr
 	}
 
 	m := aaa.NewAaaManager()
@@ -94,7 +95,7 @@ func verifyCode(ctx context.Context, c string) (*aaa.User, error) {
 	} else {
 		xlog.GetWithError(ctx, err).Debug("can't find user in check verify code")
 
-		err = t9e.G("can't find user")
+		err = errors.NotFoundError(0)
 	}
 
 	return user, err

@@ -7,6 +7,7 @@ $(INVENTORY_ROOT)-codegen: tools-codegen
 	$(BIN)/codegen -p clickyab.com/crab/modules/inventory/controllers
 
 $(INVENTORY_ROOT)-migration: tools-go-bindata
+	rm -rf $(INVENTORY_ROOT)/migrations/*.gen.go
 	cd $(INVENTORY_ROOT)/migrations && $(BIN)/go-bindata -nometadata -o $(INVENTORY_ROOT)/migrations/migration.gen.go -nomemcopy=true -pkg=migrations ./db/...
 
 $(INVENTORY_ROOT)-test:

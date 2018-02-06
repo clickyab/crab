@@ -29,7 +29,7 @@ func (c *Controller) avatar(ctx context.Context, r *http.Request, p *avatarPaylo
 	} else {
 		up, err := model.NewModelManager().FindUploadByID(p.Avatar)
 		if err != nil {
-			return nil, t9e.G("avatar not found")
+			return nil, t9e.G("user avatar not found")
 		}
 		cu.Avatar = stringToNullString(up.ID)
 	}

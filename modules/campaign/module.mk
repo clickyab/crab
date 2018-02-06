@@ -1,10 +1,13 @@
 export CAMPAIGN_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(CAMPAIGN_ROOT)-codegen: tools-codegen
+	rm -rf $(CAMPAIGN_ROOT)/orm/*.gen.go
+	rm -rf $(CAMPAIGN_ROOT)/controllers/*.gen.go
 	$(BIN)/codegen -p clickyab.com/crab/modules/campaign/orm
 	$(BIN)/codegen -p clickyab.com/crab/modules/campaign/controllers
 
 $(CAMPAIGN_ROOT)-migration: tools-go-bindata
+	rm -rf $(CAMPAIGN_ROOT)/migrations/*.gen.go
 	cd $(CAMPAIGN_ROOT)/migrations && $(BIN)/go-bindata -nometadata -o $(CAMPAIGN_ROOT)/migrations/migration.gen.go -nomemcopy=true -pkg=migrations ./db/...
 
 $(CAMPAIGN_ROOT)-test:

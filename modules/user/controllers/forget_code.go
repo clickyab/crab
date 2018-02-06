@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
+	"clickyab.com/crab/modules/user/errors"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/gettext/t9e"
 )
 
 // @Validate {
@@ -25,7 +25,7 @@ type forgetCodePayload struct {
 func (c *Controller) checkForgetCode(ctx context.Context, r *http.Request, p *forgetCodePayload) (*ResponseLoginOK, error) {
 	u, e := verifyCode(ctx, fmt.Sprintf("%s%s%s", hasher(p.Email+passwordVerifyPath.String()), delimiter, p.Code))
 	if e != nil || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
-		return nil, t9e.G("bad request data")
+		return nil, errors.InvalidEmailError
 	}
 
 	s, _, e := genVerifyCode(u, "change password")

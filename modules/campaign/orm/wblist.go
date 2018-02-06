@@ -29,9 +29,14 @@ func (m *Manager) UpdateCampaignWhiteBlackList(w int64, exchange *bool, white *b
 	if err != nil {
 		return err
 	}
-	m.attachSchedule(ca)
-	m.attachAttribute(ca)
-	return nil
+
+	err = m.attachSchedule(ca)
+	if err != nil {
+		return err
+	}
+
+	err = m.attachAttribute(ca)
+	return err
 }
 
 // DeleteCampaignWhiteBlackList delete white/black list
@@ -48,7 +53,12 @@ func (m *Manager) DeleteCampaignWhiteBlackList(ca *Campaign) error {
 	if err != nil {
 		return err
 	}
-	m.attachSchedule(ca)
-	m.attachAttribute(ca)
-	return nil
+
+	err = m.attachSchedule(ca)
+	if err != nil {
+		return err
+	}
+
+	err = m.attachAttribute(ca)
+	return err
 }

@@ -15,6 +15,7 @@ import (
 
 	"strings"
 
+	"clickyab.com/crab/modules/upload/errors"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/gettext/t9e"
@@ -61,31 +62,31 @@ func getChunkFlowData(r *http.Request) (ngFlowData, error) {
 	ngfd := ngFlowData{}
 	ngfd.chunkNumber, err = strconv.Atoi(r.FormValue("flowChunkNumber"))
 	if err != nil {
-		return ngfd, t9e.G("bad ChunkNumber")
+		return ngfd, errors.InvalidError("ChunkNumber")
 	}
 	ngfd.totalChunks, err = strconv.Atoi(r.FormValue("flowTotalChunks"))
 	if err != nil {
-		return ngfd, t9e.G("bad TotalChunks")
+		return ngfd, errors.InvalidError("TotalChunks")
 	}
 	ngfd.chunkSize, err = strconv.Atoi(r.FormValue("flowChunkSize"))
 	if err != nil {
-		return ngfd, t9e.G("bad ChunkSize")
+		return ngfd, errors.InvalidError("ChunkSize")
 	}
 	ngfd.totalSize, err = strconv.Atoi(r.FormValue("flowTotalSize"))
 	if err != nil {
-		return ngfd, t9e.G("bad TotalSize")
+		return ngfd, errors.InvalidError("TotalSize")
 	}
 	ngfd.identifier = r.FormValue("flowIdentifier")
 	if ngfd.identifier == "" {
-		return ngfd, t9e.G("bad Identifier")
+		return ngfd, errors.InvalidError("Identifier")
 	}
 	ngfd.filename = strings.Trim(r.FormValue("flowFilename"), " \n\t")
 	if ngfd.filename == "" {
-		return ngfd, t9e.G("bad Filename")
+		return ngfd, errors.InvalidError("Filename")
 	}
 	ngfd.relativePath = r.FormValue("flowRelativePath")
 	if ngfd.relativePath == "" {
-		return ngfd, t9e.G("bad RelativePath")
+		return ngfd, errors.InvalidError("RelativePath")
 	}
 	return ngfd, nil
 }
@@ -158,8 +159,9 @@ func chunkUpload(tempDir string, ngfd ngFlowData, r *http.Request) (string, stri
 func storeChunk(tempDir string, tempFile string, ngfd ngFlowData, r *http.Request) error {
 	err := os.MkdirAll(tempDir, os.FileMode(Perm.Int()))
 	if err != nil {
-		return t9e.G("bad directory")
+		return errors.InvalidError("directory")
 	}
+
 	file, _, err := r.FormFile("file")
 	if err != nil {
 		return t9e.G("can't access file field")

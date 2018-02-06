@@ -12,7 +12,11 @@ func (m *Manager) UpdateCampaignBudget(c CampaignFinance, ca *Campaign) error {
 	if err != nil {
 		return err
 	}
-	m.attachSchedule(ca)
-	m.attachAttribute(ca)
-	return nil
+	err = m.attachSchedule(ca)
+	if err != nil {
+		return err
+	}
+
+	err = m.attachAttribute(ca)
+	return err
 }

@@ -66,6 +66,9 @@ func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.
 		campaign.ArchiveAt = mysql.NullTime{Valid: true, Time: time.Now()}
 	}
 	err = cpManager.UpdateCampaign(campaign)
+	if err != nil {
+		return nil, t9e.G("can't update campaign data")
+	}
 
-	return nil, err
+	return nil, nil
 }
