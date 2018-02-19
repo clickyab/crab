@@ -5,7 +5,7 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "kind",
+				"name": "type",
 				"required": false,
 				"type": "string"
 			},
@@ -13,6 +13,13 @@
 				"description": " search the title field",
 				"in": "query",
 				"name": "title",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the owner_email field",
+				"in": "query",
+				"name": "owner_email",
 				"required": false,
 				"type": "string"
 			},
@@ -31,30 +38,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "cost_type",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "type",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the owner_email field",
-				"in": "query",
-				"name": "owner_email",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -66,9 +52,23 @@
 				"type": "int"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "to",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "cost_type",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
