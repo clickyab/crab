@@ -204,7 +204,7 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 		return nil, t9e.G("failed to upload chunks")
 	}
 	if file == "" {
-		return nil, t9e.G("failed storing chunks")
+		return nil, nil
 	}
 	// open uploaded file in tmp folder
 	fileObj, err := os.Open(file)
