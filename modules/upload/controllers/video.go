@@ -35,7 +35,7 @@ func (c *Controller) getVideoReady(ctx context.Context, r *http.Request) (*getVi
 		return nil, t9e.G("wrong id")
 	}
 	//check if file ready or not
-	_, err = os.Stat(filepath.Join(UPath.String(), file.ID))
+	_, err = os.Stat(filepath.Join(UPath.String(), "uploads", file.ID))
 	if err != nil {
 		return &getVideoResponse{Ready: "pending"}, nil
 	}

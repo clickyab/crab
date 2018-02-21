@@ -37,7 +37,7 @@ var (
 	routes = make(map[model.Mime]kind)
 	lock   = sync.RWMutex{}
 	// UPath default upload path
-	UPath = config.RegisterString("crab.modules.upload.path", "/statics/uploads", "a path to the location that uploaded file should save")
+	UPath = config.RegisterString("crab.modules.upload.path", "/statics", "a path to the location that uploaded file should save")
 	// Perm default perm
 	Perm = config.RegisterInt("crab.modules.upload.Perm", 0777, "file will save with this permission")
 	// VideoMaxSize video max size
@@ -101,7 +101,7 @@ func (c *Controller) upload(ctx context.Context, r *http.Request) (*uploadRespon
 	}
 	ext := filepath.Ext(handler.Filename)
 	now := time.Now()
-	fp := filepath.Join(UPath.String(), string(m), now.Format("2006/01/02"))
+	fp := filepath.Join(UPath.String(), "uploads", string(m), now.Format("2006/01/02"))
 	err = os.MkdirAll(fp, os.FileMode(Perm.Int64()))
 	assert.Nil(err)
 	fn := func() string {
@@ -190,7 +190,7 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	if flowData.totalChunks > videoMaxChunkCount.Int() {
 		return nil, t9e.G("file size not valid")
 	}
-	var tempDir = filepath.Join(os.TempDir(), "uploads")
+	var tempDir = filepath.Join(UPath.String(), "temp")
 	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
 		err = os.MkdirAll(tempDir, os.FileMode(Perm.Int()))
 		assert.Nil(err)
@@ -256,7 +256,7 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	}
 	convertedPath := strings.TrimRight(file, extension) + videoSaveFormat.String()
 	now := time.Now()
-	basePath := filepath.Join(UPath.String(), "video", now.Format("2006/01/02"))
+	basePath := filepath.Join(UPath.String(), "uploads", "video", now.Format("2006/01/02"))
 	err = os.MkdirAll(basePath, os.FileMode(Perm.Int64()))
 	assert.Nil(err)
 	fn := generateFileName(currentUser.ID, basePath, videoSaveFormat.String())
