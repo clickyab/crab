@@ -31,6 +31,7 @@ import (
 	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/safe"
+	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 )
 
@@ -46,7 +47,7 @@ var (
 	// VideoMaxSize video max size
 	VideoMaxSize = config.RegisterInt64("crab.modules.upload.video.size", 3145728, "max size of video upload")
 	// MaxVideoDuration video max duration
-	MaxVideoDuration   = config.RegisterInt64("crab.modules.upload.video.duration", 61, "max video duration in seconds")
+	MaxVideoDuration   = config.RegisterInt64("crab.modules.upload.video.duration", 90, "max video duration in seconds")
 	videoSaveFormat    = config.RegisterString("crab.modules.upload.video.format", ".cy", "video format saved")
 	videoMaxChunkCount = config.RegisterInt("crab.modules.upload.video.max.chunk", 15, "video max chunk count")
 )
@@ -234,20 +235,21 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	}()
 	if !isValidMime {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("video mime type not valid")
+		return nil, t9e.G("video mime type %s is not valid", mimeType)
 
 	}
 	size := fileInfo.Size()
 	//check size
 	if size > VideoMaxSize.Int64() {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("video is too large to be uploaded")
+		return nil, t9e.G("video is too %d large to be uploaded", size)
 	}
 
 	info, err := getVideoInfo(file)
 	if err != nil {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("uploaded file is not readable")
+		xlog.GetWithError(ctx, err).WithFields(info).Debug("file info wrong")
+		return nil, t9e.G("uploaded file  is not readable")
 	}
 
 	if _, ok := info["format"]; !ok {
