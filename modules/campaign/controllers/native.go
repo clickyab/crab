@@ -50,7 +50,7 @@ func (c Controller) getNativeData(ctx context.Context, w http.ResponseWriter, r 
 	if res.Image != "" {
 		extension := strings.ToLower(filepath.Ext(res.Image))
 		now := time.Now()
-		fp := filepath.Join(controllers.UPath.String(), "temp", now.Format("2006/01/02"))
+		fp := filepath.Join(controllers.UPath.String(), "uploads", "temp", now.Format("2006/01/02"))
 		err := os.MkdirAll(fp, os.FileMode(controllers.Perm.Int64()))
 		assert.Nil(err)
 		fn := func() string {
