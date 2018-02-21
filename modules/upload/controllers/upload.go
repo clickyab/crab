@@ -16,8 +16,6 @@ import (
 
 	"strings"
 
-	"mime"
-
 	"image"
 	"image/gif"
 	"image/jpeg"
@@ -40,8 +38,6 @@ var (
 	lock   = sync.RWMutex{}
 	// UPath default upload path
 	UPath = config.RegisterString("crab.modules.upload.path", "/statics/uploads", "a path to the location that uploaded file should save")
-	// ValidVideoMime valid mime video
-	ValidVideoMime = config.RegisterString("crab.modules.upload.video.mime", "video/mp4", "comma separated valid video mime")
 	// Perm default perm
 	Perm = config.RegisterInt("crab.modules.upload.Perm", 0777, "file will save with this permission")
 	// VideoMaxSize video max size
@@ -226,22 +222,6 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 		return nil, t9e.G("cant open uploaded file")
 	}
 	extension := strings.ToLower(filepath.Ext(fileObj.Name()))
-	//check if file extension is valid
-	mimeType := mime.TypeByExtension(extension)
-	validMimeArr := strings.Split(ValidVideoMime.String(), ",")
-	isValidMime := func() bool {
-		for i := range validMimeArr {
-			if validMimeArr[i] == mimeType {
-				return true
-			}
-		}
-		return false
-	}()
-	if !isValidMime {
-		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("video mime type %s and extension %s is not valid", mimeType, extension)
-
-	}
 	size := fileInfo.Size()
 	//check size
 	if size > VideoMaxSize.Int64() {
@@ -294,7 +274,7 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	dbSavePath := filepath.Join("video", now.Format("2006/01/02"), fn)
 	g := &model.Upload{
 		ID:      dbSavePath,
-		MIME:    mimeType,
+		MIME:    "video/mp4",
 		Size:    size,
 		UserID:  currentUser.ID,
 		Section: "video",
