@@ -209,6 +209,9 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	}
 	// open uploaded file in tmp folder
 	fileObj, err := os.Open(file)
+	if err != nil {
+		xlog.GetWithError(ctx, err).Debug("error while open file")
+	}
 	defer func() {
 		err = fileObj.Close()
 		assert.Nil(err)
@@ -219,6 +222,7 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	}
 	fileInfo, err := fileObj.Stat()
 	if err != nil {
+		xlog.GetWithError(ctx, err).Debug("error while stat file")
 		return nil, t9e.G("cant open uploaded file")
 	}
 	extension := strings.ToLower(filepath.Ext(fileObj.Name()))
@@ -235,7 +239,7 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	}()
 	if !isValidMime {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("video mime type %s is not valid", mimeType)
+		return nil, t9e.G("video mime type %s and extension %s is not valid", mimeType, extension)
 
 	}
 	size := fileInfo.Size()
