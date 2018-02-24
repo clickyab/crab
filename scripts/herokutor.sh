@@ -86,10 +86,11 @@ EXPORT /app/bin /app
 FROM ubuntu:16.04
 IMPORT /app
 
+RUN apt-get update && apt-get install -y tzdata ca-certificates && apt-get clean
+
 ENV TZ=Asia/Tehran
 RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
 
-RUN apt-get update && apt-get install -y tzdata ca-certificates && apt-get clean
 
 CMD ["bash", "/app/bin/run_order.sh"]
 
