@@ -81,7 +81,10 @@ ENV BUILD_DATE ${BUILD_DATE}
 
 MOUNT {{ .Build }}:/crab
 
+RUN apt-get update && apt-get install -y tzdata ca-certificates && apt-get clean
+
 ENV TZ=Asia/Tehran
+RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
 
 RUN apk add --no-cache --virtual .build-deps git go libc-dev make tzdata \
     && cp /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone \
