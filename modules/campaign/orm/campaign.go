@@ -3,13 +3,12 @@ package orm
 import (
 	"time"
 
-	"errors"
-
 	"database/sql"
 
 	"clickyab.com/crab/modules/domain/dmn"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/gettext/t9e"
 )
 
 const (
@@ -18,7 +17,7 @@ const (
 )
 
 // ErrInventoryID of insert or update campaign
-var ErrInventoryID = errors.New("there is no inventory with this id")
+var ErrInventoryID error = t9e.G("there is no inventory with this id")
 
 // AddCampaign for creating campaign with minimum info
 func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *dmn.Domain) (*Campaign, error) {
@@ -76,7 +75,7 @@ func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *dmn.Domain) (*Camp
 
 var (
 	// ErrorStartDate should raise if campaign start date is not valid
-	ErrorStartDate = errors.New("start date can't be past")
+	ErrorStartDate error = t9e.G("start date can't be past")
 )
 
 // UpdateCampaignByID for updating campaign with minimum info

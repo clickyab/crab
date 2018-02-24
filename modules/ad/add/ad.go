@@ -2,7 +2,6 @@ package add
 
 import (
 	"encoding/json"
-	"errors"
 	"time"
 
 	"fmt"
@@ -11,6 +10,7 @@ import (
 
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/gettext/t9e"
 )
 
 // AdActiveStatus is the ad active status
@@ -60,16 +60,14 @@ type AdAttr struct {
 // Scan for add attr
 func (b *AdAttr) Scan(src interface{}) error {
 	var c []byte
+
 	switch src.(type) {
 	case []byte:
 		c = src.([]byte)
 	case string:
 		c = []byte(src.(string))
-	case nil:
-		c = make([]byte, 0)
-		return nil
 	default:
-		return errors.New("unsupported type")
+		return t9e.G("unsupported type")
 	}
 
 	return json.Unmarshal(c, b)
@@ -93,6 +91,7 @@ func (b AdAttr) Value() (driver.Value, error) {
 // }
 type Ad struct {
 	ID         int64          `json:"id" db:"id"`
+	Title      string         `json:"title" db:"title"`
 	CampaignID int64          `json:"campaign_id" db:"campaign_id"`
 	Src        string         `json:"src" db:"src"`
 	Mime       string         `json:"mime" db:"mime"`

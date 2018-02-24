@@ -6,9 +6,10 @@ set -eo pipefail
 exit_message() {
     echo ${1:-'exiting...'}
     code=${2:-1}
+    app=${3}
     if [ "${code}" == "0" ]
     then
-        echo "Build was OK, but its not the correct branch. ignore this" >> ${OUT_LOG}
+        echo -e "${app}\nBuild was OK, but its not the correct branch. ignore this" >> ${OUT_LOG}
         echo "green" > ${OUT_LOG_COLOR}
     else
         echo "Build was NOT OK. verify with dev team" >> ${OUT_LOG}
@@ -29,12 +30,12 @@ BRANCH=${CHANGE_TARGET:-${BRANCH}}
 
 PUSH="--push"
 [ -z ${CHANGE_AUTHOR} ] || PUSH=""
-[ -z ${APP} ] && exit_message "The APP is not defined." # WTF, the APP NAME is important
+[ -z ${APP} ] && exit_message "The APP is not defined." 1 ${APP}_${BRANCH}:${COMMIT_COUNT} # WTF, the APP NAME is important
 
 SCRIPT_DIR=$(readlink -f $(dirname ${BASH_SOURCE[0]}))
 
 SOURCE_DIR=${1:-}
-[ -z ${SOURCE_DIR} ] && exit_message "Must pass the source directory as the first parameter" 1
+[ -z ${SOURCE_DIR} ] && exit_message "Must pass the source directory as the first parameter" 1 ${APP}_${BRANCH}:${COMMIT_COUNT}
 SOURCE_DIR=$(cd "${SOURCE_DIR}/" && pwd)
 
 BUILD_DIR=${2:-$(mktemp -d)}
@@ -69,39 +70,42 @@ TEMPORARY=$(mktemp -d)
 
 # Create Rockerfile to build with rocker (the Dockerfile enhancer tool)
 cat > ${TEMPORARY}/Rockerfile <<EOF
-FROM gliderlabs/herokuish
+FROM alpine:latest
 
-MOUNT {{ .Build }}:/tmp/app
-MOUNT {{ .EnvDir }}:/tmp/env
-MOUNT {{ .Target }}:/tmp/build
-MOUNT {{ .Cache }}:/tmp/cache
+ENV LONG_HASH ${LONG_HASH}
+ENV SHORT_HASH ${SHORT_HASH}
+ENV COMMIT_DATE ${COMMIT_DATE}
+ENV IMP_DATE ${IMP_DATE}
+ENV COMMIT_COUNT ${COMMIT_COUNT}
+ENV BUILD_DATE ${BUILD_DATE}
 
-ENV TZ=Asia/Tehran
-RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
-
-RUN /bin/herokuish buildpack build
-EXPORT /app/bin /app
-
-
-FROM ubuntu:16.04
-IMPORT /app
+MOUNT {{ .Build }}:/crab
 
 RUN apt-get update && apt-get install -y tzdata ca-certificates && apt-get clean
 
 ENV TZ=Asia/Tehran
 RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
 
-
-CMD ["bash", "/app/bin/run_order.sh"]
+RUN apk add --no-cache --virtual .build-deps git go libc-dev make tzdata \
+    && cp /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone \
+    && apk add --no-cache ca-certificates bash ffmpeg wget && update-ca-certificates \
+    && mkdir -p /gopath/src/clickyab.com/ && cp -r /crab /gopath/src/clickyab.com/ \
+    && cd /gopath/src/clickyab.com/crab && make \
+    && apk del .build-deps \
+    && mkdir -p /app/bin \
+    && mv /gopath/src/clickyab.com/crab/bin/* /app/bin/ \
+    && rm -rf /gopath /go
 
 TAG registry.clickyab.ae/clickyab/{{ .App }}:{{ .Version }}
 PUSH registry.clickyab.ae/clickyab/{{ .App }}:{{ .Version }}
+TAG registry.clickyab.ae/clickyab/{{ .App }}:latest
+PUSH registry.clickyab.ae/clickyab/{{ .App }}:latest
 EOF
 
 TARGET=$(mktemp -d)
 pushd ${TEMPORARY}
 # Actual build
-rocker build ${PUSH} -var Build=${BUILD} -var EnvDir=${VARS} -var Cache=${CACHE} -var Target=${TARGET} -var Version=${BRANCH}.${COMMIT_COUNT} -var App=${APP}
+rocker build ${PUSH} --no-cache -var Build=${BUILD} -var EnvDir=${VARS} -var Cache=${CACHE} -var Target=${TARGET} -var Version=${COMMIT_COUNT} -var App=${APP}_${BRANCH}
 popd
 
 echo "${VARS}" >> /tmp/kill-me
@@ -110,12 +114,12 @@ echo "${TEMPORARY}" >> /tmp/kill-me
 echo "${BUILD_DIR}" >> /tmp/kill-me
 echo "${BUILD_PACKS_DIR}" >> /tmp/kill-me
 
-[ -z ${CHANGE_AUTHOR} ] || exit_message "It's a PR, bail out" 0
+[ -z ${CHANGE_AUTHOR} ] || exit_message "It's a PR, bail out" 0 ${APP}_${BRANCH}:${COMMIT_COUNT}
 if [[ ( "${BRANCH}" != "master" ) && ( "${BRANCH}" != "deploy" ) ]]; then
-    exit_message "Its not on correct branch, bail out" 0
+    exit_message "Its not on correct branch, bail out" 0 ${APP}_${BRANCH}:${COMMIT_COUNT}
 fi
 echo "The branch ${BRANCH} build finished, try to deploy it" >> ${OUT_LOG}
 echo "If there is no report after this for successful deploy, it means the deploy failed. report it please." >> ${OUT_LOG}
-kubectl -n ${PROJECT} set image deployment  ${APP}-${BRANCH} ${APP}-${BRANCH}=registry.clickyab.ae/clickyab/${APP}:${BRANCH}.${COMMIT_COUNT} --record
-echo "Deploy done successfully to image registry.clickyab.ae/clickyab/${APP}:${BRANCH}.${COMMIT_COUNT}" >> ${OUT_LOG}
+kubectl -n ${PROJECT} set image deployment  ${APP}-${BRANCH} ${APP}-${BRANCH}=registry.clickyab.ae/clickyab/${APP}_${BRANCH}:${COMMIT_COUNT} --record
+echo "Deploy done successfully to image registry.clickyab.ae/clickyab/${APP}_${BRANCH}.${COMMIT_COUNT}" >> ${OUT_LOG}
 echo "green" > ${OUT_LOG_COLOR}

@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -13,6 +12,7 @@ import (
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/array"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
@@ -31,7 +31,7 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 	}
 
 	if array.StringInArray(orm.Foreign, l.Region...) && len(l.Region) > 1 {
-		return errors.New("region is not valid")
+		return t9e.G("region is not valid")
 	}
 	o := asset.NewOrmManager()
 
@@ -74,13 +74,14 @@ func (c *Controller) attributes(ctx context.Context, w http.ResponseWriter, r *h
 	p := c.MustGetPayload(ctx).(*attributesPayload)
 
 	if err != nil || id < 1 {
-		c.BadResponse(w, errors.New("id is not valid"))
+		c.BadResponse(w, t9e.G("id is not valid"))
 		return
 	}
 	db := orm.NewOrmManager()
 	o, err := db.FindCampaignByID(id)
 	if err != nil {
 		c.NotFoundResponse(w, nil)
+		return
 	}
 
 	err = db.UpdateAttribute(p.CampaignAttributes, o)
@@ -98,7 +99,7 @@ func (c *Controller) attributes(ctx context.Context, w http.ResponseWriter, r *h
 			WithField("campaign", string(j)).
 			Debug("update base campaign ")
 		w.Header().Set("x-error-id", eid)
-		c.BadResponse(w, errors.New("can not update attributes"))
+		c.BadResponse(w, t9e.G("can not update attributes"))
 		return
 	}
 	c.OKResponse(w, o)

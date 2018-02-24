@@ -3,12 +3,12 @@ package controllers
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"strconv"
 
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
@@ -35,12 +35,12 @@ type whiteBlackPayload struct {
 func (c *Controller) updateWhiteBlackList(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if err != nil {
-		c.BadResponse(w, errors.New("id is not valid"))
+		c.BadResponse(w, t9e.G("id is not valid"))
 	}
 	p := c.MustGetPayload(ctx).(*whiteBlackPayload)
 
 	if err != nil || id < 1 {
-		c.BadResponse(w, errors.New("id is not valid"))
+		c.BadResponse(w, t9e.G("id is not valid"))
 	}
 	db := orm.NewOrmManager()
 	o, err := db.FindCampaignByID(id)
@@ -66,7 +66,7 @@ func (c *Controller) updateWhiteBlackList(ctx context.Context, w http.ResponseWr
 			WithField("campaign", string(j)).
 			Debug("update base campaign ")
 		w.Header().Set("x-error-id", eid)
-		c.BadResponse(w, errors.New("can not update white/black list"))
+		c.BadResponse(w, t9e.G("can not update white/black list"))
 		return
 	}
 	c.OKResponse(w, o)
@@ -84,7 +84,7 @@ func (c *Controller) updateWhiteBlackList(ctx context.Context, w http.ResponseWr
 func (c *Controller) deleteWhiteBlackList(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if err != nil {
-		c.BadResponse(w, errors.New("id is not valid"))
+		c.BadResponse(w, t9e.G("id is not valid"))
 	}
 	db := orm.NewOrmManager()
 	o, err := db.FindCampaignByID(id)
@@ -107,7 +107,7 @@ func (c *Controller) deleteWhiteBlackList(ctx context.Context, w http.ResponseWr
 			WithField("campaign", string(j)).
 			Debug("update base campaign ")
 		w.Header().Set("x-error-id", eid)
-		c.BadResponse(w, errors.New("can not delete white/black list"))
+		c.BadResponse(w, t9e.G("can not delete white/black list"))
 		return
 	}
 	c.OKResponse(w, o)

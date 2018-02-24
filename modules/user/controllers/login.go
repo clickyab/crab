@@ -2,11 +2,11 @@ package user
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
+	"github.com/clickyab/services/gettext/t9e"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,34 +18,25 @@ type loginPayload struct {
 }
 
 // login userPayload in system
-// @Route {
+// @Rest {
 // 		url = /login
 //		method = post
-//		payload = loginPayload
-//		200 = ResponseLoginOK
-//		401 = controller.ErrorResponseSimple
-//		403 = controller.ErrorResponseSimple
 // }
-func (c Controller) login(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := c.MustGetPayload(ctx).(*loginPayload)
+func (c *Controller) login(ctx context.Context, r *http.Request, p *loginPayload) (*ResponseLoginOK, error) {
 	uDomain := domain.MustGetDomain(ctx)
-	currentUser, err := aaa.NewAaaManager().FindUserByEmailDomain(pl.Email, uDomain)
+	currentUser, err := aaa.NewAaaManager().FindUserByEmailDomain(p.Email, uDomain)
 
-	if err != nil || bcrypt.CompareHashAndPassword([]byte(currentUser.Password), []byte(pl.Password)) != nil {
-		c.ForbiddenResponse(w, errors.New("wrong email or password"))
-		return
+	if err != nil || bcrypt.CompareHashAndPassword([]byte(currentUser.Password), []byte(p.Password)) != nil {
+		return nil, t9e.G("wrong email or password")
 	}
 
 	if currentUser.Status == aaa.RegisteredUserStatus {
-		c.ForbiddenResponse(w, errors.New("not verified"))
-		return
+		return nil, t9e.G("not verified")
 	}
 
 	if currentUser.Status == aaa.BlockedUserStatus {
-		c.ForbiddenResponse(w, errors.New("this account has been blocked"))
-		return
+		return nil, t9e.G("this account has been blocked")
 	}
 
-	c.createLoginResponse(w, currentUser)
-
+	return c.createLoginResponse(currentUser), nil
 }

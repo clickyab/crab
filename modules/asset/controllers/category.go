@@ -10,13 +10,12 @@ import (
 type catResponse []orm.Category
 
 // category return list iab categories
-// @Route {
+// @Rest {
 // 		url = /category
 //		method = get
-//		200 = catResponse
-//		middleware = authz.Authenticate
+//		protected = true
 // }
-func (c *Controller) category(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) category(ctx context.Context, r *http.Request) (catResponse, error) {
 	m := orm.NewOrmManager()
-	c.OKResponse(w, m.ListCategoriesWithFilter("active=?", true))
+	return catResponse(m.ListCategoriesWithFilter("active=?", true)), nil
 }

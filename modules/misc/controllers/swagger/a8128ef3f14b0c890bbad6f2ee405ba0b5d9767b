@@ -3,6 +3,10 @@
 		"active": {
 			"type": "boolean"
 		},
+		"archive_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
 		"attributes": {
 			"properties": {
 				"browser": {

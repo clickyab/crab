@@ -1,0 +1,90 @@
+{
+	"get": {
+		"description": "get gets a campaign by id",
+		"parameters": [
+			{
+				"description": "",
+				"in": "path",
+				"name": "id",
+				"required": true,
+				"type": "string"
+			},
+			{
+				"description": "the security token, get it from login route",
+				"in": "header",
+				"name": "token",
+				"required": true,
+				"type": "string"
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/orm_Campaign"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			},
+			"401": {
+				"description": "you are not authorized",
+				"schema": {
+					"properties": {
+						"error": {
+							"properties": {
+								"params": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								},
+								"text": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						}
+					},
+					"title": "not_authorized",
+					"type": "object"
+				}
+			},
+			"403": {
+				"description": "forbidden, you have no access here",
+				"schema": {
+					"properties": {
+						"error": {
+							"properties": {
+								"params": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								},
+								"text": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						}
+					},
+					"title": "forbidden",
+					"type": "object"
+				}
+			},
+			"404": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			}
+		},
+		"tags": [
+			"controllers"
+		]
+	}
+}

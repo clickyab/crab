@@ -25,9 +25,9 @@ func (c *Controller) Routes(r framework.Mux) {
 		group := r.NewGroup("/upload")
 
 		/* Route {
-			"Route": "/:module",
+			"Route": "/module/:module",
 			"Method": "POST",
-			"Function": "Controller.Upload",
+			"Function": "Controller.uploadPost",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -43,8 +43,52 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.POST("controllers-Controller-Upload", "/:module", framework.Mix(c.Upload, m0...))
+		group.POST("controllers-Controller-uploadPost", "/module/:module", framework.Mix(c.uploadPost, m0...))
 		// End route with key 0
+
+		/* Route {
+			"Route": "/video",
+			"Method": "POST",
+			"Function": "Controller.videoUploadPost",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "",
+			"Scope": ""
+		} with key 1 */
+		m1 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		group.POST("controllers-Controller-videoUploadPost", "/video", framework.Mix(c.videoUploadPost, m1...))
+		// End route with key 1
+
+		/* Route {
+			"Route": "/video/:id",
+			"Method": "GET",
+			"Function": "Controller.getVideoReadyGet",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "",
+			"Scope": ""
+		} with key 2 */
+		m2 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		group.GET("controllers-Controller-getVideoReadyGet", "/video/:id", framework.Mix(c.getVideoReadyGet, m2...))
+		// End route with key 2
 
 		initializer.DoInitialize(c)
 	})

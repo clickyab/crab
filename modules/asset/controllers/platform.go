@@ -10,13 +10,12 @@ import (
 type platformResponse []orm.Platform
 
 // platform return list all is (e.g. desktop,mobile, ...)
-// @Route {
+// @Rest {
 // 		url = /platform
 //		method = get
-//		200 = platformResponse
-//		middleware = authz.Authenticate
+//		protected = true
 // }
-func (c *Controller) platform(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) platform(ctx context.Context, r *http.Request) (platformResponse, error) {
 	m := orm.NewOrmManager()
-	c.OKResponse(w, m.ListPlatformsWithFilter("active=?", true))
+	return platformResponse(m.ListPlatformsWithFilter("active=?", true)), nil
 }

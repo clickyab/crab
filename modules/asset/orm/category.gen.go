@@ -46,7 +46,7 @@ func (m *Manager) ListCategoriesWithFilter(filter string, params ...interface{})
 	var res []Category
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", CategoryTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CategoryTableFull, ""), CategoryTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -94,7 +94,7 @@ func (m *Manager) ListCategoriesWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", CategoryTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CategoryTableFull, ""), CategoryTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -112,7 +112,7 @@ func (m *Manager) FindCategoryByName(n string) (*Category, error) {
 	var res Category
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE name=?", CategoryTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(CategoryTableFull, ""), CategoryTableFull),
 		n,
 	)
 

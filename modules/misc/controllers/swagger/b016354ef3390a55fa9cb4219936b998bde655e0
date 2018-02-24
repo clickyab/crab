@@ -1,0 +1,113 @@
+{
+	"get": {
+		"description": "",
+		"parameters": [
+			{
+				"description": "",
+				"in": "path",
+				"name": "id",
+				"required": true,
+				"type": "string"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "the security token, get it from login route",
+				"in": "header",
+				"name": "token",
+				"required": true,
+				"type": "string"
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controllers_listCampaigndailyResponse"
+				}
+			},
+			"401": {
+				"description": "you are not authorized",
+				"schema": {
+					"properties": {
+						"error": {
+							"properties": {
+								"params": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								},
+								"text": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						}
+					},
+					"title": "not_authorized",
+					"type": "object"
+				}
+			},
+			"403": {
+				"description": "forbidden, you have no access here",
+				"schema": {
+					"properties": {
+						"error": {
+							"properties": {
+								"params": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								},
+								"text": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						}
+					},
+					"title": "forbidden",
+					"type": "object"
+				}
+			}
+		},
+		"tags": [
+			"controllers"
+		]
+	}
+}

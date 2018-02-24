@@ -3,6 +3,8 @@
 package orm
 
 import (
+	"fmt"
+
 	"github.com/clickyab/services/mysql"
 	gorp "gopkg.in/gorp.v2"
 )
@@ -31,6 +33,37 @@ const (
 	// RegionTableFull is the Region table name
 	RegionTableFull = "regions"
 )
+
+func getSelectFields(tb string, alias string) string {
+	if alias != "" {
+		alias += "."
+	}
+	switch tb {
+
+	case BrowserTableFull:
+		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname`, alias)
+
+	case CategoryTableFull:
+		return fmt.Sprintf(`%[1]sname,%[1]sdescription,%[1]sactive`, alias)
+
+	case ISPTableFull:
+		return fmt.Sprintf(`%[1]sname,%[1]skind,%[1]sactive,%[1]screated_at,%[1]supdated_at`, alias)
+
+	case ManufacturerTableFull:
+		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname`, alias)
+
+	case OSTableFull:
+		return fmt.Sprintf(`%[1]sname,%[1]sactive,%[1]screated_at,%[1]supdated_at`, alias)
+
+	case PlatformTableFull:
+		return fmt.Sprintf(`%[1]sname,%[1]sactive,%[1]screated_at,%[1]supdated_at`, alias)
+
+	case RegionTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname`, alias)
+
+	}
+	return ""
+}
 
 // Manager is the model manager for orm package
 type Manager struct {

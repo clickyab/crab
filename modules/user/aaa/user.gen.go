@@ -43,7 +43,7 @@ func (m *Manager) FindCorporationByUserID(ui int64) (*Corporation, error) {
 	var res Corporation
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE user_id=?", CorporationTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE user_id=?", getSelectFields(CorporationTableFull, ""), CorporationTableFull),
 		ui,
 	)
 
@@ -87,7 +87,7 @@ func (m *Manager) FindRolePermissionByID(id int64) (*RolePermission, error) {
 	var res RolePermission
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", RolePermissionTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(RolePermissionTableFull, ""), RolePermissionTableFull),
 		id,
 	)
 
@@ -162,7 +162,7 @@ func (m *Manager) ListRolesWithFilter(filter string, params ...interface{}) []Ro
 	var res []Role
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", RoleTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(RoleTableFull, ""), RoleTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -210,7 +210,7 @@ func (m *Manager) ListRolesWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", RoleTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(RoleTableFull, ""), RoleTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -228,7 +228,7 @@ func (m *Manager) FindRoleByID(id int64) (*Role, error) {
 	var res Role
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", RoleTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(RoleTableFull, ""), RoleTableFull),
 		id,
 	)
 
@@ -276,7 +276,7 @@ func (m *Manager) ListUsersWithFilter(filter string, params ...interface{}) []Us
 	var res []User
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", UserTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(UserTableFull, ""), UserTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -324,7 +324,7 @@ func (m *Manager) ListUsersWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", UserTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(UserTableFull, ""), UserTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -342,7 +342,7 @@ func (m *Manager) FindUserByID(id int64) (*User, error) {
 	var res User
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", UserTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(UserTableFull, ""), UserTableFull),
 		id,
 	)
 
@@ -358,7 +358,7 @@ func (m *Manager) FindUserByEmail(e string) (*User, error) {
 	var res User
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE email=?", UserTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE email=?", getSelectFields(UserTableFull, ""), UserTableFull),
 		e,
 	)
 
@@ -374,7 +374,7 @@ func (m *Manager) FindUserByAccessToken(at string) (*User, error) {
 	var res User
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE access_token=?", UserTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE access_token=?", getSelectFields(UserTableFull, ""), UserTableFull),
 		at,
 	)
 

@@ -38,6 +38,9 @@ func (p *assignBannerPayload) Validate(ctx context.Context, w http.ResponseWrite
 		case "Utm":
 			res["utm"] = trans.E("invalid value")
 
+		case "Title":
+			res["title"] = trans.E("invalid value")
+
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}

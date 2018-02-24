@@ -50,7 +50,7 @@ func (m *Manager) ListInventoriesWithFilter(filter string, params ...interface{}
 	var res []Inventory
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", InventoryTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(InventoryTableFull, ""), InventoryTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -98,7 +98,7 @@ func (m *Manager) ListInventoriesWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", InventoryTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(InventoryTableFull, ""), InventoryTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -116,7 +116,7 @@ func (m *Manager) FindInventoryByID(id int64) (*Inventory, error) {
 	var res Inventory
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", InventoryTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(InventoryTableFull, ""), InventoryTableFull),
 		id,
 	)
 
@@ -132,7 +132,7 @@ func (m *Manager) FindInventoryByDomain(d string) (*Inventory, error) {
 	var res Inventory
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE domain=?", InventoryTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE domain=?", getSelectFields(InventoryTableFull, ""), InventoryTableFull),
 		d,
 	)
 
@@ -180,7 +180,7 @@ func (m *Manager) ListWhiteBlackListsWithFilter(filter string, params ...interfa
 	var res []WhiteBlackList
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", WhiteBlackListTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(WhiteBlackListTableFull, ""), WhiteBlackListTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -228,7 +228,7 @@ func (m *Manager) ListWhiteBlackListsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s %s", WhiteBlackListTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(WhiteBlackListTableFull, ""), WhiteBlackListTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -246,7 +246,7 @@ func (m *Manager) FindWhiteBlackListByID(id int64) (*WhiteBlackList, error) {
 	var res WhiteBlackList
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id=?", WhiteBlackListTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(WhiteBlackListTableFull, ""), WhiteBlackListTableFull),
 		id,
 	)
 

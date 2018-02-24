@@ -7,7 +7,9 @@ import (
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/trans"
+	gom "github.com/go-sql-driver/mysql"
 )
 
 // @Validate {
@@ -16,41 +18,42 @@ type registerPayload struct {
 	Email     string `json:"email" validate:"email" error:"email is invalid"`
 	Password  string `json:"password" validate:"gt=5" error:"password is too short"`
 	FirstName string `json:"first_name" validate:"required" error:"first name is invalid"`
-	Mobile    string `json:"mobile"`
+	Mobile    string `json:"mobile" validate:"lt=15"`
 	LastName  string `json:"last_name" validate:"required" error:"last name is invalid"`
 	LegalName string `json:"legal_name" validate:"omitempty,gt=5"`
 }
 
-// @Route {
+// register is for register user
+// @Rest {
 // 		url = /register
-//		method = post
-//		payload = registerPayload
-//		400 = controller.ErrorResponseSimple
+// 		method = post
 // }
-func (u *Controller) register(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := u.MustGetPayload(ctx).(*registerPayload)
+func (c *Controller) register(ctx context.Context, r *http.Request, p *registerPayload) (*controller.NormalResponse, error) {
 	m := aaa.NewAaaManager()
 	d := domain.MustGetDomain(ctx)
 
 	res := aaa.RegisterUserPayload{
-		Email:     pl.Email,
-		Password:  pl.Password,
-		FirstName: pl.FirstName,
-		LastName:  pl.LastName,
-		Mobile:    pl.Mobile,
-		LegalName: pl.LegalName,
+		Email:     p.Email,
+		Password:  p.Password,
+		FirstName: p.FirstName,
+		LastName:  p.LastName,
+		Mobile:    p.Mobile,
+		LegalName: p.LegalName,
 	}
 	usr, err := m.RegisterUser(res, d.ID)
 	if err != nil {
-		u.BadResponse(w, trans.E("error registering userPayload"))
-		return
+		mysqlError, ok := err.(*gom.MySQLError)
+		if !ok {
+			return nil, trans.E("error registering user")
+		}
+		if mysqlError.Number == 1062 {
+			return nil, trans.E("duplicate email %s", p.Email)
+		}
 	}
 	e := verifyEmail(usr, r)
 	if e == errTooSoon {
-		u.OKResponse(w, "user has been created")
-		return
+		return nil, nil
 	}
 	assert.Nil(e)
-	u.OKResponse(w, nil)
-
+	return nil, nil
 }

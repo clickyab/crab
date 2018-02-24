@@ -3,18 +3,16 @@ package controllers
 import (
 	"context"
 	"net/http"
-
-	"strconv"
-
-	"time"
-
 	"regexp"
+	"strconv"
+	"time"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/inventory/orm"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
 	"github.com/rs/xmux"
@@ -32,44 +30,38 @@ type Controller struct {
 type whiteBlackLists []orm.WhiteBlackList
 
 // whiteBlackLists return all user inventories
-// @Route {
+// @Rest {
 // 		url = /presets
 //		method = get
-//		200 = whiteBlackLists
-//		404 = controller.ErrorResponseSimple
-//		middleware = authz.Authenticate
+//		protected = true
 // }
-func (ctrl *Controller) whiteBlackLists(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (ctrl *Controller) whiteBlackLists(ctx context.Context, r *http.Request) (whiteBlackLists, error) {
 	u := authz.MustGetUser(ctx)
 	res := orm.NewOrmManager().ListWhiteBlackListsWithFilter(
 		"user_id = ? ", u.ID)
 	if len(res) == 0 {
-		ctrl.NotFoundResponse(w, trans.E("User doesn't have any list"))
-		return
+		return nil, trans.E("User doesn't have any list")
+
 	}
-	ctrl.OKResponse(w, res)
+	return whiteBlackLists(res), nil
 }
 
 // whiteBlackList return a user inventory
-// @Route {
+// @Rest {
 // 		url = /preset/:id
 //		method = get
-//		200 = orm.WhiteBlackList
-//		404 = controller.ErrorResponseSimple
-//		middleware = authz.Authenticate
+//		protected = true
 // }
-func (ctrl *Controller) whiteBlackList(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (ctrl *Controller) whiteBlackList(ctx context.Context, r *http.Request) (*orm.WhiteBlackList, error) {
 	id, e := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if e != nil {
-		ctrl.BadResponse(w, trans.E("not valid id"))
-		return
+		return nil, t9e.G("not valid id")
 	}
 	res, e := orm.NewOrmManager().FindWhiteBlackListByID(id)
 	if e != nil {
-		ctrl.NotFoundResponse(w, trans.E("Inventory with id %d does not exists!", id))
-		return
+		return nil, t9e.G("Inventory with id %d does not exists!", id)
 	}
-	ctrl.OKResponse(w, res)
+	return res, nil
 }
 
 //@Validate {
@@ -81,15 +73,12 @@ type whiteBlackList struct {
 }
 
 // addPreset get a new whitelist blacklist for user
-// @Route {
+// @Rest {
 // 		url = /preset
 //		method = post
-//		200 = orm.WhiteBlackList
-//		middleware = authz.Authenticate
-//		payload = whiteBlackList
+//		protected = true
 // }
-func (ctrl *Controller) addPreset(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := ctrl.MustGetPayload(ctx).(*whiteBlackList)
+func (ctrl *Controller) addPreset(ctx context.Context, r *http.Request, pl *whiteBlackList) (*orm.WhiteBlackList, error) {
 	u := authz.MustGetUser(ctx)
 	dm := domain.MustGetDomain(ctx)
 	now := time.Now()
@@ -106,7 +95,7 @@ func (ctrl *Controller) addPreset(ctx context.Context, w http.ResponseWriter, r 
 	}
 	e := orm.NewOrmManager().CreateWhiteBlackList(d)
 	assert.Nil(e)
-	ctrl.OKResponse(w, d)
+	return d, nil
 }
 
 // FillResMap fill string map json for black white

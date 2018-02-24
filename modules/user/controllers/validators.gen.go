@@ -242,6 +242,9 @@ func (pl *registerPayload) Validate(ctx context.Context, w http.ResponseWriter, 
 		case "FirstName":
 			res["first_name"] = trans.E("first name is invalid")
 
+		case "Mobile":
+			res["mobile"] = trans.E("invalid value")
+
 		case "LastName":
 			res["last_name"] = trans.E("last name is invalid")
 

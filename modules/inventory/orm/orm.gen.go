@@ -3,6 +3,8 @@
 package orm
 
 import (
+	"fmt"
+
 	"github.com/clickyab/services/mysql"
 	gorp "gopkg.in/gorp.v2"
 )
@@ -16,6 +18,22 @@ const (
 	// WhiteBlackListTableFull is the WhiteBlackList table name
 	WhiteBlackListTableFull = "user_wlbl_presets"
 )
+
+func getSelectFields(tb string, alias string) string {
+	if alias != "" {
+		alias += "."
+	}
+	switch tb {
+
+	case InventoryTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname,%[1]sdomain,%[1]scat,%[1]spublisher,%[1]skind,%[1]sstatus`, alias)
+
+	case WhiteBlackListTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]suser_id,%[1]sdomain_id,%[1]slabel,%[1]sdomains,%[1]spublisher_type`, alias)
+
+	}
+	return ""
+}
 
 // Manager is the model manager for orm package
 type Manager struct {

@@ -53,10 +53,10 @@ func (e *{{ $m.Type.Name }}) Scan(src interface{}) error {
 	case nil:
 		b = make([]byte, 0)
 	default:
-		return trans.E("unsupported type")
+		return t9e.G("unsupported type")
 	}
 	if !{{ $m.Type.Name }}(b).IsValid() {
-		return trans.E("invaid value")
+		return t9e.G("invalid value")
 	}
 	*e = {{ $m.Type.Name }}(b)
 	return nil
@@ -65,7 +65,7 @@ func (e *{{ $m.Type.Name }}) Scan(src interface{}) error {
 // Value try to get the string slice representation in database
 func (e {{ $m.Type.Name }}) Value() (driver.Value, error) {
 	if !e.IsValid() {
-		return nil, trans.E("invalid status")
+		return nil, t9e.G("invalid status")
 	}
 	return string(e), nil
 }
@@ -81,9 +81,22 @@ func (e enumPlugin) GetType() []string {
 	return []string{"Enum"}
 }
 
+func appendToPkg(pkg *humanize.Package, f string) error {
+	b, err := ioutil.ReadFile(f)
+	if err != nil {
+		return err
+	}
+	fl, err := humanize.ParseFile(string(b), pkg)
+	if err != nil {
+		return err
+	}
+	pkg.Files = append(pkg.Files, fl)
+	return nil
+}
+
 // Finalize is called after all the functions are done. the context is the one from the
 // process
-func (e enumPlugin) Finalize(c interface{}, p humanize.Package) error {
+func (e enumPlugin) Finalize(c interface{}, p *humanize.Package) error {
 	var ctx enumCtx
 	if c != nil {
 		var ok bool
@@ -114,6 +127,9 @@ func (e enumPlugin) Finalize(c interface{}, p humanize.Package) error {
 		return err
 	}
 	if err := ioutil.WriteFile(f, res, 0644); err != nil {
+		return err
+	}
+	if err := appendToPkg(p, f); err != nil {
 		return err
 	}
 
@@ -157,5 +173,5 @@ func (e enumPlugin) GetOrder() int {
 }
 
 func init() {
-	plugins.Register(enumPlugin{})
+	plugins.Register(&enumPlugin{})
 }

@@ -1,6 +1,8 @@
 export USER_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(USER_ROOT)-codegen: tools-codegen
+	rm -rf $(USER_ROOT)/aaa/*.gen.go
+	rm -rf $(USER_ROOT)/controllers/*.gen.go
 	$(BIN)/codegen -p clickyab.com/crab/modules/user/aaa
 	$(BIN)/codegen -p clickyab.com/crab/modules/user/controllers
 

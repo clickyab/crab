@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"errors"
-
 	"clickyab.com/crab/modules/domain/dmn"
-
 	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
@@ -179,12 +177,12 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 	}
 	role, err := m.FindRoleByNameDomain(ucfg.DefaultRole.String(), domainID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("user role %s with domain id %d not found with error: %s", ucfg.DefaultRole.String(), domainID, err.Error())
 	}
 	ur := &RoleUser{RoleID: role.ID, UserID: u.ID}
 	err = m.CreateRoleUser(ur)
 	if err != nil {
-		return nil, err
+		return u, err
 	}
 
 	if pl.LegalName != "" {
@@ -290,9 +288,9 @@ var allowOldPassword = config.RegisterBoolean("crab.user.allow_old_pass", true,
 
 var (
 	// ErrorOldPass when The password was used before
-	ErrorOldPass = errors.New("this password was used before, please try another one")
+	ErrorOldPass error = t9e.G("this password was used before, please try another one")
 	// ErrorWrongPassword when The current user password and claimed password doesn't match
-	ErrorWrongPassword = errors.New("current password is not correct")
+	ErrorWrongPassword error = t9e.G("current password is not correct")
 )
 
 // UpdatePassword will change password (p param) if the current given password (c param) be correct.
@@ -306,10 +304,7 @@ func (u *User) UpdatePassword(c, p string) error {
 
 // ValidatePassword return true if the given password is the user current password.
 func (u *User) ValidatePassword(p string) bool {
-	if bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(p)) == nil {
-		return true
-	}
-	return false
+	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(p)) == nil
 }
 
 // ChangePassword get user and password and will update oldpassword column

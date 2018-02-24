@@ -20,13 +20,12 @@ type Controller struct {
 type manufacturers []orm.Manufacturer
 
 // Manufacturers return list all mobile manufacturers (e.g. Apple, Samsung)
-// @Route {
+// @Rest {
 // 		url = /manufacturers
 //		method = get
-//		200 = manufacturers
-//		middleware = authz.Authenticate
+//		protected = true
 // }
-func (c *Controller) manufacturer(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) manufacturer(ctx context.Context, r *http.Request) (manufacturers, error) {
 	m := orm.NewOrmManager()
-	c.OKResponse(w, m.ListManufacturersWithFilter("active=?", true))
+	return manufacturers(m.ListManufacturersWithFilter("active=?", true)), nil
 }

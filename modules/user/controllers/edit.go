@@ -6,51 +6,24 @@ import (
 
 	"time"
 
-	"errors"
-
-	upload "clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/middleware"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
 )
 
-type avatarPayload struct {
-	Avatar string `json:"avatar"`
-}
-
-// route for add/update user avatar
-// @Route {
-// 		url = /avatar
-//		method = put
-//		payload = avatarPayload
-//		middleware = authz.Authenticate
-//		200 = ResponseLoginOK
-//		400 = controller.ErrorResponseSimple
-// }
-func (u *Controller) avatar(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := u.MustGetPayload(ctx).(*avatarPayload)
-
-	cu := u.MustGetUser(ctx)
-	m := aaa.NewAaaManager()
-	if pl.Avatar == "" {
-		cu.Avatar.String = ""
-		cu.Avatar.Valid = false
-	} else {
-
-		up, err := upload.NewModelManager().FindUploadByID(pl.Avatar)
-		if err != nil {
-			u.NotFoundResponse(w, errors.New("avatar not found"))
-			return
+func (u *userPayload) ValidateExtra(ctx context.Context) error {
+	if u.Gender != "" {
+		if u.Gender.IsValid() {
+			return middleware.GroupError{
+				"validate": trans.E("Gender is not valid"),
+			}
 		}
-		cu.Avatar = stringToNullString(up.ID)
 	}
 
-	err := m.UpdateUser(cu)
-	assert.Nil(err)
-	u.createLoginResponse(w, cu)
+	return nil
 }
 
 // @Validate {
@@ -70,78 +43,57 @@ type userPayload struct {
 	EconomicCode  string         `json:"economic_code" validate:"omitempty"`
 }
 
-func (u *userPayload) ValidateExtra(ctx context.Context) error {
-	if u.Gender != "" {
-		if u.Gender.IsValid() {
-			return middleware.GroupError{
-				"validate": trans.E("Gender is not valid"),
-			}
-		}
-	}
-
-	return nil
-}
-
 // edit route for edit personal profile
-// @Route {
+// @Rest {
 // 		url = /update
+//		protected = true
 //		method = put
-//		payload = userPayload
-//		middleware = authz.Authenticate
-//		200 = ResponseLoginOK
-//		400 = controller.ErrorResponseSimple
 // }
-func (u *Controller) edit(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := u.MustGetPayload(ctx).(*userPayload)
-	if !pl.Gender.IsValid() || pl.Gender == aaa.NotSpecifiedGender {
-		u.BadResponse(w, middleware.GroupError{
-			string(pl.Gender): trans.E("gender is invalid"),
-		})
-		return
+func (c *Controller) edit(ctx context.Context, r *http.Request, p *userPayload) (*ResponseLoginOK, error) {
+	if !p.Gender.IsValid() || p.Gender == aaa.NotSpecifiedGender {
+		return nil, t9e.G("gender is invalid")
 	}
 
-	cu := u.MustGetUser(ctx)
+	cu := c.MustGetUser(ctx)
 	m := aaa.NewAaaManager()
 
 	var cc *aaa.Corporation
 	var e error
-	if pl.LegalName != "" {
+	if p.LegalName != "" {
 		cc, e = m.FindCorporationByUserID(cu.ID)
 		if e != nil {
-			u.BadResponse(w, trans.E("Personal userPayload not allowed to update corporate account"))
+			return nil, t9e.G("personal userPayload not allowed to update corporate account")
 		}
 	}
 
-	cu.CityID = intToNullInt64(pl.CityID)
-	cu.LandLine = stringToNullString(pl.LandLine)
-	cu.Cellphone = stringToNullString(pl.CellPhone)
-	cu.PostalCode = stringToNullString(pl.PostalCode)
-	cu.FirstName = pl.FirstName
-	cu.LastName = pl.LastName
-	cu.Address = stringToNullString(pl.Address)
-	cu.Gender = pl.Gender
-	cu.SSN = stringToNullString(pl.SSN)
+	cu.CityID = intToNullInt64(p.CityID)
+	cu.LandLine = stringToNullString(p.LandLine)
+	cu.Cellphone = stringToNullString(p.CellPhone)
+	cu.PostalCode = stringToNullString(p.PostalCode)
+	cu.FirstName = p.FirstName
+	cu.LastName = p.LastName
+	cu.Address = stringToNullString(p.Address)
+	cu.Gender = p.Gender
+	cu.SSN = stringToNullString(p.SSN)
 	cu.UpdatedAt = time.Now()
 
 	e = m.UpdateUser(cu)
 	if e != nil {
-		u.BadResponse(w, trans.EE(e))
-		return
+		return nil, e
 	}
 
-	if pl.LegalName != "" {
-		cc.LegalName = pl.LegalName
-		cc.EconomicCode = stringToNullString(pl.LegalName)
-		cc.LegalRegister = stringToNullString(pl.LegalName)
+	if p.LegalName != "" {
+		cc.LegalName = p.LegalName
+		cc.EconomicCode = stringToNullString(p.LegalName)
+		cc.LegalRegister = stringToNullString(p.LegalName)
 
 		e = m.UpdateCorporation(cc)
 		if e != nil {
-			u.BadResponse(w, trans.EE(e))
-			return
+			return nil, e
 		}
 	}
 
-	u.createLoginResponseWithToken(w, cu, authz.MustGetToken(ctx))
+	return c.createLoginResponseWithToken(cu, authz.MustGetToken(ctx)), nil
 }
 
 func stringToNullString(val string) mysql.NullString {

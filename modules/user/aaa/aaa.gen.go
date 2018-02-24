@@ -3,6 +3,8 @@
 package aaa
 
 import (
+	"fmt"
+
 	"github.com/clickyab/services/mysql"
 	gorp "gopkg.in/gorp.v2"
 )
@@ -28,6 +30,34 @@ const (
 	// UserTableFull is the User table name
 	UserTableFull = "users"
 )
+
+func getSelectFields(tb string, alias string) string {
+	if alias != "" {
+		alias += "."
+	}
+	switch tb {
+
+	case CorporationTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]suser_id,%[1]slegal_name,%[1]slegal_register,%[1]seconomic_code`, alias)
+
+	case ParentUserTableFull:
+		return fmt.Sprintf(`%[1]suser_id,%[1]sparent_id,%[1]sdomain_id,%[1]screated_at`, alias)
+
+	case RolePermissionTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]srole_id,%[1]sscope,%[1]sperm,%[1]screated_at,%[1]supdated_at`, alias)
+
+	case RoleUserTableFull:
+		return fmt.Sprintf(`%[1]suser_id,%[1]srole_id,%[1]screated_at`, alias)
+
+	case RoleTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]sname,%[1]sdescription,%[1]sdomain_id,%[1]screated_at,%[1]supdated_at`, alias)
+
+	case UserTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]semail,%[1]spassword,%[1]saccess_token,%[1]savatar,%[1]sstatus,%[1]screated_at,%[1]supdated_at,%[1]sold_password,%[1]scity_id,%[1]sland_line,%[1]scellphone,%[1]spostal_code,%[1]sfirst_name,%[1]slast_name,%[1]saddress,%[1]sgender,%[1]sssn`, alias)
+
+	}
+	return ""
+}
 
 // Manager is the model manager for aaa package
 type Manager struct {

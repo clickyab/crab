@@ -19,7 +19,7 @@
 					"$ref": "#/definitions/controller_NormalResponse"
 				}
 			},
-			"404": {
+			"400": {
 				"description": "",
 				"schema": {
 					"$ref": "#/definitions/controller_ErrorResponseSimple"

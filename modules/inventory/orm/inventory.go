@@ -89,6 +89,7 @@ type Inventory struct {
 //		view = inventory_list:self
 //		checkable = true
 //		multiselect = true
+//		datefilter = created_at
 //		map_prefix = inventories
 //		controller = clickyab.com/crab/modules/inventory/controllers
 //		fill = FillInventoryDataTableArray
@@ -102,6 +103,7 @@ type InventoryDataTable struct {
 func (m *Manager) FillInventoryDataTableArray(
 	pc permission.InterfaceComplete,
 	filters map[string]string,
+	dateRange map[string]string,
 	search map[string]string,
 	contextparams map[string]string,
 	sort, order string, p, c int) (InventoryDataTableArray, int64) {

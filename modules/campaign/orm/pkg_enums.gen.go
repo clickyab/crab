@@ -6,7 +6,7 @@ import (
 	"database/sql/driver"
 
 	"github.com/clickyab/services/array"
-	"github.com/clickyab/services/trans"
+	"github.com/clickyab/services/gettext/t9e"
 )
 
 // IsValid try to validate enum value on ths type
@@ -29,10 +29,10 @@ func (e *CampaignKind) Scan(src interface{}) error {
 	case nil:
 		b = make([]byte, 0)
 	default:
-		return trans.E("unsupported type")
+		return t9e.G("unsupported type")
 	}
 	if !CampaignKind(b).IsValid() {
-		return trans.E("invaid value")
+		return t9e.G("invalid value")
 	}
 	*e = CampaignKind(b)
 	return nil
@@ -41,7 +41,7 @@ func (e *CampaignKind) Scan(src interface{}) error {
 // Value try to get the string slice representation in database
 func (e CampaignKind) Value() (driver.Value, error) {
 	if !e.IsValid() {
-		return nil, trans.E("invalid status")
+		return nil, t9e.G("invalid status")
 	}
 	return string(e), nil
 }
@@ -67,10 +67,10 @@ func (e *CampaignType) Scan(src interface{}) error {
 	case nil:
 		b = make([]byte, 0)
 	default:
-		return trans.E("unsupported type")
+		return t9e.G("unsupported type")
 	}
 	if !CampaignType(b).IsValid() {
-		return trans.E("invaid value")
+		return t9e.G("invalid value")
 	}
 	*e = CampaignType(b)
 	return nil
@@ -79,7 +79,7 @@ func (e *CampaignType) Scan(src interface{}) error {
 // Value try to get the string slice representation in database
 func (e CampaignType) Value() (driver.Value, error) {
 	if !e.IsValid() {
-		return nil, trans.E("invalid status")
+		return nil, t9e.G("invalid status")
 	}
 	return string(e), nil
 }
@@ -104,10 +104,10 @@ func (e *Progress) Scan(src interface{}) error {
 	case nil:
 		b = make([]byte, 0)
 	default:
-		return trans.E("unsupported type")
+		return t9e.G("unsupported type")
 	}
 	if !Progress(b).IsValid() {
-		return trans.E("invaid value")
+		return t9e.G("invalid value")
 	}
 	*e = Progress(b)
 	return nil
@@ -116,7 +116,7 @@ func (e *Progress) Scan(src interface{}) error {
 // Value try to get the string slice representation in database
 func (e Progress) Value() (driver.Value, error) {
 	if !e.IsValid() {
-		return nil, trans.E("invalid status")
+		return nil, t9e.G("invalid status")
 	}
 	return string(e), nil
 }
@@ -142,10 +142,10 @@ func (e *CostType) Scan(src interface{}) error {
 	case nil:
 		b = make([]byte, 0)
 	default:
-		return trans.E("unsupported type")
+		return t9e.G("unsupported type")
 	}
 	if !CostType(b).IsValid() {
-		return trans.E("invaid value")
+		return t9e.G("invalid value")
 	}
 	*e = CostType(b)
 	return nil
@@ -154,7 +154,7 @@ func (e *CostType) Scan(src interface{}) error {
 // Value try to get the string slice representation in database
 func (e CostType) Value() (driver.Value, error) {
 	if !e.IsValid() {
-		return nil, trans.E("invalid status")
+		return nil, t9e.G("invalid status")
 	}
 	return string(e), nil
 }

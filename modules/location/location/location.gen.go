@@ -3,6 +3,8 @@
 package location
 
 import (
+	"fmt"
+
 	"github.com/clickyab/services/mysql"
 	gorp "gopkg.in/gorp.v2"
 )
@@ -19,6 +21,25 @@ const (
 	// ProvinceTableFull is the Province table name
 	ProvinceTableFull = "provinces"
 )
+
+func getSelectFields(tb string, alias string) string {
+	if alias != "" {
+		alias += "."
+	}
+	switch tb {
+
+	case CityTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]sname,%[1]sprovince_id`, alias)
+
+	case CountryTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]sname`, alias)
+
+	case ProvinceTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]sname,%[1]scountry_id`, alias)
+
+	}
+	return ""
+}
 
 // Manager is the model manager for location package
 type Manager struct {

@@ -1,6 +1,8 @@
 export LOCATION_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(LOCATION_ROOT)-codegen: tools-codegen
+	rm -rf $(LOCATION_ROOT)/location/*.gen.go
+	rm -rf $(LOCATION_ROOT)/controllers/*.gen.go
 	$(BIN)/codegen -p clickyab.com/crab/modules/location/location
 	$(BIN)/codegen -p clickyab.com/crab/modules/location/controllers
 

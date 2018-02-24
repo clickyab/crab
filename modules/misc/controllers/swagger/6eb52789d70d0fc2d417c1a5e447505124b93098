@@ -1,0 +1,126 @@
+{
+	"properties": {
+		"data": {
+			"items": {
+				"properties": {
+					"_actions": {
+						"type": "string"
+					},
+					"active": {
+						"type": "boolean"
+					},
+					"avg_cpc": {
+						"type": "number"
+					},
+					"avg_cpm": {
+						"type": "number"
+					},
+					"budget": {
+						"type": "integer"
+					},
+					"cost_type": {
+						"type": "string"
+					},
+					"created_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"ctr": {
+						"type": "number"
+					},
+					"daily_limit": {
+						"type": "integer"
+					},
+					"domain_id": {
+						"type": "integer"
+					},
+					"end_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"id": {
+						"type": "integer"
+					},
+					"kind": {
+						"type": "string"
+					},
+					"max_bid": {
+						"type": "integer"
+					},
+					"owner_email": {
+						"type": "string"
+					},
+					"owner_id": {
+						"type": "integer"
+					},
+					"parent_email": {
+						"properties": {
+							"String": {
+								"type": "string"
+							},
+							"Valid": {
+								"type": "boolean"
+							}
+						},
+						"type": "object"
+					},
+					"start_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"status": {
+						"type": "boolean"
+					},
+					"title": {
+						"type": "string"
+					},
+					"today_click": {
+						"type": "integer"
+					},
+					"today_ctr": {
+						"type": "number"
+					},
+					"today_imp": {
+						"type": "integer"
+					},
+					"total_click": {
+						"type": "integer"
+					},
+					"total_conv": {
+						"type": "integer"
+					},
+					"total_cpc": {
+						"type": "integer"
+					},
+					"total_cpm": {
+						"type": "integer"
+					},
+					"total_imp": {
+						"type": "integer"
+					},
+					"total_spent": {
+						"type": "integer"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"hash": {
+			"type": "string"
+		},
+		"page": {
+			"type": "integer"
+		},
+		"per_page": {
+			"type": "integer"
+		},
+		"total": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

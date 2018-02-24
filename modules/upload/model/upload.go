@@ -2,10 +2,11 @@ package model
 
 import (
 	"encoding/json"
-	"errors"
 	"time"
 
 	"database/sql/driver"
+
+	"github.com/clickyab/services/gettext/t9e"
 )
 
 // Mime all mime type
@@ -66,7 +67,7 @@ type NativeAttr struct {
 type FileAttr struct {
 	Avatar *AvatarAttr `json:"avatar,omitempty"`
 	Banner *BannerAttr `json:"banner,omitempty"`
-	Video  *VideoAttr  `json:"vast,omitempty"`
+	Video  *VideoAttr  `json:"video,omitempty"`
 	Native *NativeAttr `json:"native,omitempty"`
 }
 
@@ -78,11 +79,8 @@ func (b *FileAttr) Scan(src interface{}) error {
 		c = src.([]byte)
 	case string:
 		c = []byte(src.(string))
-	case nil:
-		c = make([]byte, 0)
-		return nil
 	default:
-		return errors.New("unsupported type")
+		return t9e.G("unsupported type")
 	}
 
 	return json.Unmarshal(c, b)
@@ -90,27 +88,5 @@ func (b *FileAttr) Scan(src interface{}) error {
 
 // Value for ad attr
 func (b FileAttr) Value() (driver.Value, error) {
-	if b.Banner != nil {
-		b.Native = nil
-		b.Video = nil
-		b.Avatar = nil
-	} else if b.Native != nil {
-		b.Banner = nil
-		b.Video = nil
-		b.Avatar = nil
-	} else if b.Video != nil {
-		b.Banner = nil
-		b.Video = nil
-		b.Avatar = nil
-	} else if b.Avatar != nil {
-		b.Native = nil
-		b.Video = nil
-		b.Banner = nil
-	} else {
-		b.Native = nil
-		b.Video = nil
-		b.Banner = nil
-		b.Avatar = nil
-	}
 	return json.Marshal(b)
 }
