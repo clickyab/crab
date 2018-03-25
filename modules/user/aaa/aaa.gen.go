@@ -12,11 +12,11 @@ import (
 // AUTO GENERATED CODE. DO NOT EDIT!
 
 const (
+	// AdvisorTableFull is the Advisor table name
+	AdvisorTableFull = "advisors"
+
 	// CorporationTableFull is the Corporation table name
 	CorporationTableFull = "corporations"
-
-	// ParentUserTableFull is the ParentUser table name
-	ParentUserTableFull = "parent_user"
 
 	// RolePermissionTableFull is the RolePermission table name
 	RolePermissionTableFull = "role_permission"
@@ -37,11 +37,11 @@ func getSelectFields(tb string, alias string) string {
 	}
 	switch tb {
 
-	case CorporationTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]suser_id,%[1]slegal_name,%[1]slegal_register,%[1]seconomic_code`, alias)
+	case AdvisorTableFull:
+		return fmt.Sprintf(`%[1]suser_id,%[1]sadvisor_id,%[1]sdomain_id,%[1]screated_at`, alias)
 
-	case ParentUserTableFull:
-		return fmt.Sprintf(`%[1]suser_id,%[1]sparent_id,%[1]sdomain_id,%[1]screated_at`, alias)
+	case CorporationTableFull:
+		return fmt.Sprintf(`%[1]suser_id,%[1]slegal_name,%[1]slegal_register,%[1]seconomic_code`, alias)
 
 	case RolePermissionTableFull:
 		return fmt.Sprintf(`%[1]sid,%[1]srole_id,%[1]sscope,%[1]sperm,%[1]screated_at,%[1]supdated_at`, alias)
@@ -53,7 +53,7 @@ func getSelectFields(tb string, alias string) string {
 		return fmt.Sprintf(`%[1]sid,%[1]sname,%[1]sdescription,%[1]sdomain_id,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case UserTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]semail,%[1]spassword,%[1]saccess_token,%[1]savatar,%[1]sstatus,%[1]screated_at,%[1]supdated_at,%[1]sold_password,%[1]scity_id,%[1]sland_line,%[1]scellphone,%[1]spostal_code,%[1]sfirst_name,%[1]slast_name,%[1]saddress,%[1]sgender,%[1]sssn`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]semail,%[1]spassword,%[1]saccess_token,%[1]savatar,%[1]sstatus,%[1]screated_at,%[1]supdated_at,%[1]sold_password,%[1]scity_id,%[1]sland_line,%[1]scellphone,%[1]spostal_code,%[1]sfirst_name,%[1]slast_name,%[1]saddress,%[1]sgender,%[1]sssn,%[1]sattributes`, alias)
 
 	}
 	return ""
@@ -84,21 +84,21 @@ func NewAaaManagerFromTransaction(tx gorp.SqlExecutor) (*Manager, error) {
 func (m *Manager) Initialize() {
 
 	m.AddTableWithName(
-		Corporation{},
-		CorporationTableFull,
-	).SetKeys(
-		true,
-		"ID",
-	)
-
-	m.AddTableWithName(
-		ParentUser{},
-		ParentUserTableFull,
+		Advisor{},
+		AdvisorTableFull,
 	).SetKeys(
 		false,
 		"UserID",
-		"ParentID",
+		"AdvisorID",
 		"DomainID",
+	)
+
+	m.AddTableWithName(
+		Corporation{},
+		CorporationTableFull,
+	).SetKeys(
+		false,
+		"UserID",
 	)
 
 	m.AddTableWithName(

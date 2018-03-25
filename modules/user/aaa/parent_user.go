@@ -7,7 +7,7 @@ import (
 	"github.com/clickyab/services/assert"
 )
 
-// Advisors Advisors model in database
+// Advisor Advisor model in database
 // @Model {
 //		table = advisors
 //		primary = false, user_id,advisor_id,domain_id

@@ -10,29 +10,29 @@ import (
 
 // AUTO GENERATED CODE. DO NOT EDIT!
 
-// CreateParentUser try to save a new ParentUser in database
-func (m *Manager) CreateParentUser(pu *ParentUser) error {
+// CreateAdvisor try to save a new Advisor in database
+func (m *Manager) CreateAdvisor(a *Advisor) error {
 	now := time.Now()
-	pu.CreatedAt = now
+	a.CreatedAt = now
 
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
 		}
-	}(pu)
+	}(a)
 
-	return m.GetWDbMap().Insert(pu)
+	return m.GetWDbMap().Insert(a)
 }
 
-// UpdateParentUser try to update ParentUser in database
-func (m *Manager) UpdateParentUser(pu *ParentUser) error {
+// UpdateAdvisor try to update Advisor in database
+func (m *Manager) UpdateAdvisor(a *Advisor) error {
 
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
 		}
-	}(pu)
+	}(a)
 
-	_, err := m.GetWDbMap().Update(pu)
+	_, err := m.GetWDbMap().Update(a)
 	return err
 }
