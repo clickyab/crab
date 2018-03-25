@@ -49,7 +49,7 @@ func verifyEmail(u *aaa.User, r *http.Request) error {
 			return "http"
 		}(),
 		Host: r.Host,
-		Path: fmt.Sprintf("/user/register/verification/%s", h),
+		Path: fmt.Sprintf("/api/user/email/verify/%s", h),
 	}
 	temp := fmt.Sprintf(`
 	%s

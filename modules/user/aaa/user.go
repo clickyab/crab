@@ -76,6 +76,7 @@ type User struct {
 	Address     mysql.NullString                         `json:"address" db:"address"`
 	Gender      GenderType                               `json:"gender" db:"gender"`
 	SSN         mysql.NullString                         `json:"ssn" db:"ssn"`
+	Attributes  mysql.GenericJSONField                   `json:"attributes" db:"attributes"`
 	Corporation *Corporation                             `json:"corporation, omitempty" db:"-"`
 	parents     []int64                                  `json:"-" db:"-"`
 	roles       []Role                                   `db:"-"`
@@ -127,11 +128,10 @@ type RolePermission struct {
 // Corporation user corporation model
 // @Model {
 //		table = corporations
-//		primary = true, id
+//		primary = false, user_id
 //		find_by = user_id
 // }
 type Corporation struct {
-	ID            int64            `json:"id" db:"id"`
 	UserID        int64            `json:"user_id" db:"user_id"`
 	LegalName     string           `json:"legal_name" db:"legal_name"`
 	LegalRegister mysql.NullString `json:"legal_register" db:"legal_register"`
@@ -200,7 +200,7 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 	if err != nil {
 		return nil, err
 	}
-	du := &dmn.DomainUser{UserID: u.ID, DomainID: domainID}
+	du := &dmn.DomainUser{UserID: u.ID, DomainID: domainID, Status: dmn.EnableDomainStatus}
 	err = dManager.CreateDomainUser(du)
 	if err != nil {
 		return nil, err
@@ -236,11 +236,11 @@ func GetNewToken(user *User) string {
 // FindUserDomainsByEmail find active user domain based on its email
 func (m *Manager) FindUserDomainsByEmail(e string) []dmn.Domain {
 	var res []dmn.Domain
-	q := "SELECT d.* FROM domains AS d " +
-		"INNER JOIN domain_user AS dm ON dm.domain_id=d.id " +
-		"INNER JOIN users AS u ON u.id=dm.user_id " +
-		"WHERE u.email=? AND d.active=?"
-	_, err := m.GetRDbMap().Select(&res, q, e, true)
+	q := fmt.Sprintf("SELECT d.* FROM %s AS d "+
+		"INNER JOIN %s AS dm ON dm.domain_id=d.id "+
+		"INNER JOIN %s AS u ON u.id=dm.user_id "+
+		"WHERE u.email=? AND d.status=?", dmn.DomainTableFull, dmn.DomainUserTableFull, UserTableFull)
+	_, err := m.GetRDbMap().Select(&res, q, e, dmn.EnableDomainStatus)
 	assert.Nil(err)
 	return res
 }
@@ -270,8 +270,8 @@ func (m *Manager) FindUserByEmailDomain(email string, domain *dmn.Domain) (*User
 	err := m.GetRDbMap().SelectOne(
 		&res,
 		fmt.Sprintf("SELECT u.* FROM %s AS u "+
-			"INNER JOIN domain_user AS dm ON dm.user_id=u.id"+
-			" WHERE u.email=? AND dm.domain_id=?", UserTableFull),
+			"INNER JOIN %s AS dm ON dm.user_id=u.id"+
+			" WHERE u.email=? AND dm.domain_id=?", UserTableFull, dmn.DomainUserTableFull),
 		email,
 		domain.ID,
 	)
@@ -354,7 +354,7 @@ func (u *User) getUserParents(d int64) []int64 {
 	m := NewAaaManager()
 	parents := m.GetUserParentsIDDomain(u.ID, d)
 	for i := range parents {
-		res = append(res, parents[i].ParentID)
+		res = append(res, parents[i].AdvisorID)
 	}
 	return res
 }
