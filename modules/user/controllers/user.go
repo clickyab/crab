@@ -8,6 +8,7 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework/controller"
+	"github.com/clickyab/services/mysql"
 )
 
 // Controller is the controller for the userPayload package
@@ -37,26 +38,27 @@ func (u Controller) MustGetUser(ctx context.Context) *aaa.User {
 }
 
 type userResponse struct {
-	ID            int64          `json:"id"`
-	Email         string         `json:"email"`
-	FirstName     string         `json:"first_name"`
-	LastName      string         `json:"last_name"`
-	Avatar        string         `json:"avatar,omitempty"`
-	CityName      string         `json:"city_name,omitempty"`
-	CityID        int64          `json:"city_id,omitempty"`
-	ProvinceName  string         `json:"province_name,omitempty"`
-	ProvinceID    int64          `json:"province_id,omitempty"`
-	CountryName   string         `json:"country_name,omitempty"`
-	CountryID     int64          `json:"country_id,omitempty"`
-	LandLine      string         `json:"land_line,omitempty"`
-	Cellphone     string         `json:"cellphone,omitempty"`
-	PostalCode    string         `json:"postal_code,omitempty"`
-	Address       string         `json:"address,omitempty"`
-	Gender        aaa.GenderType `json:"gender,omitempty"`
-	SSN           string         `json:"ssn,omitempty"`
-	LegalName     string         `json:"legal_name,omitempty"`
-	LegalRegister string         `json:"legal_register,omitempty"`
-	EconomicCode  string         `json:"economic_code,omitempty"`
+	ID            int64                  `json:"id"`
+	Email         string                 `json:"email"`
+	FirstName     string                 `json:"first_name"`
+	LastName      string                 `json:"last_name"`
+	Avatar        string                 `json:"avatar,omitempty"`
+	CityName      string                 `json:"city_name,omitempty"`
+	CityID        int64                  `json:"city_id,omitempty"`
+	ProvinceName  string                 `json:"province_name,omitempty"`
+	ProvinceID    int64                  `json:"province_id,omitempty"`
+	CountryName   string                 `json:"country_name,omitempty"`
+	CountryID     int64                  `json:"country_id,omitempty"`
+	LandLine      string                 `json:"land_line,omitempty"`
+	Cellphone     string                 `json:"cellphone,omitempty"`
+	PostalCode    string                 `json:"postal_code,omitempty"`
+	Address       string                 `json:"address,omitempty"`
+	Gender        aaa.GenderType         `json:"gender,omitempty"`
+	SSN           string                 `json:"ssn,omitempty"`
+	LegalName     string                 `json:"legal_name,omitempty"`
+	LegalRegister string                 `json:"legal_register,omitempty"`
+	EconomicCode  string                 `json:"economic_code,omitempty"`
+	Attributes    mysql.GenericJSONField `json:"attributes,omitempty"`
 }
 
 func (u Controller) createLoginResponseWithToken(user *aaa.User, token string) *ResponseLoginOK {
@@ -70,6 +72,7 @@ func (u Controller) createLoginResponseWithToken(user *aaa.User, token string) *
 	us.LandLine = user.LandLine.String
 	us.Cellphone = user.Cellphone.String
 	us.PostalCode = user.PostalCode.String
+	us.Attributes = user.Attributes
 	us.Address = user.Address.String
 	if user.Gender != aaa.NotSpecifiedGender {
 		us.Gender = user.Gender
