@@ -42,6 +42,7 @@
 		"controllers_whiteBlackLists": "file://84cef84b61e3ba89735c425c487aa1ced5aeebea",
 		"controllers_whiteBlackPayload": "file://9e3f0c5ce707adfcd8dc73348cdb8bf13052ea38",
 		"dmn_Domain": "file://0993a4c1236078df3801e651a1df8771fa16d3a2",
+		"dmn_DomainStatus": "file://2cb525dbe23b945053bfda99293872714a2aa39d",
 		"location_City": "file://2a9d2f23da95a9eb8b8d6653a54aa974eb67f3ca",
 		"location_Country": "file://d890b381993d623c120f93c26ac29b169191788e",
 		"location_Province": "file://2107e6d7a3b80f3fedccecb941396baf6b9232ef",

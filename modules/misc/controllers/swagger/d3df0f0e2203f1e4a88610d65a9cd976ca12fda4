@@ -5,6 +5,12 @@
 				"address": {
 					"type": "string"
 				},
+				"attributes": {
+					"additionalProperties": {
+						"type": "string"
+					},
+					"type": "object"
+				},
 				"avatar": {
 					"type": "string"
 				},

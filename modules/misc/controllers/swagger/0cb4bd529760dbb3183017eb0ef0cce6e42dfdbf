@@ -6,8 +6,11 @@
 		"domains": {
 			"items": {
 				"properties": {
-					"active": {
-						"type": "boolean"
+					"attributes": {
+						"additionalProperties": {
+							"type": "string"
+						},
+						"type": "object"
 					},
 					"created_at": {
 						"format": "dateTime",
@@ -28,6 +31,9 @@
 						"type": "integer"
 					},
 					"name": {
+						"type": "string"
+					},
+					"status": {
 						"type": "string"
 					},
 					"updated_at": {

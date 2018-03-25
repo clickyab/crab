@@ -13,31 +13,6 @@ import (
 
 // AUTO GENERATED CODE. DO NOT EDIT!
 
-// CreateDomainUser try to save a new DomainUser in database
-func (m *Manager) CreateDomainUser(du *DomainUser) error {
-
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
-		}
-	}(du)
-
-	return m.GetWDbMap().Insert(du)
-}
-
-// UpdateDomainUser try to update DomainUser in database
-func (m *Manager) UpdateDomainUser(du *DomainUser) error {
-
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
-		}
-	}(du)
-
-	_, err := m.GetWDbMap().Update(du)
-	return err
-}
-
 // CreateDomain try to save a new Domain in database
 func (m *Manager) CreateDomain(d *Domain) error {
 	now := time.Now()
@@ -166,4 +141,29 @@ func (m *Manager) FindDomainByName(n string) (*Domain, error) {
 	}
 
 	return &res, nil
+}
+
+// CreateDomainUser try to save a new DomainUser in database
+func (m *Manager) CreateDomainUser(du *DomainUser) error {
+
+	func(in interface{}) {
+		if ii, ok := in.(initializer.Simple); ok {
+			ii.Initialize()
+		}
+	}(du)
+
+	return m.GetWDbMap().Insert(du)
+}
+
+// UpdateDomainUser try to update DomainUser in database
+func (m *Manager) UpdateDomainUser(du *DomainUser) error {
+
+	func(in interface{}) {
+		if ii, ok := in.(initializer.Simple); ok {
+			ii.Initialize()
+		}
+	}(du)
+
+	_, err := m.GetWDbMap().Update(du)
+	return err
 }
