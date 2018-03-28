@@ -51,7 +51,6 @@ var (
 //		resource = campaign_list:self
 //		_sort_ = string, the sort and order like id:asc or id:desc available column "created_at","start_at","max_bid"
 //		_kind_ = string , filter the kind field valid values are "web","app"
-//		_type_ = string , filter the type field valid values are "banner","vast","native"
 //		_cost_type_ = string , filter the cost_type field valid values are "cpm","cpc","cpa"
 //		_title_ = string , search the title field
 //		_owner_email_ = string , search the owner_email field
@@ -70,11 +69,7 @@ func (u *Controller) listCampaign(ctx context.Context, w http.ResponseWriter, r 
 		filter["cp.kind"] = e
 	}
 
-	if e := r.URL.Query().Get("type"); e != "" && orm.CampaignType(e).IsValid() {
-		filter["cp.type"] = e
-	}
-
-	if e := r.URL.Query().Get("cost_type"); e != "" && orm.CostType(e).IsValid() {
+	if e := r.URL.Query().Get("cost_type"); e != "" && orm.Strategy(e).IsValid() {
 		filter["cp.cost_type"] = e
 	}
 
@@ -198,21 +193,6 @@ func init() {
 			"filter_valid_map": {
 				"app": "AppCampaign",
 				"web": "WebCampaign"
-			}
-		},
-		{
-			"data": "type",
-			"name": "Type",
-			"searchable": false,
-			"sortable": false,
-			"visible": true,
-			"filter": true,
-			"title": "Type",
-			"type": "enum",
-			"filter_valid_map": {
-				"banner": "BannerType",
-				"native": "NativeType",
-				"vast": "VastType"
 			}
 		},
 		{

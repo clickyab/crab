@@ -89,12 +89,12 @@
 			"type": "string"
 		},
 		"status": {
-			"type": "boolean"
+			"type": "string"
 		},
 		"title": {
 			"type": "string"
 		},
-		"type": {
+		"tld": {
 			"type": "string"
 		}
 	},

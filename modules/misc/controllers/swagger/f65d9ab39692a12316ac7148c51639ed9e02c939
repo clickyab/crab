@@ -1,7 +1,10 @@
 {
 	"properties": {
-		"kind": {
+		"InventoryState": {
 			"type": "string"
+		},
+		"Valid": {
+			"type": "boolean"
 		}
 	},
 	"type": "object"

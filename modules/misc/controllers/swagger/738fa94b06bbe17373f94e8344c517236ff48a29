@@ -97,9 +97,6 @@
 		},
 		"total_spent": {
 			"type": "integer"
-		},
-		"type": {
-			"type": "string"
 		}
 	},
 	"type": "object"

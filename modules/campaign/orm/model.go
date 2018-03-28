@@ -1,11 +1,14 @@
 package orm
 
 import (
+	"encoding/json"
 	"time"
 
 	"fmt"
 
 	"strings"
+
+	"database/sql/driver"
 
 	"clickyab.com/crab/libs"
 	"clickyab.com/crab/modules/user/aaa"
@@ -31,21 +34,6 @@ const (
 	AppCampaign CampaignKind = "app"
 )
 
-// CampaignType is type of campaign <vast,banner,native>
-// @Enum{
-// }
-type CampaignType string
-
-const (
-
-	// BannerType of campaign
-	BannerType CampaignType = "banner"
-	// VastType   of campaign
-	VastType CampaignType = "vast"
-	// NativeType of campaign
-	NativeType CampaignType = "native"
-)
-
 // Progress is progress of campaign
 // @Enum{
 // }
@@ -58,27 +46,94 @@ const (
 	ProgressFinalized Progress = "finalized"
 )
 
-// CostType is type of campaign <cpm,cpc,cpa>
+// InventoryState is whether black or white list selected
 // @Enum{
 // }
-type CostType string
+type InventoryState string
+
+type NullInventoryState struct {
+	Valid          bool
+	InventoryState InventoryState
+}
+
+// MarshalJSON try to marshaling to json
+func (nt NullInventoryState) MarshalJSON() ([]byte, error) {
+	if nt.Valid {
+		return json.Marshal(nt.InventoryState)
+	}
+	return []byte("null"), nil
+}
+
+// UnmarshalJSON try to unmarshal dae from input
+func (nt *NullInventoryState) UnmarshalJSON(b []byte) error {
+	text := strings.ToLower(string(b))
+	if text == "null" {
+		nt.Valid = false
+		nt.InventoryState = InventoryState("")
+		return nil
+	}
+
+	err := json.Unmarshal(b, &nt.InventoryState)
+	if err != nil {
+		return err
+	}
+
+	nt.Valid = true
+	return nil
+}
+
+// Scan implements the Scanner interface.
+func (nt *NullInventoryState) Scan(value interface{}) error {
+	nt.InventoryState, nt.Valid = value.(InventoryState)
+	return nil
+}
+
+// Value implements the driver Valuer interface.
+func (nt NullInventoryState) Value() (driver.Value, error) {
+	if !nt.Valid {
+		return nil, nil
+	}
+	return nt.InventoryState, nil
+}
+
+const (
+	// WhiteInventory white list selected
+	WhiteInventory InventoryState = "white_list"
+	// BlackInventory black list selected
+	BlackInventory InventoryState = "black_list"
+)
+
+// Strategy is type of campaign <cpm,cpc,cpa>
+// @Enum{
+// }
+type Strategy string
 
 const (
 	// CPM is cpm
-	CPM CostType = "cpm"
+	CPM Strategy = "cpm"
 	// CPC is cpc
-	CPC CostType = "cpc"
+	CPC Strategy = "cpc"
 	// CPA is cpa
-	CPA CostType = "cpa"
+	CPA Strategy = "cpa"
+	wh  string   = " WHERE "
+)
 
-	wh string = " WHERE "
+// Status is campaign status start/pause
+// @Enum{
+// }
+type Status string
+
+const (
+	// StartStatus is start status
+	StartStatus Status = "start"
+	// PauseStatus is pause status
+	PauseStatus Status = "pause"
 )
 
 type base struct {
 	ID        int64     `json:"id" db:"id"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
-	Active    bool      `json:"active" db:"active"`
 }
 
 // Campaign campaign model in database
@@ -93,16 +148,18 @@ type Campaign struct {
 	CampaignBaseType
 	CampaignStatus
 	CampaignFinance
-	UserID       int64           `json:"user_id" db:"user_id"`
-	DomainID     int64           `json:"domain_id" db:"domain_id"`
-	Exchange     bool            `json:"exchange" db:"exchange"`
-	WhiteBlackID mysql.NullInt64 `json:"white_black_id" db:"white_black_id"`
-	// WhiteBlackType true is whitelist
-	WhiteBlackType  mysql.NullBool           `json:"white_black_type" db:"white_black_type"`
-	WhiteBlackValue mysql.StringMapJSONArray `json:"-" db:"white_black_value"`
-	Progress        Progress                 `json:"-" db:"progress"`
-	Attributes      *CampaignAttributes      `json:"attributes,omitempty" db:"-"`
-	ArchiveAt       mysql.NullTime           `json:"archive_at" db:"archive_at"`
+	UserID      int64           `json:"user_id" db:"user_id"`
+	DomainID    int64           `json:"domain_id" db:"domain_id"`
+	Exchange    bool            `json:"exchange" db:"exchange"`
+	InventoryID mysql.NullInt64 `json:"inventory_id" db:"inventory_id"`
+	// InventoryType black_list or white_list
+	InventoryType    NullInventoryState       `json:"inventory_type" db:"inventory_type"`
+	InventoryDomains mysql.StringMapJSONArray `json:"-" db:"inventory_domains"`
+	Progress         Progress                 `json:"progress" db:"progress"`
+	Attributes       *CampaignAttributes      `json:"attributes,omitempty" db:"-"`
+	ArchivedAt       mysql.NullTime           `json:"archived_at" db:"archived_at"`
+	TodaySpend       int64                    `json:"today_spend" db:"today_spend"`
+	TotalSpend       int64                    `json:"total_spend" db:"total_spend"`
 }
 
 // CampaignDataTable is the campaign full data in data table
@@ -124,7 +181,6 @@ type CampaignDataTable struct {
 	Active    bool      `json:"active" db:"active" type:"bool"`
 
 	Kind CampaignKind `json:"kind" db:"kind" type:"enum" filter:"true" map:"cp.kind"`
-	Type CampaignType `json:"type" db:"type" type:"enum" filter:"true" map:"cp.type"`
 
 	Status  bool           `json:"status" db:"status" type:"bool"`
 	StartAt time.Time      `json:"start_at" db:"start_at" type:"date" sort:"true"`
@@ -133,7 +189,7 @@ type CampaignDataTable struct {
 
 	Budget     int64    `json:"budget" db:"budget" type:"number"`
 	DailyLimit int64    `json:"daily_limit" db:"daily_limit" type:"number"`
-	CostType   CostType `json:"cost_type" db:"cost_type" type:"enum" filter:"true" map:"cp.cost_type"`
+	CostType   Strategy `json:"cost_type" db:"cost_type" type:"enum" filter:"true" map:"cp.cost_type"`
 	MaxBid     int64    `json:"max_bid" db:"max_bid" type:"number" sort:"true"`
 
 	AvgCPC     float64 `json:"avg_cpc" db:"avg_cpc" graph:"avg_cpc,Avg. CPC,line,false"`
@@ -161,26 +217,25 @@ type CampaignDataTable struct {
 
 // CampaignFinance is the financial
 type CampaignFinance struct {
-	Budget      int64                 `json:"budget" db:"budget" validate:"required,gt=0"`
-	DailyLimit  int64                 `json:"daily_limit" db:"daily_limit" validate:"required,gt=0"`
-	CostType    CostType              `json:"cost_type" db:"cost_type"`
-	MaxBid      int64                 `json:"max_bid" db:"max_bid" validate:"required,gt=0"`
-	NotifyEmail mysql.StringJSONArray `json:"notify_email" db:"notify_email" validate:"required"`
+	TotalBudget int64    `json:"total_budget" db:"total_budget" validate:"required,gt=0"`
+	DailyBudget int64    `json:"daily_budget" db:"daily_budget" validate:"required,gt=0"`
+	Strategy    Strategy `json:"strategy" db:"strategy"`
+	MaxBid      int64    `json:"max_bid" db:"max_bid" validate:"required,gt=0"`
 }
 
 // CampaignBaseType is fundamental data of campaign
 type CampaignBaseType struct {
 	Kind CampaignKind `json:"kind" db:"kind"`
-	Type CampaignType `json:"type" db:"type"`
 }
 
 // CampaignStatus update campaign (stage one)
 type CampaignStatus struct {
-	Status   bool           `json:"status" db:"status"`
-	StartAt  time.Time      `json:"start_at" db:"start_at"`
-	EndAt    mysql.NullTime `json:"end_at" db:"end_at"`
-	Title    string         `json:"title" db:"title" `
-	Schedule ScheduleSheet  `json:"schedule" db:"-"`
+	Status   Status           `json:"status" db:"status"`
+	StartAt  time.Time        `json:"start_at" db:"start_at"`
+	EndAt    mysql.NullTime   `json:"end_at" db:"end_at"`
+	Title    string           `json:"title" db:"title" `
+	TLD      mysql.NullString `json:"tld" db:"tld"`
+	Schedule ScheduleSheet    `json:"schedule" db:"-"`
 }
 
 // CampaignBase is minimum data for creating campaign (stage one)
@@ -190,24 +245,10 @@ type CampaignBase struct { // stage one create
 }
 
 func (ca *Campaign) webMaxBid(c CampaignBase) {
-	switch c.Type {
-	case BannerType:
-		ca.MaxBid = defaultWebBannerCPC.Int64()
-	case VastType:
-		ca.MaxBid = defaultWebVastCPC.Int64()
-	case NativeType:
-		ca.MaxBid = defaultWebNativeCPC.Int64()
-	}
+
 }
 func (ca *Campaign) appMaxBid(c CampaignBase) {
-	switch c.Type {
-	case BannerType:
-		ca.MaxBid = defaultAppBannerCPC.Int64()
-	case VastType:
-		ca.MaxBid = defaultAppVastCPC.Int64()
-	case NativeType:
-		ca.MaxBid = defaultAppNativeCPC.Int64()
-	}
+
 }
 
 // FindCampaignByIDDomain return the Campaign base on its id and domain id
@@ -245,7 +286,6 @@ func (m *Manager) FindCampaignByIDDomain(id, d int64) (*Campaign, error) {
 type CampaignGraph struct {
 	OwnerEmail string       `db:"owner_email" json:"owner_email" type:"string" search:"true" map:"owner.email"`
 	Kind       CampaignKind `json:"kind" db:"kind" type:"enum" filter:"true" map:"cp.kind"`
-	Type       CampaignType `json:"type" db:"type" type:"enum" filter:"true" map:"cp.type"`
 	Title      string       `json:"title" db:"title" type:"string" search:"true" map:"cp.title"`
 
 	ID         int64   `json:"id" db:"id" type:"number"`

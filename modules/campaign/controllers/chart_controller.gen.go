@@ -55,7 +55,6 @@ type graphChartData struct {
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		200 = graphChartResponse
 //		_kind_ = string , filter the kind field valid values are "web","app"
-//		_type_ = string , filter the type field valid values are "banner","vast","native"
 //		_owner_email_ = string , search the owner_email field
 //		_title_ = string , search the title field
 // }
@@ -66,9 +65,6 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 
 	if e := r.URL.Query().Get("kind"); e != "" && orm.CampaignKind(e).IsValid() {
 		filter["cp.kind"] = e
-	}
-	if e := r.URL.Query().Get("type"); e != "" && orm.CampaignType(e).IsValid() {
-		filter["cp.type"] = e
 	}
 
 	search := make(map[string]string)

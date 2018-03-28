@@ -18,6 +18,7 @@ import (
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
+	"github.com/sirupsen/logrus"
 )
 
 // Controller is the controller for the user package
@@ -33,11 +34,11 @@ type Controller struct {
 //}
 type createCampaignPayload struct {
 	Kind     orm.CampaignKind `json:"kind"`
-	Type     orm.CampaignType `json:"type"`
-	Status   bool             `json:"status" validate:"required"`
+	Status   orm.Status       `json:"status" validate:"required"`
 	StartAt  time.Time        `json:"start_at"`
 	EndAt    mysql.NullTime   `json:"end_at" validate:"omitempty"`
 	Title    string           `json:"title" validate:"required,gt=5"`
+	TLD      string           `json:"tld"`
 	Schedule struct {
 		H00 string `json:"h00" hour:""`
 		H01 string `json:"h01" hour:""`
@@ -102,9 +103,6 @@ func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.Respon
 		return errors.KindError
 
 	}
-	if !l.Type.IsValid() {
-		return errors.TypeError
-	}
 
 	if l.StartAt.Before(time.Now()) {
 		return errors.StartTimeError
@@ -125,9 +123,12 @@ func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCa
 	ca, err := orm.NewOrmManager().AddCampaign(orm.CampaignBase{
 		CampaignBaseType: orm.CampaignBaseType{
 			Kind: p.Kind,
-			Type: p.Type,
 		},
 		CampaignStatus: orm.CampaignStatus{
+			TLD: mysql.NullString{
+				Valid:  p.TLD != "",
+				String: p.TLD,
+			},
 			Status:  p.Status,
 			Title:   p.Title,
 			StartAt: p.StartAt,
@@ -221,10 +222,11 @@ func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCa
 // @Validate{
 //}
 type campaignStatus struct {
-	Status   bool           `json:"status" validate:"required"`
+	Status   orm.Status     `json:"status" validate:"required"`
 	StartAt  time.Time      `json:"start_at"`
 	EndAt    mysql.NullTime `json:"end_at"`
 	Title    string         `json:"title"  validate:"required,gt=5"`
+	TLD      string         `json:"tld"`
 	Schedule struct {
 		H00 string `json:"h00" hour:""`
 		H01 string `json:"h01" hour:""`
@@ -286,13 +288,26 @@ func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaign
 	if e != nil || ca.DomainID != d.ID || ca != nil {
 		return nil, errors.NotFoundError(id)
 	}
-	// TODO: check access
-	//u.HasOn("edit-campaign",ca.UserID,[],d.ID)
+
+	// check access
+	userManager := aaa.NewAaaManager()
+	owner, err := userManager.FindUserWithParentsByID(ca.UserID, id)
+	if err != nil {
+		return ca, t9e.G("can't find user with related domain")
+	}
+
+	currentUser := authz.MustGetUser(ctx)
+	_, ok := aaa.CheckPermOn(owner, currentUser, "edit_campaign", id)
+	if !ok {
+		return ca, errors.AccessDenied
+	}
+
 	err = o.UpdateCampaignByID(orm.CampaignStatus{
 		Status:  p.Status,
 		Title:   p.Title,
 		StartAt: p.StartAt,
 		EndAt:   p.EndAt,
+		TLD:     mysql.NullString{Valid: p.TLD != "", String: p.TLD},
 		Schedule: orm.ScheduleSheet{
 			H00: mysql.NullString{
 				String: p.Schedule.H00,
@@ -420,6 +435,7 @@ func (c *Controller) get(ctx context.Context, r *http.Request) (*orm.Campaign, e
 	}
 
 	campaign, err := orm.NewOrmManager().FindCampaignByIDDomain(campID, userDomain.ID)
+	logrus.Warn(err)
 	if err != nil {
 		return campaign, errors.NotFoundError(campID)
 	}
@@ -429,7 +445,8 @@ func (c *Controller) get(ctx context.Context, r *http.Request) (*orm.Campaign, e
 		return campaign, t9e.G("can't find user with id %s and domain id %s", campaign.UserID, userDomain.ID)
 	}
 
-	_, ok := aaa.CheckPermOn(owner, currentUser, "get-campaign", userDomain.ID)
+	// check access
+	_, ok := aaa.CheckPermOn(owner, currentUser, "get_campaign", userDomain.ID)
 	if !ok {
 		return campaign, t9e.G("access denied. you can't get campaign information")
 	}

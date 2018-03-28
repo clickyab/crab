@@ -15,15 +15,15 @@ func (m *Manager) UpdateCampaignWhiteBlackList(w int64, exchange *bool, white *b
 		}
 		domains = l.Domains
 	}
-	ca.WhiteBlackValue = domains
-	ca.WhiteBlackID = mysql.NullInt64{
+	ca.InventoryDomains = domains
+	ca.InventoryID = mysql.NullInt64{
 		Valid: w > 0,
 		Int64: w,
 	}
 	ca.Exchange = *exchange
-	ca.WhiteBlackType = mysql.NullBool{
-		Valid: true,
-		Bool:  *white,
+	ca.InventoryType = NullInventoryState{
+		Valid:          true,
+		InventoryState: InventoryState("white_list"),
 	}
 	err := m.UpdateCampaign(ca)
 	if err != nil {
@@ -42,13 +42,13 @@ func (m *Manager) UpdateCampaignWhiteBlackList(w int64, exchange *bool, white *b
 // DeleteCampaignWhiteBlackList delete white/black list
 func (m *Manager) DeleteCampaignWhiteBlackList(ca *Campaign) error {
 
-	ca.WhiteBlackID = mysql.NullInt64{
+	ca.InventoryID = mysql.NullInt64{
 		Valid: false,
 	}
-	ca.WhiteBlackType = mysql.NullBool{
+	ca.InventoryType = NullInventoryState{
 		Valid: false,
 	}
-	ca.WhiteBlackValue = mysql.StringMapJSONArray(make(map[string][]string))
+	ca.InventoryDomains = mysql.StringMapJSONArray(make(map[string][]string))
 	err := m.UpdateCampaign(ca)
 	if err != nil {
 		return err

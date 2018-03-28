@@ -78,8 +78,6 @@ func (cdt CampaignDataTable) Filter(u permission.Interface) CampaignDataTable {
 
 	res.Kind = cdt.Kind
 
-	res.Type = cdt.Type
-
 	res.Status = cdt.Status
 
 	res.StartAt = cdt.StartAt

@@ -1,8 +1,5 @@
 {
 	"properties": {
-		"active": {
-			"type": "boolean"
-		},
 		"created_at": {
 			"format": "dateTime",
 			"type": "string"
@@ -11,6 +8,9 @@
 			"type": "string"
 		},
 		"name": {
+			"type": "string"
+		},
+		"status": {
 			"type": "string"
 		},
 		"updated_at": {

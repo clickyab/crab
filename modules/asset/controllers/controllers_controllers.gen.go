@@ -87,7 +87,7 @@ func (c *Controller) manufacturerGet(ctx context.Context, w http.ResponseWriter,
 
 // os return list all is (e.g. linux, ...)
 // @Route {
-// 		url = /os
+// 		url = /os/:kind
 //		method = get
 //		middleware = authz.Authenticate
 //		200 = osResponse
@@ -104,9 +104,28 @@ func (c *Controller) osGet(ctx context.Context, w http.ResponseWriter, r *http.R
 	framework.Write(w, res, http.StatusOK)
 }
 
+// os return list all is (e.g. linux, ...)
+// @Route {
+// 		url = /os
+//		method = get
+//		middleware = authz.Authenticate
+//		200 = osResponse
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+// }
+func (c *Controller) allOsGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.allOs(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // platform return list all is (e.g. desktop,mobile, ...)
 // @Route {
-// 		url = /platform
+// 		url = /platform/:kind
 //		method = get
 //		middleware = authz.Authenticate
 //		200 = platformResponse
@@ -123,18 +142,18 @@ func (c *Controller) platformGet(ctx context.Context, w http.ResponseWriter, r *
 	framework.Write(w, res, http.StatusOK)
 }
 
-// region return list iab categories
+// platform return list all is (e.g. desktop,mobile, ...)
 // @Route {
-// 		url = /region
+// 		url = /platform
 //		method = get
 //		middleware = authz.Authenticate
-//		200 = regionList
+//		200 = platformResponse
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
 // }
-func (c *Controller) regionGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c *Controller) allPlatformGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
-	res, err := c.region(ctx, r)
+	res, err := c.allPlatform(ctx, r)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return

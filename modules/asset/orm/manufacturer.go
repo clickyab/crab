@@ -10,8 +10,8 @@ import "time"
 //		list = yes
 // }
 type Manufacturer struct {
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
-	Active    bool      `json:"active" db:"active"`
-	Name      string    `json:"name" db:"name"`
+	CreatedAt time.Time   `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time   `json:"updated_at" db:"updated_at"`
+	Status    AssetStatus `json:"status" db:"status"`
+	Name      string      `json:"name" db:"name"`
 }

@@ -44,7 +44,7 @@ type CampaignDetail struct {
 // }
 type CampaignDailyDataTable struct {
 	CreatedAt time.Time `json:"created_at" db:"created_at" type:"date" sort:"true"`
-	CostType  CostType  `json:"-" db:"cost_type"`
+	CostType  Strategy  `json:"-" db:"cost_type"`
 
 	Imp   int64 `json:"imp" db:"imp" type:"number" sort:"true"`
 	Click int64 `json:"click" db:"click" type:"number" sort:"true"`

@@ -47,44 +47,6 @@ func (e CampaignKind) Value() (driver.Value, error) {
 }
 
 // IsValid try to validate enum value on ths type
-func (e CampaignType) IsValid() bool {
-	return array.StringInArray(
-		string(e),
-		string(BannerType),
-		string(VastType),
-		string(NativeType),
-	)
-}
-
-// Scan convert the json array ino string slice
-func (e *CampaignType) Scan(src interface{}) error {
-	var b []byte
-	switch src.(type) {
-	case []byte:
-		b = src.([]byte)
-	case string:
-		b = []byte(src.(string))
-	case nil:
-		b = make([]byte, 0)
-	default:
-		return t9e.G("unsupported type")
-	}
-	if !CampaignType(b).IsValid() {
-		return t9e.G("invalid value")
-	}
-	*e = CampaignType(b)
-	return nil
-}
-
-// Value try to get the string slice representation in database
-func (e CampaignType) Value() (driver.Value, error) {
-	if !e.IsValid() {
-		return nil, t9e.G("invalid status")
-	}
-	return string(e), nil
-}
-
-// IsValid try to validate enum value on ths type
 func (e Progress) IsValid() bool {
 	return array.StringInArray(
 		string(e),
@@ -122,17 +84,16 @@ func (e Progress) Value() (driver.Value, error) {
 }
 
 // IsValid try to validate enum value on ths type
-func (e CostType) IsValid() bool {
+func (e InventoryState) IsValid() bool {
 	return array.StringInArray(
 		string(e),
-		string(CPM),
-		string(CPC),
-		string(CPA),
+		string(WhiteInventory),
+		string(BlackInventory),
 	)
 }
 
 // Scan convert the json array ino string slice
-func (e *CostType) Scan(src interface{}) error {
+func (e *InventoryState) Scan(src interface{}) error {
 	var b []byte
 	switch src.(type) {
 	case []byte:
@@ -144,15 +105,90 @@ func (e *CostType) Scan(src interface{}) error {
 	default:
 		return t9e.G("unsupported type")
 	}
-	if !CostType(b).IsValid() {
+	if !InventoryState(b).IsValid() {
 		return t9e.G("invalid value")
 	}
-	*e = CostType(b)
+	*e = InventoryState(b)
 	return nil
 }
 
 // Value try to get the string slice representation in database
-func (e CostType) Value() (driver.Value, error) {
+func (e InventoryState) Value() (driver.Value, error) {
+	if !e.IsValid() {
+		return nil, t9e.G("invalid status")
+	}
+	return string(e), nil
+}
+
+// IsValid try to validate enum value on ths type
+func (e Strategy) IsValid() bool {
+	return array.StringInArray(
+		string(e),
+		string(CPM),
+		string(CPC),
+		string(CPA),
+	)
+}
+
+// Scan convert the json array ino string slice
+func (e *Strategy) Scan(src interface{}) error {
+	var b []byte
+	switch src.(type) {
+	case []byte:
+		b = src.([]byte)
+	case string:
+		b = []byte(src.(string))
+	case nil:
+		b = make([]byte, 0)
+	default:
+		return t9e.G("unsupported type")
+	}
+	if !Strategy(b).IsValid() {
+		return t9e.G("invalid value")
+	}
+	*e = Strategy(b)
+	return nil
+}
+
+// Value try to get the string slice representation in database
+func (e Strategy) Value() (driver.Value, error) {
+	if !e.IsValid() {
+		return nil, t9e.G("invalid status")
+	}
+	return string(e), nil
+}
+
+// IsValid try to validate enum value on ths type
+func (e Status) IsValid() bool {
+	return array.StringInArray(
+		string(e),
+		string(StartStatus),
+		string(PauseStatus),
+	)
+}
+
+// Scan convert the json array ino string slice
+func (e *Status) Scan(src interface{}) error {
+	var b []byte
+	switch src.(type) {
+	case []byte:
+		b = src.([]byte)
+	case string:
+		b = []byte(src.(string))
+	case nil:
+		b = make([]byte, 0)
+	default:
+		return t9e.G("unsupported type")
+	}
+	if !Status(b).IsValid() {
+		return t9e.G("invalid value")
+	}
+	*e = Status(b)
+	return nil
+}
+
+// Value try to get the string slice representation in database
+func (e Status) Value() (driver.Value, error) {
 	if !e.IsValid() {
 		return nil, t9e.G("invalid status")
 	}

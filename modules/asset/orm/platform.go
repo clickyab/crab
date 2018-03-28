@@ -10,8 +10,8 @@ import "time"
 //		list = yes
 // }
 type Platform struct {
-	Name      string    `json:"name" db:"name"`
-	Active    bool      `json:"active" db:"active"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	Name      string      `json:"name" db:"name"`
+	Status    AssetStatus `json:"status" db:"status"`
+	CreatedAt time.Time   `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time   `json:"updated_at" db:"updated_at"`
 }

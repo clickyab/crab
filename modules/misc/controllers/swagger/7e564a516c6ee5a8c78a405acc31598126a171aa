@@ -1,14 +1,18 @@
 {
 	"items": {
 		"properties": {
-			"active": {
-				"type": "boolean"
-			},
 			"created_at": {
 				"format": "dateTime",
 				"type": "string"
 			},
+			"deleted_at": {
+				"format": "dateTime",
+				"type": "string"
+			},
 			"name": {
+				"type": "string"
+			},
+			"status": {
 				"type": "string"
 			},
 			"updated_at": {

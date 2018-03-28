@@ -72,9 +72,6 @@ func (p *assignBannerPayload) ValidateExtra(ctx context.Context, w http.Response
 		return campignErr.NotFoundError(d.ID)
 	}
 	p.campaign = campaign
-	if string(p.campaign.Type) != string(bannerType) {
-		return campignErr.TypeError
-	}
 	m := add.NewAddManager()
 	if len(p.Banners) == 0 {
 		return errors.NoBannerError

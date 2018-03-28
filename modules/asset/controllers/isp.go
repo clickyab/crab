@@ -24,5 +24,5 @@ func (c *Controller) isp(ctx context.Context, r *http.Request) (ispResponse, err
 		return nil, errors.ISPKidError
 
 	}
-	return ispResponse(m.ListISPSWithFilter("active=? AND kind=? OR kind=?", true, kind, orm.BothISPKind)), nil
+	return ispResponse(m.ListISPSWithFilter("status=? AND kind=? OR kind=?", orm.EnableAssetStatus, kind, orm.BothISPKind)), nil
 }

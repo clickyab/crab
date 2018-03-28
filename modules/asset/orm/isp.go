@@ -27,9 +27,9 @@ const (
 //		list = yes
 // }
 type ISP struct {
-	Name      string    `json:"name" db:"name"`
-	Kind      ISPKind   `json:"kind" db:"kind"`
-	Active    bool      `json:"active" db:"active"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	Name      string      `json:"name" db:"name"`
+	Kind      ISPKind     `json:"kind" db:"kind"`
+	Status    AssetStatus `json:"status" db:"status"`
+	CreatedAt time.Time   `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time   `json:"updated_at" db:"updated_at"`
 }
