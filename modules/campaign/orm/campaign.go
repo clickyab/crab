@@ -19,22 +19,16 @@ const (
 // AddCampaign for creating campaign with minimum info
 func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *dmn.Domain) (*Campaign, error) {
 	ca := &Campaign{
-		base: base{
-			Active: true,
-		},
 		DomainID: d.ID,
 		UserID:   u.ID,
 		CampaignFinance: CampaignFinance{
-
-			CostType: CPC,
+			Strategy: CPC,
 		},
 		CampaignBaseType: CampaignBaseType{
-
-			Type: c.Type,
 			Kind: c.Kind,
 		},
 		CampaignStatus: CampaignStatus{
-
+			TLD:     c.TLD,
 			Status:  c.Status,
 			StartAt: c.StartAt,
 			EndAt:   c.EndAt,
@@ -82,6 +76,7 @@ func (m *Manager) UpdateCampaignByID(c CampaignStatus, ca *Campaign) error {
 	ca.StartAt = c.StartAt
 	ca.EndAt = c.EndAt
 	ca.Title = c.Title
+	ca.TLD = c.TLD
 
 	err := m.Begin()
 	assert.Nil(err)

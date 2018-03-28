@@ -1,9 +1,6 @@
 {
 	"properties": {
-		"active": {
-			"type": "boolean"
-		},
-		"archive_at": {
+		"archived_at": {
 			"format": "dateTime",
 			"type": "string"
 		},
@@ -60,17 +57,11 @@
 			},
 			"type": "object"
 		},
-		"budget": {
-			"type": "integer"
-		},
-		"cost_type": {
-			"type": "string"
-		},
 		"created_at": {
 			"format": "dateTime",
 			"type": "string"
 		},
-		"daily_limit": {
+		"daily_budget": {
 			"type": "integer"
 		},
 		"domain_id": {
@@ -86,17 +77,28 @@
 		"id": {
 			"type": "integer"
 		},
+		"inventory_id": {
+			"type": "integer"
+		},
+		"inventory_type": {
+			"properties": {
+				"InventoryState": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
 		"kind": {
 			"type": "string"
 		},
 		"max_bid": {
 			"type": "integer"
 		},
-		"notify_email": {
-			"items": {
-				"type": "string"
-			},
-			"type": "array"
+		"progress": {
+			"type": "string"
 		},
 		"schedule": {
 			"properties": {
@@ -372,13 +374,33 @@
 			"type": "string"
 		},
 		"status": {
-			"type": "boolean"
+			"type": "string"
+		},
+		"strategy": {
+			"type": "string"
 		},
 		"title": {
 			"type": "string"
 		},
-		"type": {
-			"type": "string"
+		"tld": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"today_spend": {
+			"type": "integer"
+		},
+		"total_budget": {
+			"type": "integer"
+		},
+		"total_spend": {
+			"type": "integer"
 		},
 		"updated_at": {
 			"format": "dateTime",
@@ -386,20 +408,6 @@
 		},
 		"user_id": {
 			"type": "integer"
-		},
-		"white_black_id": {
-			"type": "integer"
-		},
-		"white_black_type": {
-			"properties": {
-				"Bool": {
-					"type": "boolean"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
 		}
 	},
 	"type": "object"

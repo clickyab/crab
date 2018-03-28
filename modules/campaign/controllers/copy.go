@@ -53,7 +53,7 @@ func (c Controller) copyCampaign(ctx context.Context, r *http.Request, p *copyCa
 	}
 
 	// check for archive campaign
-	if campaign.ArchiveAt.Valid && campaign.ArchiveAt.Time.Before(time.Now()) {
+	if campaign.ArchivedAt.Valid && campaign.ArchivedAt.Time.Before(time.Now()) {
 		return campaign, errors.ArchivedEditError
 	}
 

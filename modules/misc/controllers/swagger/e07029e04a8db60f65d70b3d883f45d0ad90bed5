@@ -1,7 +1,14 @@
 {
 	"get": {
-		"description": "region return list iab categories",
+		"description": "platform return list all is (e.g. desktop,mobile, ...)",
 		"parameters": [
+			{
+				"description": "",
+				"in": "path",
+				"name": "kind",
+				"required": true,
+				"type": "string"
+			},
 			{
 				"description": "the security token, get it from login route",
 				"in": "header",
@@ -14,7 +21,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_regionList"
+					"$ref": "#/definitions/controllers_platformResponse"
 				}
 			},
 			"400": {

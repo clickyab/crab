@@ -53,17 +53,20 @@ func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.
 		return nil, t9e.G("access denied. you can't change campaign status")
 	}
 	// if campaign current mode is archive nothing can be done
-	if campaign.ArchiveAt.Valid && campaign.ArchiveAt.Time.Before(time.Now()) {
+	if campaign.ArchivedAt.Valid && campaign.ArchivedAt.Time.Before(time.Now()) {
 		//nothing can do
 		return nil, t9e.G("can't manipulate status")
 	}
 
 	if stat == "start" {
-		campaign.Active = true
+		campaign.Status = orm.StartStatus
+		assert.Nil(cpManager.UpdateCampaign(campaign))
 	} else if stat == "pause" {
-		campaign.Active = false
+		campaign.Status = orm.PauseStatus
+		assert.Nil(cpManager.UpdateCampaign(campaign))
 	} else { // archive is selected
-		campaign.ArchiveAt = mysql.NullTime{Valid: true, Time: time.Now()}
+		campaign.ArchivedAt = mysql.NullTime{Valid: true, Time: time.Now()}
+		assert.Nil(cpManager.UpdateCampaign(campaign))
 	}
 	err = cpManager.UpdateCampaign(campaign)
 	if err != nil {

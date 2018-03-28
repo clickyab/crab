@@ -27,6 +27,8 @@ var (
 	StartTimeError error = t9e.G("start date can't be past")
 	// ErrInventoryID there is no inventory with this id
 	ErrInventoryID error = t9e.G("there is no inventory with this id")
+	// AccessDenied error
+	AccessDenied error = t9e.G("access denied! you don't have access for this action")
 )
 
 // NotFoundError maker

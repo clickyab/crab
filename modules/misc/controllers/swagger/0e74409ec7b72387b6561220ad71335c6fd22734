@@ -1,8 +1,17 @@
 {
 	"items": {
 		"properties": {
-			"active": {
-				"type": "boolean"
+			"deleted_at": {
+				"properties": {
+					"Time": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"Valid": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
 			},
 			"description": {
 				"type": "string"

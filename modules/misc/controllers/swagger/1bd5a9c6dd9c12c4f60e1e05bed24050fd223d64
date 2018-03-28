@@ -278,10 +278,21 @@
 			"type": "string"
 		},
 		"status": {
-			"type": "boolean"
+			"type": "string"
 		},
 		"title": {
 			"type": "string"
+		},
+		"tld": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
 		}
 	},
 	"type": "object"

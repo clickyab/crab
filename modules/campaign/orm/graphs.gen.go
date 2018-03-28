@@ -25,8 +25,6 @@ func (cg CampaignGraph) Filter(u permission.Interface) CampaignGraph {
 
 	res.Kind = cg.Kind
 
-	res.Type = cg.Type
-
 	res.Title = cg.Title
 
 	res.ID = cg.ID

@@ -4,11 +4,12 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"net/mail"
 	"strconv"
 
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
+	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
@@ -21,14 +22,12 @@ type budgetPayload struct {
 }
 
 func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	for _, m := range l.NotifyEmail {
-		if _, err := mail.ParseAddress(m); err != nil {
-			return err
-		}
-	}
 
-	if !l.CostType.IsValid() {
-		return fmt.Errorf("cost type %s is not valid. options are %s,%s or %s", l.CostType, orm.CPC, orm.CPM, orm.CPA)
+	if !l.Strategy.IsValid() {
+		return fmt.Errorf("cost type %s is not valid. options are %s,%s or %s", l.Strategy, orm.CPC, orm.CPM, orm.CPA)
+	}
+	if l.TotalBudget < 0 || l.DailyBudget < 0 || l.MaxBid < 0 {
+		return t9e.G("budget, daily limit and max bid can not be a negative number")
 	}
 
 	return nil
@@ -47,12 +46,25 @@ func (c *Controller) budget(ctx context.Context, r *http.Request, p *budgetPaylo
 	}
 
 	db := orm.NewOrmManager()
-	o, err := db.FindCampaignByID(id)
+	ca, err := db.FindCampaignByID(id)
 	if err != nil {
 		return nil, errors.NotFoundError(id)
 	}
 
-	err = db.UpdateCampaignBudget(p.CampaignFinance, o)
+	// check access
+	userManager := aaa.NewAaaManager()
+	owner, err := userManager.FindUserWithParentsByID(ca.UserID, ca.DomainID)
+	if err != nil {
+		return ca, t9e.G("can't find user with related domain")
+	}
+
+	currentUser := authz.MustGetUser(ctx)
+	_, ok := aaa.CheckPermOn(owner, currentUser, "edit_budget", ca.DomainID)
+	if !ok {
+		return ca, errors.AccessDenied
+	}
+
+	err = db.UpdateCampaignBudget(p.CampaignFinance, ca)
 
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug("update base campaign")
@@ -60,5 +72,5 @@ func (c *Controller) budget(ctx context.Context, r *http.Request, p *budgetPaylo
 		return nil, t9e.G("can't update campaign budget")
 	}
 
-	return o, nil
+	return ca, nil
 }

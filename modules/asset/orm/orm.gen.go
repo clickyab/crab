@@ -29,9 +29,6 @@ const (
 
 	// PlatformTableFull is the Platform table name
 	PlatformTableFull = "platforms"
-
-	// RegionTableFull is the Region table name
-	RegionTableFull = "regions"
 )
 
 func getSelectFields(tb string, alias string) string {
@@ -41,25 +38,22 @@ func getSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case BrowserTableFull:
-		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname`, alias)
+		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sdeleted_at,%[1]sstatus,%[1]sname`, alias)
 
 	case CategoryTableFull:
-		return fmt.Sprintf(`%[1]sname,%[1]sdescription,%[1]sactive`, alias)
+		return fmt.Sprintf(`%[1]sname,%[1]sdescription,%[1]sdeleted_at`, alias)
 
 	case ISPTableFull:
-		return fmt.Sprintf(`%[1]sname,%[1]skind,%[1]sactive,%[1]screated_at,%[1]supdated_at`, alias)
+		return fmt.Sprintf(`%[1]sname,%[1]skind,%[1]sstatus,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case ManufacturerTableFull:
-		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname`, alias)
+		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sstatus,%[1]sname`, alias)
 
 	case OSTableFull:
-		return fmt.Sprintf(`%[1]sname,%[1]sactive,%[1]screated_at,%[1]supdated_at`, alias)
+		return fmt.Sprintf(`%[1]sname,%[1]sstatus,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case PlatformTableFull:
-		return fmt.Sprintf(`%[1]sname,%[1]sactive,%[1]screated_at,%[1]supdated_at`, alias)
-
-	case RegionTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname`, alias)
+		return fmt.Sprintf(`%[1]sname,%[1]sstatus,%[1]screated_at,%[1]supdated_at`, alias)
 
 	}
 	return ""
@@ -135,14 +129,6 @@ func (m *Manager) Initialize() {
 	).SetKeys(
 		false,
 		"Name",
-	)
-
-	m.AddTableWithName(
-		Region{},
-		RegionTableFull,
-	).SetKeys(
-		true,
-		"ID",
 	)
 
 }
