@@ -251,6 +251,26 @@ func (c *Controller) registerPost(ctx context.Context, w http.ResponseWriter, r 
 	framework.Write(w, res, http.StatusOK)
 }
 
+// register is for register user
+// @Route {
+// 		url = /store
+//		method = post
+//		payload = storePayload
+//		middleware = authz.Authenticate
+//		200 = controller.NormalResponse
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+// }
+func (c *Controller) storePost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*storePayload)
+	res, err := c.store(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // verifyEmail is verify code
 // @Route {
 // 		url = /email/verify/:token

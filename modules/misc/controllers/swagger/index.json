@@ -86,6 +86,7 @@
 		"user_forgetPayload": "file://278252767381faac04ea52478750705a188ef3df",
 		"user_loginPayload": "file://a3152804bb2c7852c77d345a2186b7b647a941ee",
 		"user_registerPayload": "file://e58b6e35a3a18cfe0c6853307c71d4d79fc839be",
+		"user_storePayload": "file://192632ed3ad4757b14475d79f76b67567f41be35",
 		"user_userPayload": "file://32e49b32f8778691637df812d65329bb0ba5a7c9",
 		"user_userResponse": "file://08175acbc0f8050a4920ef9f6f457c815fed16c3",
 		"user_verifyEmailCodePayload": "file://e68fb6da09fcd8f870939a85ff1f7c7a9d662815",
@@ -149,6 +150,7 @@
 		"/user/password/verify/{token}": "file://bcfa209fe734c5bec872d15d9815f72a5a4776de",
 		"/user/ping": "file://4416a4e4c163a273509696c8f207e7a9fb05874e",
 		"/user/register": "file://f8ecee7efdede6882e6b06b4d398a7c92528c5b1",
+		"/user/store": "file://81c617ef1932a06e426689a8caa90863f41c61d4",
 		"/user/update": "file://951d1a07ddde52ec17cf0844784bb4dbfbc9c164"
 	},
 	"produces": [
