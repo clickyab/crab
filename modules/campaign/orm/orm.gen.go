@@ -18,6 +18,9 @@ const (
 	// CampaignDetailTableFull is the CampaignDetail table name
 	CampaignDetailTableFull = "campaign_detail"
 
+	// CampaignReportReceiversTableFull is the CampaignReportReceivers table name
+	CampaignReportReceiversTableFull = "campaign_report_receivers"
+
 	// CampaignTableFull is the Campaign table name
 	CampaignTableFull = "campaigns"
 
@@ -36,6 +39,9 @@ func getSelectFields(tb string, alias string) string {
 
 	case CampaignDetailTableFull:
 		return fmt.Sprintf(`%[1]scampaign_id,%[1]sdaily_id,%[1]shour_id,%[1]sfake_imp,%[1]sfake_click,%[1]simp,%[1]sclick,%[1]scpc,%[1]scpa,%[1]sconv,%[1]screated_at,%[1]supdated_at`, alias)
+
+	case CampaignReportReceiversTableFull:
+		return fmt.Sprintf(`%[1]scampaign_id,%[1]suser_id,%[1]screated_at`, alias)
 
 	case CampaignTableFull:
 		return fmt.Sprintf(`%[1]suser_id,%[1]sdomain_id,%[1]sexchange,%[1]sinventory_id,%[1]sinventory_type,%[1]sinventory_domains,%[1]sprogress,%[1]sarchived_at,%[1]stoday_spend,%[1]stotal_spend,id,created_at,updated_at,kind,status,start_at,end_at,title,tld,total_budget,daily_budget,strategy,max_bid`, alias)
@@ -86,6 +92,15 @@ func (m *Manager) Initialize() {
 		false,
 		"CampaignID",
 		"DailyID",
+	)
+
+	m.AddTableWithName(
+		CampaignReportReceivers{},
+		CampaignReportReceiversTableFull,
+	).SetKeys(
+		false,
+		"CampaignID",
+		"UserID",
 	)
 
 	m.AddTableWithName(

@@ -38,7 +38,7 @@ type createCampaignPayload struct {
 	StartAt  time.Time        `json:"start_at"`
 	EndAt    mysql.NullTime   `json:"end_at" validate:"omitempty"`
 	Title    string           `json:"title" validate:"required,gt=5"`
-	TLD      string           `json:"tld"`
+	TLD      string           `json:"tld" validate:"required"`
 	Schedule struct {
 		H00 string `json:"h00" hour:""`
 		H01 string `json:"h01" hour:""`

@@ -10,30 +10,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
-				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the name field",
-				"in": "query",
-				"name": "name",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
 				"required": false,
 				"type": "int"
 			},
@@ -52,11 +31,32 @@
 				"type": "string"
 			},
 			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the name field",
+				"in": "query",
+				"name": "name",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the domain field",
 				"in": "query",
 				"name": "domain",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",

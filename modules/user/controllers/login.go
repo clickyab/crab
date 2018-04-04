@@ -6,7 +6,7 @@ import (
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
-	"github.com/clickyab/services/gettext/t9e"
+	"clickyab.com/crab/modules/user/errors"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -27,15 +27,15 @@ func (c *Controller) login(ctx context.Context, r *http.Request, p *loginPayload
 	currentUser, err := aaa.NewAaaManager().FindUserByEmailDomain(p.Email, uDomain)
 
 	if err != nil || bcrypt.CompareHashAndPassword([]byte(currentUser.Password), []byte(p.Password)) != nil {
-		return nil, t9e.G("wrong email or password")
+		return nil, errors.InvalidEmailPassError
 	}
 
 	if currentUser.Status == aaa.RegisteredUserStatus {
-		return nil, t9e.G("not verified")
+		return nil, errors.UserNotVerifiedError
 	}
 
 	if currentUser.Status == aaa.BlockedUserStatus {
-		return nil, t9e.G("this account has been blocked")
+		return nil, errors.UserBlockedError
 	}
 
 	return c.createLoginResponse(currentUser), nil

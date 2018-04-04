@@ -10,7 +10,7 @@ var (
 )
 
 // NotFoundError maker
-func NotFoundError(id int) error {
+func NotFoundError(id int64) error {
 	if id > 0 {
 		return t9e.G("campaign with identifier %s not found, please check your request data.", id)
 	}

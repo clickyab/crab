@@ -12,7 +12,9 @@ var (
 	// TypeError invalid campaign type error
 	TypeError = t9e.G("invalid campaign type. you can select %s or %s or %s please check your request data and try again", "banner", "vast", "native")
 	// KindError invalid campaign kind error
-	KindError = t9e.G("invalid campaign kind. you can select %s or %s or %s please check your request data and try again", "web", "app")
+	KindError = t9e.G("invalid campaign kind. you can select %s or %s please check your request data and try again", "web", "app")
+	// InvalidStrategyError invalid campaign strategy error
+	InvalidStrategyError = t9e.G("invalid campaign cost strategy. you can select %s or %s or %s please check your request data and try again", "cpc", "cpa", "cpm")
 	// InvalidCampaignStatusError invalid campaign status error
 	InvalidCampaignStatusError = t9e.G("invalid campaign status. you can select %s or %s or %s please check your request data and try again", "archive", "start", "pause")
 	// EndTimeError campaign should end error
