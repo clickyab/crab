@@ -59,6 +59,7 @@
 		"orm_CampaignKind": "file://aa0bff138e6caabecbf60426b0dbd3368cc9f832",
 		"orm_CampaignStatus": "file://1bd5a9c6dd9c12c4f60e1e05bed24050fd223d64",
 		"orm_Category": "file://fa5855e5339835cccf41fe70ac6d103e51b742a7",
+		"orm_ExchangeType": "file://cfaffbbcea3a9904498c787415cd16fde2af5c6c",
 		"orm_ISP": "file://d106295c09b8889b2f96a21715afff022ee20e09",
 		"orm_ISPKind": "file://f237b2917c79ee9e63d8eb9aadbb6f46b10825e2",
 		"orm_Inventory": "file://7b9f28fd276e9d84cb076cc1a87b1df3cf000f18",

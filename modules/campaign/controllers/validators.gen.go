@@ -67,8 +67,17 @@ func (l *budgetPayload) Validate(ctx context.Context, w http.ResponseWriter, r *
 		case "DailyBudget":
 			res["daily_budget"] = trans.E("invalid value")
 
+		case "Strategy":
+			res["strategy"] = trans.E("invalid value")
+
 		case "MaxBid":
 			res["max_bid"] = trans.E("invalid value")
+
+		case "Exchange":
+			res["exchange"] = trans.E("invalid value")
+
+		case "NotifyUsers":
+			res["notify_users"] = trans.E("invalid value")
 
 		default:
 			logrus.Panicf("the field %s is not translated", i)
@@ -174,6 +183,9 @@ func (l *createCampaignPayload) Validate(ctx context.Context, w http.ResponseWri
 
 		case "Title":
 			res["title"] = trans.E("invalid value")
+
+		case "TLD":
+			res["tld"] = trans.E("invalid value")
 
 		default:
 			logrus.Panicf("the field %s is not translated", i)

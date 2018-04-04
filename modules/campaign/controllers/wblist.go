@@ -15,9 +15,9 @@ import (
 // @Validate{
 //}
 type whiteBlackPayload struct {
-	ListID   int64 `json:"list_id"`
-	WhiteTyp *bool `json:"white_typ" validate:"required"` //true for white false for black
-	Exchange *bool `json:"exchange" validate:"required"`
+	ListID   int64            `json:"list_id"`
+	WhiteTyp *bool            `json:"white_typ" validate:"required"` //true for white false for black
+	Exchange orm.ExchangeType `json:"exchange" validate:"required"`
 }
 
 // updateWhiteBlackList will update campaign white/black list

@@ -3,8 +3,17 @@
 		"daily_budget": {
 			"type": "integer"
 		},
+		"exchange": {
+			"type": "string"
+		},
 		"max_bid": {
 			"type": "integer"
+		},
+		"notify_users": {
+			"items": {
+				"type": "integer"
+			},
+			"type": "array"
 		},
 		"strategy": {
 			"type": "string"

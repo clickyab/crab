@@ -25,8 +25,8 @@ func Access(next framework.Handler) framework.Handler {
 		// check if d is valid
 		d, err := dmn.NewDmnManager().FindActiveDomainByName(r.Host)
 		if err != nil {
-			logrus.WithError(err).WithField("domain", r.Host).Debug("domain not found")
-			framework.JSON(w, http.StatusNotFound, controller.ErrorResponseSimple{Error: trans.E(http.StatusText(http.StatusNotFound))})
+			logrus.WithError(err).WithField("domain", r.Host).Debug("domain not found ", r.Host)
+			framework.JSON(w, http.StatusNotFound, controller.ErrorResponseSimple{Error: trans.E("domain %s not found", r.Host)})
 			return
 		}
 		ctx = context.WithValue(ctx, ContextDomain, d)

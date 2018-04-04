@@ -2,13 +2,13 @@ package controllers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/user/aaa"
+	userError "clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/xlog"
@@ -19,17 +19,26 @@ import (
 //}
 type budgetPayload struct {
 	orm.CampaignFinance
+	Exchange    orm.ExchangeType `json:"exchange" db:"exchange" validate:"required"`
+	NotifyUsers []int64          `json:"notify_users" validate:"required"`
 }
 
 func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 
 	if !l.Strategy.IsValid() {
-		return fmt.Errorf("cost type %s is not valid. options are %s,%s or %s", l.Strategy, orm.CPC, orm.CPM, orm.CPA)
-	}
-	if l.TotalBudget < 0 || l.DailyBudget < 0 || l.MaxBid < 0 {
-		return t9e.G("budget, daily limit and max bid can not be a negative number")
+		return errors.InvalidStrategyError
 	}
 
+	if len(l.NotifyUsers) > 0 {
+		db := aaa.NewAaaManager()
+
+		for _, uID := range l.NotifyUsers {
+			_, err := db.FindUserByID(uID)
+			if err != nil {
+				return userError.NotFoundError(uID)
+			}
+		}
+	}
 	return nil
 }
 
@@ -65,11 +74,17 @@ func (c *Controller) budget(ctx context.Context, r *http.Request, p *budgetPaylo
 	}
 
 	err = db.UpdateCampaignBudget(p.CampaignFinance, ca)
-
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug("update base campaign")
 
 		return nil, t9e.G("can't update campaign budget")
+	}
+
+	err = db.UpdateReportReceivers(p.NotifyUsers, ca.ID)
+	if err != nil {
+		xlog.GetWithError(ctx, err).Debug("add campaign report receivers error")
+
+		return nil, t9e.G("can't add/update campaign report receivers")
 	}
 
 	return ca, nil
