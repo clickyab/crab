@@ -183,6 +183,8 @@ func (m *Manager) FindCampaignByIDDomain(id, d int64) (*Campaign, error) {
 		return nil, err
 	}
 
+	res.Receivers = m.GetReportReceivers(id)
+
 	err = m.attachAttribute(&res)
 	if err != nil {
 		return &res, err
