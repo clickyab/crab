@@ -16,7 +16,6 @@ import (
 	"strings"
 
 	"clickyab.com/crab/modules/upload/errors"
-	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/gettext/t9e"
 )
@@ -196,13 +195,17 @@ func allChunksUploaded(tempDir string, ngfd ngFlowData) bool {
 	return totalSize == int64(ngfd.totalSize)
 }
 
-func getVideoInfo(path string) (map[string]interface{}, error) {
+func getVideoInfo(path string, chunkPath string) (map[string]interface{}, error) {
 	cmd := exec.Command(ffprobe.String(), "-v", "quiet", "-print_format", "json", "-show_format", ""+path+"")
 	var info map[string]interface{}
 	data, err := cmd.Output()
-	assert.Nil(err)
+	if err != nil {
+		_ = os.RemoveAll(chunkPath)
+		return nil, err
+	}
 	err = json.Unmarshal(data, &info)
 	if err != nil {
+		_ = os.RemoveAll(chunkPath)
 		return nil, err
 	}
 	return info, nil
