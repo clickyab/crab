@@ -161,6 +161,7 @@ type Campaign struct {
 	InventoryDomains mysql.StringMapJSONArray `json:"-" db:"inventory_domains"`
 	Progress         Progress                 `json:"progress" db:"progress"`
 	Attributes       *CampaignAttributes      `json:"attributes,omitempty" db:"-"`
+	Receivers        []Receiver               `json:"receivers" db:"-"`
 	ArchivedAt       mysql.NullTime           `json:"archived_at" db:"archived_at"`
 	TodaySpend       int64                    `json:"today_spend" db:"today_spend"`
 	TotalSpend       int64                    `json:"total_spend" db:"total_spend"`
