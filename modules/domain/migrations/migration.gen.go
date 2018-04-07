@@ -2,6 +2,7 @@
 // sources:
 // db/20180325060449_domains.sql
 // db/20180325072416_seed.sql
+// db/20180407053606_fix.sql
 // DO NOT EDIT!
 
 package migrations
@@ -109,6 +110,26 @@ func db20180325072416_seedSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180407053606_fixSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x9c\xd0\xbd\x4e\xc3\x30\x14\x05\xe0\xdd\x4f\x71\xb6\x0e\xa8\x4f\xc0\x64\x1a\x57\xaa\xe4\x24\x90\x5e\x0f\x4c\x91\x89\xaf\xe8\x15\xa9\x63\xc5\x8e\xca\xe3\x23\x0b\x81\xc4\x56\x31\xde\x9f\x73\x86\x4f\xed\xf7\x78\xb8\xca\xfb\xea\x0b\xc3\xa5\x3a\x9e\x5f\x2c\x24\x22\xf3\x54\x64\x89\xd8\xb9\xb4\x83\x64\xf0\x27\x4f\x5b\xe1\x80\xdb\x85\x23\xca\x45\x32\xbe\x73\xf5\x49\x32\x7c\x4a\xb3\x70\x50\xda\x92\x19\x40\xfa\xc9\x1a\x6c\x99\xd7\x3c\x86\xe5\xea\x25\x66\xb4\x7d\x73\x3a\xbe\xe2\xd0\x5b\xd7\x76\x98\x56\xf6\x85\xc3\xe8\x0b\x1a\x4d\x86\x4e\xad\x41\xd7\x13\x3a\x67\x2d\x1a\x73\xd4\xce\x12\x0e\x6e\x18\x4c\x47\x63\xbd\x9e\x49\xb7\xcf\x8f\x77\xf7\x6f\x29\xfc\xab\xff\x8f\x48\xb3\xdc\xe2\x8f\xc9\x2f\x48\x5d\xde\x45\xb2\x2e\xf3\xcc\x01\x6f\x7e\xfa\x50\x4a\x7d\x05\x00\x00\xff\xff\xa7\x1a\x37\xb3\x6b\x01\x00\x00"
+
+func db20180407053606_fixSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180407053606_fixSql,
+		"db/20180407053606_fix.sql",
+	)
+}
+
+func db20180407053606_fixSql() (*asset, error) {
+	bytes, err := db20180407053606_fixSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180407053606_fix.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -163,6 +184,7 @@ func AssetNames() []string {
 var _bindata = map[string]func() (*asset, error){
 	"db/20180325060449_domains.sql": db20180325060449_domainsSql,
 	"db/20180325072416_seed.sql":    db20180325072416_seedSql,
+	"db/20180407053606_fix.sql":     db20180407053606_fixSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -209,6 +231,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
 		"20180325060449_domains.sql": &bintree{db20180325060449_domainsSql, map[string]*bintree{}},
 		"20180325072416_seed.sql":    &bintree{db20180325072416_seedSql, map[string]*bintree{}},
+		"20180407053606_fix.sql":     &bintree{db20180407053606_fixSql, map[string]*bintree{}},
 	}},
 }}
 
