@@ -3,6 +3,7 @@ package orm
 import (
 	"time"
 
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/initializer"
 )
 
@@ -43,6 +44,21 @@ func (m *Manager) DeleteAllCampaignReportReceivers(caID int64) error {
 	_, err := m.GetWDbMap().Exec("delete from campaign_report_receivers where campaign_id=?", caID)
 
 	return err
+}
+
+// Receiver for campaign reports receivers
+type Receiver struct {
+	ID    int64  `json:"id" db:"id" `
+	Email string `json:"email" db:"email"`
+}
+
+// GetReportReceivers to delete all campaign reports receivers
+func (m *Manager) GetReportReceivers(caID int64) []Receiver {
+	r := make([]Receiver, 0)
+	_, err := m.GetRDbMap().Select(&r, `select a.id, a.email from users as a join  campaign_report_receivers as b
+on b.user_id=a.id  where b.campaign_id=?`, caID)
+	assert.Nil(err)
+	return r
 }
 
 // UpdateReportReceivers remove campaign report receivers and add new
