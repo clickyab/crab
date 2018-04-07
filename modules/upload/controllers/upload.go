@@ -24,6 +24,7 @@ import (
 	"clickyab.com/crab/modules/upload/errors"
 	"clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/array"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/framework/controller"
@@ -245,7 +246,7 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 		return nil, t9e.G("video is too %d large to be uploaded", size)
 	}
 
-	info, err := getVideoInfo(file)
+	info, err := getVideoInfo(file, chunkPathDir)
 	if err != nil {
 		_ = os.RemoveAll(chunkPathDir)
 		xlog.GetWithError(ctx, err).WithFields(info).Debug("file info wrong")
@@ -257,6 +258,16 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 		return nil, t9e.G("file format is not readable")
 	}
 	format := info["format"].(map[string]interface{})
+	// check format
+	if _, ok := format["format_name"]; !ok {
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, t9e.G("file format not valid")
+	}
+	formatsArr := strings.Split(format["format_name"].(string), ",")
+	if !array.StringInArray("mp4", formatsArr...) {
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, t9e.G("file format not valid")
+	}
 	if _, ok := format["duration"]; !ok {
 		_ = os.RemoveAll(chunkPathDir)
 		return nil, t9e.G("cant get duration from file")
@@ -308,12 +319,10 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 func doConvert(file, convertedPath, chunkPathDir, f string) error {
 	err := convertVideo(file, convertedPath)
 	if err != nil {
+		_ = os.RemoveAll(chunkPathDir)
 		return t9e.G("cant convert video")
 	}
-	err = os.Rename(convertedPath, f)
-
-	//remove chunk dir
-	return err
+	return os.Rename(convertedPath, f)
 }
 
 func getDimension(mime model.Mime, dimensionHandler *bytes.Buffer, bannerType string) (*model.FileAttr, error) {
