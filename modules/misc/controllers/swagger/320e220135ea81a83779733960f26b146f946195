@@ -26,14 +26,14 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
+				"name": "cost_type",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the owner_email field",
 				"in": "query",
-				"name": "kind",
+				"name": "owner_email",
 				"required": false,
 				"type": "string"
 			},
@@ -45,16 +45,16 @@
 				"type": "int"
 			},
 			{
-				"description": " search the owner_email field",
+				"description": "",
 				"in": "query",
-				"name": "owner_email",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
 			{
 				"description": "",
 				"in": "query",
-				"name": "cost_type",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},

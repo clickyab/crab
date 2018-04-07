@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"email": {
+			"type": "string"
+		},
+		"id": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

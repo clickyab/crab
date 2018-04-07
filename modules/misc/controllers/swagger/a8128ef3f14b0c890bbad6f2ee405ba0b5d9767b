@@ -100,6 +100,20 @@
 		"progress": {
 			"type": "string"
 		},
+		"receivers": {
+			"items": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"id": {
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
 		"schedule": {
 			"properties": {
 				"h00": {
