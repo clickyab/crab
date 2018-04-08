@@ -75,7 +75,7 @@ func (c Controller) createBasePost(ctx context.Context, w http.ResponseWriter, r
 //		method = put
 //		payload = campaignStatus
 //		middleware = authz.Authenticate
-//		resource = edit-campaign:self
+//		resource = edit_campaign:self
 //		200 = orm.Campaign
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
