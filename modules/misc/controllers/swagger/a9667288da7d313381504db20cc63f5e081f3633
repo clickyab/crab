@@ -1,18 +1,12 @@
 {
 	"items": {
 		"properties": {
-			"attr": {
-				"properties": {
-					"native": {
-						"properties": {
-							"title": {
-								"type": "string"
-							}
-						},
-						"type": "object"
-					}
-				},
-				"type": "object"
+			"archived_at": {
+				"format": "dateTime",
+				"type": "string"
+			},
+			"attributes": {
+				"type": "string"
 			},
 			"campaign_id": {
 				"type": "integer"
@@ -21,25 +15,13 @@
 				"format": "dateTime",
 				"type": "string"
 			},
-			"height": {
-				"type": "integer"
-			},
 			"id": {
 				"type": "integer"
 			},
-			"mime": {
-				"type": "string"
-			},
-			"src": {
-				"type": "string"
+			"max_bid": {
+				"type": "integer"
 			},
 			"status": {
-				"type": "string"
-			},
-			"target": {
-				"type": "string"
-			},
-			"title": {
 				"type": "string"
 			},
 			"type": {
@@ -49,10 +31,10 @@
 				"format": "dateTime",
 				"type": "string"
 			},
-			"user_id": {
-				"type": "integer"
+			"url": {
+				"type": "string"
 			},
-			"width": {
+			"user_id": {
 				"type": "integer"
 			}
 		},

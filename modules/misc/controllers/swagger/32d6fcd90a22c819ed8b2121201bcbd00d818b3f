@@ -1,18 +1,11 @@
 {
-	"post": {
-		"description": "assignNormalBanner assignNormalBanner module is banner type (banner/native)",
+	"put": {
+		"description": "editNativeCreative to campaign",
 		"parameters": [
 			{
 				"description": "",
 				"in": "path",
-				"name": "banner_type",
-				"required": true,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "path",
-				"name": "id",
+				"name": "creative_id",
 				"required": true,
 				"type": "string"
 			},
@@ -29,7 +22,7 @@
 				"name": "payload_data",
 				"required": false,
 				"schema": {
-					"$ref": "#/definitions/controllers_assignBannerPayload"
+					"$ref": "#/definitions/controllers_nativeCreativePayload"
 				}
 			}
 		],
@@ -37,7 +30,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/add_Ad"
+					"$ref": "#/definitions/orm_CreativeSaveResult"
 				}
 			},
 			"400": {
@@ -47,26 +40,9 @@
 				}
 			},
 			"401": {
-				"description": "you are not authorized",
+				"description": "",
 				"schema": {
-					"properties": {
-						"error": {
-							"properties": {
-								"params": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						}
-					},
-					"title": "not_authorized",
-					"type": "object"
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			},
 			"403": {
@@ -90,12 +66,6 @@
 					},
 					"title": "forbidden",
 					"type": "object"
-				}
-			},
-			"404": {
-				"description": "",
-				"schema": {
-					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},
