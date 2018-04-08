@@ -21,6 +21,10 @@ var (
 	InvalidDimension = t9e.G("invalid file dimension.")
 	// DuplicateAdSrc duplicate src error
 	DuplicateAdSrc = t9e.G("duplicate src. add banner file is duplicate")
+	// AccessDenied have not access error
+	AccessDenied = t9e.G("access Denied!you have not access to do this on creatives")
+	// DBError to show when query has error
+	DBError = t9e.G("database error! please check request data and try again")
 )
 
 // AdNotFound maker

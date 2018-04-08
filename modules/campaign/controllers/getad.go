@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"clickyab.com/crab/modules/ad/add"
 	AdsErr "clickyab.com/crab/modules/ad/errors"
+	AdOrm "clickyab.com/crab/modules/ad/orm"
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
@@ -15,7 +15,7 @@ import (
 	"github.com/rs/xmux"
 )
 
-type sliceAds []add.AdUser
+type sliceAds []AdOrm.AdUser
 
 // getCampaignAds get all campaign ads
 // @Rest {
@@ -30,7 +30,7 @@ func (c Controller) getCampaignAds(ctx context.Context, r *http.Request) (sliceA
 		return nil, errors.InvalidIDErr
 	}
 	d := domain.MustGetDomain(ctx)
-	adManager := add.NewAddManager()
+	adManager := AdOrm.NewOrmManager()
 	ads, ownerID := adManager.GetAdsByCampaignID(campaignIDInt, d.ID)
 	if len(ads) == 0 {
 		return ads, AdsErr.AdNotFound(campaignIDInt)

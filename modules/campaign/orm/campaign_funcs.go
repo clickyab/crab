@@ -9,7 +9,7 @@ import (
 
 	"clickyab.com/crab/libs"
 	"clickyab.com/crab/modules/campaign/errors"
-	"clickyab.com/crab/modules/domain/dmn"
+	domainOrm "clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
@@ -26,7 +26,7 @@ const (
 )
 
 // AddCampaign for creating campaign with minimum info
-func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *dmn.Domain) (*Campaign, error) {
+func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *domainOrm.Domain) (*Campaign, error) {
 	ca := &Campaign{
 		DomainID: d.ID,
 		UserID:   u.ID,

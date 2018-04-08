@@ -1,6 +1,6 @@
 // Code generated build with enum DO NOT EDIT.
 
-package dmn
+package orm
 
 import (
 	"database/sql/driver"
