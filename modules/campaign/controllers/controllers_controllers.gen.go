@@ -115,7 +115,7 @@ func (c *Controller) finalizePut(ctx context.Context, w http.ResponseWriter, r *
 // 		url = /get/:id
 //		method = get
 //		middleware = authz.Authenticate
-//		resource = get-campaign:self
+//		resource = get_campaign:self
 //		200 = orm.Campaign
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
