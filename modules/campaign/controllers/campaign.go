@@ -270,7 +270,7 @@ func (l *campaignStatus) ValidateExtra(ctx context.Context, w http.ResponseWrite
 // 		url = /base/:id
 //		protected = true
 // 		method = put
-//		resource = edit-campaign:self
+//		resource = edit_campaign:self
 // }
 func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaignStatus) (*orm.Campaign, error) {
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
