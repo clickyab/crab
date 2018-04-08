@@ -1,0 +1,66 @@
+{
+	"properties": {
+		"assets": {
+			"properties": {
+				"cta": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"downloads": {
+					"type": "integer"
+				},
+				"icon": {
+					"type": "string"
+				},
+				"image": {
+					"type": "string"
+				},
+				"logo": {
+					"type": "string"
+				},
+				"phone": {
+					"type": "string"
+				},
+				"price": {
+					"type": "number"
+				},
+				"rating": {
+					"type": "number"
+				},
+				"saleprice": {
+					"type": "number"
+				},
+				"title": {
+					"type": "string"
+				},
+				"video": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"creative": {
+			"properties": {
+				"attributes": {
+					"type": "string"
+				},
+				"campaign_id": {
+					"type": "integer"
+				},
+				"max_bid": {
+					"type": "integer"
+				},
+				"status": {
+					"type": "string"
+				},
+				"url": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		}
+	},
+	"type": "object"
+}

@@ -1,0 +1,38 @@
+{
+	"properties": {
+		"archived_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"attributes": {
+			"type": "string"
+		},
+		"campaign_id": {
+			"type": "integer"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"max_bid": {
+			"type": "integer"
+		},
+		"status": {
+			"type": "string"
+		},
+		"type": {
+			"type": "string"
+		},
+		"updated_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"url": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

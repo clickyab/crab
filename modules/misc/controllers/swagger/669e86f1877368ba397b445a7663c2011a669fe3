@@ -1,0 +1,31 @@
+{
+	"properties": {
+		"asset_key": {
+			"type": "string"
+		},
+		"asset_type": {
+			"type": "string"
+		},
+		"asset_value": {
+			"type": "string"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"creative_id": {
+			"type": "integer"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"property": {
+			"type": "string"
+		},
+		"updated_at": {
+			"format": "dateTime",
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

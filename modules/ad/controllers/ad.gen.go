@@ -11,7 +11,6 @@ import (
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
-	"github.com/clickyab/services/permission"
 )
 
 var once = sync.Once{}
@@ -27,9 +26,9 @@ func (c *Controller) Routes(r framework.Mux) {
 		group := r.NewGroup("/ad")
 
 		/* Route {
-			"Route": "/:banner_type/:id",
+			"Route": "/native",
 			"Method": "POST",
-			"Function": "Controller.assignNormalBanner",
+			"Function": "Controller.addNativeCreativePost",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -37,21 +36,42 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
 			"RecName": "c",
-			"Payload": "assignBannerPayload",
-			"Resource": "assign_banner",
-			"Scope": "self"
+			"Payload": "nativeCreativePayload",
+			"Resource": "",
+			"Scope": ""
 		} with key 0 */
 		m0 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("assign_banner", "assign_banner")
-		m0 = append(m0, authz.AuthorizeGenerator("assign_banner", "self"))
+		// Make sure payload is the last middleware
+		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(nativeCreativePayload{}))
+		group.POST("controllers-Controller-addNativeCreativePost", "/native", framework.Mix(c.addNativeCreativePost, m0...))
+		// End route with key 0
+
+		/* Route {
+			"Route": "/native/:creative_id",
+			"Method": "PUT",
+			"Function": "Controller.editNativeCreativePut",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "nativeCreativePayload",
+			"Resource": "",
+			"Scope": ""
+		} with key 1 */
+		m1 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
 
 		// Make sure payload is the last middleware
-		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(assignBannerPayload{}))
-		group.POST("controllers-Controller-assignNormalBanner", "/:banner_type/:id", framework.Mix(c.assignNormalBanner, m0...))
-		// End route with key 0
+		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(nativeCreativePayload{}))
+		group.PUT("controllers-Controller-editNativeCreativePut", "/native/:creative_id", framework.Mix(c.editNativeCreativePut, m1...))
+		// End route with key 1
 
 		initializer.DoInitialize(c)
 	})

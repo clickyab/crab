@@ -76,7 +76,7 @@ func (l *budgetPayload) Validate(ctx context.Context, w http.ResponseWriter, r *
 		case "Exchange":
 			res["exchange"] = trans.E("invalid value")
 
-		case "NotifyUsers":
+		case "Receivers":
 			res["notify_users"] = trans.E("invalid value")
 
 		default:
