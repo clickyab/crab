@@ -1,0 +1,3 @@
+*.gen.go linguist-generated=true
+*.js linguist-vendored=true
+*.ts linguist-vendored=true
