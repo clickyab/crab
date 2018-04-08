@@ -18,7 +18,6 @@ import (
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
-	"github.com/sirupsen/logrus"
 )
 
 // Controller is the controller for the user package
@@ -125,10 +124,7 @@ func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCa
 			Kind: p.Kind,
 		},
 		CampaignStatus: orm.CampaignStatus{
-			TLD: mysql.NullString{
-				Valid:  p.TLD != "",
-				String: p.TLD,
-			},
+			TLD:     p.TLD,
 			Status:  p.Status,
 			Title:   p.Title,
 			StartAt: p.StartAt,
@@ -307,7 +303,7 @@ func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaign
 		Title:   p.Title,
 		StartAt: p.StartAt,
 		EndAt:   p.EndAt,
-		TLD:     mysql.NullString{Valid: p.TLD != "", String: p.TLD},
+		TLD:     p.TLD,
 		Schedule: orm.ScheduleSheet{
 			H00: mysql.NullString{
 				String: p.Schedule.H00,
@@ -423,7 +419,7 @@ func (c *Controller) finalize(ctx context.Context, r *http.Request) (*orm.Campai
 // 		url = /get/:id
 //		protected = true
 // 		method = get
-//		resource = get-campaign:self
+//		resource = get_campaign:self
 // }
 func (c *Controller) get(ctx context.Context, r *http.Request) (*orm.Campaign, error) {
 	userDomain := domain.MustGetDomain(ctx)
@@ -435,7 +431,6 @@ func (c *Controller) get(ctx context.Context, r *http.Request) (*orm.Campaign, e
 	}
 
 	campaign, err := orm.NewOrmManager().FindCampaignByIDDomain(campID, userDomain.ID)
-	logrus.Warn(err)
 	if err != nil {
 		return campaign, errors.NotFoundError(campID)
 	}
