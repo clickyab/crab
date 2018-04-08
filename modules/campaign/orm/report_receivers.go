@@ -1,6 +1,7 @@
 package orm
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/clickyab/services/assert"
@@ -41,7 +42,13 @@ func (m *Manager) AddReceivers(rec []int64, caID int64) error {
 
 // DeleteAllCampaignReportReceivers to delete all campaign reports receivers
 func (m *Manager) DeleteAllCampaignReportReceivers(caID int64) error {
-	_, err := m.GetWDbMap().Exec("delete from campaign_report_receivers where campaign_id=?", caID)
+	_, err := m.GetWDbMap().Exec(
+		fmt.Sprintf("delete from %s "+
+			"where campaign_id=?",
+			CampaignReportReceiversTableFull,
+		),
+		caID,
+	)
 
 	return err
 }

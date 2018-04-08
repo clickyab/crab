@@ -1,9 +1,9 @@
 export DOMAIN_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(DOMAIN_ROOT)-codegen: tools-codegen
-	rm -rf $(DOMAIN_ROOT)/dmn/*.gen.go
+	rm -rf $(DOMAIN_ROOT)/orm/*.gen.go
 	rm -rf $(DOMAIN_ROOT)/controllers/*.gen.go
-	$(BIN)/codegen -p clickyab.com/crab/modules/domain/dmn
+	$(BIN)/codegen -p clickyab.com/crab/modules/domain/orm
 	$(BIN)/codegen -p clickyab.com/crab/modules/domain/controllers
 
 $(DOMAIN_ROOT)-migration: tools-go-bindata

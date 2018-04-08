@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"clickyab.com/crab/modules/domain/dmn"
+	domainOrm "clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
@@ -196,11 +196,11 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 		}
 		u.Corporation = uc
 	}
-	dManager, err := dmn.NewDmnManagerFromTransaction(m.GetRDbMap())
+	dManager, err := domainOrm.NewOrmManagerFromTransaction(m.GetRDbMap())
 	if err != nil {
 		return nil, err
 	}
-	du := &dmn.DomainUser{UserID: u.ID, DomainID: domainID, Status: dmn.EnableDomainStatus}
+	du := &domainOrm.DomainUser{UserID: u.ID, DomainID: domainID, Status: domainOrm.EnableDomainStatus}
 	err = dManager.CreateDomainUser(du)
 	if err != nil {
 		return nil, err
@@ -234,13 +234,13 @@ func GetNewToken(user *User) string {
 }
 
 // FindUserDomainsByEmail find active user domain based on its email
-func (m *Manager) FindUserDomainsByEmail(e string) []dmn.Domain {
-	var res []dmn.Domain
+func (m *Manager) FindUserDomainsByEmail(e string) []domainOrm.Domain {
+	var res []domainOrm.Domain
 	q := fmt.Sprintf("SELECT d.* FROM %s AS d "+
 		"INNER JOIN %s AS dm ON dm.domain_id=d.id "+
 		"INNER JOIN %s AS u ON u.id=dm.user_id "+
-		"WHERE u.email=? AND d.status=?", dmn.DomainTableFull, dmn.DomainUserTableFull, UserTableFull)
-	_, err := m.GetRDbMap().Select(&res, q, e, dmn.EnableDomainStatus)
+		"WHERE u.email=? AND d.status=?", domainOrm.DomainTableFull, domainOrm.DomainUserTableFull, UserTableFull)
+	_, err := m.GetRDbMap().Select(&res, q, e, domainOrm.EnableDomainStatus)
 	assert.Nil(err)
 	return res
 }
@@ -252,7 +252,7 @@ func (m *Manager) FindUserByAccessTokenDomain(at string, domainID int64) (*User,
 		&res,
 		fmt.Sprintf("SELECT u.* FROM %s AS u "+
 			"INNER JOIN %s AS dm ON dm.user_id=u.id "+
-			"WHERE u.access_token=? AND dm.domain_id=?", UserTableFull, dmn.DomainUserTableFull),
+			"WHERE u.access_token=? AND dm.domain_id=?", UserTableFull, domainOrm.DomainUserTableFull),
 		at,
 		domainID,
 	)
@@ -265,13 +265,13 @@ func (m *Manager) FindUserByAccessTokenDomain(at string, domainID int64) (*User,
 }
 
 // FindUserByEmailDomain return the User base on its email an domain
-func (m *Manager) FindUserByEmailDomain(email string, domain *dmn.Domain) (*User, error) {
+func (m *Manager) FindUserByEmailDomain(email string, domain *domainOrm.Domain) (*User, error) {
 	var res User
 	err := m.GetRDbMap().SelectOne(
 		&res,
 		fmt.Sprintf("SELECT u.* FROM %s AS u "+
 			"INNER JOIN %s AS dm ON dm.user_id=u.id"+
-			" WHERE u.email=? AND dm.domain_id=?", UserTableFull, dmn.DomainUserTableFull),
+			" WHERE u.email=? AND dm.domain_id=?", UserTableFull, domainOrm.DomainUserTableFull),
 		email,
 		domain.ID,
 	)

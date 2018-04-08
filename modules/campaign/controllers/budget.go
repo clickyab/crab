@@ -19,8 +19,8 @@ import (
 //}
 type budgetPayload struct {
 	orm.CampaignFinance
-	Exchange    orm.ExchangeType `json:"exchange" db:"exchange" validate:"required"`
-	NotifyUsers []int64          `json:"notify_users" validate:"required"`
+	Exchange  orm.ExchangeType `json:"exchange" db:"exchange" validate:"required"`
+	Receivers []int64          `json:"notify_users" validate:"required"`
 }
 
 func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
@@ -29,10 +29,10 @@ func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter
 		return errors.InvalidStrategyError
 	}
 
-	if len(l.NotifyUsers) > 0 {
+	if len(l.Receivers) > 0 {
 		db := aaa.NewAaaManager()
 
-		for _, uID := range l.NotifyUsers {
+		for _, uID := range l.Receivers {
 			_, err := db.FindUserByID(uID)
 			if err != nil {
 				return userError.NotFoundError(uID)
@@ -80,7 +80,7 @@ func (c *Controller) budget(ctx context.Context, r *http.Request, p *budgetPaylo
 		return nil, t9e.G("can't update campaign budget")
 	}
 
-	err = db.UpdateReportReceivers(p.NotifyUsers, ca.ID)
+	err = db.UpdateReportReceivers(p.Receivers, ca.ID)
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug("add campaign report receivers error")
 

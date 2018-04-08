@@ -1,6 +1,8 @@
 
 -- +migrate Up
 -- SQL in section 'Up' is executed when this migration is applied
+DROP TABLE IF EXISTS campaign_notify;
+
 CREATE TABLE IF NOT EXISTS `campaign_report_receivers` (
   `campaign_id` INT(10) UNSIGNED NOT NULL,
   `user_id` INT(10) UNSIGNED NOT NULL,

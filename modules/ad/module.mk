@@ -1,9 +1,9 @@
 export AD_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 $(AD_ROOT)-codegen: tools-codegen
-	rm -rf $(AD_ROOT)/add/*.gen.go
+	rm -rf $(AD_ROOT)/orm/*.gen.go
 	rm -rf $(AD_ROOT)/controllers/*.gen.go
-	$(BIN)/codegen -p clickyab.com/crab/modules/ad/add
+	$(BIN)/codegen -p clickyab.com/crab/modules/ad/orm
 	$(BIN)/codegen -p clickyab.com/crab/modules/ad/controllers
 
 $(AD_ROOT)-migration: tools-go-bindata

@@ -1,6 +1,6 @@
 // Code generated build with models DO NOT EDIT.
 
-package dmn
+package orm
 
 import (
 	"fmt"
