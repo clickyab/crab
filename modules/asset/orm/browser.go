@@ -40,8 +40,8 @@ type Browser struct {
 // ListActiveBrowsers find active browsers by name
 func (m *Manager) ListActiveBrowsers() ([]Browser, error) {
 	var res []Browser
-	q := fmt.Sprintf("SELECT * FROM %s WHERE active=?", BrowserTableFull)
-	_, err := m.GetRDbMap().Select(&res, q, true)
+	q := fmt.Sprintf("SELECT * FROM %s", BrowserTableFull)
+	_, err := m.GetRDbMap().Select(&res, q)
 	if err != nil {
 		return nil, err
 	}

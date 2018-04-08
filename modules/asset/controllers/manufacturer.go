@@ -27,5 +27,5 @@ type manufacturers []orm.Manufacturer
 // }
 func (c *Controller) manufacturer(ctx context.Context, r *http.Request) (manufacturers, error) {
 	m := orm.NewOrmManager()
-	return manufacturers(m.ListManufacturersWithFilter("active=?", true)), nil
+	return manufacturers(m.ListManufacturersWithFilter("status=?", orm.EnableAssetStatus)), nil
 }
