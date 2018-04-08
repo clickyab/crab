@@ -235,15 +235,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "c",
 			"Payload": "campaignStatus",
-			"Resource": "edit-campaign",
+			"Resource": "edit_campaign",
 			"Scope": "self"
 		} with key 8 */
 		m8 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("edit-campaign", "edit-campaign")
-		m8 = append(m8, authz.AuthorizeGenerator("edit-campaign", "self"))
+		permission.Register("edit_campaign", "edit_campaign")
+		m8 = append(m8, authz.AuthorizeGenerator("edit_campaign", "self"))
 
 		// Make sure payload is the last middleware
 		m8 = append(m8, middleware.PayloadUnMarshallerGenerator(campaignStatus{}))
