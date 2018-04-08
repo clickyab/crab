@@ -1,3 +1,4 @@
 *.gen.go linguist-generated=true
+modules/misc/controllers/swagger/* linguist-generated=true
 *.js linguist-vendored=true
 *.ts linguist-vendored=true
