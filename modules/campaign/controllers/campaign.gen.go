@@ -284,15 +284,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "c",
 			"Payload": "",
-			"Resource": "get-campaign",
+			"Resource": "get_campaign",
 			"Scope": "self"
 		} with key 10 */
 		m10 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("get-campaign", "get-campaign")
-		m10 = append(m10, authz.AuthorizeGenerator("get-campaign", "self"))
+		permission.Register("get_campaign", "get_campaign")
+		m10 = append(m10, authz.AuthorizeGenerator("get_campaign", "self"))
 
 		group.GET("controllers-Controller-getGet", "/get/:id", framework.Mix(c.getGet, m10...))
 		// End route with key 10
