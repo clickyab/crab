@@ -1,27 +1,27 @@
 # TODO : talk about each part and everyone must accept one part
-*           @fzerorubigd
+*           @Mehrdad-Dadkhah
 
 # User module is the user system and anything related to that
-modules/misc/           @fzerorubigd  @slifer2015 @okian
-modules/user/           @fzerorubigd  @Mehrdad-Dadkhah
-modules/domain/         @fzerorubigd  @Mehrdad-Dadkhah
-modules/ad/             @fzerorubigd  @okian
-modules/campaign/       @fzerorubigd  @slifer2015
-modules/upload/         @fzerorubigd  @okian @slifer2015
-modules/asset/          @fzerorubigd  @ehsandevop
-modules/time/           @fzerorubigd  @ehsandevop
-modules/location/       @fzerorubigd  @ehsandevop @Mehrdad-Dadkhah
-modules/asset/          @fzerorubigd  @ehsandevop @Mehrdad-Dadkhah
-modules/notifications/  @fzerorubigd  @okian
+modules/misc/           @Mehrdad-Dadkhah  @slifer2015
+modules/user/           @Mehrdad-Dadkhah  @slifer2015
+modules/domain/         @Mehrdad-Dadkhah  @okian
+modules/ad/             @Mehrdad-Dadkhah  @okian
+modules/campaign/       @Mehrdad-Dadkhah  @slifer2015
+modules/upload/         @Mehrdad-Dadkhah  @okian
+modules/asset/          @Mehrdad-Dadkhah  @slifer2015
+modules/time/           @Mehrdad-Dadkhah  @okian
+modules/location/       @Mehrdad-Dadkhah  @okian
+modules/asset/          @Mehrdad-Dadkhah  @slifer2015
+modules/notifications/  @Mehrdad-Dadkhah  @okian
 
 
-*.mk        @fzerorubigd
-Makefile    @fzerorubigd
-Jenkinsfile @fzerorubigd
+*.mk        @Mehrdad-Dadkhah
+Makefile    @Mehrdad-Dadkhah
+Jenkinsfile @Mehrdad-Dadkhah
 
-*.sql       @fzerorubigd
-scripts/    @fzerorubigd
-bin/        @fzerorubigd
+*.sql       @Mehrdad-Dadkhah
+scripts/    @Mehrdad-Dadkhah
+bin/        @Mehrdad-Dadkhah
 
-vendor/     @fzerorubigd @okian @slifer2015
-CODEOWNERS  @fzerorubigd
+vendor/     @Mehrdad-Dadkhah @okian @slifer2015
+CODEOWNERS  @Mehrdad-Dadkhah
