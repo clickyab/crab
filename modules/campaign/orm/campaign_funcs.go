@@ -142,7 +142,7 @@ func (m *Manager) Finalize(ca *Campaign) error {
 
 func (m *Manager) attachSchedule(c *Campaign) error {
 	s, err := m.FindScheduleByCampaignID(c.ID)
-	if err != sql.ErrNoRows {
+	if err != nil && err != sql.ErrNoRows {
 		return err
 	}
 
@@ -153,7 +153,7 @@ func (m *Manager) attachSchedule(c *Campaign) error {
 
 func (m *Manager) attachAttribute(c *Campaign) error {
 	s, err := m.FindCampaignAttributesByCampaignID(c.ID)
-	if err != sql.ErrNoRows {
+	if err != nil && err != sql.ErrNoRows {
 		return err
 	}
 
