@@ -1,7 +1,6 @@
 package orm
 
 import (
-	"clickyab.com/crab/modules/inventory/orm"
 	"github.com/clickyab/services/mysql"
 )
 
@@ -9,11 +8,12 @@ import (
 func (m *Manager) UpdateCampaignWhiteBlackList(w int64, exchange ExchangeType, white *bool, ca *Campaign) error {
 	var domains mysql.StringMapJSONArray
 	if w != 0 {
-		l, err := orm.NewOrmManager().FindWhiteBlackListByID(w)
-		if err != nil {
-			return err
-		}
-		domains = l.Domains
+		// TODO : fix later
+		//l, err := orm.NewOrmManager().FindWhiteBlackListByID(w)
+		//if err != nil {
+		//	return err
+		//}
+		domains = nil
 	}
 	ca.InventoryDomains = domains
 	ca.InventoryID = mysql.NullInt64{
