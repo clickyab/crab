@@ -281,7 +281,7 @@ func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaign
 
 	o := orm.NewOrmManager()
 	ca, e := o.FindCampaignByID(id)
-	if e != nil || ca.DomainID != d.ID || ca != nil {
+	if e != nil || ca.DomainID != d.ID {
 		return nil, errors.NotFoundError(id)
 	}
 
