@@ -20,15 +20,15 @@ import (
 	"github.com/rs/xmux"
 )
 
-type listInventoryResponse struct {
+type listPublisherResponse struct {
 	Total   int64                       `json:"total"`
-	Data    orm.InventoryDataTableArray `json:"data"`
+	Data    orm.PublisherDataTableArray `json:"data"`
 	Page    int                         `json:"page"`
 	PerPage int                         `json:"per_page"`
 	Hash    string                      `json:"hash"`
 }
 
-type listInventoryDefResponse struct {
+type listPublisherDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
@@ -38,23 +38,27 @@ type listInventoryDefResponse struct {
 }
 
 var (
-	listInventoryDefinition permission.Columns
-	Inventorytmp            = []byte{}
+	listPublisherDefinition permission.Columns
+	Publishertmp            = []byte{}
 )
 
 // @Route {
-// 		url = /inventory/list
+// 		url = /publisher/list
 //		method = get
 //		_c_ = int , count per page
 //		_p_ = int , page number
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
-//		resource = list_inventory:self
+//		resource = publisher_list:self
 //		_sort_ = string, the sort and order like id:asc or id:desc available column "created_at"
-//		_label_ = string , search the label field
-//		200 = listInventoryResponse
+//		_kind_ = string , filter the kind field valid values are "web","app"
+//		_status_ = string , filter the status field valid values are "accepted","pending","blocked"
+//		_name_ = string , search the name field
+//		_domain_ = string , search the domain field
+//		_supplier_ = string , search the supplier field
+//		200 = listPublisherResponse
 // }
-func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (u *Controller) listPublisher(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	m := orm.NewOrmManager()
 	usr := authz.MustGetUser(ctx)
 	domain := domain.MustGetDomain(ctx)
@@ -62,6 +66,14 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 
 	filter := make(map[string]string)
 	dateRange := make(map[string]string)
+
+	if e := r.URL.Query().Get("kind"); e != "" && orm.PublisherType(e).IsValid() {
+		filter["publishers.kind"] = e
+	}
+
+	if e := r.URL.Query().Get("status"); e != "" && orm.Status(e).IsValid() {
+		filter["publishers.status"] = e
+	}
 
 	//add date filter
 	if e := r.URL.Query().Get("from"); e != "" {
@@ -75,7 +87,15 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 	search := make(map[string]string)
 
 	if e := r.URL.Query().Get("q"); e != "" {
-		search["inventories.label"] = e
+		search["publishers.name"] = e
+	}
+
+	if e := r.URL.Query().Get("q"); e != "" {
+		search["publishers.domain"] = e
+	}
+
+	if e := r.URL.Query().Get("q"); e != "" {
+		search["publishers.supplier"] = e
 	}
 
 	s := r.URL.Query().Get("sort")
@@ -97,9 +117,9 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
-	pc := permission.NewInterfaceComplete(usr, usr.ID, "list_inventory", "self", domain.ID)
-	dt, cnt := m.FillInventoryDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
-	res := listInventoryResponse{
+	pc := permission.NewInterfaceComplete(usr, usr.ID, "publisher_list", "self", domain.ID)
+	dt, cnt := m.FillPublisherDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
+	res := listPublisherResponse{
 		Total:   cnt,
 		Data:    dt.Filter(usr),
 		Page:    p,
@@ -107,7 +127,7 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 	}
 
 	h := sha1.New()
-	_, _ = h.Write(Inventorytmp)
+	_, _ = h.Write(Publishertmp)
 	res.Hash = fmt.Sprintf("%x", h.Sum(nil))
 
 	u.OKResponse(
@@ -117,23 +137,23 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 }
 
 // @Route {
-// 		url = /inventory/list/definition
+// 		url = /publisher/list/definition
 //		method = get
-//		resource = list_inventory:self
-//		200 = listInventoryDefResponse
+//		resource = publisher_list:self
+//		200 = listPublisherDefResponse
 // }
-func (u *Controller) defInventory(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (u *Controller) defPublisher(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	h := sha1.New()
-	_, _ = h.Write(Inventorytmp)
+	_, _ = h.Write(Publishertmp)
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listInventoryDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "created_at", Hash: hash, Columns: listInventoryDefinition},
+		listPublisherDefResponse{Checkable: true, SearchKey: "q", Multiselect: true, DateFilter: "created_at", Hash: hash, Columns: listPublisherDefinition},
 	)
 }
 
 func init() {
-	Inventorytmp = []byte(` [
+	Publishertmp = []byte(` [
 		{
 			"data": "owner_id",
 			"name": "OwnerID",
@@ -190,6 +210,79 @@ func init() {
 			"filter_valid_map": null
 		},
 		{
+			"data": "name",
+			"name": "Name",
+			"searchable": true,
+			"sortable": false,
+			"visible": true,
+			"filter": false,
+			"title": "Name",
+			"type": "string",
+			"filter_valid_map": null
+		},
+		{
+			"data": "domain",
+			"name": "Domain",
+			"searchable": true,
+			"sortable": false,
+			"visible": true,
+			"filter": false,
+			"title": "Domain",
+			"type": "string",
+			"filter_valid_map": null
+		},
+		{
+			"data": "categories",
+			"name": "Categories",
+			"searchable": false,
+			"sortable": false,
+			"visible": true,
+			"filter": false,
+			"title": "Categories",
+			"type": "array",
+			"filter_valid_map": null
+		},
+		{
+			"data": "supplier",
+			"name": "Supplier",
+			"searchable": true,
+			"sortable": false,
+			"visible": true,
+			"filter": false,
+			"title": "Supplier",
+			"type": "string",
+			"filter_valid_map": null
+		},
+		{
+			"data": "kind",
+			"name": "Kind",
+			"searchable": false,
+			"sortable": false,
+			"visible": true,
+			"filter": true,
+			"title": "Kind",
+			"type": "enum",
+			"filter_valid_map": {
+				"app": "PublisherTypeAPP",
+				"web": "PublisherTypeWeb"
+			}
+		},
+		{
+			"data": "status",
+			"name": "Status",
+			"searchable": false,
+			"sortable": false,
+			"visible": true,
+			"filter": true,
+			"title": "Status",
+			"type": "enum",
+			"filter_valid_map": {
+				"accepted": "ActiveStatus",
+				"blocked": "BlockedStatus",
+				"pending": "PendingStatus"
+			}
+		},
+		{
 			"data": "created_at",
 			"name": "CreatedAt",
 			"searchable": false,
@@ -212,49 +305,16 @@ func init() {
 			"filter_valid_map": null
 		},
 		{
-			"data": "user_id",
-			"name": "UserID",
+			"data": "deleted_at",
+			"name": "DeletedAt",
 			"searchable": false,
 			"sortable": false,
 			"visible": true,
 			"filter": false,
-			"title": "UserID",
-			"type": "number",
-			"filter_valid_map": null
-		},
-		{
-			"data": "domain_id",
-			"name": "DomainID",
-			"searchable": false,
-			"sortable": false,
-			"visible": false,
-			"filter": false,
-			"title": "DomainID",
-			"type": "number",
-			"filter_valid_map": null
-		},
-		{
-			"data": "label",
-			"name": "Label",
-			"searchable": true,
-			"sortable": false,
-			"visible": true,
-			"filter": false,
-			"title": "Label",
-			"type": "string",
-			"filter_valid_map": null
-		},
-		{
-			"data": "status",
-			"name": "Status",
-			"searchable": false,
-			"sortable": false,
-			"visible": true,
-			"filter": false,
-			"title": "Status",
-			"type": "enum",
+			"title": "DeletedAt",
+			"type": "date",
 			"filter_valid_map": null
 		}
 	] `)
-	assert.Nil(json.Unmarshal(Inventorytmp, &listInventoryDefinition))
+	assert.Nil(json.Unmarshal(Publishertmp, &listPublisherDefinition))
 }

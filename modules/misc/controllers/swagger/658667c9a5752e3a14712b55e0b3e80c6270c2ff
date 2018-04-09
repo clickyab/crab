@@ -3,11 +3,39 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " search the owner_email field",
+				"description": " the sort and order like id:asc or id:desc available column \"created_at\"",
 				"in": "query",
-				"name": "owner_email",
+				"name": "sort",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": " search the name field",
+				"in": "query",
+				"name": "name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the supplier field",
+				"in": "query",
+				"name": "supplier",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": " page number",
@@ -26,23 +54,9 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
+				"name": "status",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " search the title field",
-				"in": "query",
-				"name": "title",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
@@ -52,16 +66,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the domain field",
 				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "cost_type",
+				"name": "domain",
 				"required": false,
 				"type": "string"
 			},
@@ -77,7 +84,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_listCampaignResponse"
+					"$ref": "#/definitions/controllers_listPublisherResponse"
 				}
 			},
 			"401": {

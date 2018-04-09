@@ -1,6 +1,6 @@
 {
 	"get": {
-		"description": "whiteBlackLists return all user inventories",
+		"description": "",
 		"parameters": [
 			{
 				"description": "the security token, get it from login route",
@@ -14,19 +14,30 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_whiteBlackLists"
-				}
-			},
-			"400": {
-				"description": "",
-				"schema": {
-					"$ref": "#/definitions/controller_ErrorResponseSimple"
+					"$ref": "#/definitions/controllers_listPublisherDefResponse"
 				}
 			},
 			"401": {
-				"description": "",
+				"description": "you are not authorized",
 				"schema": {
-					"$ref": "#/definitions/controller_ErrorResponseSimple"
+					"properties": {
+						"error": {
+							"properties": {
+								"params": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								},
+								"text": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						}
+					},
+					"title": "not_authorized",
+					"type": "object"
 				}
 			},
 			"403": {

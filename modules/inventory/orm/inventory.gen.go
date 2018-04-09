@@ -127,60 +127,41 @@ func (m *Manager) FindInventoryByID(id int64) (*Inventory, error) {
 	return &res, nil
 }
 
-// FindInventoryByDomain return the Inventory base on its domain
-func (m *Manager) FindInventoryByDomain(d string) (*Inventory, error) {
-	var res Inventory
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE domain=?", getSelectFields(InventoryTableFull, ""), InventoryTableFull),
-		d,
-	)
+// CreateInventoryPublisher try to save a new InventoryPublisher in database
+func (m *Manager) CreateInventoryPublisher(ip *InventoryPublisher) error {
 
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
-// CreateWhiteBlackList try to save a new WhiteBlackList in database
-func (m *Manager) CreateWhiteBlackList(wbl *WhiteBlackList) error {
-	now := time.Now()
-	wbl.CreatedAt = now
-	wbl.UpdatedAt = now
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
 		}
-	}(wbl)
+	}(ip)
 
-	return m.GetWDbMap().Insert(wbl)
+	return m.GetWDbMap().Insert(ip)
 }
 
-// UpdateWhiteBlackList try to update WhiteBlackList in database
-func (m *Manager) UpdateWhiteBlackList(wbl *WhiteBlackList) error {
-	now := time.Now()
-	wbl.UpdatedAt = now
+// UpdateInventoryPublisher try to update InventoryPublisher in database
+func (m *Manager) UpdateInventoryPublisher(ip *InventoryPublisher) error {
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
 		}
-	}(wbl)
+	}(ip)
 
-	_, err := m.GetWDbMap().Update(wbl)
+	_, err := m.GetWDbMap().Update(ip)
 	return err
 }
 
-// ListWhiteBlackListsWithFilter try to list all WhiteBlackLists without pagination
-func (m *Manager) ListWhiteBlackListsWithFilter(filter string, params ...interface{}) []WhiteBlackList {
+// ListInventoryPublishersWithFilter try to list all InventoryPublishers without pagination
+func (m *Manager) ListInventoryPublishersWithFilter(filter string, params ...interface{}) []InventoryPublisher {
 	filter = strings.Trim(filter, "\n\t ")
 	if filter != "" {
 		filter = "WHERE " + filter
 	}
-	var res []WhiteBlackList
+	var res []InventoryPublisher
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(WhiteBlackListTableFull, ""), WhiteBlackListTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(InventoryPublisherTableFull, ""), InventoryPublisherTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -188,19 +169,19 @@ func (m *Manager) ListWhiteBlackListsWithFilter(filter string, params ...interfa
 	return res
 }
 
-// ListWhiteBlackLists try to list all WhiteBlackLists without pagination
-func (m *Manager) ListWhiteBlackLists() []WhiteBlackList {
-	return m.ListWhiteBlackListsWithFilter("")
+// ListInventoryPublishers try to list all InventoryPublishers without pagination
+func (m *Manager) ListInventoryPublishers() []InventoryPublisher {
+	return m.ListInventoryPublishersWithFilter("")
 }
 
-// CountWhiteBlackListsWithFilter count entity in WhiteBlackLists table with valid where filter
-func (m *Manager) CountWhiteBlackListsWithFilter(filter string, params ...interface{}) int64 {
+// CountInventoryPublishersWithFilter count entity in InventoryPublishers table with valid where filter
+func (m *Manager) CountInventoryPublishersWithFilter(filter string, params ...interface{}) int64 {
 	filter = strings.Trim(filter, "\n\t ")
 	if filter != "" {
 		filter = "WHERE " + filter
 	}
 	cnt, err := m.GetRDbMap().SelectInt(
-		fmt.Sprintf("SELECT COUNT(*) FROM %s %s", WhiteBlackListTableFull, filter),
+		fmt.Sprintf("SELECT COUNT(*) FROM %s %s", InventoryPublisherTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -208,15 +189,15 @@ func (m *Manager) CountWhiteBlackListsWithFilter(filter string, params ...interf
 	return cnt
 }
 
-// CountWhiteBlackLists count entity in WhiteBlackLists table
-func (m *Manager) CountWhiteBlackLists() int64 {
-	return m.CountWhiteBlackListsWithFilter("")
+// CountInventoryPublishers count entity in InventoryPublishers table
+func (m *Manager) CountInventoryPublishers() int64 {
+	return m.CountInventoryPublishersWithFilter("")
 }
 
-// ListWhiteBlackListsWithPaginationFilter try to list all WhiteBlackLists with pagination and filter
-func (m *Manager) ListWhiteBlackListsWithPaginationFilter(
-	offset, perPage int, filter string, params ...interface{}) []WhiteBlackList {
-	var res []WhiteBlackList
+// ListInventoryPublishersWithPaginationFilter try to list all InventoryPublishers with pagination and filter
+func (m *Manager) ListInventoryPublishersWithPaginationFilter(
+	offset, perPage int, filter string, params ...interface{}) []InventoryPublisher {
+	var res []InventoryPublisher
 	filter = strings.Trim(filter, "\n\t ")
 	if filter != "" {
 		filter = "WHERE " + filter
@@ -228,7 +209,7 @@ func (m *Manager) ListWhiteBlackListsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(WhiteBlackListTableFull, ""), WhiteBlackListTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(InventoryPublisherTableFull, ""), InventoryPublisherTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -236,23 +217,7 @@ func (m *Manager) ListWhiteBlackListsWithPaginationFilter(
 	return res
 }
 
-// ListWhiteBlackListsWithPagination try to list all WhiteBlackLists with pagination
-func (m *Manager) ListWhiteBlackListsWithPagination(offset, perPage int) []WhiteBlackList {
-	return m.ListWhiteBlackListsWithPaginationFilter(offset, perPage, "")
-}
-
-// FindWhiteBlackListByID return the WhiteBlackList base on its id
-func (m *Manager) FindWhiteBlackListByID(id int64) (*WhiteBlackList, error) {
-	var res WhiteBlackList
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(WhiteBlackListTableFull, ""), WhiteBlackListTableFull),
-		id,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
+// ListInventoryPublishersWithPagination try to list all InventoryPublishers with pagination
+func (m *Manager) ListInventoryPublishersWithPagination(offset, perPage int) []InventoryPublisher {
+	return m.ListInventoryPublishersWithPaginationFilter(offset, perPage, "")
 }

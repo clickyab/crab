@@ -398,52 +398,6 @@ func (c *Controller) Routes(r framework.Mux) {
 		group.POST("controllers-Controller-getNativeDataPost", "/native/fetch", framework.Mix(c.getNativeDataPost, m14...))
 		// End route with key 14
 
-		/* Route {
-			"Route": "/wb/:id",
-			"Method": "PUT",
-			"Function": "Controller.updateWhiteBlackListPut",
-			"RoutePkg": "controllers",
-			"RouteMiddleware": [
-				"authz.Authenticate"
-			],
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "c",
-			"Payload": "whiteBlackPayload",
-			"Resource": "",
-			"Scope": ""
-		} with key 15 */
-		m15 := append(groupMiddleware, []framework.Middleware{
-			authz.Authenticate,
-		}...)
-
-		// Make sure payload is the last middleware
-		m15 = append(m15, middleware.PayloadUnMarshallerGenerator(whiteBlackPayload{}))
-		group.PUT("controllers-Controller-updateWhiteBlackListPut", "/wb/:id", framework.Mix(c.updateWhiteBlackListPut, m15...))
-		// End route with key 15
-
-		/* Route {
-			"Route": "/wblist/:id",
-			"Method": "DELETE",
-			"Function": "Controller.deleteWhiteBlackListDelete",
-			"RoutePkg": "controllers",
-			"RouteMiddleware": [
-				"authz.Authenticate"
-			],
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "c",
-			"Payload": "",
-			"Resource": "",
-			"Scope": ""
-		} with key 16 */
-		m16 := append(groupMiddleware, []framework.Middleware{
-			authz.Authenticate,
-		}...)
-
-		group.DELETE("controllers-Controller-deleteWhiteBlackListDelete", "/wblist/:id", framework.Mix(c.deleteWhiteBlackListDelete, m16...))
-		// End route with key 16
-
 		initializer.DoInitialize(c)
 	})
 }

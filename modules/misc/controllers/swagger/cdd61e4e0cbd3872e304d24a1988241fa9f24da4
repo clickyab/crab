@@ -1,6 +1,6 @@
 {
-	"delete": {
-		"description": "deleteWhiteBlackList will update campaign white/black list",
+	"put": {
+		"description": "removePreset edit inventory",
 		"parameters": [
 			{
 				"description": "",
@@ -15,13 +15,22 @@
 				"name": "token",
 				"required": true,
 				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "body",
+				"name": "payload_data",
+				"required": false,
+				"schema": {
+					"$ref": "#/definitions/controllers_changeLabelPayload"
+				}
 			}
 		],
 		"responses": {
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/orm_Campaign"
+					"$ref": "#/definitions/orm_Inventory"
 				}
 			},
 			"400": {
@@ -37,26 +46,9 @@
 				}
 			},
 			"403": {
-				"description": "forbidden, you have no access here",
+				"description": "",
 				"schema": {
-					"properties": {
-						"error": {
-							"properties": {
-								"params": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						}
-					},
-					"title": "forbidden",
-					"type": "object"
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},

@@ -1,0 +1,14 @@
+{
+	"properties": {
+		"label": {
+			"type": "string"
+		},
+		"pub_ids": {
+			"items": {
+				"type": "integer"
+			},
+			"type": "array"
+		}
+	},
+	"type": "object"
+}

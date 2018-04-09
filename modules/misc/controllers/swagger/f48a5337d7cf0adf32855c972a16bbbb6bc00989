@@ -1,6 +1,6 @@
 {
 	"post": {
-		"description": "addPreset get a new whitelist blacklist for user",
+		"description": "createPreset get a new whitelist blacklist for user",
 		"parameters": [
 			{
 				"description": "the security token, get it from login route",
@@ -15,7 +15,7 @@
 				"name": "payload_data",
 				"required": false,
 				"schema": {
-					"$ref": "#/definitions/controllers_whiteBlackList"
+					"$ref": "#/definitions/controllers_createInventoryPayload"
 				}
 			}
 		],
@@ -23,7 +23,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/orm_WhiteBlackList"
+					"$ref": "#/definitions/orm_Inventory"
 				}
 			},
 			"400": {
@@ -39,26 +39,9 @@
 				}
 			},
 			"403": {
-				"description": "forbidden, you have no access here",
+				"description": "",
 				"schema": {
-					"properties": {
-						"error": {
-							"properties": {
-								"params": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						}
-					},
-					"title": "forbidden",
-					"type": "object"
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},
