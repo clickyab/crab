@@ -103,7 +103,7 @@ func (l *createCampaignPayload) ValidateExtra(ctx context.Context, w http.Respon
 
 	}
 
-	if l.StartAt.Before(time.Now().Truncate(time.Hour)) {
+	if l.StartAt.Before(time.Now().Truncate(time.Hour * 24)) {
 		return errors.StartTimeError
 	}
 
