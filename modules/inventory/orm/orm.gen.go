@@ -15,8 +15,11 @@ const (
 	// InventoryTableFull is the Inventory table name
 	InventoryTableFull = "inventories"
 
-	// WhiteBlackListTableFull is the WhiteBlackList table name
-	WhiteBlackListTableFull = "user_wlbl_presets"
+	// InventoryPublisherTableFull is the InventoryPublisher table name
+	InventoryPublisherTableFull = "inventories_publishers"
+
+	// PublisherTableFull is the Publisher table name
+	PublisherTableFull = "publishers"
 )
 
 func getSelectFields(tb string, alias string) string {
@@ -26,10 +29,13 @@ func getSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case InventoryTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]sname,%[1]sdomain,%[1]scat,%[1]spublisher,%[1]skind,%[1]sstatus`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]supdated_at,%[1]suser_id,%[1]sdomain_id,%[1]slabel,%[1]sstatus`, alias)
 
-	case WhiteBlackListTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]supdated_at,%[1]sactive,%[1]suser_id,%[1]sdomain_id,%[1]slabel,%[1]sdomains,%[1]spublisher_type`, alias)
+	case InventoryPublisherTableFull:
+		return fmt.Sprintf(`%[1]spublisher_id,%[1]sinventory_id`, alias)
+
+	case PublisherTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]sname,%[1]sdomain,%[1]scategories,%[1]ssupplier,%[1]skind,%[1]sstatus,%[1]screated_at,%[1]supdated_at,%[1]sdeleted_at`, alias)
 
 	}
 	return ""
@@ -63,13 +69,22 @@ func (m *Manager) Initialize() {
 		Inventory{},
 		InventoryTableFull,
 	).SetKeys(
-		false,
+		true,
 		"ID",
 	)
 
 	m.AddTableWithName(
-		WhiteBlackList{},
-		WhiteBlackListTableFull,
+		InventoryPublisher{},
+		InventoryPublisherTableFull,
+	).SetKeys(
+		false,
+		"PublisherID",
+		"InventoryID",
+	)
+
+	m.AddTableWithName(
+		Publisher{},
+		PublisherTableFull,
 	).SetKeys(
 		true,
 		"ID",

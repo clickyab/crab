@@ -1,39 +1,40 @@
 {
 	"properties": {
-		"_actions": {
-			"type": "string"
+		"categories": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
 		},
 		"created_at": {
 			"format": "dateTime",
 			"type": "string"
 		},
-		"domain_id": {
-			"type": "integer"
+		"deleted_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"domain": {
+			"type": "string"
 		},
 		"id": {
 			"type": "integer"
 		},
-		"label": {
+		"kind": {
 			"type": "string"
 		},
-		"owner_id": {
-			"type": "integer"
-		},
-		"parent_ids": {
-			"items": {
-				"type": "integer"
-			},
-			"type": "array"
+		"name": {
+			"type": "string"
 		},
 		"status": {
+			"type": "string"
+		},
+		"supplier": {
 			"type": "string"
 		},
 		"updated_at": {
 			"format": "dateTime",
 			"type": "string"
-		},
-		"user_id": {
-			"type": "integer"
 		}
 	},
 	"type": "object"

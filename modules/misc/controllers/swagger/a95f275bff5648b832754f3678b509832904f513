@@ -3,8 +3,21 @@
 		"_actions": {
 			"type": "string"
 		},
+		"categories": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
 		"created_at": {
 			"format": "dateTime",
+			"type": "string"
+		},
+		"deleted_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"domain": {
 			"type": "string"
 		},
 		"domain_id": {
@@ -13,7 +26,10 @@
 		"id": {
 			"type": "integer"
 		},
-		"label": {
+		"kind": {
+			"type": "string"
+		},
+		"name": {
 			"type": "string"
 		},
 		"owner_id": {
@@ -28,12 +44,12 @@
 		"status": {
 			"type": "string"
 		},
+		"supplier": {
+			"type": "string"
+		},
 		"updated_at": {
 			"format": "dateTime",
 			"type": "string"
-		},
-		"user_id": {
-			"type": "integer"
 		}
 	},
 	"type": "object"

@@ -33,6 +33,7 @@ type listCampaignDefResponse struct {
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
 	DateFilter  string             `json:"datefilter"`
+	SearchKey   string             `json:"searchkey"`
 	Columns     permission.Columns `json:"columns"`
 }
 
@@ -84,11 +85,11 @@ func (u *Controller) listCampaign(ctx context.Context, w http.ResponseWriter, r 
 
 	search := make(map[string]string)
 
-	if e := r.URL.Query().Get("title"); e != "" {
+	if e := r.URL.Query().Get(""); e != "" {
 		search["cp.title"] = e
 	}
 
-	if e := r.URL.Query().Get("owner_email"); e != "" {
+	if e := r.URL.Query().Get(""); e != "" {
 		search["owner.email"] = e
 	}
 
@@ -142,7 +143,7 @@ func (u *Controller) defCampaign(ctx context.Context, w http.ResponseWriter, r *
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listCampaignDefResponse{Checkable: false, Multiselect: false, DateFilter: "cp.created_at", Hash: hash, Columns: listCampaignDefinition},
+		listCampaignDefResponse{Checkable: false, SearchKey: "", Multiselect: false, DateFilter: "cp.created_at", Hash: hash, Columns: listCampaignDefinition},
 	)
 }
 

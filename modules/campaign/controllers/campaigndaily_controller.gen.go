@@ -33,6 +33,7 @@ type listCampaigndailyDefResponse struct {
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
 	DateFilter  string             `json:"datefilter"`
+	SearchKey   string             `json:"searchkey"`
 	Columns     permission.Columns `json:"columns"`
 }
 
@@ -122,7 +123,7 @@ func (u *Controller) defCampaigndaily(ctx context.Context, w http.ResponseWriter
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listCampaigndailyDefResponse{Checkable: false, Multiselect: false, DateFilter: "", Hash: hash, Columns: listCampaigndailyDefinition},
+		listCampaigndailyDefResponse{Checkable: false, SearchKey: "", Multiselect: false, DateFilter: "", Hash: hash, Columns: listCampaigndailyDefinition},
 	)
 }
 

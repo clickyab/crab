@@ -52,6 +52,9 @@
 		},
 		"multiselect": {
 			"type": "boolean"
+		},
+		"searchkey": {
+			"type": "string"
 		}
 	},
 	"type": "object"

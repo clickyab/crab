@@ -1,31 +1,16 @@
 {
 	"properties": {
-		"active": {
-			"type": "boolean"
-		},
-		"cat": {
-			"items": {
-				"type": "string"
-			},
-			"type": "array"
-		},
 		"created_at": {
 			"format": "dateTime",
 			"type": "string"
 		},
-		"domain": {
-			"type": "string"
+		"domain_id": {
+			"type": "integer"
 		},
 		"id": {
 			"type": "integer"
 		},
-		"kind": {
-			"type": "string"
-		},
-		"name": {
-			"type": "string"
-		},
-		"publisher": {
+		"label": {
 			"type": "string"
 		},
 		"status": {
@@ -34,6 +19,9 @@
 		"updated_at": {
 			"format": "dateTime",
 			"type": "string"
+		},
+		"user_id": {
+			"type": "integer"
 		}
 	},
 	"type": "object"
