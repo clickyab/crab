@@ -83,7 +83,7 @@ func (nt NullInventoryState) Value() (driver.Value, error) {
 	if !nt.Valid {
 		return nil, nil
 	}
-	return nt.InventoryState, nil
+	return string(nt.InventoryState), nil
 }
 
 const (
@@ -157,14 +157,14 @@ type Campaign struct {
 	Exchange    ExchangeType    `json:"exchange" db:"exchange"`
 	InventoryID mysql.NullInt64 `json:"inventory_id" db:"inventory_id"`
 	// InventoryType black_list or white_list
-	InventoryType    NullInventoryState       `json:"inventory_type" db:"inventory_type"`
-	InventoryDomains mysql.StringMapJSONArray `json:"-" db:"inventory_domains"`
-	Progress         Progress                 `json:"progress" db:"progress"`
-	Attributes       *CampaignAttributes      `json:"attributes,omitempty" db:"-"`
-	Receivers        []Receiver               `json:"receivers" db:"-"`
-	ArchivedAt       mysql.NullTime           `json:"archived_at" db:"archived_at"`
-	TodaySpend       int64                    `json:"today_spend" db:"today_spend"`
-	TotalSpend       int64                    `json:"total_spend" db:"total_spend"`
+	InventoryType    NullInventoryState    `json:"inventory_type" db:"inventory_type"`
+	InventoryDomains mysql.StringJSONArray `json:"-" db:"inventory_domains"`
+	Progress         Progress              `json:"progress" db:"progress"`
+	Attributes       *CampaignAttributes   `json:"attributes,omitempty" db:"-"`
+	Receivers        []Receiver            `json:"receivers" db:"-"`
+	ArchivedAt       mysql.NullTime        `json:"archived_at" db:"archived_at"`
+	TodaySpend       int64                 `json:"today_spend" db:"today_spend"`
+	TotalSpend       int64                 `json:"total_spend" db:"total_spend"`
 }
 
 // CampaignDataTable is the campaign full data in data table
