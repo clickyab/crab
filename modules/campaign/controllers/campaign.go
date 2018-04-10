@@ -253,9 +253,9 @@ type campaignStatus struct {
 
 func (l *campaignStatus) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	if l.StartAt.IsZero() {
-		return errors.StartTimeError
+		return errors.CampaignStartTimeError
 	}
-	if l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
+	if l.EndAt.Valid && l.StartAt.Before(l.EndAt.Time) {
 		return errors.EndTimeError
 	}
 

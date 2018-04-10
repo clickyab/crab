@@ -79,7 +79,7 @@ func (m *Manager) UpdateCampaignByID(c CampaignStatus, ca *Campaign) error {
 
 	ca.Status = c.Status
 	if ca.StartAt != c.StartAt {
-		if c.StartAt.Unix() < time.Now().Unix() {
+		if time.Now().Truncate(time.Hour * 24).After(c.StartAt) {
 			return errors.StartTimeError
 		}
 	}
