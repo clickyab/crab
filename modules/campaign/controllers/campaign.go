@@ -379,9 +379,10 @@ func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaign
 				Valid:  p.Schedule.H23 != "",
 			}}}, ca)
 	if err != nil {
-		if err != errors.StartTimeError {
-			xlog.GetWithError(ctx, err).Debug("can't update base info of campaign")
+		if err.Error() == errors.StartTimeError.Error() {
+			return nil, err
 		}
+		xlog.GetWithError(ctx, err).Debug("can't update base info of campaign")
 		return nil, t9e.G("can't update base info of campaign")
 	}
 
