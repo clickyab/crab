@@ -1,12 +1,15 @@
 package orm
 
 import (
+	"errors"
 	"strings"
 	"time"
 
 	"fmt"
 
+	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
 )
 
@@ -146,8 +149,8 @@ func (m *Manager) CreateInventoryComplete(label string, pubIDs []int64, domainID
 	return newInventory, nil
 }
 
-// AddInventoryComplete add inventory with its pivot table
-func (m *Manager) AddInventoryComplete(currentInventory *Inventory, invPublishers []InventoryPublisher, pubIDs []int64) (*Inventory, error) {
+// AddInventoryPub add inventory with its pivot table
+func (m *Manager) AddInventoryPub(currentInventory *Inventory, invPublishers []InventoryPublisher, pubIDs []int64) (*Inventory, error) {
 	err := m.Begin()
 	assert.Nil(err)
 	defer func() {
@@ -185,11 +188,27 @@ func (m *Manager) AddInventoryComplete(currentInventory *Inventory, invPublisher
 		}
 	}
 
+	var resDomains []string
+	if len(invPubIDsRes) != 0 {
+		//find all domains to be updated in campaigns table
+		resDomains = m.ListPublisherDomainsByIDs(invPubIDsRes)
+	}
+
+	// update campaigns domains related to this inventory
+	q := fmt.Sprintf("UPDATE %s SET inventory_domains=? WHERE inventory_id=?", orm.CampaignTableFull)
+	newManager, err := orm.NewOrmManagerFromTransaction(m.GetWDbMap())
+	_, err = newManager.GetWDbMap().Exec(q, mysql.StringJSONArray(resDomains), currentInventory.ID)
+	if err != nil {
+		return nil, err
+	}
+	if err != nil {
+		return nil, err
+	}
 	return currentInventory, nil
 }
 
 // RemoveInventoryPub remove inventory with its pivot table
-func (m *Manager) RemoveInventoryPub(currentInventory *Inventory, pubIDs []int64) (*Inventory, error) {
+func (m *Manager) RemoveInventoryPub(currentInventory *Inventory, pubIDs []int64, oldPubIDs []int64) (*Inventory, error) {
 	err := m.Begin()
 	assert.Nil(err)
 	defer func() {
@@ -214,6 +233,24 @@ func (m *Manager) RemoveInventoryPub(currentInventory *Inventory, pubIDs []int64
 			return pubStringIDs
 		}(pubIDs, currentInventory.ID)...,
 	)
+	if err != nil {
+		return nil, err
+	}
+
+	invPubIDsRes := subtractsTwoArray(oldPubIDs, pubIDs)
+	var resDomains []string
+	if len(invPubIDsRes) != 0 {
+		//find all domains to be updated in campaigns table
+		resDomains = m.ListPublisherDomainsByIDs(invPubIDsRes)
+	}
+
+	// update campaigns domains related to this inventory
+	q := fmt.Sprintf("UPDATE %s SET inventory_domains=? WHERE inventory_id=?", orm.CampaignTableFull)
+	newManager, err := orm.NewOrmManagerFromTransaction(m.GetWDbMap())
+	_, err = newManager.GetWDbMap().Exec(q, mysql.StringJSONArray(resDomains), currentInventory.ID)
+	if err != nil {
+		return nil, err
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -319,11 +356,15 @@ func (m *Manager) FillInventoryDataTableArray(
 }
 
 // FindInventoryByIDDomain find inventory by id and domain
-func (m *Manager) FindInventoryByIDDomain(ID, domainID int64) []Inventory {
-	return m.ListInventoriesWithFilter("id=? AND domain_id=?", ID, domainID)
+func (m *Manager) FindInventoryByIDDomain(ID, domainID int64) (*Inventory, error) {
+	inventories := m.ListInventoriesWithFilter("id=? AND domain_id=?", ID, domainID)
+	if len(inventories) != 1 {
+		return nil, errors.New("inventory not found")
+	}
+	return &inventories[0], nil
 }
 
-// FindInventoryPublishersByInvID find publisher
+// FindInventoryDomainsByInvID find publisher
 func (m *Manager) FindInventoryDomainsByInvID(ID int64) []string {
 	var res []string
 	q := fmt.Sprintf("SELECT p.domain FROM %s AS i "+
@@ -335,5 +376,23 @@ func (m *Manager) FindInventoryDomainsByInvID(ID int64) []string {
 	)
 	_, err := m.GetRDbMap().Select(&res, q, ID)
 	assert.Nil(err)
+	return res
+}
+
+// subtractsTwoArray similar to (a-b)
+func subtractsTwoArray(a, b []int64) []int64 {
+	x := make(map[int64]bool)
+	for _, i := range a {
+		x[i] = true
+	}
+	for _, i := range b {
+		if _, ok := x[i]; ok {
+			delete(x, i)
+		}
+	}
+	var res []int64
+	for i := range x {
+		res = append(res, i)
+	}
 	return res
 }
