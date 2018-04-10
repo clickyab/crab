@@ -33,28 +33,6 @@ func (ctrl *Controller) addPresetPatch(ctx context.Context, w http.ResponseWrite
 
 // removePreset edit inventory
 // @Route {
-// 		url = /removepub/:id
-//		method = patch
-//		payload = removeInventoryPayload
-//		middleware = authz.Authenticate
-//		resource = edit_inventory:self
-//		200 = orm.Inventory
-//		400 = controller.ErrorResponseSimple
-//		401 = controller.ErrorResponseSimple
-//		403 = controller.ErrorResponseSimple
-// }
-func (ctrl *Controller) removePresetPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := ctrl.MustGetPayload(ctx).(*removeInventoryPayload)
-	res, err := ctrl.removePreset(ctx, r, pl)
-	if err != nil {
-		framework.Write(w, err, http.StatusBadRequest)
-		return
-	}
-	framework.Write(w, res, http.StatusOK)
-}
-
-// removePreset edit inventory
-// @Route {
 // 		url = /:id
 //		method = put
 //		payload = changeLabelPayload
@@ -90,6 +68,28 @@ func (ctrl *Controller) changeLabelPut(ctx context.Context, w http.ResponseWrite
 func (ctrl *Controller) createPresetPost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := ctrl.MustGetPayload(ctx).(*createInventoryPayload)
 	res, err := ctrl.createPreset(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
+// removePreset edit inventory
+// @Route {
+// 		url = /removepub/:id
+//		method = patch
+//		payload = removeInventoryPayload
+//		middleware = authz.Authenticate
+//		resource = edit_inventory:self
+//		200 = orm.Inventory
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (ctrl *Controller) removePresetPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := ctrl.MustGetPayload(ctx).(*removeInventoryPayload)
+	res, err := ctrl.removePreset(ctx, r, pl)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return

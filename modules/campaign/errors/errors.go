@@ -33,6 +33,10 @@ var (
 	ErrInventoryID error = t9e.G("there is no inventory with this id")
 	// AccessDenied error
 	AccessDenied error = t9e.G("access denied! you don't have access for this action")
+	// InventoryStateErr inventory state err
+	InventoryStateErr error = t9e.G("inventory state should be either black_list or white_list")
+	// UpdateCampaignErr error while update
+	UpdateCampaignErr error = t9e.G("error while update campaign")
 )
 
 // NotFoundError maker

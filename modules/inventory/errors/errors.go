@@ -7,6 +7,8 @@ var (
 	InvalidIDErr = t9e.G("invalid id, please check your request data.")
 	// AccessDeniedErr access denied
 	AccessDeniedErr = t9e.G("access denied. can't edit inventory")
+	// EmptyPublisherSelectedErr when inventory is empty
+	EmptyPublisherSelectedErr = t9e.G("inventory cant be empty")
 )
 
 // NotFoundError maker
