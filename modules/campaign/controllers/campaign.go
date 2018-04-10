@@ -287,13 +287,13 @@ func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaign
 
 	// check access
 	userManager := aaa.NewAaaManager()
-	owner, err := userManager.FindUserWithParentsByID(ca.UserID, id)
+	owner, err := userManager.FindUserWithParentsByID(ca.UserID, d.ID)
 	if err != nil {
 		return ca, t9e.G("can't find user with related domain")
 	}
 
 	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(owner, currentUser, "edit_campaign", id)
+	_, ok := aaa.CheckPermOn(owner, currentUser, "edit_campaign", d.ID)
 	if !ok {
 		return ca, errors.AccessDenied
 	}
