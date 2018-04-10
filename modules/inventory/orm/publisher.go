@@ -107,3 +107,23 @@ func (m *Manager) FillPublisherDataTableArray(
 
 	return res, count
 }
+
+// ListPublisherDomainsByIDs list publisher domain based on their ids
+func (m *Manager) ListPublisherDomainsByIDs(IDs []int64) []string {
+	var final []string
+	publishers := m.ListPublishersWithFilter(
+		fmt.Sprintf("id IN (%s)", strings.TrimRight(strings.Repeat("?,", len(IDs)), ",")),
+		func() []interface{} {
+			var res = make([]interface{}, len(IDs))
+			for i := range IDs {
+				res[i] = IDs[i]
+			}
+			return res
+		}()...,
+	)
+	for j := range publishers {
+		final = append(final, publishers[j].Domain)
+	}
+
+	return final
+}

@@ -154,33 +154,6 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		// End route with key 4
 
 		/* Route {
-			"Route": "/removepub/:id",
-			"Method": "PATCH",
-			"Function": "Controller.removePresetPatch",
-			"RoutePkg": "controllers",
-			"RouteMiddleware": [
-				"authz.Authenticate"
-			],
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "ctrl",
-			"Payload": "removeInventoryPayload",
-			"Resource": "edit_inventory",
-			"Scope": "self"
-		} with key 5 */
-		m5 := append(groupMiddleware, []framework.Middleware{
-			authz.Authenticate,
-		}...)
-
-		permission.Register("edit_inventory", "edit_inventory")
-		m5 = append(m5, authz.AuthorizeGenerator("edit_inventory", "self"))
-
-		// Make sure payload is the last middleware
-		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(removeInventoryPayload{}))
-		group.PATCH("controllers-Controller-removePresetPatch", "/removepub/:id", framework.Mix(ctrl.removePresetPatch, m5...))
-		// End route with key 5
-
-		/* Route {
 			"Route": "/:id",
 			"Method": "PUT",
 			"Function": "Controller.changeLabelPut",
@@ -194,18 +167,18 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"Payload": "changeLabelPayload",
 			"Resource": "edit_inventory",
 			"Scope": "self"
-		} with key 6 */
-		m6 := append(groupMiddleware, []framework.Middleware{
+		} with key 5 */
+		m5 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("edit_inventory", "edit_inventory")
-		m6 = append(m6, authz.AuthorizeGenerator("edit_inventory", "self"))
+		m5 = append(m5, authz.AuthorizeGenerator("edit_inventory", "self"))
 
 		// Make sure payload is the last middleware
-		m6 = append(m6, middleware.PayloadUnMarshallerGenerator(changeLabelPayload{}))
-		group.PUT("controllers-Controller-changeLabelPut", "/:id", framework.Mix(ctrl.changeLabelPut, m6...))
-		// End route with key 6
+		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(changeLabelPayload{}))
+		group.PUT("controllers-Controller-changeLabelPut", "/:id", framework.Mix(ctrl.changeLabelPut, m5...))
+		// End route with key 5
 
 		/* Route {
 			"Route": "/create",
@@ -221,17 +194,44 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"Payload": "createInventoryPayload",
 			"Resource": "add_inventory",
 			"Scope": "self"
+		} with key 6 */
+		m6 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("add_inventory", "add_inventory")
+		m6 = append(m6, authz.AuthorizeGenerator("add_inventory", "self"))
+
+		// Make sure payload is the last middleware
+		m6 = append(m6, middleware.PayloadUnMarshallerGenerator(createInventoryPayload{}))
+		group.POST("controllers-Controller-createPresetPost", "/create", framework.Mix(ctrl.createPresetPost, m6...))
+		// End route with key 6
+
+		/* Route {
+			"Route": "/removepub/:id",
+			"Method": "PATCH",
+			"Function": "Controller.removePresetPatch",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "ctrl",
+			"Payload": "removeInventoryPayload",
+			"Resource": "edit_inventory",
+			"Scope": "self"
 		} with key 7 */
 		m7 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("add_inventory", "add_inventory")
-		m7 = append(m7, authz.AuthorizeGenerator("add_inventory", "self"))
+		permission.Register("edit_inventory", "edit_inventory")
+		m7 = append(m7, authz.AuthorizeGenerator("edit_inventory", "self"))
 
 		// Make sure payload is the last middleware
-		m7 = append(m7, middleware.PayloadUnMarshallerGenerator(createInventoryPayload{}))
-		group.POST("controllers-Controller-createPresetPost", "/create", framework.Mix(ctrl.createPresetPost, m7...))
+		m7 = append(m7, middleware.PayloadUnMarshallerGenerator(removeInventoryPayload{}))
+		group.PATCH("controllers-Controller-removePresetPatch", "/removepub/:id", framework.Mix(ctrl.removePresetPatch, m7...))
 		// End route with key 7
 
 		initializer.DoInitialize(ctrl)

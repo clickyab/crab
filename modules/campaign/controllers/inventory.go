@@ -51,17 +51,17 @@ func (pl *assignInventoryPayload) ValidateExtra(ctx context.Context, w http.Resp
 
 	// find target inventory
 	invManager := inv.NewOrmManager()
-	inventory := invManager.FindInventoryByIDDomain(pl.ID, dm.ID)
-	if len(inventory) != 1 {
+	inventory, err := invManager.FindInventoryByIDDomain(pl.ID, dm.ID)
+	if err != nil {
 		return errors.InvalidIDErr
 	}
 	if !pl.InvState.IsValid() {
 		return errors.InventoryStateErr
 	}
 	// find publishers for the specified inventory
-	domains := invManager.FindInventoryDomainsByInvID(inventory[0].ID)
+	domains := invManager.FindInventoryDomainsByInvID(inventory.ID)
 
-	pl.targetInventory = &inventory[0]
+	pl.targetInventory = inventory
 
 	pl.pubDomains = domains
 

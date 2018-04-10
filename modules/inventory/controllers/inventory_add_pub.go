@@ -29,6 +29,9 @@ func (pl *addInventoryPayload) ValidateExtra(ctx context.Context, w http.Respons
 	if err != nil {
 		return errors.InvalidIDErr
 	}
+	if len(pl.PubIDs) == 0 {
+		return errors.EmptyPublisherSelectedErr
+	}
 	currentInventory, err := orm.NewOrmManager().FindInventoryByID(id)
 	if err != nil {
 		return errors.NotFoundError(id)
@@ -85,7 +88,7 @@ func (ctrl *Controller) addPreset(ctx context.Context, r *http.Request, pl *addI
 		validPubIDs = append(validPubIDs, validPublishers[j].ID)
 	}
 
-	res, e := invManager.AddInventoryComplete(pl.currentInventory, pl.currentInventoryPubs, validPubIDs)
+	res, e := invManager.AddInventoryPub(pl.currentInventory, pl.currentInventoryPubs, validPubIDs)
 	assert.Nil(e)
 	return res, nil
 }
