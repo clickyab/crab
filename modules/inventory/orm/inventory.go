@@ -189,7 +189,7 @@ func (m *Manager) AddInventoryComplete(currentInventory *Inventory, invPublisher
 }
 
 // RemoveInventoryPub remove inventory with its pivot table
-func (m *Manager) RemoveInventoryPub(currentInventory *Inventory, invPublishers []InventoryPublisher, pubIDs []int64) (*Inventory, error) {
+func (m *Manager) RemoveInventoryPub(currentInventory *Inventory, pubIDs []int64) (*Inventory, error) {
 	err := m.Begin()
 	assert.Nil(err)
 	defer func() {
@@ -316,4 +316,24 @@ func (m *Manager) FillInventoryDataTableArray(
 	assert.Nil(err)
 
 	return res, count
+}
+
+// FindInventoryByIDDomain find inventory by id and domain
+func (m *Manager) FindInventoryByIDDomain(ID, domainID int64) []Inventory {
+	return m.ListInventoriesWithFilter("id=? AND domain_id=?", ID, domainID)
+}
+
+// FindInventoryPublishersByInvID find publisher
+func (m *Manager) FindInventoryDomainsByInvID(ID int64) []string {
+	var res []string
+	q := fmt.Sprintf("SELECT p.domain FROM %s AS i "+
+		"INNER JOIN %s AS ip ON ip.inventory_id=i.id "+
+		"INNER JOIN %s AS p ON p.id=ip.publisher_id WHERE i.id=?",
+		InventoryTableFull,
+		InventoryPublisherTableFull,
+		PublisherTableFull,
+	)
+	_, err := m.GetRDbMap().Select(&res, q, ID)
+	assert.Nil(err)
+	return res
 }
