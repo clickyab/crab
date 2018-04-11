@@ -313,7 +313,7 @@ func (m *Manager) FillInventoryDataTableArray(
 	dateRange map[string]string,
 	search map[string]string,
 	contextparams map[string]string,
-	sort, order string, p, c int) (InventoryDataTableArray, int64) {
+	sort, order string, p, c int) (InventoryDataTableArray, int64, error) {
 	var params []interface{}
 	var res InventoryDataTableArray
 	var where []string
@@ -321,7 +321,8 @@ func (m *Manager) FillInventoryDataTableArray(
 	countQuery := fmt.Sprintf("SELECT COUNT(id) FROM %s",
 		InventoryTableFull,
 	)
-	query := fmt.Sprintf("SELECT * FROM %s",
+	query := fmt.Sprintf("SELECT %s FROM %s",
+		getSelectFields(InventoryTableFull, ""),
 		InventoryTableFull,
 	)
 	for field, value := range filters {
@@ -358,7 +359,7 @@ func (m *Manager) FillInventoryDataTableArray(
 	_, err = m.GetRDbMap().Select(&res, query, params...)
 	assert.Nil(err)
 
-	return res, count
+	return res, count, nil
 }
 
 // FindInventoryByIDDomain find inventory by id and domain

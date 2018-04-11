@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"strings"
 
+	"strconv"
+
+	"clickyab.com/crab/modules/ad/errors"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
@@ -47,9 +50,9 @@ type Publisher struct {
 // }
 type PublisherDataTable struct {
 	Publisher
-	OwnerID   int64   `json:"owner_id" db:"owner_id" visible:"false"`
-	DomainID  int64   `json:"domain_id" db:"domain_id" visible:"false"`
-	ParentIDs []int64 `json:"parent_ids" db:"parent_ids" visible:"false"`
+	OwnerID   int64   `json:"-" db:"owner_id" visible:"false"`
+	DomainID  int64   `json:"-" db:"domain_id" visible:"false"`
+	ParentIDs []int64 `json:"-" db:"parent_ids" visible:"false"`
 	Actions   string  `db:"-" json:"_actions" visible:"false"`
 }
 
@@ -60,7 +63,7 @@ func (m *Manager) FillPublisherDataTableArray(
 	dateRange map[string]string,
 	search map[string]string,
 	contextparams map[string]string,
-	sort, order string, p, c int) (PublisherDataTableArray, int64) {
+	sort, order string, p, c int) (PublisherDataTableArray, int64, error) {
 	var params []interface{}
 	var res PublisherDataTableArray
 	var where []string
@@ -68,7 +71,8 @@ func (m *Manager) FillPublisherDataTableArray(
 	countQuery := fmt.Sprintf("SELECT COUNT(id) FROM %s",
 		PublisherTableFull,
 	)
-	query := fmt.Sprintf("SELECT * FROM %s",
+	query := fmt.Sprintf("SELECT %s FROM %s",
+		getSelectFields(PublisherTableFull, ""),
 		PublisherTableFull,
 	)
 	for field, value := range filters {
@@ -88,8 +92,8 @@ func (m *Manager) FillPublisherDataTableArray(
 	query += strings.Join(where, " AND ")
 	countQuery += strings.Join(where, " AND ")
 	if len(where) > 0 && len(whereLike) > 0 {
-		query += fmt.Sprintf("%s %s ", query, " AND ")
-		countQuery += fmt.Sprintf("%s %s ", countQuery, " AND ")
+		query = fmt.Sprintf("%s %s ", query, " AND ")
+		countQuery = fmt.Sprintf("%s %s ", countQuery, " AND ")
 	}
 	query += strings.Join(whereLike, " OR ")
 	countQuery += strings.Join(whereLike, " OR ")
@@ -105,7 +109,7 @@ func (m *Manager) FillPublisherDataTableArray(
 	_, err = m.GetRDbMap().Select(&res, query, params...)
 	assert.Nil(err)
 
-	return res, count
+	return res, count, nil
 }
 
 // ListPublisherDomainsByIDs list publisher domain based on their ids
@@ -142,4 +146,102 @@ func (m *Manager) GetValidPubs(pubIDs []int64) []Publisher {
 		}()...,
 	)
 	return validPublishers
+}
+
+// SinglePublisherDataTable is the single publisher
+// @DataTable {
+//		url = /publisher/list/single/:id
+//		entity = invpublisher
+//		view = list_inventory:self
+//		searchkey = q
+//		checkable = true
+//		multiselect = true
+//		datefilter = created_at
+//		map_prefix = publishers
+//		controller = clickyab.com/crab/modules/inventory/controllers
+//		fill = FillSinglePublisherDataTableArray
+// }
+type SinglePublisherDataTable struct {
+	Publisher
+	OwnerID   int64   `json:"owner_id" db:"owner_id" visible:"false"`
+	DomainID  int64   `json:"domain_id" db:"domain_id" visible:"false"`
+	ParentIDs []int64 `json:"parent_ids" db:"parent_ids" visible:"false"`
+	Actions   string  `db:"-" json:"_actions" visible:"false"`
+}
+
+// FillPublisherDataTableArray is the function to handle
+func (m *Manager) FillSinglePublisherDataTableArray(
+	pc permission.InterfaceComplete,
+	filters map[string]string,
+	dateRange map[string]string,
+	search map[string]string,
+	contextparams map[string]string,
+	sort, order string, p, c int) (SinglePublisherDataTableArray, int64, error) {
+	var params []interface{}
+	var res SinglePublisherDataTableArray
+	var where []string
+	var whereLike []string
+	countQuery := fmt.Sprintf("SELECT COUNT(p.id) FROM %s AS p"+
+		" INNER JOIN %s AS ip ON ip.publisher_id=p.id "+
+		"INNER JOIN %s AS i ON i.id=ip.inventory_id",
+		PublisherTableFull,
+		InventoryPublisherTableFull,
+		InventoryTableFull,
+	)
+	query := fmt.Sprintf("SELECT %s FROM %s AS p"+
+		" INNER JOIN %s AS ip ON ip.publisher_id=p.id"+
+		" INNER JOIN %s AS i ON i.id=ip.inventory_id",
+		getSelectFields(PublisherTableFull, "p"),
+		PublisherTableFull,
+		InventoryPublisherTableFull,
+		InventoryTableFull,
+	)
+	val, ok := contextparams["id"]
+	if !ok {
+
+	}
+	intVal, err := strconv.ParseInt(val, 10, 0)
+	if err != nil {
+		return nil, 0, errors.DBError
+	}
+
+	where = append(where, "inventory_id=?")
+	params = append(params, intVal)
+
+	for field, value := range filters {
+		where = append(where, fmt.Sprintf("%s=?", field))
+		params = append(params, value)
+	}
+
+	for column, val := range search {
+		whereLike = append(whereLike, fmt.Sprintf("%s LIKE ?", column))
+		params = append(params, "%"+val+"%")
+	}
+	//check for perm
+	if len(where)+len(whereLike) > 0 {
+		query = fmt.Sprintf("%s %s ", query, " WHERE ")
+		countQuery = fmt.Sprintf("%s %s ", countQuery, " WHERE ")
+	}
+
+	query += strings.Join(where, " AND ")
+	countQuery += strings.Join(where, " AND ")
+	if len(where) > 0 && len(whereLike) > 0 {
+		query = fmt.Sprintf("%s %s ", query, " AND ")
+		countQuery = fmt.Sprintf("%s %s ", countQuery, " AND ")
+	}
+	query += strings.Join(whereLike, " OR ")
+	countQuery += strings.Join(whereLike, " OR ")
+	limit := c
+	offset := (p - 1) * c
+	if sort != "" {
+		query += fmt.Sprintf(" ORDER BY %s %s ", sort, order)
+	}
+	query += fmt.Sprintf(" LIMIT %d OFFSET %d ", limit, offset)
+	count, err := m.GetRDbMap().SelectInt(countQuery, params...)
+	assert.Nil(err)
+
+	_, err = m.GetRDbMap().Select(&res, query, params...)
+	assert.Nil(err)
+
+	return res, count, nil
 }

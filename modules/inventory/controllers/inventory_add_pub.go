@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
+	dmn "clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/inventory/errors"
 	"clickyab.com/crab/modules/inventory/orm"
 	"clickyab.com/crab/modules/user/aaa"
@@ -20,6 +21,7 @@ type addInventoryPayload struct {
 	PubIDs               []int64                  `json:"pub_ids" validate:"required"`
 	currentInventory     *orm.Inventory           `json:"-"`
 	currentInventoryPubs []orm.InventoryPublisher `json:"-"`
+	currentDomain        *dmn.Domain              `json:"-"`
 	validPublishers      []orm.Publisher          `json:"-"`
 }
 
@@ -31,7 +33,9 @@ func (pl *addInventoryPayload) ValidateExtra(ctx context.Context, w http.Respons
 	if len(pl.PubIDs) == 0 {
 		return errors.EmptyPublisherSelectedErr
 	}
-	currentInventory, err := orm.NewOrmManager().FindInventoryByID(id)
+	dm := domain.MustGetDomain(ctx)
+	pl.currentDomain = dm
+	currentInventory, err := orm.NewOrmManager().FindInventoryByIDDomain(id, dm.ID)
 	if err != nil {
 		return errors.NotFoundError(id)
 	}
@@ -60,15 +64,10 @@ func (pl *addInventoryPayload) ValidateExtra(ctx context.Context, w http.Respons
 // }
 func (ctrl *Controller) addPreset(ctx context.Context, r *http.Request, pl *addInventoryPayload) (*orm.Inventory, error) {
 	currentUser := authz.MustGetUser(ctx)
-	dm := domain.MustGetDomain(ctx)
 	invManager := orm.NewOrmManager()
-
-	if pl.currentInventory.DomainID != dm.ID {
-		return nil, errors.NotFoundError(pl.currentInventory.ID)
-	}
-	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(pl.currentInventory.UserID, dm.ID)
+	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(pl.currentInventory.UserID, pl.currentDomain.ID)
 	assert.Nil(err)
-	_, ok := aaa.CheckPermOn(owner, currentUser, "edit_inventory", dm.ID)
+	_, ok := aaa.CheckPermOn(owner, currentUser, "edit_inventory", pl.currentDomain.ID)
 	if !ok {
 		return nil, errors.AccessDeniedErr
 	}

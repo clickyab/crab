@@ -212,7 +212,7 @@ func (m *Manager) FillCampaignDataTableArray(
 	dateRange map[string]string,
 	search map[string]string,
 	contextparams map[string]string,
-	sort, order string, p, c int) (CampaignDataTableArray, int64) {
+	sort, order string, p, c int) (CampaignDataTableArray, int64, error) {
 	var params []interface{}
 	var res CampaignDataTableArray
 	var where []string
@@ -349,7 +349,7 @@ func (m *Manager) FillCampaignDataTableArray(
 		}()
 	}
 
-	return res, count
+	return res, count, nil
 }
 
 func calculateCtr(imp, click int64, def float64) float64 {

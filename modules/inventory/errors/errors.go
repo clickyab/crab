@@ -9,6 +9,10 @@ var (
 	AccessDeniedErr = t9e.G("access denied. can't edit inventory")
 	// EmptyPublisherSelectedErr when inventory is empty
 	EmptyPublisherSelectedErr = t9e.G("inventory cant be empty")
+	// InvalidInventoryStatusErr when inventory status is invalid
+	InvalidInventoryStatusErr = t9e.G("inventory status is invalid ")
+	// InventoryHasStartCampErr inventory already attached to start campaign
+	InventoryHasStartCampErr = t9e.G("inventory already attached to start campaign")
 )
 
 // NotFoundError maker
