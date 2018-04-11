@@ -23,6 +23,9 @@
 					"domain": {
 						"type": "string"
 					},
+					"domain_id": {
+						"type": "integer"
+					},
 					"id": {
 						"type": "integer"
 					},
@@ -31,6 +34,15 @@
 					},
 					"name": {
 						"type": "string"
+					},
+					"owner_id": {
+						"type": "integer"
+					},
+					"parent_ids": {
+						"items": {
+							"type": "integer"
+						},
+						"type": "array"
 					},
 					"status": {
 						"type": "string"

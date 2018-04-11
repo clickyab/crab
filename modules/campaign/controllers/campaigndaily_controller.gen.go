@@ -93,7 +93,11 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 	}
 
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_list", "self", domain.ID)
-	dt, cnt := m.FillCampaignDailyDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
+	dt, cnt, err := m.FillCampaignDailyDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
+	if err != nil {
+		u.JSON(w, http.StatusBadRequest, err)
+		return
+	}
 	res := listCampaigndailyResponse{
 		Total:   cnt,
 		Data:    dt.Filter(usr),

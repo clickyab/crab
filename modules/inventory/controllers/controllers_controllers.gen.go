@@ -53,6 +53,28 @@ func (ctrl *Controller) changeLabelPut(ctx context.Context, w http.ResponseWrite
 	framework.Write(w, res, http.StatusOK)
 }
 
+// changeStatus change inventory status
+// @Route {
+// 		url = /inventory/:id
+//		method = patch
+//		payload = changeStatusPayload
+//		middleware = authz.Authenticate
+//		resource = edit_inventory:self
+//		200 = orm.Inventory
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (ctrl *Controller) changeStatusPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := ctrl.MustGetPayload(ctx).(*changeStatusPayload)
+	res, err := ctrl.changeStatus(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // createPreset get a new whitelist blacklist for user
 // @Route {
 // 		url = /create
