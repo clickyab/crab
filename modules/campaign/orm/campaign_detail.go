@@ -67,7 +67,7 @@ func (m *Manager) FillCampaignDailyDataTableArray(
 	dateRange map[string]string,
 	search map[string]string,
 	contextparams map[string]string,
-	sort, order string, p, c int) (CampaignDailyDataTableArray, int64) {
+	sort, order string, p, c int) (CampaignDailyDataTableArray, int64, error) {
 
 	var params []interface{}
 	var res CampaignDailyDataTableArray
@@ -75,11 +75,11 @@ func (m *Manager) FillCampaignDailyDataTableArray(
 
 	val, ok := contextparams["id"]
 	if !ok {
-		return res, 0
+		return res, 0, nil
 	}
 	id, err := strconv.ParseInt(val, 10, 64)
 	if err != nil {
-		return res, 0
+		return res, 0, nil
 	}
 
 	countQuery := fmt.Sprintf(`SELECT COUNT(cd.daily_id) FROM %s AS cd
@@ -183,5 +183,5 @@ func (m *Manager) FillCampaignDailyDataTableArray(
 
 	_, err = m.GetRDbMap().Select(&res, query, params...)
 	assert.Nil(err)
-	return res, count
+	return res, count, nil
 }
