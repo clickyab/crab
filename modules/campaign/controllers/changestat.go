@@ -50,7 +50,7 @@ func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.
 	assert.Nil(err)
 	_, ok := aaa.CheckPermOn(owner, currentUser, "change_campaign", campaign.DomainID)
 	if !ok {
-		return nil, t9e.G("access denied. you can't change campaign status")
+		return nil, errors.AccessDenied
 	}
 	// if campaign current mode is archive nothing can be done
 	if campaign.ArchivedAt.Valid && campaign.ArchivedAt.Time.Before(time.Now()) {

@@ -26,32 +26,22 @@ const (
 )
 
 // AddCampaign for creating campaign with minimum info
-func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *domainOrm.Domain) (*Campaign, error) {
-	ca := &Campaign{
+func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *domainOrm.Domain) (Campaign, Schedule, error) {
+	ca := Campaign{
+		Title:    c.Title,
 		DomainID: d.ID,
 		UserID:   u.ID,
-		Exchange: "all",
-		CampaignFinance: CampaignFinance{
-			Strategy: CPC,
-		},
-		CampaignBaseType: CampaignBaseType{
-			Kind: c.Kind,
-		},
-		CampaignStatus: CampaignStatus{
-			TLD:     c.TLD,
-			Status:  c.Status,
-			StartAt: c.StartAt,
-			EndAt:   c.EndAt,
-			Title:   c.Title,
-		},
+		Kind:     c.Kind,
+		Exchange: All,
+		TLD:      c.TLD,
+		Strategy: CPC,
+		Status:   c.Status,
+		StartAt:  c.StartAt,
+		EndAt:    c.EndAt,
 		Progress: ProgressInProgress,
 	}
-	switch c.Kind {
-	case WebCampaign:
-		ca.webMaxBid(c)
-	case AppCampaign:
-		ca.appMaxBid(c)
-	}
+	var s Schedule
+
 	err := m.Begin()
 	assert.Nil(err)
 	defer func() {
@@ -62,21 +52,21 @@ func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *domainOrm.Domain) 
 		assert.Nil(m.Rollback())
 	}()
 
-	if err = m.CreateCampaign(ca); err != nil {
-		return nil, err
+	if err = m.CreateCampaign(&ca); err != nil {
+		return ca, s, err
 	}
-	s := &Schedule{
+
+	s = Schedule{
 		CampaignID:    ca.ID,
 		ScheduleSheet: c.Schedule,
 	}
-	ca.Schedule = s.ScheduleSheet
-	err = m.CreateSchedule(s)
-	return ca, err
+	err = m.CreateSchedule(&s)
+
+	return ca, s, err
 }
 
 // UpdateCampaignByID for updating campaign with minimum info
-func (m *Manager) UpdateCampaignByID(c CampaignStatus, ca *Campaign) error {
-
+func (m *Manager) UpdateCampaignByID(c CampaignBase, ca *Campaign) error {
 	ca.Status = c.Status
 	if ca.StartAt != c.StartAt {
 		if time.Now().Truncate(time.Hour * 24).After(c.StartAt) {
@@ -112,85 +102,34 @@ func (m *Manager) UpdateCampaignByID(c CampaignStatus, ca *Campaign) error {
 		return err
 	}
 
-	err = m.attachAttribute(ca)
-	if err != nil {
-		return err
-	}
-
 	err = m.UpdateSchedule(s)
 	return err
 }
 
-// Finalize will mark campaign ready for publish
-func (m *Manager) Finalize(ca *Campaign) error {
-
-	ca.Progress = ProgressFinalized
-	err := m.UpdateCampaign(ca)
-	if err != nil {
-		return err
-	}
-
-	err = m.attachAttribute(ca)
-	if err != nil {
-		return err
-	}
-
-	err = m.attachSchedule(ca)
-
-	return err
-}
-
-func (m *Manager) attachSchedule(c *Campaign) error {
-	s, err := m.FindScheduleByCampaignID(c.ID)
+// GetSchedule get campaign schedule data
+func (m *Manager) GetSchedule(caID int64) (*Schedule, error) {
+	s, err := m.FindScheduleByCampaignID(caID)
 	if err != nil && err != sql.ErrNoRows {
-		return err
+		return nil, err
 	}
 
-	c.Schedule = s.ScheduleSheet
-
-	return nil
-}
-
-func (m *Manager) attachAttribute(c *Campaign) error {
-	s, err := m.FindCampaignAttributesByCampaignID(c.ID)
-	if err != nil && err != sql.ErrNoRows {
-		return err
-	}
-
-	c.Attributes = s
-
-	return nil
-}
-
-func (ca *Campaign) webMaxBid(c CampaignBase) {
-
-}
-func (ca *Campaign) appMaxBid(c CampaignBase) {
-
+	return s, nil
 }
 
 // FindCampaignByIDDomain return the Campaign base on its id and domain id
-func (m *Manager) FindCampaignByIDDomain(id, d int64) (*Campaign, error) {
+func (m *Manager) FindCampaignByIDDomain(caID, dID int64) (*Campaign, error) {
 	var res Campaign
 	err := m.GetRDbMap().SelectOne(
 		&res,
 		fmt.Sprintf("SELECT * FROM %s WHERE id=? AND domain_id=?", CampaignTableFull),
-		id,
-		d,
+		caID,
+		dID,
 	)
 
 	if err != nil {
 		return nil, err
 	}
 
-	res.Receivers = m.GetReportReceivers(id)
-
-	err = m.attachAttribute(&res)
-	if err != nil {
-		return &res, err
-	}
-
-	err = m.attachSchedule(&res)
 	return &res, err
 }
 

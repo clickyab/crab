@@ -88,6 +88,12 @@ type InventoryPublisher struct {
 	InventoryID int64 `json:"inventory_id" db:"inventory_id"`
 }
 
+// InventoryWithPubCount type
+type InventoryWithPubCount struct {
+	Inventory
+	PublisherCount int64 `json:"publisher_count" db:"publisher_count"`
+}
+
 // GetDomainPublishers try to get all Inventory with ids
 func (m *Manager) GetDomainPublishers(ids []int64) []Inventory {
 	var res []Inventory
@@ -395,4 +401,21 @@ func subtractsTwoArray(a, b []int64) []int64 {
 		res = append(res, i)
 	}
 	return res
+}
+
+// FindInventoryAndPubCount find inventory info + publishers count
+func (m *Manager) FindInventoryAndPubCount(id int64) (InventoryWithPubCount, error) {
+	var res InventoryWithPubCount
+
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT COUNT(ip.publisher_id) AS publisher_count,i.* FROM %s AS i "+
+			"INNER JOIN inventories_publishers AS ip ON ip.inventory_id=i.id "+
+			"WHERE id=?",
+			InventoryTableFull,
+		),
+		id,
+	)
+
+	return res, err
 }
