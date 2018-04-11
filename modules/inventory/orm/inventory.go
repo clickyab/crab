@@ -7,6 +7,8 @@ import (
 
 	"fmt"
 
+	"database/sql"
+
 	"clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
@@ -283,6 +285,39 @@ func removeDuplicate(elements []int64) []int64 {
 		}
 	}
 	return result
+}
+
+// Duplicate inventory. the id argument is the target inventory id
+func (m *Manager) Duplicate(id int64) (*Inventory, error) {
+	o, err := m.FindInventoryByID(id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			assert.Nil(err)
+		}
+		return nil, err
+	}
+	oid := o.ID
+
+	err = m.Begin()
+	defer func() {
+		if err != nil {
+			assert.Nil(m.Rollback())
+			return
+		}
+		assert.Nil(m.Commit())
+	}()
+
+	err = m.CreateInventory(o)
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = m.GetWDbMap().Exec(fmt.Sprintf(`INSERT into %[2]s
+	SELECT %[1]d as inventory_id,publisher_id  FROM %[2]s
+	WHERE inventory_id=?`, oid, InventoryPublisherTableFull), o.ID)
+
+	return o, err
 }
 
 // InventoryDataTable is the inventory full data in data table
