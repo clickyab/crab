@@ -90,9 +90,11 @@ func (ctrl *Controller) duplicate(ctx context.Context, r *http.Request, pl *dupl
 	}
 
 	iu, err := aaa.NewAaaManager().FindUserWithParentsByID(a.ID, dm.ID)
-	assert.Nil(err)
+	if err != nil {
+		return nil, errors.InvalidIDErr
+	}
 
-	_, ok := aaa.CheckPermOn(iu, currentUser, "add_inventory", dm.ID)
+	_, ok := aaa.CheckPermOn(iu, currentUser, "duplicate_inventory", dm.ID)
 	if !ok {
 		return nil, errors.AccessDeniedErr
 	}

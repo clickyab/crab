@@ -302,10 +302,10 @@ func (m *Manager) Duplicate(id int64) (*Inventory, error) {
 	err = m.Begin()
 	defer func() {
 		if err != nil {
-			m.Rollback()
+			assert.Nil(m.Rollback())
 			return
 		}
-		m.Commit()
+		assert.Nil(m.Commit())
 	}()
 
 	err = m.CreateInventory(o)
@@ -315,8 +315,8 @@ func (m *Manager) Duplicate(id int64) (*Inventory, error) {
 	}
 
 	_, err = m.GetWDbMap().Exec(fmt.Sprintf(`INSERT into %[2]s
-	SELECT %[1]d as inventory_id,publisher_id  FROM %[2]s
-	WHERE inventory_id=?`, oid, InventoryPublisherTableFull), o.ID)
+	SELECT publisher_id, %[1]d as inventory_id  FROM %[2]s
+	WHERE inventory_id=?`, o.ID, InventoryPublisherTableFull), oid)
 
 	return o, err
 }
