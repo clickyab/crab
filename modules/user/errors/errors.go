@@ -25,3 +25,12 @@ func NotFoundError(id int64) error {
 
 	return t9e.G("user not found, please check your request data.")
 }
+
+// NotFoundWithDomainError maker
+func NotFoundWithDomainError(dName string) error {
+	if dName != "" {
+		return t9e.G("can't find user with related domain", dName)
+	}
+
+	return t9e.G("can't find user with related domain")
+}

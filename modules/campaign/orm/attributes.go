@@ -27,15 +27,14 @@ type CampaignAttributes struct {
 	ISP          mysql.StringJSONArray `json:"isp" db:"isp"`
 }
 
-// UpdateAttribute will update campaign attributes
-func (m *Manager) UpdateAttribute(attributes CampaignAttributes, ca *Campaign) error {
+// AttachCampaignAttributes will update campaign attributes
+func (m *Manager) AttachCampaignAttributes(attributes CampaignAttributes) (CampaignAttributes, error) {
 
-	_, err := m.FindCampaignAttributesByCampaignID(ca.ID)
+	_, err := m.FindCampaignAttributesByCampaignID(attributes.CampaignID)
 	if err != sql.ErrNoRows {
 		assert.Nil(err)
 	}
 	at := &attributes
-	at.CampaignID = ca.ID
 
 	if err != nil {
 		err = m.CreateCampaignAttributes(at)
@@ -43,12 +42,5 @@ func (m *Manager) UpdateAttribute(attributes CampaignAttributes, ca *Campaign) e
 		err = m.UpdateCampaignAttributes(at)
 	}
 
-	if err != nil {
-		return err
-	}
-
-	ca.Attributes = at
-	err = m.attachSchedule(ca)
-	return err
-
+	return attributes, err
 }

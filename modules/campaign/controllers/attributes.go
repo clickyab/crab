@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 
 	asset "clickyab.com/crab/modules/asset/orm"
@@ -14,19 +13,30 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/array"
-	"github.com/clickyab/services/gettext/t9e"
-	"github.com/rs/xmux"
-	"github.com/sirupsen/logrus"
+	"github.com/clickyab/services/mysql"
 )
 
 // @Validate{
 //}
 type attributesPayload struct {
-	orm.CampaignAttributes
-	campaign *orm.Campaign `json:"-"`
+	Device       mysql.StringJSONArray `json:"device" validate:"omitempty"`
+	Manufacturer mysql.StringJSONArray `json:"manufacturer" validate:"omitempty"`
+	OS           mysql.StringJSONArray `json:"os" validate:"omitempty"`
+	Browser      mysql.StringJSONArray `json:"browser" validate:"omitempty"`
+	IAB          mysql.StringJSONArray `json:"iab" validate:"omitempty"`
+	Region       mysql.StringJSONArray `json:"region" validate:"omitempty"`
+	Cellular     mysql.StringJSONArray `json:"cellular" validate:"omitempty"`
+	ISP          mysql.StringJSONArray `json:"isp" validate:"omitempty"`
+	baseData     *BaseData             `json:"-"`
 }
 
 func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	res, err := CheckUserCamapignDomain(ctx)
+	if err != nil {
+		return err
+	}
+	l.baseData = res
+
 	queryGen := func(t string, s []string) string {
 		m := len(s)
 		return fmt.Sprintf(`select count(name) as total from %s where name in (%s)`, t, strings.Repeat("?,", m)[:2*m-1])
@@ -53,17 +63,6 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 		}
 	}
 
-	campaignIDInt, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
-	if err != nil {
-		return t9e.G("campaign id not valid")
-	}
-	db := orm.NewOrmManager()
-	campaign, err := db.FindCampaignByID(campaignIDInt)
-	if err != nil {
-		return t9e.G("campaign not found")
-	}
-	l.campaign = campaign
-
 	// TODO : extra validation based on campaign kind
 
 	for k, v := range stringArrays {
@@ -73,7 +72,6 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 		}
 
 		if t, err := o.GetRDbMap().SelectInt(queryGen(k, v), values...); err != nil || int64(len(v)) != t {
-			logrus.Warn(err)
 			return errors.InvalidError(k)
 		}
 	}
@@ -81,41 +79,48 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 	return nil
 }
 
+type attributesResult struct {
+	orm.Campaign
+	orm.CampaignAttributes
+}
+
 // attributes will update campaign attribute
 // @Rest {
 // 		url = /attributes/:id
 //		protected = true
 // 		method = put
+//		resource = edit_attributes:self
 // }
-func (c *Controller) attributes(ctx context.Context, r *http.Request, p *attributesPayload) (*orm.Campaign, error) {
-	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
-	if err != nil || id < 1 {
-		return nil, errors.InvalidIDErr
-	}
-
+func (c *Controller) attributes(ctx context.Context, r *http.Request, p *attributesPayload) (*attributesResult, error) {
 	db := orm.NewOrmManager()
-	ca, err := db.FindCampaignByID(id)
-	if err != nil {
-		return ca, errors.NotFoundError(id)
-	}
 
 	// check access
-	userManager := aaa.NewAaaManager()
-	owner, err := userManager.FindUserWithParentsByID(p.campaign.UserID, id)
-	if err != nil {
-		return ca, t9e.G("can't find user with related domain")
-	}
-
 	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(owner, currentUser, "edit_attributes", id)
+	_, ok := aaa.CheckPermOn(p.baseData.owner, currentUser, "edit_attributes", p.baseData.domain.ID)
 	if !ok {
-		return ca, errors.AccessDenied
+		return nil, errors.AccessDenied
 	}
 
-	err = db.UpdateAttribute(p.CampaignAttributes, p.campaign)
+	attrs := orm.CampaignAttributes{
+		CampaignID:   p.baseData.campaign.ID,
+		Device:       p.Device,
+		Manufacturer: p.Manufacturer,
+		OS:           p.OS,
+		Browser:      p.Browser,
+		IAB:          p.IAB,
+		Region:       p.Region,
+		Cellular:     p.Cellular,
+		ISP:          p.ISP,
+	}
+	attr, err := db.AttachCampaignAttributes(attrs)
 	if err != nil {
-		return ca, t9e.G("can't update campaign attributes")
+		return nil, errors.UpdateError
 	}
 
-	return ca, nil
+	res := attributesResult{
+		Campaign:           *p.baseData.campaign,
+		CampaignAttributes: attr,
+	}
+
+	return &res, nil
 }

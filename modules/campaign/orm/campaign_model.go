@@ -134,12 +134,6 @@ const (
 	All ExchangeType = "all"
 )
 
-type base struct {
-	ID        int64     `json:"id" db:"id"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
-}
-
 // Campaign campaign model in database
 // @Model {
 //		table = campaigns
@@ -148,23 +142,41 @@ type base struct {
 //		list = yes
 // }
 type Campaign struct {
-	base
-	CampaignBaseType
-	CampaignStatus
-	CampaignFinance
-	UserID      int64           `json:"user_id" db:"user_id"`
-	DomainID    int64           `json:"domain_id" db:"domain_id"`
-	Exchange    ExchangeType    `json:"exchange" db:"exchange"`
-	InventoryID mysql.NullInt64 `json:"inventory_id" db:"inventory_id"`
-	// InventoryType black_list or white_list
-	InventoryType    NullInventoryState    `json:"inventory_type" db:"inventory_type"`
-	InventoryDomains mysql.StringJSONArray `json:"-" db:"inventory_domains"`
+	ID               int64                 `json:"id" db:"id"`
+	UserID           int64                 `json:"user_id" db:"user_id"`
+	DomainID         int64                 `json:"domain_id" db:"domain_id"`
+	Title            string                `json:"title" db:"title"`
+	Kind             CampaignKind          `json:"kind" db:"kind"`
+	Status           Status                `json:"status" db:"status"`
 	Progress         Progress              `json:"progress" db:"progress"`
-	Attributes       *CampaignAttributes   `json:"attributes,omitempty" db:"-"`
-	Receivers        []Receiver            `json:"receivers" db:"-"`
-	ArchivedAt       mysql.NullTime        `json:"archived_at" db:"archived_at"`
+	StartAt          time.Time             `json:"start_at" db:"start_at"`
+	EndAt            mysql.NullTime        `json:"end_at" db:"end_at"`
+	TotalBudget      int64                 `json:"total_budget" db:"total_budget"`
+	DailyBudget      int64                 `json:"daily_budget" db:"daily_budget"`
+	Strategy         Strategy              `json:"strategy" db:"strategy"`
+	MaxBid           int64                 `json:"max_bid" db:"max_bid"`
+	Exchange         ExchangeType          `json:"exchange" db:"exchange"`
+	InventoryID      mysql.NullInt64       `json:"inventory_id" db:"inventory_id"`
+	InventoryType    NullInventoryState    `json:"inventory_type" db:"inventory_type"` // InventoryType black_list or white_list
+	InventoryDomains mysql.StringJSONArray `json:"-" db:"inventory_domains"`
+	TLD              string                `json:"tld" db:"tld"`
 	TodaySpend       int64                 `json:"today_spend" db:"today_spend"`
 	TotalSpend       int64                 `json:"total_spend" db:"total_spend"`
+	CreatedAt        time.Time             `json:"created_at" db:"created_at"`
+	UpdatedAt        time.Time             `json:"updated_at" db:"updated_at"`
+	ArchivedAt       mysql.NullTime        `json:"archived_at" db:"archived_at"`
+}
+
+// CampaignBase is minimum data for creating campaign (stage one)
+type CampaignBase struct { // stage one create
+	Status   Status         `json:"status" db:"status"`
+	Progress Progress       `json:"progress" db:"progress"`
+	StartAt  time.Time      `json:"start_at" db:"start_at"`
+	EndAt    mysql.NullTime `json:"end_at" db:"end_at"`
+	Title    string         `json:"title" db:"title"`
+	Kind     CampaignKind   `json:"kind" db:"kind"`
+	TLD      string         `json:"tld" db:"tld"`
+	Schedule ScheduleSheet  `json:"schedule" db:"-"`
 }
 
 // CampaignDataTable is the campaign full data in data table
@@ -218,35 +230,6 @@ type CampaignDataTable struct {
 	OwnerID     int64            `db:"owner_id" json:"owner_id" visible:"false"`
 	DomainID    int64            `db:"domain_id" json:"domain_id"`
 	Actions     string           `db:"-" json:"_actions" visible:"false"`
-}
-
-// CampaignFinance is the financial
-type CampaignFinance struct {
-	TotalBudget int64    `json:"total_budget" db:"total_budget" validate:"required,gt=0"`
-	DailyBudget int64    `json:"daily_budget" db:"daily_budget" validate:"required,gt=0"`
-	Strategy    Strategy `json:"strategy" db:"strategy" validate:"required"`
-	MaxBid      int64    `json:"max_bid" db:"max_bid" validate:"required,gt=0"`
-}
-
-// CampaignBaseType is fundamental data of campaign
-type CampaignBaseType struct {
-	Kind CampaignKind `json:"kind" db:"kind"`
-}
-
-// CampaignStatus update campaign (stage one)
-type CampaignStatus struct {
-	Status   Status         `json:"status" db:"status"`
-	StartAt  time.Time      `json:"start_at" db:"start_at"`
-	EndAt    mysql.NullTime `json:"end_at" db:"end_at"`
-	Title    string         `json:"title" db:"title" `
-	TLD      string         `json:"tld" db:"tld"`
-	Schedule ScheduleSheet  `json:"schedule" db:"-"`
-}
-
-// CampaignBase is minimum data for creating campaign (stage one)
-type CampaignBase struct { // stage one create
-	CampaignBaseType
-	CampaignStatus
 }
 
 // CampaignGraph is the campaign full data in data table

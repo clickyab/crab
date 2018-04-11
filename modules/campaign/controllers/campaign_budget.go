@@ -3,27 +3,33 @@ package controllers
 import (
 	"context"
 	"net/http"
-	"strconv"
 
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	userError "clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/xlog"
-	"github.com/rs/xmux"
 )
 
 // @Validate{
 //}
 type budgetPayload struct {
-	orm.CampaignFinance
-	Exchange  orm.ExchangeType `json:"exchange" db:"exchange" validate:"required"`
-	Receivers []int64          `json:"notify_users" validate:"required"`
+	TotalBudget int64            `json:"total_budget" validate:"required,gt=0"`
+	DailyBudget int64            `json:"daily_budget" validate:"required,gt=0"`
+	Strategy    orm.Strategy     `json:"strategy" validate:"required"`
+	MaxBid      int64            `json:"max_bid" validate:"required,gt=0"`
+	Exchange    orm.ExchangeType `json:"exchange" validate:"required"`
+	Receivers   []int64          `json:"receivers" validate:"omitempty"`
+	baseData    *BaseData        `json:"-"`
 }
 
 func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	res, err := CheckUserCamapignDomain(ctx)
+	if err != nil {
+		return err
+	}
+	l.baseData = res
 
 	if !l.Strategy.IsValid() {
 		return errors.InvalidStrategyError
@@ -47,45 +53,35 @@ func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter
 // 		url = /budget/:id
 //		protected = true
 // 		method = put
+//		resource = edit_budget:self
 // }
 func (c *Controller) budget(ctx context.Context, r *http.Request, p *budgetPayload) (*orm.Campaign, error) {
-	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
-	if err != nil || id < 1 {
-		return nil, errors.InvalidIDErr
-	}
-
 	db := orm.NewOrmManager()
-	ca, err := db.FindCampaignByID(id)
-	if err != nil {
-		return nil, errors.NotFoundError(id)
-	}
 
 	// check access
-	userManager := aaa.NewAaaManager()
-	owner, err := userManager.FindUserWithParentsByID(ca.UserID, ca.DomainID)
-	if err != nil {
-		return ca, t9e.G("can't find user with related domain")
-	}
-
 	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(owner, currentUser, "edit_budget", ca.DomainID)
+	_, ok := aaa.CheckPermOn(p.baseData.owner, currentUser, "edit_budget", p.baseData.domain.ID)
 	if !ok {
-		return ca, errors.AccessDenied
+		return nil, errors.AccessDenied
 	}
 
-	err = db.UpdateCampaignBudget(p.CampaignFinance, ca)
+	p.baseData.campaign.TotalBudget = p.TotalBudget
+	p.baseData.campaign.DailyBudget = p.DailyBudget
+	p.baseData.campaign.Strategy = p.Strategy
+	p.baseData.campaign.MaxBid = p.MaxBid
+	err := db.UpdateCampaign(p.baseData.campaign)
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug("update base campaign")
 
-		return nil, t9e.G("can't update campaign budget")
+		return nil, errors.UpdateError
 	}
 
-	err = db.UpdateReportReceivers(p.Receivers, ca.ID)
+	err = db.UpdateReportReceivers(p.Receivers, p.baseData.campaign.ID)
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug("add campaign report receivers error")
 
-		return nil, t9e.G("can't add/update campaign report receivers")
+		return nil, errors.UpdateError
 	}
 
-	return ca, nil
+	return p.baseData.campaign, nil
 }

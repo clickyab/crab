@@ -11,7 +11,6 @@ import (
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/gettext/t9e"
 	"github.com/rs/xmux"
 )
 
@@ -44,7 +43,7 @@ func (c Controller) getCampaignAds(ctx context.Context, r *http.Request) (sliceA
 
 	_, ok := aaa.CheckPermOn(owner, currentUser, "get_banner", d.ID)
 	if !ok {
-		return ads, t9e.G("access denied. can't get campaign banner data")
+		return ads, errors.AccessDenied
 	}
 
 	return ads, nil

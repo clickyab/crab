@@ -13,7 +13,6 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/gettext/t9e"
 	"github.com/rs/xmux"
 )
 
@@ -49,7 +48,7 @@ func (c Controller) copyCampaign(ctx context.Context, r *http.Request, p *copyCa
 	assert.Nil(err)
 	_, ok := aaa.CheckPermOn(owner, currentUser, "copy_campaign", campaign.DomainID)
 	if !ok {
-		return campaign, t9e.G("access denied. you can't copy campaign")
+		return campaign, errors.AccessDenied
 	}
 
 	// check for archive campaign
