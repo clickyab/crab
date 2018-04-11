@@ -4,12 +4,30 @@
 			"format": "dateTime",
 			"type": "string"
 		},
+		"browser": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
+		"cellular": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
 		"created_at": {
 			"format": "dateTime",
 			"type": "string"
 		},
 		"daily_budget": {
 			"type": "integer"
+		},
+		"device": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
 		},
 		"domain_id": {
 			"type": "integer"
@@ -20,6 +38,12 @@
 		},
 		"exchange": {
 			"type": "string"
+		},
+		"iab": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
 		},
 		"id": {
 			"type": "integer"
@@ -38,14 +62,38 @@
 			},
 			"type": "object"
 		},
+		"isp": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
 		"kind": {
 			"type": "string"
+		},
+		"manufacturer": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
 		},
 		"max_bid": {
 			"type": "integer"
 		},
+		"os": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
 		"progress": {
 			"type": "string"
+		},
+		"region": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
 		},
 		"start_at": {
 			"format": "dateTime",

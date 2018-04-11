@@ -15,13 +15,37 @@ import (
 //		method = put
 //		payload = attributesPayload
 //		middleware = authz.Authenticate
-//		200 = orm.Campaign
+//		resource = edit_attributes:self
+//		200 = attributesResult
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
 // }
 func (c *Controller) attributesPut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := c.MustGetPayload(ctx).(*attributesPayload)
 	res, err := c.attributes(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
+// updateBase campaign
+// @Route {
+// 		url = /base/:id
+//		method = put
+//		payload = campaignBase
+//		middleware = authz.Authenticate
+//		resource = edit_campaign:self
+//		200 = updateResult
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) updateBasePut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*campaignBase)
+	res, err := c.updateBase(ctx, r, pl)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return
@@ -35,9 +59,11 @@ func (c *Controller) attributesPut(ctx context.Context, w http.ResponseWriter, r
 //		method = put
 //		payload = budgetPayload
 //		middleware = authz.Authenticate
+//		resource = edit_budget:self
 //		200 = orm.Campaign
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
 // }
 func (c *Controller) budgetPut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := c.MustGetPayload(ctx).(*budgetPayload)
@@ -55,35 +81,15 @@ func (c *Controller) budgetPut(ctx context.Context, w http.ResponseWriter, r *ht
 //		method = post
 //		payload = createCampaignPayload
 //		middleware = authz.Authenticate
-//		200 = orm.Campaign
-//		400 = controller.ErrorResponseSimple
-//		401 = controller.ErrorResponseSimple
-// }
-func (c Controller) createBasePost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := c.MustGetPayload(ctx).(*createCampaignPayload)
-	res, err := c.createBase(ctx, r, pl)
-	if err != nil {
-		framework.Write(w, err, http.StatusBadRequest)
-		return
-	}
-	framework.Write(w, res, http.StatusOK)
-}
-
-// updateBase campaign
-// @Route {
-// 		url = /base/:id
-//		method = put
-//		payload = campaignStatus
-//		middleware = authz.Authenticate
 //		resource = edit_campaign:self
-//		200 = orm.Campaign
+//		200 = baseResult
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
 // }
-func (c Controller) updateBasePut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := c.MustGetPayload(ctx).(*campaignStatus)
-	res, err := c.updateBase(ctx, r, pl)
+func (c Controller) createBasePost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*createCampaignPayload)
+	res, err := c.createBase(ctx, r, pl)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return
@@ -96,9 +102,11 @@ func (c Controller) updateBasePut(ctx context.Context, w http.ResponseWriter, r 
 // 		url = /finalize/:id
 //		method = put
 //		middleware = authz.Authenticate
-//		200 = orm.Campaign
+//		resource = edit_campaign:self
+//		200 = finalizeResult
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
 // }
 func (c *Controller) finalizePut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
