@@ -64,3 +64,40 @@ func (ctrl *Controller) createPreset(ctx context.Context, r *http.Request, pl *c
 	assert.Nil(e)
 	return res, nil
 }
+
+//@Validate {
+//}
+type duplicateInventoryPayload struct {
+	ID int64 `json:"id"  validate:"required"`
+}
+
+// duplicate a new whitelist blacklist for user
+// @Rest {
+// 		url = /duplicate
+//		method = post
+//		protected = true
+//		resource = duplicate_inventory:self
+// }
+func (ctrl *Controller) duplicate(ctx context.Context, r *http.Request, pl *duplicateInventoryPayload) (*orm.Inventory, error) {
+	currentUser := authz.MustGetUser(ctx)
+	dm := domain.MustGetDomain(ctx)
+
+	m := orm.NewOrmManager()
+	a, err := m.FindInventoryByIDDomain(pl.ID, dm.ID)
+
+	if err != nil {
+		return nil, errors.InvalidIDErr
+	}
+
+	iu, err := aaa.NewAaaManager().FindUserWithParentsByID(a.ID, dm.ID)
+	assert.Nil(err)
+
+	_, ok := aaa.CheckPermOn(iu, currentUser, "add_inventory", dm.ID)
+	if !ok {
+		return nil, errors.AccessDeniedErr
+	}
+
+	res, e := m.Duplicate(pl.ID)
+	assert.Nil(e)
+	return res, nil
+}
