@@ -252,7 +252,11 @@ func (u *Controller) list{{ .Data.Entity|ucfirst }}(ctx context.Context, w http.
 	}
 
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "{{ .Data.View.Perm }}", "{{ .Data.View.Scope }}",domain.ID)
-	dt, cnt := m.{{ .Data.Fill }}(pc, filter,dateRange, search, params, sort, order, p, c)
+	dt, cnt, err := m.{{ .Data.Fill }}(pc, filter,dateRange, search, params, sort, order, p, c)
+	if err!=nil{
+		u.JSON(w,http.StatusBadRequest,err)
+		return
+	}
 	res := 		list{{ .Data.Entity|ucfirst }}Response{
 		Total:   cnt,
 		Data:    dt.Filter(usr),
