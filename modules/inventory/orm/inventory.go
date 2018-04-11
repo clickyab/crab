@@ -301,10 +301,10 @@ func (m *Manager) Duplicate(id int64) (*Inventory, error) {
 	err = m.Begin()
 	defer func() {
 		if err != nil {
-			m.Rollback()
+			assert.Nil(m.Rollback())
 			return
 		}
-		m.Commit()
+		assert.Nil(m.Commit())
 	}()
 
 	err = m.CreateInventory(o)
