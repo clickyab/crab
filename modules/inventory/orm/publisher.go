@@ -169,7 +169,7 @@ type SinglePublisherDataTable struct {
 	Actions   string  `db:"-" json:"_actions" visible:"false"`
 }
 
-// FillPublisherDataTableArray is the function to handle
+// FillSinglePublisherDataTableArray is the function to handle
 func (m *Manager) FillSinglePublisherDataTableArray(
 	pc permission.InterfaceComplete,
 	filters map[string]string,
@@ -198,7 +198,7 @@ func (m *Manager) FillSinglePublisherDataTableArray(
 	)
 	val, ok := contextparams["id"]
 	if !ok {
-
+		return nil, 0, errors.DBError
 	}
 	intVal, err := strconv.ParseInt(val, 10, 0)
 	if err != nil {
