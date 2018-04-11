@@ -1,11 +1,57 @@
 {
 	"properties": {
+		"archived_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"daily_budget": {
+			"type": "integer"
+		},
+		"domain_id": {
+			"type": "integer"
+		},
 		"end_at": {
 			"format": "dateTime",
 			"type": "string"
 		},
+		"exchange": {
+			"type": "string"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"inventory_id": {
+			"type": "integer"
+		},
+		"inventory_type": {
+			"properties": {
+				"InventoryState": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"kind": {
+			"type": "string"
+		},
+		"max_bid": {
+			"type": "integer"
+		},
+		"progress": {
+			"type": "string"
+		},
 		"schedule": {
 			"properties": {
+				"campaign_id": {
+					"type": "integer"
+				},
 				"h00": {
 					"properties": {
 						"String": {
@@ -269,6 +315,13 @@
 						}
 					},
 					"type": "object"
+				},
+				"id": {
+					"type": "integer"
+				},
+				"updated_at": {
+					"format": "dateTime",
+					"type": "string"
 				}
 			},
 			"type": "object"
@@ -280,11 +333,30 @@
 		"status": {
 			"type": "string"
 		},
+		"strategy": {
+			"type": "string"
+		},
 		"title": {
 			"type": "string"
 		},
 		"tld": {
 			"type": "string"
+		},
+		"today_spend": {
+			"type": "integer"
+		},
+		"total_budget": {
+			"type": "integer"
+		},
+		"total_spend": {
+			"type": "integer"
+		},
+		"updated_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"user_id": {
+			"type": "integer"
 		}
 	},
 	"type": "object"

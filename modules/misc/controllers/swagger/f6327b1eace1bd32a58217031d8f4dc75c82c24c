@@ -22,7 +22,7 @@
 				"name": "payload_data",
 				"required": false,
 				"schema": {
-					"$ref": "#/definitions/controllers_campaignStatus"
+					"$ref": "#/definitions/controllers_campaignBase"
 				}
 			}
 		],
@@ -30,7 +30,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/orm_Campaign"
+					"$ref": "#/definitions/controllers_updateResult"
 				}
 			},
 			"400": {

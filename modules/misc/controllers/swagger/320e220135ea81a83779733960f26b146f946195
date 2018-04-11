@@ -10,16 +10,23 @@
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": " search the owner_email field",
 				"in": "query",
-				"name": "p",
+				"name": "owner_email",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
 				"required": false,
 				"type": "int"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "to",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
@@ -33,21 +40,14 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
 				"name": "cost_type",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": " page number",
 				"in": "query",
-				"name": "c",
+				"name": "p",
 				"required": false,
 				"type": "int"
 			},
@@ -59,9 +59,9 @@
 				"type": "string"
 			},
 			{
-				"description": " search the owner_email field",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "owner_email",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},

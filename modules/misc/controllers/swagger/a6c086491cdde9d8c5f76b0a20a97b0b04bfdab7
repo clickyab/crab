@@ -30,7 +30,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/orm_Campaign"
+					"$ref": "#/definitions/controllers_attributesResult"
 				}
 			},
 			"400": {
@@ -46,26 +46,9 @@
 				}
 			},
 			"403": {
-				"description": "forbidden, you have no access here",
+				"description": "",
 				"schema": {
-					"properties": {
-						"error": {
-							"properties": {
-								"params": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						}
-					},
-					"title": "forbidden",
-					"type": "object"
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},

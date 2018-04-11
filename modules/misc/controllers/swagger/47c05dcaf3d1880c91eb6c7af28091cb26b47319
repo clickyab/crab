@@ -9,7 +9,7 @@
 		"max_bid": {
 			"type": "integer"
 		},
-		"notify_users": {
+		"receivers": {
 			"items": {
 				"type": "integer"
 			},

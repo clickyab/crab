@@ -17,6 +17,13 @@
 				"type": "string"
 			},
 			{
+				"description": " search the label field",
+				"in": "query",
+				"name": "label",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
@@ -34,13 +41,6 @@
 				"description": " the sort and order like id:asc or id:desc available column \"created_at\"",
 				"in": "query",
 				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the label field",
-				"in": "query",
-				"name": "label",
 				"required": false,
 				"type": "string"
 			},
