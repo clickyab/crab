@@ -10,16 +10,16 @@
 				"type": "int"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the label field",
 				"in": "query",
-				"name": "to",
+				"name": "label",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the label field",
+				"description": " the sort and order like id:asc or id:desc available column \"created_at\"",
 				"in": "query",
-				"name": "label",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
@@ -38,9 +38,9 @@
 				"type": "string"
 			},
 			{
-				"description": " the sort and order like id:asc or id:desc available column \"created_at\"",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "sort",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},

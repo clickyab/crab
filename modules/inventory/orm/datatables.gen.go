@@ -12,6 +12,8 @@ type (
 	InventoryDataTableArray []InventoryDataTable
 
 	PublisherDataTableArray []PublisherDataTable
+
+	SinglePublisherDataTableArray []SinglePublisherDataTable
 )
 
 func (idta InventoryDataTableArray) Filter(u permission.Interface) InventoryDataTableArray {
@@ -72,12 +74,6 @@ func (pdt PublisherDataTable) Filter(u permission.Interface) PublisherDataTable 
 	action := []string{}
 	res := PublisherDataTable{}
 
-	res.OwnerID = pdt.OwnerID
-
-	res.DomainID = pdt.DomainID
-
-	res.ParentIDs = pdt.ParentIDs
-
 	res.Actions = pdt.Actions
 
 	res.ID = pdt.ID
@@ -111,5 +107,55 @@ func (pdt PublisherDataTable) Filter(u permission.Interface) PublisherDataTable 
 func init() {
 
 	permission.Register("none", "none")
+
+}
+
+func (spdta SinglePublisherDataTableArray) Filter(u permission.Interface) SinglePublisherDataTableArray {
+	res := make(SinglePublisherDataTableArray, len(spdta))
+	for i := range spdta {
+		res[i] = spdta[i].Filter(u)
+	}
+
+	return res
+}
+
+// Filter is for filtering base on permission
+func (spdt SinglePublisherDataTable) Filter(u permission.Interface) SinglePublisherDataTable {
+	action := []string{}
+	res := SinglePublisherDataTable{}
+
+	res.OwnerID = spdt.OwnerID
+
+	res.DomainID = spdt.DomainID
+
+	res.ParentIDs = spdt.ParentIDs
+
+	res.Actions = spdt.Actions
+
+	res.ID = spdt.ID
+
+	res.Name = spdt.Name
+
+	res.Domain = spdt.Domain
+
+	res.Categories = spdt.Categories
+
+	res.Supplier = spdt.Supplier
+
+	res.Kind = spdt.Kind
+
+	res.Status = spdt.Status
+
+	res.CreatedAt = spdt.CreatedAt
+
+	res.UpdatedAt = spdt.UpdatedAt
+
+	res.DeletedAt = spdt.DeletedAt
+
+	res.Actions = strings.Join(action, ",")
+	return res
+}
+
+func init() {
 
 }

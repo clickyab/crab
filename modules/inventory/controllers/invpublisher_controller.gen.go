@@ -20,15 +20,15 @@ import (
 	"github.com/rs/xmux"
 )
 
-type listPublisherResponse struct {
-	Total   int64                       `json:"total"`
-	Data    orm.PublisherDataTableArray `json:"data"`
-	Page    int                         `json:"page"`
-	PerPage int                         `json:"per_page"`
-	Hash    string                      `json:"hash"`
+type listInvpublisherResponse struct {
+	Total   int64                             `json:"total"`
+	Data    orm.SinglePublisherDataTableArray `json:"data"`
+	Page    int                               `json:"page"`
+	PerPage int                               `json:"per_page"`
+	Hash    string                            `json:"hash"`
 }
 
-type listPublisherDefResponse struct {
+type listInvpublisherDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
@@ -38,27 +38,27 @@ type listPublisherDefResponse struct {
 }
 
 var (
-	listPublisherDefinition permission.Columns
-	Publishertmp            = []byte{}
+	listInvpublisherDefinition permission.Columns
+	Invpublishertmp            = []byte{}
 )
 
 // @Route {
-// 		url = /publisher/list
+// 		url = /publisher/list/single/:id
 //		method = get
 //		_c_ = int , count per page
 //		_p_ = int , page number
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
-//		resource = publisher_list:self
+//		resource = list_inventory:self
 //		_sort_ = string, the sort and order like id:asc or id:desc available column "created_at"
 //		_kind_ = string , filter the kind field valid values are "web","app"
 //		_status_ = string , filter the status field valid values are "accepted","pending","blocked"
 //		_name_ = string , search the name field
 //		_domain_ = string , search the domain field
 //		_supplier_ = string , search the supplier field
-//		200 = listPublisherResponse
+//		200 = listInvpublisherResponse
 // }
-func (u *Controller) listPublisher(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (u *Controller) listInvpublisher(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	m := orm.NewOrmManager()
 	usr := authz.MustGetUser(ctx)
 	domain := domain.MustGetDomain(ctx)
@@ -117,13 +117,13 @@ func (u *Controller) listPublisher(ctx context.Context, w http.ResponseWriter, r
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
-	pc := permission.NewInterfaceComplete(usr, usr.ID, "publisher_list", "self", domain.ID)
-	dt, cnt, err := m.FillPublisherDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
+	pc := permission.NewInterfaceComplete(usr, usr.ID, "list_inventory", "self", domain.ID)
+	dt, cnt, err := m.FillSinglePublisherDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
 		return
 	}
-	res := listPublisherResponse{
+	res := listInvpublisherResponse{
 		Total:   cnt,
 		Data:    dt.Filter(usr),
 		Page:    p,
@@ -131,7 +131,7 @@ func (u *Controller) listPublisher(ctx context.Context, w http.ResponseWriter, r
 	}
 
 	h := sha1.New()
-	_, _ = h.Write(Publishertmp)
+	_, _ = h.Write(Invpublishertmp)
 	res.Hash = fmt.Sprintf("%x", h.Sum(nil))
 
 	u.OKResponse(
@@ -141,23 +141,56 @@ func (u *Controller) listPublisher(ctx context.Context, w http.ResponseWriter, r
 }
 
 // @Route {
-// 		url = /publisher/list/definition
+// 		url = /publisher/list/single/:id/definition
 //		method = get
-//		resource = publisher_list:self
-//		200 = listPublisherDefResponse
+//		resource = list_inventory:self
+//		200 = listInvpublisherDefResponse
 // }
-func (u *Controller) defPublisher(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (u *Controller) defInvpublisher(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	h := sha1.New()
-	_, _ = h.Write(Publishertmp)
+	_, _ = h.Write(Invpublishertmp)
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listPublisherDefResponse{Checkable: true, SearchKey: "q", Multiselect: true, DateFilter: "created_at", Hash: hash, Columns: listPublisherDefinition},
+		listInvpublisherDefResponse{Checkable: true, SearchKey: "q", Multiselect: true, DateFilter: "created_at", Hash: hash, Columns: listInvpublisherDefinition},
 	)
 }
 
 func init() {
-	Publishertmp = []byte(` [
+	Invpublishertmp = []byte(` [
+		{
+			"data": "owner_id",
+			"name": "OwnerID",
+			"searchable": false,
+			"sortable": false,
+			"visible": false,
+			"filter": false,
+			"title": "OwnerID",
+			"type": "",
+			"filter_valid_map": null
+		},
+		{
+			"data": "domain_id",
+			"name": "DomainID",
+			"searchable": false,
+			"sortable": false,
+			"visible": false,
+			"filter": false,
+			"title": "DomainID",
+			"type": "",
+			"filter_valid_map": null
+		},
+		{
+			"data": "parent_ids",
+			"name": "ParentIDs",
+			"searchable": false,
+			"sortable": false,
+			"visible": false,
+			"filter": false,
+			"title": "ParentIDs",
+			"type": "",
+			"filter_valid_map": null
+		},
 		{
 			"data": "_actions",
 			"name": "Actions",
@@ -287,5 +320,5 @@ func init() {
 			"filter_valid_map": null
 		}
 	] `)
-	assert.Nil(json.Unmarshal(Publishertmp, &listPublisherDefinition))
+	assert.Nil(json.Unmarshal(Invpublishertmp, &listInvpublisherDefinition))
 }

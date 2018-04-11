@@ -98,7 +98,11 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 	}
 
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "list_inventory", "self", domain.ID)
-	dt, cnt := m.FillInventoryDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
+	dt, cnt, err := m.FillInventoryDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
+	if err != nil {
+		u.JSON(w, http.StatusBadRequest, err)
+		return
+	}
 	res := listInventoryResponse{
 		Total:   cnt,
 		Data:    dt.Filter(usr),
