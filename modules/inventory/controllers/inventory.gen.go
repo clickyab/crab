@@ -285,6 +285,33 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		// End route with key 9
 
 		/* Route {
+			"Route": "/duplicate",
+			"Method": "POST",
+			"Function": "Controller.duplicatePost",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "ctrl",
+			"Payload": "duplicateInventoryPayload",
+			"Resource": "duplicate_inventory",
+			"Scope": "self"
+		} with key 10 */
+		m10 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("duplicate_inventory", "duplicate_inventory")
+		m10 = append(m10, authz.AuthorizeGenerator("duplicate_inventory", "self"))
+
+		// Make sure payload is the last middleware
+		m10 = append(m10, middleware.PayloadUnMarshallerGenerator(duplicateInventoryPayload{}))
+		group.POST("controllers-Controller-duplicatePost", "/duplicate", framework.Mix(ctrl.duplicatePost, m10...))
+		// End route with key 10
+
+		/* Route {
 			"Route": "/removepub/:id",
 			"Method": "PATCH",
 			"Function": "Controller.removePresetPatch",
@@ -298,18 +325,18 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"Payload": "removeInventoryPayload",
 			"Resource": "edit_inventory",
 			"Scope": "self"
-		} with key 10 */
-		m10 := append(groupMiddleware, []framework.Middleware{
+		} with key 11 */
+		m11 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("edit_inventory", "edit_inventory")
-		m10 = append(m10, authz.AuthorizeGenerator("edit_inventory", "self"))
+		m11 = append(m11, authz.AuthorizeGenerator("edit_inventory", "self"))
 
 		// Make sure payload is the last middleware
-		m10 = append(m10, middleware.PayloadUnMarshallerGenerator(removeInventoryPayload{}))
-		group.PATCH("controllers-Controller-removePresetPatch", "/removepub/:id", framework.Mix(ctrl.removePresetPatch, m10...))
-		// End route with key 10
+		m11 = append(m11, middleware.PayloadUnMarshallerGenerator(removeInventoryPayload{}))
+		group.PATCH("controllers-Controller-removePresetPatch", "/removepub/:id", framework.Mix(ctrl.removePresetPatch, m11...))
+		// End route with key 11
 
 		initializer.DoInitialize(ctrl)
 	})
