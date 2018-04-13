@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"clickyab.com/crab/modules/campaign/orm"
+	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
@@ -68,13 +69,13 @@ const (
 //		list = yes
 // }
 type Inventory struct {
-	ID        int64           `json:"id" db:"id" type:"number"`
+	ID        int64           `json:"id" db:"id" type:"number" sort:"true"`
 	CreatedAt time.Time       `json:"created_at" db:"created_at" type:"date" sort:"true"`
 	UpdatedAt time.Time       `json:"updated_at" db:"updated_at" type:"date"`
 	UserID    int64           `json:"user_id" db:"user_id" type:"number"`
 	DomainID  int64           `json:"domain_id" db:"domain_id" type:"number" visible:"false"`
 	Label     string          `json:"label" db:"label" type:"string" search:"true"`
-	Status    InventoryStatus `json:"status" db:"status" type:"enum"`
+	Status    InventoryStatus `json:"status" db:"status" type:"enum" filter:"true"`
 }
 
 // InventoryPublisher is model for inventories_publishers table in database
@@ -294,23 +295,25 @@ func removeDuplicate(elements []int64) []int64 {
 //		datefilter = created_at
 //		checkable = false
 //		multiselect = false
-//		map_prefix = inventories
+//		map_prefix = i
 //		controller = clickyab.com/crab/modules/inventory/controllers
 //		fill = FillInventoryDataTableArray
 // }
 type InventoryDataTable struct {
 	Inventory
-	OwnerID   int64   `json:"owner_id" db:"owner_id" visible:"false"`
-	DomainID  int64   `json:"domain_id" db:"domain_id" visible:"false"`
-	ParentIDs []int64 `json:"parent_ids" db:"parent_ids" visible:"false"`
-	Actions   string  `db:"-" json:"_actions" visible:"false"`
+	OwnerID           int64   `json:"-" db:"owner_id" visible:"false"`
+	AttachedCampaigns int64   `json:"attached" db:"attached" visible:"false"`
+	DomainID          int64   `json:"-" db:"domain_id" visible:"false"`
+	ParentIDs         []int64 `json:"-" db:"-" visible:"false"`
+	Actions           string  `db:"-" json:"_actions" visible:"false"`
 }
 
 // FillInventoryDataTableArray is the function to handle
 func (m *Manager) FillInventoryDataTableArray(
 	pc permission.InterfaceComplete,
 	filters map[string]string,
-	dateRange map[string]string,
+	from string,
+	to string,
 	search map[string]string,
 	contextparams map[string]string,
 	sort, order string, p, c int) (InventoryDataTableArray, int64, error) {
@@ -318,20 +321,64 @@ func (m *Manager) FillInventoryDataTableArray(
 	var res InventoryDataTableArray
 	var where []string
 	var whereLike []string
-	countQuery := fmt.Sprintf("SELECT COUNT(id) FROM %s",
+	countQuery := fmt.Sprintf("SELECT COUNT(i.id) FROM %s AS i "+
+		"INNER JOIN %s AS owner ON owner.id=i.user_id LEFT JOIN campaigns AS c ON (c.inventory_id=i.id AND c.status=?)",
 		InventoryTableFull,
+		aaa.UserTableFull,
 	)
-	query := fmt.Sprintf("SELECT %s FROM %s",
-		getSelectFields(InventoryTableFull, ""),
+	query := fmt.Sprintf("SELECT %s,owner.id AS owner_id,COUNT(c.id) AS attached FROM %s AS i "+
+		"INNER JOIN %s AS owner ON owner.id=i.user_id LEFT JOIN campaigns AS c ON (c.inventory_id=i.id AND c.status=?)",
+		"i.id,i.label,i.status,i.created_at,i.updated_at,i.domain_id AS domain_id",
 		InventoryTableFull,
+		aaa.UserTableFull,
 	)
+	params = append(params, orm.StartStatus)
 	for field, value := range filters {
 		where = append(where, fmt.Sprintf("%s=?", field))
 		params = append(params, value)
 	}
 
+	//check for date filter
+	if from != "" && to != "" {
+		fromArr := strings.Split(from, ":")
+		toArr := strings.Split(to, ":")
+		where = append(where, fmt.Sprintf(`i.%s BETWEEN ? AND ?`, fromArr[0]))
+		params = append(params, fromArr[1], toArr[1])
+	}
+
+	//check for domain
+	where = append(where, fmt.Sprintf("%s=?", "i.domain_id"))
+	params = append(params, pc.GetDomainID())
+
+	highestScope := pc.GetCurrentScope()
+	if highestScope == permission.ScopeSelf {
+		// find current user childes
+		childes := pc.GetChildesPerm(permission.ScopeSelf, "list_inventory", pc.GetDomainID())
+		childes = append(childes, pc.GetID())
+		where = append(where, fmt.Sprintf("i.user_id IN (%s)",
+			func() string {
+				return strings.TrimRight(strings.Repeat("?,", len(childes)), ",")
+			}(),
+		),
+		)
+		for i := range childes {
+			params = append(params, childes[i])
+		}
+
+	}
+
 	for column, val := range search {
-		whereLike = append(whereLike, fmt.Sprintf("%s LIKE ?", column))
+		if len(whereLike) == 0 {
+			if len(search) == 1 {
+				whereLike = append(whereLike, fmt.Sprintf("(%s LIKE ?)", column))
+			} else {
+				whereLike = append(whereLike, fmt.Sprintf("(%s LIKE ?", column))
+			}
+		} else if len(whereLike) == len(search)-1 {
+			whereLike = append(whereLike, fmt.Sprintf("%s LIKE ?)", column))
+		} else {
+			whereLike = append(whereLike, fmt.Sprintf("%s LIKE ?", column))
+		}
 		params = append(params, "%"+val+"%")
 	}
 	//check for perm
@@ -347,6 +394,8 @@ func (m *Manager) FillInventoryDataTableArray(
 	}
 	query += strings.Join(whereLike, " OR ")
 	countQuery += strings.Join(whereLike, " OR ")
+	query += fmt.Sprintf(" GROUP BY i.id ")
+	countQuery += fmt.Sprintf(" GROUP BY i.id ")
 	limit := c
 	offset := (p - 1) * c
 	if sort != "" {
