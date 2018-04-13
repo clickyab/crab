@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/inventory/orm"
@@ -50,7 +51,7 @@ var (
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		resource = list_inventory:self
-//		_sort_ = string, the sort and order like id:asc or id:desc available column "created_at"
+//		_sort_ = string, the sort and order like id:asc or id:desc available column "id","created_at"
 //		_kind_ = string , filter the kind field valid values are "web","app"
 //		_status_ = string , filter the status field valid values are "accepted","pending","blocked"
 //		_name_ = string , search the name field
@@ -65,37 +66,49 @@ func (u *Controller) listInvpublisher(ctx context.Context, w http.ResponseWriter
 	p, c := framework.GetPageAndCount(r, false)
 
 	filter := make(map[string]string)
-	dateRange := make(map[string]string)
 
 	if e := r.URL.Query().Get("kind"); e != "" && orm.PublisherType(e).IsValid() {
-		filter["publishers.kind"] = e
+		filter["p.kind"] = e
 	}
 
 	if e := r.URL.Query().Get("status"); e != "" && orm.Status(e).IsValid() {
-		filter["publishers.status"] = e
+		filter["p.status"] = e
 	}
 
 	//add date filter
+	var from, to string
 	if e := r.URL.Query().Get("from"); e != "" {
-		dateRange["from-created_at"] = e
+		//validate param
+		fromTime, err := time.Parse(time.RFC3339, e)
+		if err != nil {
+			u.JSON(w, http.StatusBadRequest, err)
+			return
+		}
+		from = "created_at" + ":" + fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	if e := r.URL.Query().Get("to"); e != "" {
-		dateRange["to-created_at"] = e
+		//validate param
+		toTime, err := time.Parse(time.RFC3339, e)
+		if err != nil {
+			u.JSON(w, http.StatusBadRequest, err)
+			return
+		}
+		to = "created_at" + ":" + toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	search := make(map[string]string)
 
 	if e := r.URL.Query().Get("q"); e != "" {
-		search["publishers.name"] = e
+		search["p.name"] = e
 	}
 
 	if e := r.URL.Query().Get("q"); e != "" {
-		search["publishers.domain"] = e
+		search["p.domain"] = e
 	}
 
 	if e := r.URL.Query().Get("q"); e != "" {
-		search["publishers.supplier"] = e
+		search["p.supplier"] = e
 	}
 
 	s := r.URL.Query().Get("sort")
@@ -104,7 +117,7 @@ func (u *Controller) listInvpublisher(ctx context.Context, w http.ResponseWriter
 		parts = append(parts, "asc")
 	}
 	sort := parts[0]
-	if !array.StringInArray(sort, "created_at") {
+	if !array.StringInArray(sort, "id", "created_at") {
 		sort = ""
 	}
 	order := strings.ToUpper(parts[1])
@@ -118,7 +131,7 @@ func (u *Controller) listInvpublisher(ctx context.Context, w http.ResponseWriter
 	}
 
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "list_inventory", "self", domain.ID)
-	dt, cnt, err := m.FillSinglePublisherDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
+	dt, cnt, err := m.FillSinglePublisherDataTableArray(pc, filter, from, to, search, params, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
 		return
@@ -159,39 +172,6 @@ func (u *Controller) defInvpublisher(ctx context.Context, w http.ResponseWriter,
 func init() {
 	Invpublishertmp = []byte(` [
 		{
-			"data": "owner_id",
-			"name": "OwnerID",
-			"searchable": false,
-			"sortable": false,
-			"visible": false,
-			"filter": false,
-			"title": "OwnerID",
-			"type": "",
-			"filter_valid_map": null
-		},
-		{
-			"data": "domain_id",
-			"name": "DomainID",
-			"searchable": false,
-			"sortable": false,
-			"visible": false,
-			"filter": false,
-			"title": "DomainID",
-			"type": "",
-			"filter_valid_map": null
-		},
-		{
-			"data": "parent_ids",
-			"name": "ParentIDs",
-			"searchable": false,
-			"sortable": false,
-			"visible": false,
-			"filter": false,
-			"title": "ParentIDs",
-			"type": "",
-			"filter_valid_map": null
-		},
-		{
 			"data": "_actions",
 			"name": "Actions",
 			"searchable": false,
@@ -206,7 +186,7 @@ func init() {
 			"data": "id",
 			"name": "ID",
 			"searchable": false,
-			"sortable": false,
+			"sortable": true,
 			"visible": true,
 			"filter": false,
 			"title": "ID",

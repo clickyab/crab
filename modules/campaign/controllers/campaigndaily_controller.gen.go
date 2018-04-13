@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/domain/middleware/domain"
@@ -60,15 +61,27 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 	p, c := framework.GetPageAndCount(r, false)
 
 	filter := make(map[string]string)
-	dateRange := make(map[string]string)
 
 	//add date filter
+	var from, to string
 	if e := r.URL.Query().Get("from"); e != "" {
-		dateRange["from-"] = e
+		//validate param
+		fromTime, err := time.Parse(time.RFC3339, e)
+		if err != nil {
+			u.JSON(w, http.StatusBadRequest, err)
+			return
+		}
+		from = "" + ":" + fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	if e := r.URL.Query().Get("to"); e != "" {
-		dateRange["to-"] = e
+		//validate param
+		toTime, err := time.Parse(time.RFC3339, e)
+		if err != nil {
+			u.JSON(w, http.StatusBadRequest, err)
+			return
+		}
+		to = "" + ":" + toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	search := make(map[string]string)
@@ -93,7 +106,7 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 	}
 
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_list", "self", domain.ID)
-	dt, cnt, err := m.FillCampaignDailyDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
+	dt, cnt, err := m.FillCampaignDailyDataTableArray(pc, filter, from, to, search, params, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
 		return
