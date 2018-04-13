@@ -257,33 +257,7 @@ func (m *Manager) FillCampaignDataTableArray(
 	LEFT JOIN %s AS ycd ON (ycd.campaign_id=cp.id AND ycd.daily_id=%d)`,
 		CampaignTableFull, aaa.UserTableFull, aaa.AdvisorTableFull, aaa.UserTableFull, CampaignDetailTableFull, CampaignDetailTableFull, todayInt)
 
-	//check for date range
-	//var dateRangeField string
-	//var from string
-	//var to string
-	//for key, val := range dateRange {
-	//	dateRangeArr := strings.Split(key, "-")
-	//	if len(dateRangeArr) == 2 {
-	//		dateRangeField = dateRangeArr[1]
-	//		if dateRangeArr[0] == "from" {
-	//			from = val
-	//		}
-	//		if dateRangeArr[0] == "to" {
-	//			to = val
-	//		}
-	//	}
-	//}
-	//if dateRangeField != "" && from != "" && to != "" {
-	//	fromTime, err1 := time.Parse(time.RFC3339, from)
-	//	toTime, err2 := time.Parse(time.RFC3339, to)
-	//
-	//	if err1 == nil && err2 == nil {
-	//		where = append(where,
-	//			fmt.Sprintf(`%s BETWEEN "%s" AND "%s"`, dateRangeField,
-	//				fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00"),
-	//				toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")))
-	//	}
-	//}
+	// TODO : fix later
 
 	params = append(params, pc.GetDomainID())
 	for field, value := range filters {

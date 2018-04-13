@@ -201,7 +201,6 @@ func (u *Controller) list{{ .Data.Entity|ucfirst }}(ctx context.Context, w http.
 	p, c := framework.GetPageAndCount(r, false)
 
 	filter := make(map[string]string)
-	dateRange := make(map[string]string)
 	{{ range $f := .Data.Column }}
 	{{ if $f.Filter }}
 	if e := r.URL.Query().Get("{{ $f.Data }}"); e != "" && {{ $.PackageName }}.{{ $f.FieldTypeString }}(e).IsValid() {
@@ -211,12 +210,25 @@ func (u *Controller) list{{ .Data.Entity|ucfirst }}(ctx context.Context, w http.
 	{{ end }}
 
 	//add date filter
+	var from,to string
 	if e := r.URL.Query().Get("from"); e != ""{
-		dateRange["from-{{ .Data.DateFilter }}"]=e
+		//validate param
+		fromTime,err:=time.Parse(time.RFC3339,e)
+		if err!=nil{
+			u.JSON(w, http.StatusBadRequest, err)
+			return
+		}
+		from="{{ .Data.DateFilter }}"+":"+fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	if e := r.URL.Query().Get("to"); e != ""{
-		dateRange["to-{{ .Data.DateFilter }}"]=e
+		//validate param
+		toTime,err:=time.Parse(time.RFC3339,e)
+		if err!=nil{
+			u.JSON(w, http.StatusBadRequest, err)
+			return
+		}
+		to="{{ .Data.DateFilter }}"+":"+toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	search := make(map[string]string)
@@ -252,7 +264,7 @@ func (u *Controller) list{{ .Data.Entity|ucfirst }}(ctx context.Context, w http.
 	}
 
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "{{ .Data.View.Perm }}", "{{ .Data.View.Scope }}",domain.ID)
-	dt, cnt, err := m.{{ .Data.Fill }}(pc, filter,dateRange, search, params, sort, order, p, c)
+	dt, cnt, err := m.{{ .Data.Fill }}(pc, filter,from,to, search, params, sort, order, p, c)
 	if err!=nil{
 		u.JSON(w,http.StatusBadRequest,err)
 		return

@@ -46,11 +46,12 @@ func (m *Manager) GetUserChildesIDDomain(id, d int64) []int64 {
 func (m *Manager) getUserChildesIDDomainPerm(id, d int64, scope permission.UserScope, perm string) []int64 {
 	var res []Advisor
 	var final []int64
-	q := fmt.Sprintf("SELECT a.* FROM %s AS a "+
+	q := fmt.Sprintf("SELECT %s FROM %s AS a "+
 		"INNER JOIN %s AS u ON u.id=a.user_id "+
 		"INNER JOIN %s AS ru ON ru.user_id=u.id "+
 		"INNER JOIN %s AS rp ON rp.role_id=ru.role_id "+
 		"WHERE a.advisor_id=? AND a.domain_id=? AND rp.perm=? AND rp.scope=? GROUP BY u.id",
+		getSelectFields(AdvisorTableFull, "a"),
 		AdvisorTableFull,
 		UserTableFull,
 		RoleUserTableFull,
