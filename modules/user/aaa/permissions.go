@@ -26,13 +26,13 @@ func (u *User) Has(scope permission.UserScope, p permission.Token, d int64) (per
 	switch scope {
 	case permission.ScopeSelf:
 		if u.resource[permission.ScopeSelf][perm] {
-			rScope = scope
+			rScope = permission.ScopeSelf
 			permGranted = true
 		}
 		fallthrough
 	case permission.ScopeGlobal:
 		if u.resource[permission.ScopeGlobal][perm] || u.resource[scope][string(permission.God)] {
-			rScope = scope
+			rScope = permission.ScopeGlobal
 			permGranted = true
 		}
 	}
@@ -132,4 +132,12 @@ func (u *User) setUserPermissions(DomainID int64) {
 	if u.resource == nil {
 		u.resource = u.getUserPermissions(DomainID)
 	}
+}
+
+// GetChildesPerm get user childes based on perm
+func (u *User) GetChildesPerm(scope permission.UserScope, perm string, DomainID int64) []int64 {
+	if u.childes == nil {
+		u.childes = NewAaaManager().getUserChildesIDDomainPerm(u.ID, DomainID, scope, perm)
+	}
+	return u.childes
 }

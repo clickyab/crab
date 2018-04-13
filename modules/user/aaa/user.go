@@ -79,6 +79,7 @@ type User struct {
 	Attributes  mysql.GenericJSONField                   `json:"attributes" db:"attributes"`
 	Corporation *Corporation                             `json:"corporation, omitempty" db:"-"`
 	parents     []int64                                  `json:"-" db:"-"`
+	childes     []int64                                  `json:"-" db:"-"`
 	roles       []Role                                   `db:"-"`
 	resource    map[permission.UserScope]map[string]bool `db:"-"`
 }
