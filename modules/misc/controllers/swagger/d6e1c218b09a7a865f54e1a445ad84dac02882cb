@@ -3,6 +3,9 @@
 		"_actions": {
 			"type": "string"
 		},
+		"attached": {
+			"type": "integer"
+		},
 		"created_at": {
 			"format": "dateTime",
 			"type": "string"
@@ -15,15 +18,6 @@
 		},
 		"label": {
 			"type": "string"
-		},
-		"owner_id": {
-			"type": "integer"
-		},
-		"parent_ids": {
-			"items": {
-				"type": "integer"
-			},
-			"type": "array"
 		},
 		"status": {
 			"type": "string"
