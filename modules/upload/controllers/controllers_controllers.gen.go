@@ -28,25 +28,6 @@ func (c *Controller) uploadPost(ctx context.Context, w http.ResponseWriter, r *h
 	framework.Write(w, res, http.StatusOK)
 }
 
-// videoUpload video into the system
-// @Route {
-// 		url = /video
-//		method = post
-//		middleware = authz.Authenticate
-//		200 = uploadResponse
-//		400 = controller.ErrorResponseSimple
-//		401 = controller.ErrorResponseSimple
-// }
-func (c *Controller) videoUploadPost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-
-	res, err := c.videoUpload(ctx, r)
-	if err != nil {
-		framework.Write(w, err, http.StatusBadRequest)
-		return
-	}
-	framework.Write(w, res, http.StatusOK)
-}
-
 // getVideoReady find video into the system
 // @Route {
 // 		url = /video/:id
