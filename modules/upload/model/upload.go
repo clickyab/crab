@@ -21,6 +21,8 @@ const (
 	PNGMime Mime = "image/png"
 	// GifMime GifMime
 	GifMime Mime = "image/gif"
+	// VideoMime VideoMime
+	VideoMime Mime = "video/mp4"
 )
 
 // Upload model in database

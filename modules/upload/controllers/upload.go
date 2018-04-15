@@ -5,14 +5,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/textproto"
 	"os"
 	"path/filepath"
 	"strconv"
 	"sync"
 	"time"
-
-	"bytes"
 
 	"strings"
 
@@ -21,6 +18,8 @@ import (
 	"image/jpeg"
 	"image/png"
 
+	"mime"
+
 	"clickyab.com/crab/modules/upload/errors"
 	"clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/middleware/authz"
@@ -28,7 +27,6 @@ import (
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/framework/controller"
-	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/safe"
 	"github.com/clickyab/services/xlog"
@@ -42,24 +40,22 @@ var (
 	UPath = config.RegisterString("crab.modules.upload.path", "/statics/uploads", "a path to the location that uploaded file should save")
 	// Perm default perm
 	Perm = config.RegisterInt("crab.modules.upload.Perm", 0777, "file will save with this permission")
-	// VideoMaxSize video max size
-	VideoMaxSize = config.RegisterInt64("crab.modules.upload.video.size", 3145728, "max size of video upload")
 	// MaxVideoDuration video max duration
-	MaxVideoDuration   = config.RegisterInt64("crab.modules.upload.video.duration", 90, "max video duration in seconds")
-	videoSaveFormat    = config.RegisterString("crab.modules.upload.video.format", ".cy", "video format saved")
-	videoMaxChunkCount = config.RegisterInt("crab.modules.upload.video.max.chunk", 15, "video max chunk count")
+	MaxVideoDuration = config.RegisterInt64("crab.modules.upload.video.duration", 90, "max video duration in seconds")
+	videoSaveFormat  = config.RegisterString("crab.modules.upload.video.format", ".cy", "video format saved")
 )
 
 type kind struct {
-	maxSize int64
-	mimes   []model.Mime
+	maxSize      int64
+	mimes        []model.Mime
+	maxChunksNum int
 }
 
 type uploadResponse struct {
 	Src string `json:"src"`
 }
 
-// upload route for upload banner,native,avatar,...
+// upload route for upload banner,native,avatar,video,...
 // @Rest {
 // 		url = /module/:module
 //		protected = true
@@ -68,78 +64,190 @@ type uploadResponse struct {
 func (c *Controller) upload(ctx context.Context, r *http.Request) (*uploadResponse, error) {
 	fileType := xmux.Param(ctx, "module")
 	m := model.Mime(fileType)
-	u := authz.MustGetUser(ctx)
 	lock.RLock()
 	defer lock.RUnlock()
 	s, ok := routes[m]
 	if !ok {
 		return nil, errors.InvalidFileTypeError
 	}
-	err := r.ParseMultipartForm(s.maxSize)
+	currentUser := authz.MustGetUser(ctx)
+	flowData, err := getChunkFlowData(r)
 	if err != nil {
-		return nil, fmt.Errorf("max upload size is : %d", s.maxSize)
+		return nil, errors.ChunkUploadError
 	}
-	file, handler, err := r.FormFile("file")
-	if err != nil {
-		return nil, fmt.Errorf(`file not found, the key for file should be "file"`)
+	if flowData.totalChunks > s.maxChunksNum {
+		return nil, errors.InvalidError("overflow chunk num")
 	}
-	defer func() { assert.Nil(file.Close()) }()
 
-	buff := &bytes.Buffer{}
-	dimensionHandler := &bytes.Buffer{}
-	multiHandler := io.MultiWriter(dimensionHandler, buff)
-	_, err = io.Copy(multiHandler, file)
-	assert.Nil(err)
-	ac, mime := validMIME(handler.Header, s.mimes)
-	if !ac {
-		return nil, errors.InvalidFileTypeError
+	var tempDir = filepath.Join(UPath.String(), "temp")
+	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
+		err = os.MkdirAll(tempDir, os.FileMode(Perm.Int()))
+		assert.Nil(err)
 	}
-	var attr *model.FileAttr
-	if mime == model.JPGMime || mime == model.PNGMime || mime == model.GifMime || mime == model.PJPGMime {
-		attr, err = getDimension(mime, dimensionHandler, fileType)
-		if err != nil {
-			return nil, fmt.Errorf("cant get file dimensions")
-		}
+	chunkPathDir, file, err := chunkUpload(tempDir, flowData, r)
+	if err != nil {
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, errors.ChunkUploadError
 	}
-	ext := filepath.Ext(handler.Filename)
-	now := time.Now()
-	fp := filepath.Join(UPath.String(), string(m), now.Format("2006/01/02"))
-	err = os.MkdirAll(fp, os.FileMode(Perm.Int64()))
-	assert.Nil(err)
-	fn := func() string {
-		for {
-			tmp := fmt.Sprintf("%d_%s%s", u.ID, <-random.ID, ext)
-			if _, err := os.Stat(fp + tmp); os.IsNotExist(err) {
-				return tmp
-			}
-		}
+	if file == "" {
+		return nil, nil
+	}
+
+	fileObj, err := os.Open(file)
+	defer func() {
+		err = fileObj.Close()
+		assert.Nil(err)
 	}()
-	f, err := os.OpenFile(filepath.Join(fp, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(Perm.Int64()))
+
+	if err != nil {
+		_ = os.RemoveAll(chunkPathDir)
+		xlog.GetWithError(ctx, err).Debug("error while open file")
+		return nil, errors.FileUploadError
+	}
+
+	fileInfo, err := fileObj.Stat()
+	if err != nil {
+		_ = os.RemoveAll(chunkPathDir)
+		xlog.GetWithError(ctx, err).Debug("error while stat file")
+		return nil, errors.FileOpenError
+	}
+
+	extension := strings.ToLower(filepath.Ext(fileObj.Name()))
+
+	fileMime := mime.TypeByExtension(extension)
+	if !checkForValidMimes(fileMime, s.mimes) {
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, errors.WrongMimeType
+	}
+	var attr = &model.FileAttr{}
+
+	now := time.Now()
+	basePath, err := makeBaseDir(fileType, now)
 	assert.Nil(err)
-	defer func() { assert.Nil(f.Close()) }()
 
-	finalPath := filepath.Join(string(m), now.Format("2006/01/02"), fn)
-	size, er := io.Copy(f, buff)
-	assert.Nil(er)
+	var f = &os.File{}
+	var fn string
 
+	if fileType == "video" { //validate video stuff like duration
+		f, fn = generateFinalFile(currentUser.ID, basePath, videoSaveFormat.String())
+		attr, err = videoUploadHandler(ctx, file, chunkPathDir, extension, f, attr, fileInfo, s.maxSize)
+		if err != nil {
+			_ = os.RemoveAll(chunkPathDir)
+			_ = os.RemoveAll(f.Name())
+			return nil, err
+		}
+
+	} else { //image selected
+		f, fn = generateFinalFile(currentUser.ID, basePath, extension)
+		attr, err = imageUploadHandler(fileMime, fileType, chunkPathDir, file, fileObj, f, fileInfo, s.maxSize)
+		if err != nil {
+			_ = os.RemoveAll(chunkPathDir)
+			_ = os.RemoveAll(f.Name())
+			return nil, err
+		}
+	}
+
+	dbSavePath := filepath.Join(fileType, now.Format("2006/01/02"), fn)
 	g := &model.Upload{
-		ID:      finalPath,
-		MIME:    string(mime),
-		Size:    size,
-		UserID:  u.ID,
-		Section: string(m),
+		ID:      dbSavePath,
+		MIME:    fileMime,
+		Size:    fileInfo.Size(),
+		UserID:  currentUser.ID,
+		Section: fileType,
 		Attr:    *attr,
 	}
+
 	e := model.NewModelManager().CreateUpload(g)
 	assert.Nil(e)
-	return &uploadResponse{
-		Src: g.ID,
-	}, nil
+	return &uploadResponse{Src: g.ID}, nil
+}
+
+func videoUploadHandler(ctx context.Context, file, chunkPathDir, rawExtension string, f *os.File, attr *model.FileAttr, fileInfo os.FileInfo, maxSize int64) (*model.FileAttr, error) {
+	info, err := getVideoInfo(file)
+	if err != nil {
+		return attr, errors.FileNotReadableError
+	}
+	if _, ok := info["format"]; !ok {
+		return attr, errors.FileFormatNotReadableError
+	}
+	duration, err := getDuration(info["format"].(map[string]interface{}))
+	if err != nil {
+		return attr, errors.FileDurationError
+	}
+
+	err = validateVideo(info["format"].(map[string]interface{}), fileInfo, maxSize, duration)
+	if err != nil {
+		return attr, err
+	}
+
+	convertedPath := strings.TrimRight(file, rawExtension) + videoSaveFormat.String()
+
+	//converting the video
+	safe.GoRoutine(ctx, func() {
+		err := doConvert(file, convertedPath, chunkPathDir, f.Name())
+		_ = os.RemoveAll(chunkPathDir)
+		assert.Nil(err)
+	})
+	attr.Video = &model.VideoAttr{
+		Duration: int(duration),
+	}
+	return attr, nil
+}
+
+func generateFinalFile(userID int64, basePath, extension string) (*os.File, string) {
+	fn := generateFileName(userID, basePath, extension)
+	finalFileTarget := filepath.Join(basePath, fn)
+	f, err := os.OpenFile(finalFileTarget, os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(Perm.Int64()))
+	assert.Nil(err)
+	defer func() { assert.Nil(f.Close()) }()
+	return f, fn
+}
+
+func imageUploadHandler(fileMime, fileType, chunkPathDir, file string, fileObj, f *os.File, fileInfo os.FileInfo, maxSize int64) (*model.FileAttr, error) {
+	var attr = &model.FileAttr{}
+	var err error
+	if fileMime == string(model.JPGMime) || fileMime == string(model.PNGMime) || fileMime == string(model.GifMime) || fileMime == string(model.PJPGMime) {
+		attr, err = getDimension(model.Mime(fileMime), fileObj, fileType)
+		if err != nil {
+			return attr, err
+		}
+	}
+	err = validateImage(fileInfo, maxSize)
+	if err != nil {
+		return attr, errors.FileDimensionError
+	}
+	assert.Nil(os.Rename(file, f.Name()))
+	_ = os.RemoveAll(chunkPathDir)
+	return attr, nil
+}
+
+func validateImage(fileInfo os.FileInfo, maxSize int64) error {
+	//validate size
+	size := fileInfo.Size()
+	if size > maxSize {
+		return errors.LargeFileUploadError
+	}
+	return nil
+}
+
+func checkForValidMimes(mime string, mimes []model.Mime) bool {
+	for i := range mimes {
+		if string(mimes[i]) == mime {
+			return true
+		}
+	}
+	return false
+}
+
+func makeBaseDir(fileType string, now time.Time) (string, error) {
+	basePath := filepath.Join(UPath.String(), fileType, now.Format("2006/01/02"))
+	err := os.MkdirAll(basePath, os.FileMode(Perm.Int64()))
+	return basePath, err
 }
 
 // Register add a route and settings for uploads
 // name will be the route, maxsize is maximum allowed size for file upload file and the mimes is alloed mime types
-func Register(name model.Mime, maxSize int64, mimes ...model.Mime) {
+func Register(name model.Mime, maxSize int64, maxChunk int, mimes ...model.Mime) {
 	assert.True(len(mimes) > 0)
 	lock.Lock()
 	defer lock.Unlock()
@@ -147,8 +255,9 @@ func Register(name model.Mime, maxSize int64, mimes ...model.Mime) {
 	_, ok := routes[name]
 	assert.False(ok)
 	routes[name] = kind{
-		maxSize: maxSize,
-		mimes:   mimes,
+		maxSize:      maxSize,
+		mimes:        mimes,
+		maxChunksNum: maxChunk,
 	}
 }
 
@@ -161,201 +270,51 @@ type Controller struct {
 	controller.Base
 }
 
-func validMIME(a textproto.MIMEHeader, b []model.Mime) (bool, model.Mime) {
-	var ct []string
-	var ok bool
-	if ct, ok = a["Content-Type"]; !ok {
-		return false, ""
-	}
-	for _, ak := range ct {
-		for _, bv := range b {
-			if ak == string(bv) {
-				return true, model.Mime(ak)
-			}
-		}
-	}
-	return false, ""
-}
-
-// videoUpload video into the system
-// @Rest {
-// 		url = /video
-//		protected = true
-// 		method = post
-// }
-func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadResponse, error) {
-	currentUser := authz.MustGetUser(ctx)
-	flowData, err := getChunkFlowData(r)
-	if err != nil {
-		return nil, t9e.G("error in uploading video chunks")
-	}
-	if flowData.totalChunks > videoMaxChunkCount.Int() {
-		return nil, errors.InvalidError("file size")
-	}
-
-	var tempDir = filepath.Join(UPath.String(), "temp")
-	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
-		err = os.MkdirAll(tempDir, os.FileMode(Perm.Int()))
-		assert.Nil(err)
-	}
-	chunkPathDir, file, err := chunkUpload(tempDir, flowData, r)
-	if err != nil {
-		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("failed to upload chunks")
-	}
-	if file == "" {
-		return nil, nil
-	}
-	// validate video info
-	videoInfo, err := validateVideo(ctx, file, chunkPathDir)
-	if err != nil {
-		_ = os.RemoveAll(chunkPathDir)
-		return nil, err
-	}
-
-	convertedPath := strings.TrimRight(file, videoInfo.Extension) + videoSaveFormat.String()
-	now := time.Now()
-	basePath := filepath.Join(UPath.String(), "uploads", "video", now.Format("2006/01/02"))
-	err = os.MkdirAll(basePath, os.FileMode(Perm.Int64()))
-	assert.Nil(err)
-	fn := generateFileName(currentUser.ID, basePath, videoSaveFormat.String())
-	f, err := os.OpenFile(filepath.Join(basePath, fn), os.O_RDWR|os.O_CREATE|os.O_TRUNC, os.FileMode(Perm.Int64()))
-	assert.Nil(err)
-	defer func() { assert.Nil(f.Close()) }()
-
-	//converting the video
-	safe.GoRoutine(ctx, func() {
-		err := doConvert(file, convertedPath, chunkPathDir, f.Name())
-		_ = os.RemoveAll(chunkPathDir)
-		assert.Nil(err)
-	})
-
-	dbSavePath := filepath.Join("video", now.Format("2006/01/02"), fn)
-	g := &model.Upload{
-		ID:      dbSavePath,
-		MIME:    "video/mp4",
-		Size:    videoInfo.Size,
-		UserID:  currentUser.ID,
-		Section: "video",
-		Attr: model.FileAttr{
-			Video: &model.VideoAttr{
-				Duration: int(videoInfo.Duration),
-			},
-		},
-	}
-	e := model.NewModelManager().CreateUpload(g)
-	assert.Nil(e)
-	return &uploadResponse{Src: g.ID}, nil
-}
-
-type videoInfo struct {
-	FileName   string
-	FullPath   string
-	Extension  string
-	Size       int64
-	Format     map[string]interface{}
-	FormatName string
-	Formats    []string
-	Duration   float64
-}
-
-func validateVideo(ctx context.Context, file, chunkPathDir string) (videoInfo, error) {
-	vInfo := videoInfo{
-		FullPath: file,
-	}
-
-	// open uploaded file in tmp folder
-	fileObj, err := os.Open(file)
-	defer func() {
-		err = fileObj.Close()
-		assert.Nil(err)
-	}()
-
-	if err != nil {
-		xlog.GetWithError(ctx, err).Debug("error while open file")
-		return vInfo, t9e.G("error while uploading file")
-	}
-
-	extension := strings.ToLower(filepath.Ext(fileObj.Name()))
-	vInfo.Extension = extension
-	vInfo.FileName = fileObj.Name()
-	//check if file extension is valid
-	/* mimeType := mime.TypeByExtension(extension)
-	validMimeArr := strings.Split(ValidVideoMime.String(), ",")
-	isValidMime := func() bool {
-		for i := range validMimeArr {
-			if validMimeArr[i] == mimeType {
-				return true
-			}
-		}
-		return false
-	}()
-	if !isValidMime {
-		_ = os.RemoveAll(chunkPathDir)
-		return nil, errors.InvalidFileTypeError
-	} */
-	//check size
-	fileInfo, err := fileObj.Stat()
-	if err != nil {
-		xlog.GetWithError(ctx, err).Debug("error while stat file")
-		return vInfo, t9e.G("cant open uploaded file")
-	}
-
-	size := fileInfo.Size()
-	vInfo.Size = size
-	if size > VideoMaxSize.Int64() {
-		return vInfo, t9e.G("video is too %d large to be uploaded", size)
-	}
-
-	info, err := getVideoInfo(file, chunkPathDir)
-	if err != nil {
-		xlog.GetWithError(ctx, err).WithFields(info).Debug("file info wrong")
-		return vInfo, t9e.G("uploaded file  is not readable")
-	}
-
-	if _, ok := info["format"]; !ok {
-		return vInfo, t9e.G("file format is not readable")
-	}
-	format := info["format"].(map[string]interface{})
-	vInfo.Format = format
-
+func validateVideo(format map[string]interface{}, fileInfo os.FileInfo, maxSize, duration int64) error {
 	// check format
 	if _, ok := format["format_name"]; !ok {
-		return vInfo, t9e.G("file format not valid")
+		return errors.InvalidFileTypeError
 	}
-	vInfo.FormatName = format["format_name"].(string)
+	formatName := format["format_name"].(string)
 
-	formatsArr := strings.Split(format["format_name"].(string), ",")
-	vInfo.Formats = formatsArr
+	formatsArr := strings.Split(formatName, ",")
 	if !array.StringInArray("mp4", formatsArr...) {
-		return vInfo, t9e.G("file format not valid")
+		return errors.InvalidFileTypeError
 	}
 
+	//validate size
+	size := fileInfo.Size()
+	if size > maxSize {
+		return errors.LargeFileUploadError
+	}
+
+	if int64(duration) > MaxVideoDuration.Int64() {
+		return errors.FileDurationLimitError
+	}
+	return nil
+}
+
+func getDuration(format map[string]interface{}) (int64, error) {
 	if _, ok := format["duration"]; !ok {
-		return vInfo, t9e.G("cant get duration from file")
+		return 0, errors.FileDurationError
 	}
 	duration, err := strconv.ParseFloat(format["duration"].(string), 64)
 	if err != nil {
-		return vInfo, t9e.G("error parsing duration from video")
+		return 0, errors.FileDurationError
 	}
-	vInfo.Duration = duration
-	if int64(duration) > MaxVideoDuration.Int64() {
-		return vInfo, fmt.Errorf("maximum duration is %d seconds", MaxVideoDuration.Int64())
-	}
-
-	return vInfo, nil
+	return int64(duration), nil
 }
 
 func doConvert(file, convertedPath, chunkPathDir, f string) error {
 	err := convertVideo(file, convertedPath)
 	if err != nil {
 		_ = os.RemoveAll(chunkPathDir)
-		return t9e.G("cant convert video")
+		return errors.FileConvertError
 	}
 	return os.Rename(convertedPath, f)
 }
 
-func getDimension(mime model.Mime, dimensionHandler *bytes.Buffer, bannerType string) (*model.FileAttr, error) {
+func getDimension(mime model.Mime, dimensionHandler io.Reader, bannerType string) (*model.FileAttr, error) {
 	a := model.FileAttr{}
 	var imgConf image.Config
 	var err error
@@ -410,9 +369,9 @@ func getDimension(mime model.Mime, dimensionHandler *bytes.Buffer, bannerType st
 	return &a, nil
 }
 
-func generateFileName(userID int64, basePath, fileName string) string {
+func generateFileName(userID int64, basePath, ext string) string {
 	for {
-		tmp := fmt.Sprintf("%d_%s%s", userID, <-random.ID, fileName)
+		tmp := fmt.Sprintf("%d_%s%s", userID, <-random.ID, ext)
 		if _, err := os.Stat(basePath + tmp); os.IsNotExist(err) {
 			return tmp
 		}
