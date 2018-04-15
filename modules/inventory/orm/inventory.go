@@ -367,20 +367,10 @@ func (m *Manager) FillInventoryDataTableArray(
 
 	}
 
-	for column, val := range search {
-		if len(whereLike) == 0 {
-			if len(search) == 1 {
-				whereLike = append(whereLike, fmt.Sprintf("(%s LIKE ?)", column))
-			} else {
-				whereLike = append(whereLike, fmt.Sprintf("(%s LIKE ?", column))
-			}
-		} else if len(whereLike) == len(search)-1 {
-			whereLike = append(whereLike, fmt.Sprintf("%s LIKE ?)", column))
-		} else {
-			whereLike = append(whereLike, fmt.Sprintf("%s LIKE ?", column))
-		}
-		params = append(params, "%"+val+"%")
-	}
+	wl, lp := generateSearchQuery(search)
+	whereLike = append(whereLike, wl...)
+	params = append(params, lp...)
+
 	//check for perm
 	if len(where)+len(whereLike) > 0 {
 		query = fmt.Sprintf("%s %s ", query, "WHERE")

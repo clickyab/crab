@@ -217,6 +217,7 @@ func (m *Manager) FillCampaignDataTableArray(
 	var params []interface{}
 	var res CampaignDataTableArray
 	var where []string
+
 	todayInt := libs.TimeToID(time.Now())
 	countQuery := fmt.Sprintf(`SELECT COUNT(cp.id) FROM %s AS cp
 	INNER JOIN %s AS owner ON owner.id=cp.user_id
@@ -225,6 +226,7 @@ func (m *Manager) FillCampaignDataTableArray(
 	LEFT JOIN %s AS cd ON cd.campaign_id=cp.id
 	LEFT JOIN %s AS ycd ON (ycd.campaign_id=cp.id AND ycd.daily_id=%d)`,
 		CampaignTableFull, aaa.UserTableFull, aaa.AdvisorTableFull, aaa.UserTableFull, CampaignDetailTableFull, CampaignDetailTableFull, todayInt)
+
 	query := fmt.Sprintf(`SELECT cp.id AS id,
 	cp.title,
 	cp.kind,
