@@ -1,0 +1,43 @@
+{
+	"get": {
+		"description": "billingList get list of all user billings",
+		"parameters": [
+			{
+				"description": "the security token, get it from login route",
+				"in": "header",
+				"name": "token",
+				"required": true,
+				"type": "string"
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/orm_Billing"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			},
+			"401": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			},
+			"403": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			}
+		},
+		"tags": [
+			"controllers"
+		]
+	}
+}

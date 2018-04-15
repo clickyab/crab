@@ -1,0 +1,36 @@
+{
+	"properties": {
+		"amount": {
+			"type": "integer"
+		},
+		"balance": {
+			"type": "integer"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"domain_id": {
+			"type": "integer"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"income_id": {
+			"type": "integer"
+		},
+		"pay_amount": {
+			"type": "integer"
+		},
+		"pay_model": {
+			"type": "string"
+		},
+		"user_id": {
+			"type": "integer"
+		},
+		"vat": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}
