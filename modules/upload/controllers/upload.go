@@ -192,6 +192,7 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	if flowData.totalChunks > videoMaxChunkCount.Int() {
 		return nil, errors.InvalidError("file size")
 	}
+
 	var tempDir = filepath.Join(UPath.String(), "temp")
 	if _, err := os.Stat(tempDir); os.IsNotExist(err) {
 		err = os.MkdirAll(tempDir, os.FileMode(Perm.Int()))
@@ -205,85 +206,16 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	if file == "" {
 		return nil, nil
 	}
-	// open uploaded file in tmp folder
-	fileObj, err := os.Open(file)
+	// validate video info
+	videoInfo, err := validateVideo(ctx, file, chunkPathDir)
 	if err != nil {
-		xlog.GetWithError(ctx, err).Debug("error while open file")
-	}
-	defer func() {
-		err = fileObj.Close()
-		assert.Nil(err)
-	}()
-
-	if err != nil {
-		return nil, t9e.G("error while uploading file")
-	}
-	fileInfo, err := fileObj.Stat()
-	if err != nil {
-		xlog.GetWithError(ctx, err).Debug("error while stat file")
-		return nil, t9e.G("cant open uploaded file")
-	}
-	extension := strings.ToLower(filepath.Ext(fileObj.Name()))
-	//check if file extension is valid
-	/* mimeType := mime.TypeByExtension(extension)
-	validMimeArr := strings.Split(ValidVideoMime.String(), ",")
-	isValidMime := func() bool {
-		for i := range validMimeArr {
-			if validMimeArr[i] == mimeType {
-				return true
-			}
-		}
-		return false
-	}()
-	if !isValidMime {
 		_ = os.RemoveAll(chunkPathDir)
-		return nil, errors.InvalidFileTypeError
-	} */
-	size := fileInfo.Size()
-	//check size
-	if size > VideoMaxSize.Int64() {
-		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("video is too %d large to be uploaded", size)
+		return nil, err
 	}
 
-	info, err := getVideoInfo(file, chunkPathDir)
-	if err != nil {
-		_ = os.RemoveAll(chunkPathDir)
-		xlog.GetWithError(ctx, err).WithFields(info).Debug("file info wrong")
-		return nil, t9e.G("uploaded file  is not readable")
-	}
-
-	if _, ok := info["format"]; !ok {
-		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("file format is not readable")
-	}
-	format := info["format"].(map[string]interface{})
-	// check format
-	if _, ok := format["format_name"]; !ok {
-		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("file format not valid")
-	}
-	formatsArr := strings.Split(format["format_name"].(string), ",")
-	if !array.StringInArray("mp4", formatsArr...) {
-		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("file format not valid")
-	}
-	if _, ok := format["duration"]; !ok {
-		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("cant get duration from file")
-	}
-	duration, err := strconv.ParseFloat(format["duration"].(string), 64)
-	if err != nil {
-		_ = os.RemoveAll(chunkPathDir)
-		return nil, t9e.G("error parsing duration from video")
-	}
-	if int64(duration) > MaxVideoDuration.Int64() {
-		_ = os.RemoveAll(chunkPathDir)
-		return nil, fmt.Errorf("maximum duration is %d seconds", MaxVideoDuration.Int64())
-	}
-	convertedPath := strings.TrimRight(file, extension) + videoSaveFormat.String()
+	convertedPath := strings.TrimRight(file, videoInfo.Extension) + videoSaveFormat.String()
 	now := time.Now()
-	basePath := filepath.Join(UPath.String(), "video", now.Format("2006/01/02"))
+	basePath := filepath.Join(UPath.String(), "uploads", "video", now.Format("2006/01/02"))
 	err = os.MkdirAll(basePath, os.FileMode(Perm.Int64()))
 	assert.Nil(err)
 	fn := generateFileName(currentUser.ID, basePath, videoSaveFormat.String())
@@ -302,18 +234,116 @@ func (c *Controller) videoUpload(ctx context.Context, r *http.Request) (*uploadR
 	g := &model.Upload{
 		ID:      dbSavePath,
 		MIME:    "video/mp4",
-		Size:    size,
+		Size:    videoInfo.Size,
 		UserID:  currentUser.ID,
 		Section: "video",
 		Attr: model.FileAttr{
 			Video: &model.VideoAttr{
-				Duration: int(duration),
+				Duration: int(videoInfo.Duration),
 			},
 		},
 	}
 	e := model.NewModelManager().CreateUpload(g)
 	assert.Nil(e)
 	return &uploadResponse{Src: g.ID}, nil
+}
+
+type videoInfo struct {
+	FileName   string
+	FullPath   string
+	Extension  string
+	Size       int64
+	Format     map[string]interface{}
+	FormatName string
+	Formats    []string
+	Duration   float64
+}
+
+func validateVideo(ctx context.Context, file, chunkPathDir string) (videoInfo, error) {
+	vInfo := videoInfo{
+		FullPath: file,
+	}
+
+	// open uploaded file in tmp folder
+	fileObj, err := os.Open(file)
+	defer func() {
+		err = fileObj.Close()
+		assert.Nil(err)
+	}()
+
+	if err != nil {
+		xlog.GetWithError(ctx, err).Debug("error while open file")
+		return vInfo, t9e.G("error while uploading file")
+	}
+
+	extension := strings.ToLower(filepath.Ext(fileObj.Name()))
+	vInfo.Extension = extension
+	vInfo.FileName = fileObj.Name()
+	//check if file extension is valid
+	/* mimeType := mime.TypeByExtension(extension)
+	validMimeArr := strings.Split(ValidVideoMime.String(), ",")
+	isValidMime := func() bool {
+		for i := range validMimeArr {
+			if validMimeArr[i] == mimeType {
+				return true
+			}
+		}
+		return false
+	}()
+	if !isValidMime {
+		_ = os.RemoveAll(chunkPathDir)
+		return nil, errors.InvalidFileTypeError
+	} */
+	//check size
+	fileInfo, err := fileObj.Stat()
+	if err != nil {
+		xlog.GetWithError(ctx, err).Debug("error while stat file")
+		return vInfo, t9e.G("cant open uploaded file")
+	}
+
+	size := fileInfo.Size()
+	vInfo.Size = size
+	if size > VideoMaxSize.Int64() {
+		return vInfo, t9e.G("video is too %d large to be uploaded", size)
+	}
+
+	info, err := getVideoInfo(file, chunkPathDir)
+	if err != nil {
+		xlog.GetWithError(ctx, err).WithFields(info).Debug("file info wrong")
+		return vInfo, t9e.G("uploaded file  is not readable")
+	}
+
+	if _, ok := info["format"]; !ok {
+		return vInfo, t9e.G("file format is not readable")
+	}
+	format := info["format"].(map[string]interface{})
+	vInfo.Format = format
+
+	// check format
+	if _, ok := format["format_name"]; !ok {
+		return vInfo, t9e.G("file format not valid")
+	}
+	vInfo.FormatName = format["format_name"].(string)
+
+	formatsArr := strings.Split(format["format_name"].(string), ",")
+	vInfo.Formats = formatsArr
+	if !array.StringInArray("mp4", formatsArr...) {
+		return vInfo, t9e.G("file format not valid")
+	}
+
+	if _, ok := format["duration"]; !ok {
+		return vInfo, t9e.G("cant get duration from file")
+	}
+	duration, err := strconv.ParseFloat(format["duration"].(string), 64)
+	if err != nil {
+		return vInfo, t9e.G("error parsing duration from video")
+	}
+	vInfo.Duration = duration
+	if int64(duration) > MaxVideoDuration.Int64() {
+		return vInfo, fmt.Errorf("maximum duration is %d seconds", MaxVideoDuration.Int64())
+	}
+
+	return vInfo, nil
 }
 
 func doConvert(file, convertedPath, chunkPathDir, f string) error {
