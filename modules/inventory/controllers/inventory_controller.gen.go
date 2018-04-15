@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/inventory/orm"
@@ -50,7 +51,8 @@ var (
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		resource = list_inventory:self
-//		_sort_ = string, the sort and order like id:asc or id:desc available column "created_at"
+//		_sort_ = string, the sort and order like id:asc or id:desc available column "id","created_at"
+//		_status_ = string , filter the status field valid values are "enable","disable"
 //		_label_ = string , search the label field
 //		200 = listInventoryResponse
 // }
@@ -61,21 +63,37 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 	p, c := framework.GetPageAndCount(r, false)
 
 	filter := make(map[string]string)
-	dateRange := make(map[string]string)
+
+	if e := r.URL.Query().Get("status"); e != "" && orm.InventoryStatus(e).IsValid() {
+		filter["i.status"] = e
+	}
 
 	//add date filter
+	var from, to string
 	if e := r.URL.Query().Get("from"); e != "" {
-		dateRange["from-created_at"] = e
+		//validate param
+		fromTime, err := time.Parse(time.RFC3339, e)
+		if err != nil {
+			u.JSON(w, http.StatusBadRequest, err)
+			return
+		}
+		from = "created_at" + ":" + fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	if e := r.URL.Query().Get("to"); e != "" {
-		dateRange["to-created_at"] = e
+		//validate param
+		toTime, err := time.Parse(time.RFC3339, e)
+		if err != nil {
+			u.JSON(w, http.StatusBadRequest, err)
+			return
+		}
+		to = "created_at" + ":" + toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	search := make(map[string]string)
 
 	if e := r.URL.Query().Get("q"); e != "" {
-		search["inventories.label"] = e
+		search["i.label"] = e
 	}
 
 	s := r.URL.Query().Get("sort")
@@ -84,7 +102,7 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 		parts = append(parts, "asc")
 	}
 	sort := parts[0]
-	if !array.StringInArray(sort, "created_at") {
+	if !array.StringInArray(sort, "id", "created_at") {
 		sort = ""
 	}
 	order := strings.ToUpper(parts[1])
@@ -98,7 +116,7 @@ func (u *Controller) listInventory(ctx context.Context, w http.ResponseWriter, r
 	}
 
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "list_inventory", "self", domain.ID)
-	dt, cnt, err := m.FillInventoryDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
+	dt, cnt, err := m.FillInventoryDataTableArray(pc, filter, from, to, search, params, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
 		return
@@ -139,35 +157,13 @@ func (u *Controller) defInventory(ctx context.Context, w http.ResponseWriter, r 
 func init() {
 	Inventorytmp = []byte(` [
 		{
-			"data": "owner_id",
-			"name": "OwnerID",
+			"data": "attached",
+			"name": "AttachedCampaigns",
 			"searchable": false,
 			"sortable": false,
 			"visible": false,
 			"filter": false,
-			"title": "OwnerID",
-			"type": "",
-			"filter_valid_map": null
-		},
-		{
-			"data": "domain_id",
-			"name": "DomainID",
-			"searchable": false,
-			"sortable": false,
-			"visible": false,
-			"filter": false,
-			"title": "DomainID",
-			"type": "",
-			"filter_valid_map": null
-		},
-		{
-			"data": "parent_ids",
-			"name": "ParentIDs",
-			"searchable": false,
-			"sortable": false,
-			"visible": false,
-			"filter": false,
-			"title": "ParentIDs",
+			"title": "AttachedCampaigns",
 			"type": "",
 			"filter_valid_map": null
 		},
@@ -186,7 +182,7 @@ func init() {
 			"data": "id",
 			"name": "ID",
 			"searchable": false,
-			"sortable": false,
+			"sortable": true,
 			"visible": true,
 			"filter": false,
 			"title": "ID",
@@ -254,10 +250,13 @@ func init() {
 			"searchable": false,
 			"sortable": false,
 			"visible": true,
-			"filter": false,
+			"filter": true,
 			"title": "Status",
 			"type": "enum",
-			"filter_valid_map": null
+			"filter_valid_map": {
+				"disable": "DisableInventoryStatus",
+				"enable": "EnableInventoryStatus"
+			}
 		}
 	] `)
 	assert.Nil(json.Unmarshal(Inventorytmp, &listInventoryDefinition))

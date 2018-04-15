@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/domain/middleware/domain"
@@ -64,7 +65,6 @@ func (u *Controller) listCampaign(ctx context.Context, w http.ResponseWriter, r 
 	p, c := framework.GetPageAndCount(r, false)
 
 	filter := make(map[string]string)
-	dateRange := make(map[string]string)
 
 	if e := r.URL.Query().Get("kind"); e != "" && orm.CampaignKind(e).IsValid() {
 		filter["cp.kind"] = e
@@ -75,12 +75,25 @@ func (u *Controller) listCampaign(ctx context.Context, w http.ResponseWriter, r 
 	}
 
 	//add date filter
+	var from, to string
 	if e := r.URL.Query().Get("from"); e != "" {
-		dateRange["from-cp.created_at"] = e
+		//validate param
+		fromTime, err := time.Parse(time.RFC3339, e)
+		if err != nil {
+			u.JSON(w, http.StatusBadRequest, err)
+			return
+		}
+		from = "cp.created_at" + ":" + fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	if e := r.URL.Query().Get("to"); e != "" {
-		dateRange["to-cp.created_at"] = e
+		//validate param
+		toTime, err := time.Parse(time.RFC3339, e)
+		if err != nil {
+			u.JSON(w, http.StatusBadRequest, err)
+			return
+		}
+		to = "cp.created_at" + ":" + toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	search := make(map[string]string)
@@ -113,7 +126,7 @@ func (u *Controller) listCampaign(ctx context.Context, w http.ResponseWriter, r 
 	}
 
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_list", "self", domain.ID)
-	dt, cnt, err := m.FillCampaignDataTableArray(pc, filter, dateRange, search, params, sort, order, p, c)
+	dt, cnt, err := m.FillCampaignDataTableArray(pc, filter, from, to, search, params, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
 		return

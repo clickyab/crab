@@ -30,11 +30,7 @@ func (idt InventoryDataTable) Filter(u permission.Interface) InventoryDataTable 
 	action := []string{}
 	res := InventoryDataTable{}
 
-	res.OwnerID = idt.OwnerID
-
-	res.DomainID = idt.DomainID
-
-	res.ParentIDs = idt.ParentIDs
+	res.AttachedCampaigns = idt.AttachedCampaigns
 
 	res.Actions = idt.Actions
 
@@ -96,17 +92,11 @@ func (pdt PublisherDataTable) Filter(u permission.Interface) PublisherDataTable 
 
 	res.DeletedAt = pdt.DeletedAt
 
-	if _, ok := u.HasOn("none", pdt.OwnerID, pdt.ParentIDs, pdt.DomainID, permission.ScopeGlobal); ok {
-		action = append(action, "edit")
-	}
-
 	res.Actions = strings.Join(action, ",")
 	return res
 }
 
 func init() {
-
-	permission.Register("none", "none")
 
 }
 
@@ -123,12 +113,6 @@ func (spdta SinglePublisherDataTableArray) Filter(u permission.Interface) Single
 func (spdt SinglePublisherDataTable) Filter(u permission.Interface) SinglePublisherDataTable {
 	action := []string{}
 	res := SinglePublisherDataTable{}
-
-	res.OwnerID = spdt.OwnerID
-
-	res.DomainID = spdt.DomainID
-
-	res.ParentIDs = spdt.ParentIDs
 
 	res.Actions = spdt.Actions
 
