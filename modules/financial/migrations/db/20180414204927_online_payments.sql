@@ -19,7 +19,7 @@ CREATE TABLE `online_payments` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `ref_num_UNIQUE` (`ref_num` ASC),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC))
-ENGINE = InnoDB
+ENGINE = InnoDB;
 
 -- +migrate Down
 -- SQL section 'Down' is executed when this migration is rolled back

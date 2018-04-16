@@ -5,11 +5,11 @@ DROP TABLE IF EXISTS `gateways`;
 CREATE TABLE `gateways` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
-  `status` ENUM('disabled', 'enabled') NOT NULL,
+  `status` ENUM('disable', 'enable') NOT NULL,
   `default` ENUM('yes', 'no') NOT NULL,
   `created_at` DATETIME NOT NULL,
   `updated_at` DATETIME NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 -- +migrate Down
