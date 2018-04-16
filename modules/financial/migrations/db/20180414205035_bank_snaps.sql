@@ -8,12 +8,14 @@ CREATE TABLE `bank_snaps` (
   `domain_id` INT(10) UNSIGNED NOT NULL,
   `user_id` INT(10) UNSIGNED NOT NULL,
   `trace_number` INT(10) UNSIGNED NOT NULL,
-  `amount` INT(10) UNSIGNED NOT NULL,
-  `status` ENUM('wait_to_check', 'verified', 'rejected') NOT NULL,
+  `vat` INT(10) NOT NULL,
+  `amount` INT(10) NOT NULL,
+  `pay_amount` INT(10) NOT NULL,
+  `status` ENUM('pending', 'accepted', 'rejected') NOT NULL,
   `checked_by` INT(10) UNSIGNED NULL,
   `created_at` DATETIME NOT NULL,
   `updated_at` DATETIME NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 -- +migrate Down

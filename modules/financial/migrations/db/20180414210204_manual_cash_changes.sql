@@ -8,7 +8,7 @@ CREATE TABLE `manual_cash_changes` (
   `domain_id` INT(10) UNSIGNED NOT NULL,
   `user_id` INT(10) UNSIGNED NOT NULL,
   `operator_id` INT(10) UNSIGNED NOT NULL,
-  `reason` ENUM('gift', 'manual_pay', 'refound') NOT NULL,
+  `reason` ENUM('gift', 'manual_pay', 'refund') NOT NULL,
   `amount` INT(10) NOT NULL,
   `description` TEXT NULL,
   `created_at` DATETIME NOT NULL,

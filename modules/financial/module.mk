@@ -13,4 +13,4 @@ $(FINANCIAL_ROOT)-migration: tools-go-bindata
 $(FINANCIAL_ROOT)-test:
 	cd $(FINANCIAL_ROOT)/ && $(GO) test ./...
 
-.PHONY: $(FINANCIAL_ROOT)-codegen $(USER_ROOT)-migration
+.PHONY: $(FINANCIAL_ROOT)-codegen $(FINANCIAL_ROOT)-migration
