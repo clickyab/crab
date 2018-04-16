@@ -12,8 +12,8 @@ const (
 	Gift ChangeCashReasons = "gift"
 	// ManualPay pay manually
 	ManualPay ChangeCashReasons = "manual_pay"
-	// Refound for some reseans
-	Refound ChangeCashReasons = "refound"
+	// Refund for some reasons
+	Refund ChangeCashReasons = "refund"
 )
 
 // ManualCashChangeStatus is bill payment model
@@ -23,9 +23,9 @@ type ManualCashChangeStatus string
 
 const (
 	// WaitToCheckCashChange with operator
-	WaitToCheckCashChange ManualCashChangeStatus = "wait_to_check"
+	WaitToCheckCashChange ManualCashChangeStatus = "pending"
 	// VerifiedCashChange with operator
-	VerifiedCashChange ManualCashChangeStatus = "verified"
+	VerifiedCashChange ManualCashChangeStatus = "accepted"
 	// RejectedCashChange with operator
 	RejectedCashChange ManualCashChangeStatus = "rejected"
 )
