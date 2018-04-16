@@ -13,16 +13,17 @@ import (
 // @Route {
 // 		url = /add
 //		method = post
+//		payload = registerBankSnapPayload
 //		middleware = authz.Authenticate
-//		resource = creat_bank_snap:self
+//		resource = create_bank_snap:self
 //		200 = orm.BankSnap
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
 // }
 func (c *Controller) registerSnapPost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-
-	res, err := c.registerSnap(ctx, r)
+	pl := c.MustGetPayload(ctx).(*registerBankSnapPayload)
+	res, err := c.registerSnap(ctx, r, pl)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return

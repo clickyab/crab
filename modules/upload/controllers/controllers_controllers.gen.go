@@ -9,7 +9,7 @@ import (
 	"github.com/clickyab/services/framework"
 )
 
-// upload route for upload banner,native,avatar,...
+// upload route for upload banner,native,avatar,video,...
 // @Route {
 // 		url = /module/:module
 //		method = post

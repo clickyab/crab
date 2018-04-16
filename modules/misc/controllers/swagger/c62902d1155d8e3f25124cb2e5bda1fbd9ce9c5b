@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"amount": {
+			"type": "integer"
+		},
+		"trace_number": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

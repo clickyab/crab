@@ -1,6 +1,6 @@
 {
 	"post": {
-		"description": "upload route for upload banner,native,avatar,...",
+		"description": "upload route for upload banner,native,avatar,video,...",
 		"parameters": [
 			{
 				"description": "",

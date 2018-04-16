@@ -8,6 +8,7 @@ import (
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework"
+	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
 	"github.com/clickyab/services/permission"
@@ -36,17 +37,19 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
 			"RecName": "c",
-			"Payload": "",
-			"Resource": "creat_bank_snap",
+			"Payload": "registerBankSnapPayload",
+			"Resource": "create_bank_snap",
 			"Scope": "self"
 		} with key 0 */
 		m0 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("creat_bank_snap", "creat_bank_snap")
-		m0 = append(m0, authz.AuthorizeGenerator("creat_bank_snap", "self"))
+		permission.Register("create_bank_snap", "create_bank_snap")
+		m0 = append(m0, authz.AuthorizeGenerator("create_bank_snap", "self"))
 
+		// Make sure payload is the last middleware
+		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(registerBankSnapPayload{}))
 		group.POST("controllers-Controller-registerSnapPost", "/add", framework.Mix(c.registerSnapPost, m0...))
 		// End route with key 0
 
