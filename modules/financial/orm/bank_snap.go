@@ -1,6 +1,10 @@
 package orm
 
-import "time"
+import (
+	"time"
+
+	"github.com/clickyab/services/mysql"
+)
 
 // BankSnapCheckStatus is bill payment model
 // @Enum{
@@ -8,12 +12,12 @@ import "time"
 type BankSnapCheckStatus string
 
 const (
-	// WaitToCheck snap with operator
-	WaitToCheck BankSnapCheckStatus = "wait_to_check"
-	// Verified snap with operator
-	Verified BankSnapCheckStatus = "verified"
-	// Rejected snap with operator
-	Rejected BankSnapCheckStatus = "rejected"
+	// PendingStatus snap with operator
+	PendingStatus BankSnapCheckStatus = "pending"
+	// AcceptedStatus snap with operator
+	AcceptedStatus BankSnapCheckStatus = "accepted"
+	// RejectedStatus snap with operator
+	RejectedStatus BankSnapCheckStatus = "rejected"
 )
 
 // BankSnap model in database
@@ -28,9 +32,11 @@ type BankSnap struct {
 	DomainID    int64               `json:"domain_id" db:"domain_id"`
 	UserID      int64               `json:"user_id" db:"user_id"`
 	TraceNumber int64               `json:"trace_number" db:"trace_number"`
+	VAT         int64               `json:"vat" db:"vat"`
 	Amount      int64               `json:"amount" db:"amount"`
-	Status      BankSnapCheckStatus `json:"type" db:"type"`
-	CheckedBy   int64               `json:"checked_by" db:"checked_by"`
+	PayAmount   int64               `json:"pay_amount" db:"pay_amount"`
+	Status      BankSnapCheckStatus `json:"status" db:"status"`
+	CheckedBy   mysql.NullInt64     `json:"checked_by" db:"checked_by"`
 	CreatedAt   time.Time           `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time           `json:"updated_at" db:"updated_at"`
 }

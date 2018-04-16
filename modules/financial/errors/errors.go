@@ -15,6 +15,8 @@ var (
 	UpdateError error = t9e.G("can't update bill main or related data")
 	// CreateError can't create new bill
 	CreateError error = t9e.G("db error! can't create new bill")
+	// MinBankSnapErr min min bank snap error
+	MinBankSnapErr error = t9e.G("minimum money not met")
 )
 
 // NotFoundError maker

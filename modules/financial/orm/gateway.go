@@ -9,9 +9,9 @@ type GatewayStatus string
 
 const (
 	// Disabled gateway
-	Disabled GatewayStatus = "disabled"
+	Disabled GatewayStatus = "disable"
 	// Enabled gateway
-	Enabled GatewayStatus = "enabled"
+	Enabled GatewayStatus = "enable"
 )
 
 // DefaultType status
