@@ -16,17 +16,23 @@
 		"id": {
 			"type": "integer"
 		},
-		"trace_number": {
+		"pay_amount": {
 			"type": "integer"
 		},
-		"type": {
+		"status": {
 			"type": "string"
+		},
+		"trace_number": {
+			"type": "integer"
 		},
 		"updated_at": {
 			"format": "dateTime",
 			"type": "string"
 		},
 		"user_id": {
+			"type": "integer"
+		},
+		"vat": {
 			"type": "integer"
 		}
 	},

@@ -8,6 +8,15 @@
 				"name": "token",
 				"required": true,
 				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "body",
+				"name": "payload_data",
+				"required": false,
+				"schema": {
+					"$ref": "#/definitions/controllers_registerBankSnapPayload"
+				}
 			}
 		],
 		"responses": {

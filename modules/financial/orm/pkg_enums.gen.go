@@ -13,9 +13,9 @@ import (
 func (e BankSnapCheckStatus) IsValid() bool {
 	return array.StringInArray(
 		string(e),
-		string(WaitToCheck),
-		string(Verified),
-		string(Rejected),
+		string(PendingStatus),
+		string(AcceptedStatus),
+		string(RejectedStatus),
 	)
 }
 
@@ -165,7 +165,7 @@ func (e ChangeCashReasons) IsValid() bool {
 		string(e),
 		string(Gift),
 		string(ManualPay),
-		string(Refound),
+		string(Refund),
 	)
 }
 

@@ -35,7 +35,7 @@ func getSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case BankSnapTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]sdomain_id,%[1]suser_id,%[1]strace_number,%[1]samount,%[1]stype,%[1]schecked_by,%[1]screated_at,%[1]supdated_at`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]sdomain_id,%[1]suser_id,%[1]strace_number,%[1]svat,%[1]samount,%[1]spay_amount,%[1]sstatus,%[1]schecked_by,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case BillingTableFull:
 		return fmt.Sprintf(`%[1]sid,%[1]sdomain_id,%[1]suser_id,%[1]spay_model,%[1]sincome_id,%[1]svat,%[1]samount,%[1]spay_amount,%[1]sbalance,%[1]screated_at`, alias)
