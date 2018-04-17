@@ -29,7 +29,7 @@ func getSelectFields(tb string, alias string) string {
 		return fmt.Sprintf(`%[1]sid,%[1]screative_id,%[1]sasset_type,%[1]sproperty,%[1]sasset_key,%[1]sasset_value,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case CreativeTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]scampaign_id,%[1]sstatus,%[1]stype,%[1]surl,%[1]smax_bid,%[1]sattributes,%[1]screated_at,%[1]supdated_at,%[1]sarchived_at`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]suser_id,%[1]scampaign_id,%[1]sstatus,%[1]stype,%[1]surl,%[1]smax_bid,%[1]sattributes,%[1]screated_at,%[1]supdated_at,%[1]sarchived_at`, alias)
 
 	}
 	return ""

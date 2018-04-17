@@ -1,11 +1,11 @@
 {
 	"put": {
-		"description": "editNativeCreative to campaign",
+		"description": "addNativeCreative to campaign",
 		"parameters": [
 			{
 				"description": "",
 				"in": "path",
-				"name": "creative_id",
+				"name": "id",
 				"required": true,
 				"type": "string"
 			},
@@ -22,7 +22,7 @@
 				"name": "payload_data",
 				"required": false,
 				"schema": {
-					"$ref": "#/definitions/controllers_nativeCreativePayload"
+					"$ref": "#/definitions/controllers_editNativePayload"
 				}
 			}
 		],
@@ -46,26 +46,9 @@
 				}
 			},
 			"403": {
-				"description": "forbidden, you have no access here",
+				"description": "",
 				"schema": {
-					"properties": {
-						"error": {
-							"properties": {
-								"params": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
-								},
-								"text": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						}
-					},
-					"title": "forbidden",
-					"type": "object"
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
 				}
 			}
 		},

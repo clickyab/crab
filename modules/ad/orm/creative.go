@@ -7,7 +7,8 @@ import (
 
 	campaignOrm "clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/initializer"
+	"github.com/clickyab/services/mysql"
+	"github.com/sirupsen/logrus"
 )
 
 // CreativeStatusType is the creative active status
@@ -44,17 +45,6 @@ const (
 	CreativeNativeType CreativeTypes = "native"
 )
 
-// BaseCreativeData base data of creative to use in some payloads
-type BaseCreativeData struct {
-	Type       CreativeTypes      `json:"-"`
-	ID         int64              `json:"-"`
-	Status     CreativeStatusType `json:"status" validation:"omitempty"`
-	CampaignID int64              `json:"campaign_id" validation:"required"`
-	URL        string             `json:"url" validation:"required"`
-	MaxBid     int64              `json:"max_bid" validation="required,gt=0"`
-	Attributes string             `json:"attributes" validation:"omitempty"`
-}
-
 // Creative model in database
 // @Model {
 //		table = creatives
@@ -64,20 +54,21 @@ type BaseCreativeData struct {
 // }
 type Creative struct {
 	ID         int64              `json:"id" db:"id"`
+	UserID     int64              `json:"user_id" db:"user_id"`
 	CampaignID int64              `json:"campaign_id" db:"campaign_id"`
 	Status     CreativeStatusType `json:"status" db:"status"`
 	Type       CreativeTypes      `json:"type" db:"type"`
 	URL        string             `json:"url" db:"url"`
 	MaxBid     int64              `json:"max_bid" db:"max_bid"`
-	Attributes string             `json:"attributes" db:"attributes"`
+	Attributes string             `json:"-" db:"attributes"`
 	CreatedAt  time.Time          `json:"created_at" db:"created_at"`
 	UpdatedAt  time.Time          `json:"updated_at" db:"updated_at"`
-	ArchivedAt time.Time          `json:"archived_at" db:"archived_at"`
+	ArchivedAt mysql.NullTime     `json:"archived_at" db:"archived_at"`
 }
 
 // CreativeSaveResult to return creative and related assets after insert or update
 type CreativeSaveResult struct {
-	Creative Creative               `json:"creative"`
+	Creative *Creative              `json:"creative"`
 	Assets   map[string]interface{} `json:"assets"`
 }
 
@@ -113,162 +104,100 @@ func (m *Manager) GetAdsByCampaignID(cpID int64, d int64) ([]AdUser, int64) {
 }
 
 // AddCreative insert new creative with related native assets
-func (m *Manager) AddCreative(cr BaseCreativeData, assets []Asset) (CreativeSaveResult, error) {
-	newCreative := Creative{
-		CampaignID: cr.CampaignID,
-		Status:     cr.Status,
-		Type:       cr.Type,
-		URL:        cr.URL,
-		Attributes: cr.Attributes,
-		CreatedAt:  time.Now(),
-		UpdatedAt:  time.Now(),
-	}
-
-	res := CreativeSaveResult{
-		Creative: newCreative,
-		Assets:   BeautyAsset(assets),
-	}
-
-	// Start a new transaction
+func (m *Manager) AddCreative(cr *Creative, assets []*Asset) (*CreativeSaveResult, error) {
 	err := m.Begin()
-	if err != nil {
-		return res, err
-	}
-
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
+	assert.Nil(err)
+	defer func() {
+		if err != nil {
+			assert.Nil(m.Rollback())
+		} else {
+			assert.Nil(m.Commit())
 		}
-	}(newCreative)
+	}()
 
-	err = m.GetRDbMap().Insert(&newCreative)
+	err = m.CreateCreative(cr)
 	if err != nil {
-		er := m.Rollback()
-		assert.NotNil(er)
-
-		return res, err
+		return nil, err
 	}
 
-	s := make([]interface{}, len(assets))
+	var finalAsset = make([]Asset, 0)
+
 	for i := range assets {
-		assets[i].CreativeID = newCreative.ID
-		s[i] = &assets[i]
-	}
-
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
+		assets[i].CreativeID = cr.ID
+		err = m.CreateAsset(assets[i])
+		if err != nil {
+			logrus.Warn(err)
+			return nil, err
 		}
-	}(s)
-
-	err = m.GetRDbMap().Insert(s...)
-	if err != nil {
-		er := m.Rollback()
-		assert.NotNil(er)
-
-		return res, err
+		finalAsset = append(finalAsset, *assets[i])
 	}
-
-	res = CreativeSaveResult{
-		Creative: newCreative,
-		Assets:   BeautyAsset(assets),
-	}
-
-	// if the commit is successful, a nil error is returned
-	return res, m.Commit()
+	return &CreativeSaveResult{
+		Creative: cr,
+		Assets:   BeautyAsset(finalAsset),
+	}, nil
 }
 
-// EditCreative insert new creative with related assets
-func (m *Manager) EditCreative(cr BaseCreativeData, assets []Asset) (CreativeSaveResult, error) {
-	newData := Creative{
-		ID:         cr.ID,
-		CampaignID: cr.CampaignID,
-		Status:     cr.Status,
-		Type:       cr.Type,
-		URL:        cr.URL,
-		Attributes: cr.Attributes,
-		UpdatedAt:  time.Now(),
-	}
-
-	res := CreativeSaveResult{
-		Creative: newData,
-		Assets:   BeautyAsset(assets),
-	}
-
-	// Start a new transaction
+// EditCreative update creative and its assets
+func (m *Manager) EditCreative(cr *Creative, assets []*Asset) (*CreativeSaveResult, error) {
 	err := m.Begin()
-	if err != nil {
-		return res, err
-	}
-
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
+	assert.Nil(err)
+	defer func() {
+		if err != nil {
+			assert.Nil(m.Rollback())
+		} else {
+			assert.Nil(m.Commit())
 		}
-	}(newData)
+	}()
 
-	_, err = m.GetRDbMap().Update(&newData)
+	err = m.UpdateCreative(cr)
 	if err != nil {
-		er := m.Rollback()
-		assert.NotNil(er)
-
-		return res, err
+		return nil, err
 	}
 
-	err = m.DeleteAllCreativeAssets(newData.ID)
-	if err != nil {
-		er := m.Rollback()
-		assert.NotNil(er)
+	var finalAsset = make([]Asset, 0)
 
-		return res, err
+	err = m.DeleteAssetsByCreative(cr.ID)
+	if err != nil {
+		return nil, err
 	}
 
-	s := make([]interface{}, len(assets))
 	for i := range assets {
-		assets[i].CreativeID = newData.ID
-		s[i] = &assets[i]
-	}
-
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
+		assets[i].CreativeID = cr.ID
+		err = m.CreateAsset(assets[i])
+		if err != nil {
+			return nil, err
 		}
-	}(s)
-
-	err = m.GetRDbMap().Insert(s...)
-	if err != nil {
-		er := m.Rollback()
-		assert.NotNil(er)
-
-		return res, err
+		finalAsset = append(finalAsset, *assets[i])
 	}
+	return &CreativeSaveResult{
+		Creative: cr,
+		Assets:   BeautyAsset(finalAsset),
+	}, nil
+}
 
-	res = CreativeSaveResult{
-		Creative: newData,
-		Assets:   BeautyAsset(assets),
-	}
-
-	// if the commit is successful, a nil error is returned
-	return res, m.Commit()
+// DeleteAssetsByCreative delete assets by creative id
+func (m *Manager) DeleteAssetsByCreative(id int64) error {
+	q := fmt.Sprintf("DELETE FROM %s WHERE creative_id=?", AssetTableFull)
+	_, err := m.GetWDbMap().Exec(q, id)
+	return err
 }
 
 // FindCreativeByIDAndType find creative with id and type
-func (m *Manager) FindCreativeByIDAndType(crID int64, cType CreativeTypes) (Creative, error) {
-	var res []Creative
+func (m *Manager) FindCreativeByIDAndType(crID int64, cType CreativeTypes) (*Creative, error) {
+	var res Creative
 
-	_, err := m.GetRDbMap().Select(
+	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s AS cr "+
+		fmt.Sprintf("SELECT %s FROM %s AS cr "+
 			"WHERE cr.id=? AND cr.type=?",
+			getSelectFields(CreativeTableFull, "cr"),
 			CreativeTableFull,
 		),
 		crID,
 		cType,
 	)
-
-	if err != nil || len(res) == 0 {
-		return Creative{}, err
+	if err != nil {
+		return nil, err
 	}
-
-	return res[0], nil
+	return &res, nil
 }
