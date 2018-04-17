@@ -25,6 +25,8 @@ var (
 	AccessDenied = t9e.G("access Denied!you have not access to do this on creatives")
 	// DBError to show when query has error
 	DBError = t9e.G("database error! please check request data and try again")
+	// InvalideImageSize when width or height of image is not correct
+	InvalideImageSize = t9e.G("invalid image size! please check request uploaded image width and height")
 )
 
 // AdNotFound maker
@@ -43,4 +45,14 @@ func BannerNotFound(id int64) error {
 	}
 
 	return t9e.G("ad not found, please check your request data.")
+}
+
+// FileNotFound error maker
+func FileNotFound(name string) error {
+	if name != "" {
+		return t9e.G("%s file not found! please check your request data.", name)
+	}
+
+	return t9e.G("file not found! please check your request data.")
+
 }

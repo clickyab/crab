@@ -2,37 +2,47 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
+	"sync"
 
+	upload "clickyab.com/crab/modules/upload/controllers"
+
+	"clickyab.com/crab/libs"
 	"clickyab.com/crab/modules/ad/errors"
 	"clickyab.com/crab/modules/ad/orm"
 	campignErr "clickyab.com/crab/modules/campaign/errors"
 	campaignOrm "clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/domain/middleware/domain"
+	uploadOrm "clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/gettext/t9e"
 	"github.com/rs/xmux"
 )
 
-/* type bannerSize struct {
+var (
+	nativeValidImagesSizeConf = config.RegisterString("crab.modules.ad.native.images",
+		"320x480,480x320",
+		"valid images size separated by x",
+	)
+	nativeIconSize = config.RegisterString("crab.modules.ad.native.icon",
+		"512x512",
+		"valid icon size separated by x",
+	)
+
+	lock            = sync.Mutex{}
+	validImageSizes []imageSize
+)
+
+type imageSize struct {
 	Width  int
 	Height int
-} */
-
-/* var (
-	bannerValidSizes = config.RegisterString("crab.modules.ad.banner",
-		"120x600,160x600,300x250,336x280,468x60,728x90,120x240,320x50,800x440,300x600,970x90,970x250,250x250,300x1050,320x480,480x320,128x128",
-		"valid banner sizes separated by x",
-	)
-	minNativeBannerRation = config.RegisterFloat64("crab.modules.ad.native.ratio.min", 1.55, "minimum native banner ration")
-	maxNativeBannerRation = config.RegisterFloat64("crab.modules.ad.native.ratio.max", 1.65, "maximum native banner ration")
-	lock                  = sync.Mutex{}
-
-	bannerValid []bannerSize
-) */
+}
 
 // @Validate{
 //}
@@ -42,8 +52,62 @@ type nativeCreativePayload struct {
 }
 
 func (p *nativeCreativePayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	// TODO: check native images ratio
+	if len(p.Assets.Images) > 0 {
+		err := validateImage(p.Assets.Images)
+		if err != nil {
+			return err
+		}
+	}
+
+	if p.Assets.Icon != "" {
+		icon := upload.UPath.String() + p.Assets.Icon
+		width, height := libs.GetImageDimension(icon)
+
+		if size := fmt.Sprint("%sx%s", width, height); size != nativeIconSize.String() {
+			return errors.InvalideImageSize
+		}
+
+		uploadDBM := uploadOrm.NewModelManager()
+		_, err := uploadDBM.FindUploadByID(p.Assets.Icon)
+		if err != nil {
+			return errors.FileNotFound("icon")
+		}
+	}
+
 	return nil
+}
+
+func validateImage(images []string) error {
+	var width, height int
+	var imgPath string
+
+	uploadDBM := uploadOrm.NewModelManager()
+
+	for _, img := range images {
+		imgPath = upload.UPath.String() + img
+		width, height = libs.GetImageDimension(imgPath)
+
+		if !isValidSize(width, height) {
+			return errors.InvalideImageSize
+		}
+
+		_, err := uploadDBM.FindUploadByID(img)
+		if err != nil {
+			return errors.FileNotFound("image")
+		}
+	}
+
+	return nil
+}
+
+func isValidSize(width, height int) bool {
+	for i := range validImageSizes {
+		if validImageSizes[i].Width == width && validImageSizes[i].Height == height {
+			return true
+		}
+	}
+
+	return false
 }
 
 // addNativeCreative to campaign
@@ -73,7 +137,7 @@ func (c Controller) addNativeCreative(ctx context.Context, r *http.Request, p *n
 	p.Creative.Type = orm.CreativeNativeType
 
 	db := orm.NewOrmManager()
-	assets := orm.GenerateNativeAssets(p.Assets)
+	assets := orm.GenerateNativeAssets(p.Assets, upload.UPath.String())
 	res, err := db.AddCreative(p.Creative, assets)
 	if err != nil {
 		return &res, errors.DBError
@@ -126,7 +190,7 @@ func (c Controller) editNativeCreative(ctx context.Context, r *http.Request, p *
 	}
 	p.Creative.Type = orm.CreativeNativeType
 
-	assets := orm.GenerateNativeAssets(p.Assets)
+	assets := orm.GenerateNativeAssets(p.Assets, upload.UPath.String())
 	res, err := db.EditCreative(p.Creative, assets)
 	if err != nil {
 		return &res, errors.DBError
@@ -135,72 +199,21 @@ func (c Controller) editNativeCreative(ctx context.Context, r *http.Request, p *
 	return &res, nil
 }
 
-/* func checkBannerDimension(width, height int, bannerType orm.CreativeTypes) bool {
-	switch bannerType {
-	case orm.CreativeBannerType:
-		for i := range bannerValid {
-			if bannerValid[i].Width == width && bannerValid[i].Height == height {
-				return true
-			}
-		}
-	case orm.CreativeNativeType:
-		rate := float64(float64(width) / float64(height))
-		if rate < maxNativeBannerRation.Float64() && rate > minNativeBannerRation.Float64() {
-			return true
-		}
-
-	}
-
-	return false
-}
-
-func checkBannerImage(srcID string, bannerType orm.CreativeTypes) (mime string, width int, height int, err error) {
-	file, err := model.NewModelManager().FindUploadByID(srcID)
-
-	if err != nil || (file.Attr.Banner == nil && file.Attr.Native == nil) {
-		err = errors.InvalidUploadedFile
-		return
-	}
-	//check banner type
-	if file.Section != string(bannerType) {
-		err = errors.NoBannerError
-		return
-	}
-	//TODO check access to file
-	mime = file.MIME
-
-	switch bannerType {
-	case orm.CreativeBannerType:
-		width = file.Attr.Banner.Width
-		height = file.Attr.Banner.Height
-	case orm.CreativeNativeType:
-		width = file.Attr.Native.Width
-		height = file.Attr.Native.Height
-	}
-	ok := checkBannerDimension(width, height, bannerType)
-	if !ok {
-		err = errors.InvalidDimension
-		return
-	}
-	return
-} */
-
-/* func init() {
+func init() {
 	lock.Lock()
 	defer lock.Unlock()
 	// extract valid sizes
-	mainArr := strings.Split(bannerValidSizes.String(), ",")
-	for i := range mainArr {
-		size := bannerSize{}
-		sizeArr := strings.Split(mainArr[i], "x")
-		assert.True(len(sizeArr) == 2)
-		width, err := strconv.Atoi(sizeArr[0])
+	sizes := strings.Split(nativeValidImagesSizeConf.String(), ",")
+	for i := range sizes {
+		size := imageSize{}
+		widthHeight := strings.Split(sizes[i], "x")
+		assert.True(len(widthHeight) == 2)
+		width, err := strconv.Atoi(widthHeight[0])
 		assert.Nil(err)
-		height, err := strconv.Atoi(sizeArr[1])
+		height, err := strconv.Atoi(widthHeight[1])
 		assert.Nil(err)
 		size.Width = width
 		size.Height = height
-		bannerValid = append(bannerValid, size)
+		validImageSizes = append(validImageSizes, size)
 	}
 }
-*/
