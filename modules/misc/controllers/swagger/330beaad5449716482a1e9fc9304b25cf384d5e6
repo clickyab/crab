@@ -1,0 +1,115 @@
+{
+	"properties": {
+		"data": {
+			"items": {
+				"properties": {
+					"_actions": {
+						"type": "string"
+					},
+					"conversion": {
+						"type": "integer"
+					},
+					"conversion_rate": {
+						"type": "integer"
+					},
+					"cpa": {
+						"type": "integer"
+					},
+					"created_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"creative": {
+						"type": "integer"
+					},
+					"domain_id": {
+						"type": "integer"
+					},
+					"ecpc": {
+						"type": "integer"
+					},
+					"ecpm": {
+						"type": "integer"
+					},
+					"ectr": {
+						"type": "number"
+					},
+					"end_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"exchange": {
+						"type": "string"
+					},
+					"id": {
+						"type": "integer"
+					},
+					"kind": {
+						"type": "string"
+					},
+					"max_bid": {
+						"type": "integer"
+					},
+					"owner_email": {
+						"type": "string"
+					},
+					"owner_id": {
+						"type": "integer"
+					},
+					"start_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"strategy": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"today_click": {
+						"type": "integer"
+					},
+					"today_ctr": {
+						"type": "number"
+					},
+					"today_imp": {
+						"type": "integer"
+					},
+					"today_spend": {
+						"type": "integer"
+					},
+					"total_budget": {
+						"type": "integer"
+					},
+					"total_click": {
+						"type": "integer"
+					},
+					"total_imp": {
+						"type": "integer"
+					},
+					"total_spend": {
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"hash": {
+			"type": "string"
+		},
+		"page": {
+			"type": "integer"
+		},
+		"per_page": {
+			"type": "integer"
+		},
+		"total": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}
