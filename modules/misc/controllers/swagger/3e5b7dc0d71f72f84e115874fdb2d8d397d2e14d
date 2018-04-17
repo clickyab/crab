@@ -14,8 +14,11 @@
 				"icon": {
 					"type": "string"
 				},
-				"image": {
-					"type": "string"
+				"images": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
 				},
 				"logo": {
 					"type": "string"
