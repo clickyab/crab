@@ -480,7 +480,7 @@ func subtractsTwoArray(a, b []int64) []int64 {
 
 // FindInventoryAndPubCount find inventory info + publishers count
 func (m *Manager) FindInventoryAndPubCount(id int64) (InventoryWithPubCount, error) {
-	var res InventoryWithPubCount
+	res := InventoryWithPubCount{}
 
 	err := m.GetRDbMap().SelectOne(
 		&res,

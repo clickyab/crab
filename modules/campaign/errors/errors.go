@@ -41,8 +41,10 @@ var (
 	UpdateError error = t9e.G("can't update campaign main or related data")
 	// NotFoundSchedule when can't find campaign schedule time
 	NotFoundSchedule error = t9e.G("can't find campaign schedule time")
-	// InventoryNotFound when can't find campaign schedule time
-	InventoryNotFound error = t9e.G("can't find campaign schedule time")
+	// InventoryNotFound when can't find campaign inventory
+	InventoryNotFound error = t9e.G("can't find campaign inventory")
+	// NotFoundAttributes when can't find campaign attributes
+	NotFoundAttributes error = t9e.G("can't find campaign attributes")
 	// CreateError can't create new campaign
 	CreateError error = t9e.G("db error! can't create new campaign")
 )
