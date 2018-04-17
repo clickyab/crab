@@ -10,9 +10,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the supplier field",
 				"in": "query",
-				"name": "kind",
+				"name": "supplier",
 				"required": false,
 				"type": "string"
 			},
@@ -24,6 +24,20 @@
 				"type": "int"
 			},
 			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "status",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the domain field",
 				"in": "query",
 				"name": "domain",
@@ -31,9 +45,9 @@
 				"type": "string"
 			},
 			{
-				"description": " search the supplier field",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "supplier",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
@@ -48,20 +62,6 @@
 				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
 				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
 				"required": false,
 				"type": "string"
 			},
