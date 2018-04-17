@@ -3,23 +3,16 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "to",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -38,6 +31,13 @@
 				"type": "string"
 			},
 			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": " search the label field",
 				"in": "query",
 				"name": "label",
@@ -45,9 +45,9 @@
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": " page number",
 				"in": "query",
-				"name": "c",
+				"name": "p",
 				"required": false,
 				"type": "int"
 			},

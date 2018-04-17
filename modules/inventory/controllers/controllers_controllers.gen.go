@@ -97,6 +97,28 @@ func (ctrl *Controller) createPresetPost(ctx context.Context, w http.ResponseWri
 	framework.Write(w, res, http.StatusOK)
 }
 
+// duplicate a new whitelist blacklist for user
+// @Route {
+// 		url = /duplicate
+//		method = post
+//		payload = duplicateInventoryPayload
+//		middleware = authz.Authenticate
+//		resource = duplicate_inventory:self
+//		200 = orm.Inventory
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (ctrl *Controller) duplicatePost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := ctrl.MustGetPayload(ctx).(*duplicateInventoryPayload)
+	res, err := ctrl.duplicate(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // removePreset edit inventory
 // @Route {
 // 		url = /removepub/:id
