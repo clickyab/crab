@@ -32,7 +32,7 @@
 				"rating": {
 					"type": "number"
 				},
-				"saleprice": {
+				"sale_price": {
 					"type": "number"
 				},
 				"title": {
@@ -44,25 +44,11 @@
 			},
 			"type": "object"
 		},
-		"creative": {
-			"properties": {
-				"attributes": {
-					"type": "string"
-				},
-				"campaign_id": {
-					"type": "integer"
-				},
-				"max_bid": {
-					"type": "integer"
-				},
-				"status": {
-					"type": "string"
-				},
-				"url": {
-					"type": "string"
-				}
-			},
-			"type": "object"
+		"max_bid": {
+			"type": "integer"
+		},
+		"url": {
+			"type": "string"
 		}
 	},
 	"type": "object"

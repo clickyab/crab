@@ -5,9 +5,6 @@
 				"format": "dateTime",
 				"type": "string"
 			},
-			"attributes": {
-				"type": "string"
-			},
 			"campaign_id": {
 				"type": "integer"
 			},

@@ -6,6 +6,8 @@ import (
 
 	"database/sql/driver"
 
+	"fmt"
+
 	"clickyab.com/crab/modules/upload/errors"
 )
 
@@ -91,4 +93,21 @@ func (b *FileAttr) Scan(src interface{}) error {
 // Value for ad attr
 func (b FileAttr) Value() (driver.Value, error) {
 	return json.Marshal(b)
+}
+
+// FindSectionUploadByID return the Upload base on its id and section
+func (m *Manager) FindSectionUploadByID(id, section string) (*Upload, error) {
+	var res Upload
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=? AND section=?", getSelectFields(UploadTableFull, ""), UploadTableFull),
+		id,
+		section,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
 }

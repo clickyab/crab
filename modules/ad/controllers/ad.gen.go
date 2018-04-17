@@ -11,6 +11,7 @@ import (
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
+	"github.com/clickyab/services/permission"
 )
 
 var once = sync.Once{}
@@ -36,21 +37,24 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
 			"RecName": "c",
-			"Payload": "nativeCreativePayload",
-			"Resource": "",
-			"Scope": ""
+			"Payload": "createNativePayload",
+			"Resource": "add_creative",
+			"Scope": "self"
 		} with key 0 */
 		m0 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
+		permission.Register("add_creative", "add_creative")
+		m0 = append(m0, authz.AuthorizeGenerator("add_creative", "self"))
+
 		// Make sure payload is the last middleware
-		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(nativeCreativePayload{}))
+		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(createNativePayload{}))
 		group.POST("controllers-Controller-addNativeCreativePost", "/native", framework.Mix(c.addNativeCreativePost, m0...))
 		// End route with key 0
 
 		/* Route {
-			"Route": "/native/:creative_id",
+			"Route": "/native/:id",
 			"Method": "PUT",
 			"Function": "Controller.editNativeCreativePut",
 			"RoutePkg": "controllers",
@@ -60,17 +64,20 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
 			"RecName": "c",
-			"Payload": "nativeCreativePayload",
-			"Resource": "",
-			"Scope": ""
+			"Payload": "editNativePayload",
+			"Resource": "edit_creative",
+			"Scope": "self"
 		} with key 1 */
 		m1 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
+		permission.Register("edit_creative", "edit_creative")
+		m1 = append(m1, authz.AuthorizeGenerator("edit_creative", "self"))
+
 		// Make sure payload is the last middleware
-		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(nativeCreativePayload{}))
-		group.PUT("controllers-Controller-editNativeCreativePut", "/native/:creative_id", framework.Mix(c.editNativeCreativePut, m1...))
+		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(editNativePayload{}))
+		group.PUT("controllers-Controller-editNativeCreativePut", "/native/:id", framework.Mix(c.editNativeCreativePut, m1...))
 		// End route with key 1
 
 		initializer.DoInitialize(c)

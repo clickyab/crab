@@ -1,0 +1,58 @@
+{
+	"properties": {
+		"assets": {
+			"properties": {
+				"cta": {
+					"type": "string"
+				},
+				"description": {
+					"type": "string"
+				},
+				"downloads": {
+					"type": "integer"
+				},
+				"icon": {
+					"type": "string"
+				},
+				"images": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"logo": {
+					"type": "string"
+				},
+				"phone": {
+					"type": "string"
+				},
+				"price": {
+					"type": "number"
+				},
+				"rating": {
+					"type": "number"
+				},
+				"sale_price": {
+					"type": "number"
+				},
+				"title": {
+					"type": "string"
+				},
+				"video": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"campaign_id": {
+			"type": "integer"
+		},
+		"max_bid": {
+			"type": "integer"
+		},
+		"url": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
