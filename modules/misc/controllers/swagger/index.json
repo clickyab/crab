@@ -46,6 +46,7 @@
 		"controllers_platformResponse": "file://687b15844015b0e44dea5ffed39429f06d00f4ca",
 		"controllers_registerBankSnapPayload": "file://c62902d1155d8e3f25124cb2e5bda1fbd9ce9c5b",
 		"controllers_removeInventoryPayload": "file://26354686ddbc1aa22fb9535478a8df46c62d8f79",
+		"controllers_response": "file://e8441ac5f4fbe784db060724bbcc9431d2b78866",
 		"controllers_sliceAds": "file://a9667288da7d313381504db20cc63f5e081f3633",
 		"controllers_updateResult": "file://26eaadd7100f944746a43e1ad61c918ac570a90e",
 		"controllers_uploadResponse": "file://2929b104df42faaacb83cd489e0853b2cf206b29",
