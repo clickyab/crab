@@ -77,8 +77,8 @@ type Creative struct {
 
 // CreativeSaveResult to return creative and related assets after insert or update
 type CreativeSaveResult struct {
-	Creative Creative `json:"creative"`
-	Assets   []Asset  `json:"assets"`
+	Creative Creative               `json:"creative"`
+	Assets   map[string]interface{} `json:"assets"`
 }
 
 // AdUser creative user obj
@@ -126,7 +126,7 @@ func (m *Manager) AddCreative(cr BaseCreativeData, assets []Asset) (CreativeSave
 
 	res := CreativeSaveResult{
 		Creative: newCreative,
-		Assets:   assets,
+		Assets:   BeautyAsset(assets),
 	}
 
 	// Start a new transaction
@@ -171,7 +171,7 @@ func (m *Manager) AddCreative(cr BaseCreativeData, assets []Asset) (CreativeSave
 
 	res = CreativeSaveResult{
 		Creative: newCreative,
-		Assets:   assets,
+		Assets:   BeautyAsset(assets),
 	}
 
 	// if the commit is successful, a nil error is returned
@@ -192,7 +192,7 @@ func (m *Manager) EditCreative(cr BaseCreativeData, assets []Asset) (CreativeSav
 
 	res := CreativeSaveResult{
 		Creative: newData,
-		Assets:   assets,
+		Assets:   BeautyAsset(assets),
 	}
 
 	// Start a new transaction
@@ -245,7 +245,7 @@ func (m *Manager) EditCreative(cr BaseCreativeData, assets []Asset) (CreativeSav
 
 	res = CreativeSaveResult{
 		Creative: newData,
-		Assets:   assets,
+		Assets:   BeautyAsset(assets),
 	}
 
 	// if the commit is successful, a nil error is returned
