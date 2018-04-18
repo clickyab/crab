@@ -232,7 +232,7 @@ func (m *Manager) FillCampaignDataTableArray(
 	query := fmt.Sprintf(`SELECT cp.id AS id,
 	cp.title,
 	cp.kind,
-	cp.daily_limit,
+	cp.daily_budget,
 	cp.type,
 	cp.status,
 	cp.max_bid,
