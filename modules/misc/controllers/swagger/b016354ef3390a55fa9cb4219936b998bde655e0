@@ -10,16 +10,16 @@
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": " count per page",
 				"in": "query",
-				"name": "p",
+				"name": "c",
 				"required": false,
 				"type": "int"
 			},
 			{
-				"description": " count per page",
+				"description": " page number",
 				"in": "query",
-				"name": "c",
+				"name": "p",
 				"required": false,
 				"type": "int"
 			},

@@ -88,11 +88,11 @@ func (cdt CampaignDataTable) Filter(u permission.Interface) CampaignDataTable {
 
 	res.Title = cdt.Title
 
-	res.Budget = cdt.Budget
+	res.TotalBudget = cdt.TotalBudget
 
-	res.DailyLimit = cdt.DailyLimit
+	res.DailyBudget = cdt.DailyBudget
 
-	res.CostType = cdt.CostType
+	res.Strategy = cdt.Strategy
 
 	res.MaxBid = cdt.MaxBid
 
