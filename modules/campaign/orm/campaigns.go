@@ -119,7 +119,7 @@ func (m *Manager) FillCampaigns(
 	q := fmt.Sprintf(`FROM %s AS c
   JOIN %s u ON c.user_id = ?
   LEFT JOIN %s AS pu ON (pu.user_id = owner.id AND cp.domain_id = ?)
-  LEFT JOIN %s AS parent ON parent.id = pu.parent_id
+  LEFT JOIN %s AS parent ON parent.id = pu.advisor_id
   JOIN %s cd ON (c.id = cd.campaign_id AND cd.daily_id = ?)
   JOIN %s c2 ON c.id = c2.campaign_id
   LEFT JOIN %s c3 ON (c.id = c3.campaign_id AND c3.status = 'accepted')
