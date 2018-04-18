@@ -92,6 +92,7 @@
 		"orm_Publisher": "file://517e754763ad90bcbf33f0f682b9e3d78801c986",
 		"orm_PublisherDataTable": "file://a95f275bff5648b832754f3678b509832904f513",
 		"orm_PublisherType": "file://e1608079d07b5a68239759a550f587834248a047",
+		"orm_Receiver": "file://c94751240617ac2b1c2749b2f1b322315c84f62c",
 		"orm_ScheduleSheet": "file://d8797e7fbbfe18809322e2680feff23eaa03bde2",
 		"orm_SinglePublisherDataTable": "file://456c7c73cc3dafc71250c75af0c93de6684a3168",
 		"orm_Status": "file://3df80573c7f36241a6530c1863c60c4dcfef21c6",
