@@ -12,12 +12,6 @@
 		"avg_cpm": {
 			"type": "number"
 		},
-		"budget": {
-			"type": "integer"
-		},
-		"cost_type": {
-			"type": "string"
-		},
 		"created_at": {
 			"format": "dateTime",
 			"type": "string"
@@ -25,7 +19,7 @@
 		"ctr": {
 			"type": "number"
 		},
-		"daily_limit": {
+		"daily_budget": {
 			"type": "integer"
 		},
 		"domain_id": {
@@ -66,7 +60,10 @@
 			"type": "string"
 		},
 		"status": {
-			"type": "boolean"
+			"type": "string"
+		},
+		"strategy": {
+			"type": "string"
 		},
 		"title": {
 			"type": "string"
@@ -78,6 +75,9 @@
 			"type": "number"
 		},
 		"today_imp": {
+			"type": "integer"
+		},
+		"total_budget": {
 			"type": "integer"
 		},
 		"total_click": {

@@ -3,6 +3,13 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": " search the label field",
+				"in": "query",
+				"name": "label",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " page number",
 				"in": "query",
 				"name": "p",
@@ -13,6 +20,13 @@
 				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
 				"name": "to",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
@@ -33,21 +47,7 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
 				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the label field",
-				"in": "query",
-				"name": "label",
 				"required": false,
 				"type": "string"
 			},

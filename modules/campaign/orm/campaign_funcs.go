@@ -321,7 +321,7 @@ func (m *Manager) FillCampaignDataTableArray(
 		res[i].Ctr = calculateCtr(res[i].TotalImp, res[i].TotalClick, defaultCTR.Float64())
 		res[i].TodayCtr = calculateCtr(res[i].TodayImp, res[i].TodayClick, defaultCTR.Float64())
 		res[i].TotalSpent = func() int64 {
-			if res[i].CostType == CPC {
+			if res[i].Strategy == CPC {
 				return res[i].TotalCpc
 			}
 			return res[i].TotalCpm

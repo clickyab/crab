@@ -53,7 +53,7 @@ var (
 //		resource = campaign_list:self
 //		_sort_ = string, the sort and order like id:asc or id:desc available column "created_at","start_at","max_bid"
 //		_kind_ = string , filter the kind field valid values are "web","app"
-//		_cost_type_ = string , filter the cost_type field valid values are "cpm","cpc","cpa"
+//		_strategy_ = string , filter the strategy field valid values are "cpm","cpc","cpa"
 //		_title_ = string , search the title field
 //		_owner_email_ = string , search the owner_email field
 //		200 = listCampaignResponse
@@ -70,7 +70,7 @@ func (u *Controller) listCampaign(ctx context.Context, w http.ResponseWriter, r 
 		filter["cp.kind"] = e
 	}
 
-	if e := r.URL.Query().Get("cost_type"); e != "" && orm.Strategy(e).IsValid() {
+	if e := r.URL.Query().Get("strategy"); e != "" && orm.Strategy(e).IsValid() {
 		filter["cp.cost_type"] = e
 	}
 
@@ -221,7 +221,7 @@ func init() {
 			"visible": true,
 			"filter": false,
 			"title": "Status",
-			"type": "bool",
+			"type": "enum",
 			"filter_valid_map": null
 		},
 		{
@@ -258,35 +258,35 @@ func init() {
 			"filter_valid_map": null
 		},
 		{
-			"data": "budget",
-			"name": "Budget",
+			"data": "total_budget",
+			"name": "TotalBudget",
 			"searchable": false,
 			"sortable": false,
 			"visible": true,
 			"filter": false,
-			"title": "Budget",
+			"title": "TotalBudget",
 			"type": "number",
 			"filter_valid_map": null
 		},
 		{
-			"data": "daily_limit",
-			"name": "DailyLimit",
+			"data": "daily_budget",
+			"name": "DailyBudget",
 			"searchable": false,
 			"sortable": false,
 			"visible": true,
 			"filter": false,
-			"title": "DailyLimit",
+			"title": "DailyBudget",
 			"type": "number",
 			"filter_valid_map": null
 		},
 		{
-			"data": "cost_type",
-			"name": "CostType",
+			"data": "strategy",
+			"name": "Strategy",
 			"searchable": false,
 			"sortable": false,
 			"visible": true,
 			"filter": true,
-			"title": "CostType",
+			"title": "Strategy",
 			"type": "enum",
 			"filter_valid_map": {
 				"cpa": "CPA",
