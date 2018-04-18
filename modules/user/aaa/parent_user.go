@@ -33,7 +33,7 @@ func (m *Manager) GetUserParentsIDDomain(id, d int64) []Advisor {
 func (m *Manager) GetUserChildesIDDomain(id, d int64) []int64 {
 	var res []Advisor
 	var final []int64
-	q := fmt.Sprintf(`SELECT user_id FROM %s AS pu WHERE pu.parent_id=? AND pu.domain_id=?`, AdvisorTableFull)
+	q := fmt.Sprintf(`SELECT user_id FROM %s AS pu WHERE pu.advisor_id=? AND pu.domain_id=?`, AdvisorTableFull)
 	_, err := m.GetRDbMap().Select(&res, q, id, d)
 	assert.Nil(err)
 	for i := range res {
