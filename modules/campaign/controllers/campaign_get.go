@@ -18,6 +18,7 @@ import (
 
 type response struct {
 	orm.Campaign
+	Receivers  []orm.Receiver                     `json:"receivers"`
 	Inventory  inventoryOrm.InventoryWithPubCount `json:"inventory"`
 	Schedule   orm.ScheduleSheet                  `json:"schedule"`
 	Attributes orm.CampaignAttributes             `json:"attributes"`
@@ -85,6 +86,11 @@ func (c *Controller) get(ctx context.Context, r *http.Request) (*response, error
 		}
 
 		res.Inventory = inv
+	}
+
+	recs := dbm.GetReportReceivers(campaign.ID)
+	if len(recs) > 0 {
+		res.Receivers = recs
 	}
 
 	return &res, nil
