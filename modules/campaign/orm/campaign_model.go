@@ -199,7 +199,7 @@ type CampaignDataTable struct {
 
 	Kind CampaignKind `json:"kind" db:"kind" type:"enum" filter:"true" map:"cp.kind"`
 
-	Status  bool           `json:"status" db:"status" type:"bool"`
+	Status  Status         `json:"status" db:"status" type:"bool"`
 	StartAt time.Time      `json:"start_at" db:"start_at" type:"date" sort:"true"`
 	EndAt   mysql.NullTime `json:"end_at" db:"end_at" type:"date"`
 	Title   string         `json:"title" db:"title" type:"string" search:"true" map:"cp.title"`
