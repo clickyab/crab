@@ -151,9 +151,10 @@ func (m *Manager) FillCampaignGraph(
 	COALESCE(SUM(cd.cpc)+SUM(cd.cpm),0) AS total_spent
 	FROM %s AS cp INNER JOIN %s AS owner ON owner.id=cp.user_id
 	LEFT JOIN %s AS pu ON (pu.user_id=owner.id AND cp.domain_id=?)
-	LEFT JOIN %s AS parent ON parent.id=pu.parent_id
+	LEFT JOIN %s AS parent ON parent.id=pu.advisor_id
 	LEFT JOIN %s AS cd ON cd.campaign_id=cp.id `,
-		CampaignTableFull, aaa.UserTableFull, aaa.AdvisorTableFull, aaa.UserTableFull, CampaignDetailTableFull)
+		CampaignTableFull, aaa.UserTableFull, aaa.AdvisorTableFull, aaa.UserTableFull,
+		CampaignDetailTableFull)
 
 	var where []string
 
@@ -222,10 +223,11 @@ func (m *Manager) FillCampaignDataTableArray(
 	countQuery := fmt.Sprintf(`SELECT COUNT(cp.id) FROM %s AS cp
 	INNER JOIN %s AS owner ON owner.id=cp.user_id
 	LEFT JOIN %s AS pu ON (pu.user_id=owner.id AND cp.domain_id=?)
-	LEFT JOIN %s AS parent ON parent.id=pu.parent_id
+	LEFT JOIN %s AS parent ON parent.id=pu.advisor_id
 	LEFT JOIN %s AS cd ON cd.campaign_id=cp.id
 	LEFT JOIN %s AS ycd ON (ycd.campaign_id=cp.id AND ycd.daily_id=%d)`,
-		CampaignTableFull, aaa.UserTableFull, aaa.AdvisorTableFull, aaa.UserTableFull, CampaignDetailTableFull, CampaignDetailTableFull, todayInt)
+		CampaignTableFull, aaa.UserTableFull, aaa.AdvisorTableFull, aaa.UserTableFull,
+		CampaignDetailTableFull, CampaignDetailTableFull, todayInt)
 
 	query := fmt.Sprintf(`SELECT cp.id AS id,
 	cp.title,
