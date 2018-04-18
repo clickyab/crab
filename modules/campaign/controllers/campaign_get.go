@@ -16,7 +16,7 @@ import (
 	"github.com/rs/xmux"
 )
 
-type response struct {
+type campaignGetResponse struct {
 	orm.Campaign
 	Receivers  []orm.Receiver                     `json:"receivers"`
 	Inventory  inventoryOrm.InventoryWithPubCount `json:"inventory"`
@@ -31,7 +31,7 @@ type response struct {
 // 		method = get
 //		resource = get_campaign:self
 // }
-func (c *Controller) get(ctx context.Context, r *http.Request) (*response, error) {
+func (c *Controller) get(ctx context.Context, r *http.Request) (*campaignGetResponse, error) {
 	userDomain := domain.MustGetDomain(ctx)
 	currentUser := authz.MustGetUser(ctx)
 	id := xmux.Param(ctx, "id")
@@ -56,7 +56,7 @@ func (c *Controller) get(ctx context.Context, r *http.Request) (*response, error
 		return nil, errors.AccessDenied
 	}
 
-	res := response{
+	res := campaignGetResponse{
 		Campaign: *campaign,
 	}
 
