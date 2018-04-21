@@ -48,7 +48,7 @@ var (
 //		method = get
 //		_c_ = int , count per page
 //		_p_ = int , page number
-//		__ = string , parameter for search
+//		_q_ = string , parameter for search
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		resource = campaign_list:self
@@ -109,11 +109,11 @@ func (u *Controller) listCampaigns(ctx context.Context, w http.ResponseWriter, r
 
 	search := make(map[string]string)
 
-	if e := r.URL.Query().Get(""); e != "" {
+	if e := r.URL.Query().Get("q"); e != "" {
 		search["title"] = e
 	}
 
-	if e := r.URL.Query().Get(""); e != "" {
+	if e := r.URL.Query().Get("q"); e != "" {
 		search["owner_email"] = e
 	}
 
@@ -171,7 +171,7 @@ func (u *Controller) defCampaigns(ctx context.Context, w http.ResponseWriter, r 
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listCampaignsDefResponse{Checkable: false, SearchKey: "", Multiselect: false, DateFilter: "", Hash: hash, Columns: listCampaignsDefinition},
+		listCampaignsDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "", Hash: hash, Columns: listCampaignsDefinition},
 	)
 }
 
