@@ -17,7 +17,7 @@ import (
 func (m *Manager) CreateGateway(g *Gateway) error {
 	now := time.Now()
 	g.CreatedAt = now
-
+	g.UpdatedAt = now
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -29,7 +29,8 @@ func (m *Manager) CreateGateway(g *Gateway) error {
 
 // UpdateGateway try to update Gateway in database
 func (m *Manager) UpdateGateway(g *Gateway) error {
-
+	now := time.Now()
+	g.UpdatedAt = now
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

@@ -3,16 +3,9 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": "",
 				"in": "query",
-				"name": "strategy",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
@@ -20,6 +13,13 @@
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
 				"required": false,
 				"type": "int"
 			},
@@ -33,23 +33,16 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
 				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": " search the title field",
 				"in": "query",
-				"name": "p",
+				"name": "title",
 				"required": false,
-				"type": "int"
+				"type": "string"
 			},
 			{
 				"description": "",
@@ -59,9 +52,16 @@
 				"type": "string"
 			},
 			{
-				"description": " search the title field",
+				"description": " search the owner_email field",
 				"in": "query",
-				"name": "title",
+				"name": "owner_email",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},
@@ -75,14 +75,14 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "exchange",
+				"name": "strategy",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the owner_email field",
+				"description": "",
 				"in": "query",
-				"name": "owner_email",
+				"name": "exchange",
 				"required": false,
 				"type": "string"
 			},

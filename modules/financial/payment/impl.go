@@ -1,14 +1,15 @@
 package payment
 
+import "clickyab.com/crab/modules/financial/payment/saman"
+
 // Payable handle payment
 type Payable interface {
-	GetPaymentParams() map[string]interface{}
+	InitPayment() *saman.InitPaymentResp
 	GetPaymentURL() string
 	GetPaymentMethod() string
 
 	MID() int64
 	RedirectURL() string
-	PayAmount() int64
-	ChargeAmount() int64
-	VatAmount() int64
+	Amount() int64
+	ResNum() string
 }

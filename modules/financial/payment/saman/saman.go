@@ -11,10 +11,20 @@ var bankURL = config.RegisterString("crab.modules.financial.saman.url", "https:/
 
 // Saman handle payment for saman gateway
 type Saman struct {
-	FPayAmount    int64
-	FChargeAmount int64
-	FVatAmount    int64
-	FResNum       string
+	FAmount int64
+	FResNum string
+}
+
+// InitPaymentResp init payment response
+type InitPaymentResp struct {
+	Params  map[string]interface{} `json:"params"`
+	Method  string                 `json:"method"`
+	BankURL string                 `json:"bank_url"`
+}
+
+// Amount return amount
+func (s *Saman) Amount() int64 {
+	return s.FAmount
 }
 
 // GetPaymentURL return payment url
@@ -27,34 +37,24 @@ func (s *Saman) GetPaymentMethod() string {
 	return paymentMethod.String()
 }
 
-// PayAmount return PayAmount
-func (s *Saman) PayAmount() int64 {
-	return s.FPayAmount
-}
-
-// ChargeAmount return charge amount
-func (s *Saman) ChargeAmount() int64 {
-	return s.FChargeAmount
-}
-
-// VatAmount return VatAmount
-func (s *Saman) VatAmount() int64 {
-	return s.FVatAmount
-}
-
 // ResNum return ResNum
 func (s *Saman) ResNum() string {
 	return s.FResNum
 }
 
-// GetPaymentParams return payment params
-func (s *Saman) GetPaymentParams() map[string]interface{} {
-	return map[string]interface{}{
-		"MID":         merchantID.Int64(),
-		"ResNum":      s.FResNum,
-		"RedirectURL": redirectURL.String(),
-		"Amount":      s.FPayAmount,
+// InitPayment init payment and  return payment params
+func (s *Saman) InitPayment() *InitPaymentResp {
+	return &InitPaymentResp{
+		Params: map[string]interface{}{
+			"MID":         merchantID.Int64(),
+			"ResNum":      s.FResNum,
+			"RedirectURL": redirectURL.String(),
+			"Amount":      s.FAmount,
+		},
+		Method:  paymentMethod.String(),
+		BankURL: bankURL.String(),
 	}
+
 }
 
 // MID return MID

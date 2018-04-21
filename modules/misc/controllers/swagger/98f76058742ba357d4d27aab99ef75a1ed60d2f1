@@ -1,0 +1,17 @@
+{
+	"properties": {
+		"bank_url": {
+			"type": "string"
+		},
+		"method": {
+			"type": "string"
+		},
+		"params": {
+			"additionalProperties": {
+				"type": "string"
+			},
+			"type": "object"
+		}
+	},
+	"type": "object"
+}

@@ -43,12 +43,6 @@ func (pl *initPaymentPayload) ValidateExtra(ctx context.Context, w http.Response
 	return nil
 }
 
-type initPaymentResp struct {
-	Params  map[string]interface{} `json:"params"`
-	Method  string                 `json:"method"`
-	BankURL string                 `json:"bank_url"`
-}
-
 // getPaymentData get payment data
 // @Rest {
 // 		url = /payment/init
@@ -56,7 +50,7 @@ type initPaymentResp struct {
 // 		method = post
 //		resource = make_payment:self
 // }
-func (c *Controller) getPaymentData(ctx context.Context, r *http.Request, p *initPaymentPayload) (*initPaymentResp, error) {
+func (c *Controller) getPaymentData(ctx context.Context, r *http.Request, p *initPaymentPayload) (*saman.InitPaymentResp, error) {
 	currentUser := authz.MustGetUser(ctx)
 	dm := domain.MustGetDomain(ctx)
 	// find gateway
@@ -72,16 +66,14 @@ func (c *Controller) getPaymentData(ctx context.Context, r *http.Request, p *ini
 		return nil, errors.GateWayNotSupportedErr
 	}
 	var pay = saman.Saman{
-		FPayAmount:    p.payAmount,
-		FChargeAmount: p.chargeAmount,
-		FVatAmount:    p.vatAmount,
-		FResNum:       <-random.ID,
+		FAmount: p.payAmount,
+		FResNum: <-random.ID,
 	}
 
 	// create online payment
 	onlinePay := &orm.OnlinePayment{
 		Status:    orm.Init,
-		Amount:    pay.PayAmount(),
+		Amount:    pay.Amount(),
 		ResNum:    pay.ResNum(),
 		UserID:    currentUser.ID,
 		DomainID:  dm.ID,
@@ -93,11 +85,6 @@ func (c *Controller) getPaymentData(ctx context.Context, r *http.Request, p *ini
 	if err != nil {
 		return nil, errors.MakeOnlinePaymentErr
 	}
-
-	return &initPaymentResp{
-		Method:  pay.GetPaymentMethod(),
-		Params:  pay.GetPaymentParams(),
-		BankURL: pay.GetPaymentURL(),
-	}, nil
+	return pay.InitPayment(), nil
 
 }
