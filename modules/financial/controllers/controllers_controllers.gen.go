@@ -73,3 +73,22 @@ func (c *Controller) billingListGet(ctx context.Context, w http.ResponseWriter, 
 	}
 	framework.Write(w, res, http.StatusOK)
 }
+
+// getGateways get payment data
+// @Route {
+// 		url = /gateways
+//		method = get
+//		middleware = authz.Authenticate
+//		200 = getGateResp
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+// }
+func (c *Controller) getGatewaysGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getGateways(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
