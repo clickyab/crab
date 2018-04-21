@@ -17,6 +17,14 @@ var (
 	CreateError error = t9e.G("db error! can't create new bill")
 	// MinBankSnapErr min min bank snap error
 	MinBankSnapErr error = t9e.G("minimum money not met")
+	// DisableGateWayErr gateway is disabled
+	DisableGateWayErr error = t9e.G("disabled gateway")
+	// NotFoundGateway gateway not found
+	NotFoundGateway error = t9e.G("gateway not found")
+	// MakeOnlinePaymentErr error while making online payments error while making online payments
+	MakeOnlinePaymentErr error = t9e.G("error while making online payments")
+	//GateWayNotSupportedErr gate way not supported
+	GateWayNotSupportedErr error = t9e.G("gateway not supported")
 )
 
 // NotFoundError maker
@@ -26,6 +34,11 @@ func NotFoundError(id int64) error {
 	}
 
 	return t9e.G("bill not found, please check your request data.")
+}
+
+// MinChargeError min charge not met
+func MinChargeError(min int64) error {
+	return t9e.G("min charge should be %d", min)
 }
 
 // InvalidError maker
