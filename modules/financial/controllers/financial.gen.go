@@ -105,6 +105,28 @@ func (c *Controller) Routes(r framework.Mux) {
 		group.GET("controllers-Controller-billingListGet", "/", framework.Mix(c.billingListGet, m2...))
 		// End route with key 2
 
+		/* Route {
+			"Route": "/gateways",
+			"Method": "GET",
+			"Function": "Controller.getGatewaysGet",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "",
+			"Scope": ""
+		} with key 3 */
+		m3 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		group.GET("controllers-Controller-getGatewaysGet", "/gateways", framework.Mix(c.getGatewaysGet, m3...))
+		// End route with key 3
+
 		initializer.DoInitialize(c)
 	})
 }
