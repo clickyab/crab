@@ -14,10 +14,8 @@ type OnlinePaymentStatus string
 const (
 	// Init pay transaction
 	Init OnlinePaymentStatus = "init"
-	// InGateway user go to gateway for payment
-	InGateway OnlinePaymentStatus = "in_gateway"
-	// BackToClickyab back to clickyab panel but not verified
-	BackToClickyab OnlinePaymentStatus = "back_to_clickyab"
+	// BackToSite back to clickyab panel but not verified
+	BackToSite OnlinePaymentStatus = "back_to_site"
 	// Finalized verified and finalized payment successfully
 	Finalized OnlinePaymentStatus = "finalized"
 )
@@ -36,9 +34,9 @@ type OnlinePayment struct {
 	GatewayID   int64               `json:"gateway_id" db:"gateway_id"`
 	Amount      int64               `json:"amount" db:"amount"`
 	Status      OnlinePaymentStatus `json:"status" db:"status"`
-	BankStatus  int64               `json:"bank_status" db:"bank_status"`
-	RefNum      string              `json:"ref_num" db:"ref_num"`
-	ResNum      mysql.NullString    `json:"res_num" db:"res_num"`
+	BankStatus  mysql.NullInt64     `json:"bank_status" db:"bank_status"`
+	RefNum      mysql.NullString    `json:"ref_num" db:"ref_num"`
+	ResNum      string              `json:"res_num" db:"res_num"`
 	CID         mysql.NullString    `json:"cid" db:"cid"`
 	TraceNumber mysql.NullString    `json:"trace_number" db:"trace_number"`
 	CreatedAt   time.Time           `json:"created_at" db:"created_at"`
