@@ -240,8 +240,7 @@ func (e OnlinePaymentStatus) IsValid() bool {
 	return array.StringInArray(
 		string(e),
 		string(Init),
-		string(InGateway),
-		string(BackToClickyab),
+		string(BackToSite),
 		string(Finalized),
 	)
 }

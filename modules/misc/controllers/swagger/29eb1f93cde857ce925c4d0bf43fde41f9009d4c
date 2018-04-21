@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"charge_amount": {
+			"type": "integer"
+		},
+		"gate_way": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

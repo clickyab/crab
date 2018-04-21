@@ -9,6 +9,28 @@ import (
 	"github.com/clickyab/services/framework"
 )
 
+// getPaymentData get payment data
+// @Route {
+// 		url = /payment/init
+//		method = post
+//		payload = initPaymentPayload
+//		middleware = authz.Authenticate
+//		resource = make_payment:self
+//		200 = saman.InitPaymentResp
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) getPaymentDataPost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*initPaymentPayload)
+	res, err := c.getPaymentData(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // registerSnap register new bank snap by advertiser
 // @Route {
 // 		url = /add
