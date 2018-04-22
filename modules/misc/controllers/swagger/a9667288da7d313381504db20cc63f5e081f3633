@@ -5,6 +5,12 @@
 				"format": "dateTime",
 				"type": "string"
 			},
+			"attributes": {
+				"additionalProperties": {
+					"type": "string"
+				},
+				"type": "object"
+			},
 			"campaign_id": {
 				"type": "integer"
 			},
