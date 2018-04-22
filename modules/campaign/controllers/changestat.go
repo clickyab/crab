@@ -14,7 +14,6 @@ import (
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
-	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
 	"github.com/rs/xmux"
 )
@@ -24,7 +23,7 @@ import (
 // 		url = /:id/:stat
 //		protected = true
 // 		method = patch
-//		resource = change_campaign:self
+//		resource = change_campaign_status:self
 // }
 func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.NormalResponse, error) {
 	currentUser := authz.MustGetUser(ctx)
@@ -48,14 +47,14 @@ func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.
 	userManager := aaa.NewAaaManager()
 	owner, err := userManager.FindUserWithParentsByID(campaign.UserID, campaign.DomainID)
 	assert.Nil(err)
-	_, ok := aaa.CheckPermOn(owner, currentUser, "change_campaign", campaign.DomainID)
+	_, ok := aaa.CheckPermOn(owner, currentUser, "change_campaign_status", campaign.DomainID)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
 	// if campaign current mode is archive nothing can be done
 	if campaign.ArchivedAt.Valid && campaign.ArchivedAt.Time.Before(time.Now()) {
 		//nothing can do
-		return nil, t9e.G("can't manipulate status")
+		return nil, errors.ChangeArchiveError
 	}
 
 	if stat == "start" {
@@ -70,7 +69,7 @@ func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.
 	}
 	err = cpManager.UpdateCampaign(campaign)
 	if err != nil {
-		return nil, t9e.G("can't update campaign data")
+		return nil, errors.UpdateCampaignErr
 	}
 
 	return nil, nil
