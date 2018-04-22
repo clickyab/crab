@@ -5,6 +5,7 @@
 // db/20180408053319_unique_index_assets.sql
 // db/20180408105045_add_creative_max_bid.sql
 // db/20180417122713_fix.sql
+// db/20180422112913_perm.sql
 // DO NOT EDIT!
 
 package migrations
@@ -172,6 +173,26 @@ func db20180417122713_fixSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180422112913_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x8f\x4d\x4b\xf3\x40\x14\x46\xf7\xf9\x15\x0f\xd9\x24\xe1\x4d\x17\xed\xb6\x74\x51\xc8\xbc\x18\x88\x29\xe6\x43\x97\x6d\x4c\xae\xed\xc5\x69\x66\x98\x19\xad\x3f\x5f\x26\x51\x51\x41\x10\x5c\xce\xe1\xce\xc3\x39\xc1\x62\x81\x7f\x67\x3e\x9a\xce\x11\x5a\xed\x9f\xf5\x4d\x01\x1e\x61\xa9\x77\xac\x46\x44\xad\x8e\xc0\x16\xf4\x42\xfd\x93\xa3\x01\x97\x13\x8d\x70\x27\xb6\x98\xff\xf9\x23\xb6\xe8\xb4\x96\x4c\x43\x90\x97\xb5\xa8\x1a\xe4\x65\xb3\x83\x51\x92\xf6\x9a\xcc\x99\xad\xf5\x67\xf1\x04\x78\x48\xe1\x61\x0a\xdb\x2b\x4d\x09\x6e\xb7\x45\x2b\x6a\xc4\xcb\x34\x3c\x92\xdb\xf7\x86\x3a\xc7\xcf\x14\xa6\xa1\x25\xf9\x10\x26\xeb\xbf\x8c\xae\x7e\x1c\xfd\xd2\x9e\xa9\xcb\xf8\x5e\xff\x91\xee\xe1\xaf\xe2\x8d\x92\x92\x06\xdc\x77\xfd\x63\x90\x89\x42\x34\x02\xf8\x5f\xed\xae\x71\xf8\x66\x7b\xc0\xdd\x95\xa8\xc4\xa4\xba\x89\x3e\x8b\x45\xd8\x96\xd9\x2c\xbf\x99\x15\x27\xf0\x16\x87\xbc\x8c\x97\xe9\x2a\x59\x07\xaf\x01\x00\x00\xff\xff\x8e\xcc\xe9\x12\xb2\x01\x00\x00"
+
+func db20180422112913_permSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180422112913_permSql,
+		"db/20180422112913_perm.sql",
+	)
+}
+
+func db20180422112913_permSql() (*asset, error) {
+	bytes, err := db20180422112913_permSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180422112913_perm.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -229,6 +250,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20180408053319_unique_index_assets.sql":  db20180408053319_unique_index_assetsSql,
 	"db/20180408105045_add_creative_max_bid.sql": db20180408105045_add_creative_max_bidSql,
 	"db/20180417122713_fix.sql":                  db20180417122713_fixSql,
+	"db/20180422112913_perm.sql":                 db20180422112913_permSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -278,6 +300,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20180408053319_unique_index_assets.sql":  &bintree{db20180408053319_unique_index_assetsSql, map[string]*bintree{}},
 		"20180408105045_add_creative_max_bid.sql": &bintree{db20180408105045_add_creative_max_bidSql, map[string]*bintree{}},
 		"20180417122713_fix.sql":                  &bintree{db20180417122713_fixSql, map[string]*bintree{}},
+		"20180422112913_perm.sql":                 &bintree{db20180422112913_permSql, map[string]*bintree{}},
 	}},
 }}
 

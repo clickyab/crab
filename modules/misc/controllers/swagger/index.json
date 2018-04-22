@@ -131,6 +131,7 @@
 		"version": "\"0.0.1-pre-alpha\""
 	},
 	"paths": {
+		"/ad/creative/{id}": "file://ab86a45c829e4ff509313a3022bd52fcf7728154",
 		"/ad/native": "file://84de4d396daac73444bd9791d81a9f30258825a1",
 		"/ad/native/{id}": "file://89f5a206b2b9bf2ef0039d2cde2322b6a861db9e",
 		"/asset/browser": "file://51ed0d2b16f961f1c662b8562855fb73e686f3e7",
