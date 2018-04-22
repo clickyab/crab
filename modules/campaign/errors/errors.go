@@ -47,6 +47,8 @@ var (
 	NotFoundAttributes error = t9e.G("can't find campaign attributes")
 	// CreateError can't create new campaign
 	CreateError error = t9e.G("db error! can't create new campaign")
+	// ChangeArchiveError can't manipulate in archive mode
+	ChangeArchiveError error = t9e.G("can't manipulate in archive mode")
 )
 
 // NotFoundError maker
