@@ -21,23 +21,28 @@ import (
 // @Validate{
 //}
 type editNativePayload struct {
-	URL             string                `json:"url" validate:"required"`
-	MaxBid          int64                 `json:"max_bid" validate:"required,gt=0"`
-	Assets          NativeAssetPayload    `json:"assets"`
-	CurrentUser     *aaa.User             `json:"-"`
-	CurrentDomain   *dm.Domain            `json:"-"`
-	CurrentCampaign *campaignOrm.Campaign `json:"-"`
-	CurrentCreative *orm.Creative         `json:"-"`
-	CampaignOwner   *aaa.User             `json:"-"`
-	CreativeOwner   *aaa.User             `json:"-"`
-	Images          []*uploadOrm.Upload   `json:"-"`
-	Logo            *uploadOrm.Upload     `json:"-"`
-	Video           *uploadOrm.Upload     `json:"-"`
-	Icon            *uploadOrm.Upload     `json:"-"`
+	URL             string                 `json:"url" validate:"required"`
+	MaxBid          int64                  `json:"max_bid" validate:"required,gt=0"`
+	Attributes      map[string]interface{} `json:"attributes"`
+	Assets          NativeAssetPayload     `json:"assets"`
+	CurrentUser     *aaa.User              `json:"-"`
+	CurrentDomain   *dm.Domain             `json:"-"`
+	CurrentCampaign *campaignOrm.Campaign  `json:"-"`
+	CurrentCreative *orm.Creative          `json:"-"`
+	CampaignOwner   *aaa.User              `json:"-"`
+	CreativeOwner   *aaa.User              `json:"-"`
+	Images          []*uploadOrm.Upload    `json:"-"`
+	Logos           []*uploadOrm.Upload    `json:"-"`
+	Videos          []*uploadOrm.Upload    `json:"-"`
+	Icons           []*uploadOrm.Upload    `json:"-"`
 }
 
 func (p *editNativePayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	if err := p.Assets.Validate(ctx, w, r); err != nil {
+		return err
+	}
+	err := emptyValNotPermitted(p.Assets)
+	if err != nil {
 		return err
 	}
 	currentUser := authz.MustGetUser(ctx)
@@ -89,9 +94,10 @@ func (c Controller) editNativeCreative(ctx context.Context, r *http.Request, p *
 	p.CurrentCreative.Status = orm.PendingCreativeStatus
 	p.CurrentCreative.Type = orm.CreativeNativeType
 	p.CurrentCreative.MaxBid = p.MaxBid
+	p.CurrentCreative.Attributes = p.Attributes
 
 	db := orm.NewOrmManager()
-	assets := generateNativeAssets(p.Assets, p.Images, p.Icon, p.Logo, p.Video)
+	assets := generateNativeAssets(p.Assets, p.Images, p.Icons, p.Logos, p.Videos)
 	res, err := db.EditCreative(p.CurrentCreative, assets)
 	if err != nil {
 		return res, errors.DBError
@@ -116,50 +122,73 @@ func checkEditPerm(p *editNativePayload) error {
 }
 
 func checkFilePerm(p *editNativePayload) error {
-	if len(p.Assets.Images) > 0 {
-		images, err := validateImage("image", p.Assets.Images...)
+
+	var images = make([]*uploadOrm.Upload, 0)
+
+	for i := range p.Assets.Images {
+		img, err := validateImage("image", p.Assets.Images[i].Val)
 		if err != nil {
 			return err
 		}
-		p.Images = images
-		for i := range images { //check perm on upload file
-			if fileOwnerCheckPerm(images[i], p.CurrentDomain.ID, p.CurrentUser) != nil {
-				return err
-			}
+		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
+			return err
 		}
+		img.Label = p.Assets.Images[i].Label
+
+		images = append(images, img)
 	}
 
-	if p.Assets.Icon != "" {
-		icon, err := validateImage("icon", p.Assets.Icon)
+	p.Images = images
+
+	var icons = make([]*uploadOrm.Upload, 0)
+
+	for i := range p.Assets.Icons {
+		img, err := validateImage("image", p.Assets.Images[i].Val)
 		if err != nil {
 			return err
 		}
-		if fileOwnerCheckPerm(icon[0], p.CurrentDomain.ID, p.CurrentUser) != nil {
+		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
 			return err
 		}
-		p.Icon = icon[0]
+		img.Label = p.Assets.Images[i].Label
+
+		icons = append(icons, img)
 	}
 
-	if p.Assets.Logo != "" {
-		logo, err := validateImage("logo", p.Assets.Logo)
+	p.Icons = icons
+
+	var logos = make([]*uploadOrm.Upload, 0)
+
+	for i := range p.Assets.Logos {
+		img, err := validateImage("logo", p.Assets.Logos[i].Val)
 		if err != nil {
 			return err
 		}
-		if fileOwnerCheckPerm(logo[0], p.CurrentDomain.ID, p.CurrentUser) != nil {
+		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
 			return err
 		}
-		p.Logo = logo[0]
+		img.Label = p.Assets.Logos[i].Label
+
+		logos = append(logos, img)
 	}
 
-	if p.Assets.Video != "" {
-		video, err := validateVideo(p.Assets.Video)
+	p.Logos = logos
+
+	var videos = make([]*uploadOrm.Upload, 0)
+
+	for i := range p.Assets.Videos {
+		video, err := validateVideo(p.Assets.Videos[i].Val)
 		if err != nil {
 			return err
 		}
-		if fileOwnerCheckPerm(video, p.CurrentDomain.ID, p.CurrentUser) != nil {
+		if err := fileOwnerCheckPerm(video, p.CurrentDomain.ID, p.CurrentUser); err != nil {
 			return err
 		}
-		p.Video = video
+		video.Label = p.Assets.Videos[i].Label
+
+		videos = append(videos, video)
 	}
+
+	p.Videos = videos
 	return nil
 }

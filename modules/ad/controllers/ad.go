@@ -22,127 +22,107 @@ type Controller struct {
 // Important: only add here shared func that use in other package routes
 
 // generateNativeAssets generate a slice of native assets
-func generateNativeAssets(data NativeAssetPayload, images []*model.Upload, icon, logo, video *model.Upload) []*orm.Asset {
+func generateNativeAssets(data NativeAssetPayload, images, icons, logos, videos []*model.Upload) []*orm.Asset {
 	var assets []*orm.Asset
-	var properties map[string]interface{}
 
-	assets = append(assets,
-		&orm.Asset{
-			AssetType:  orm.AssetTextType,
-			AssetKey:   "title",
-			AssetValue: data.Title,
-			Property:   map[string]interface{}{"len": utf8.RuneCountInString(data.Title)},
-		},
-		&orm.Asset{
-			AssetType:  orm.AssetTextType,
-			AssetKey:   "description",
-			AssetValue: data.Description,
-			Property:   map[string]interface{}{"len": utf8.RuneCountInString(data.Description)},
-		},
-		&orm.Asset{
-			AssetType:  orm.AssetTextType,
-			AssetKey:   "cta",
-			AssetValue: data.CTA,
-		},
-	)
+	assets = append(assets, generateNativeString(data.Titles, orm.AssetTextType, "title")...)
+	assets = append(assets, generateNativeString(data.Descriptions, orm.AssetTextType, "description")...)
+	assets = append(assets, generateNativeString(data.CTAs, orm.AssetTextType, "cta")...)
+	assets = append(assets, generateNativeString(data.Phones, orm.AssetNumberType, "phone")...)
 
-	if icon != nil {
-		properties = map[string]interface{}{"width": icon.Attr.Native.Width, "height": icon.Attr.Native.Height}
-
-		tmp := orm.Asset{
-			AssetType:  orm.AssetImageType,
-			Property:   properties,
-			AssetKey:   "icon",
-			AssetValue: icon.ID,
-		}
-		assets = append(assets, &tmp)
+	if len(icons) > 0 {
+		assets = append(assets, generateNativeMedia(icons, orm.AssetImageType, "icon")...)
 	}
-
 	if len(images) > 0 {
-		for _, img := range images {
-			properties = map[string]interface{}{"width": img.Attr.Native.Width, "height": img.Attr.Native.Height}
-
-			tmp := orm.Asset{
-				AssetType:  orm.AssetImageType,
-				Property:   properties,
-				AssetKey:   "image",
-				AssetValue: img.ID,
-			}
-			assets = append(assets, &tmp)
-		}
+		assets = append(assets, generateNativeMedia(images, orm.AssetImageType, "image")...)
 	}
-
-	if video != nil {
-
-		tmp := orm.Asset{
-			AssetType:  orm.AssetVideoType,
-			AssetKey:   "video",
-			AssetValue: video.ID,
-		}
-		assets = append(assets, &tmp)
+	if len(videos) > 0 {
+		assets = append(assets, generateNativeMedia(videos, orm.AssetVideoType, "video")...)
 	}
-
-	if logo != nil {
-		properties = map[string]interface{}{"width": logo.Attr.Native.Width, "height": logo.Attr.Native.Height}
-
-		tmp := orm.Asset{
-			AssetType:  orm.AssetImageType,
-			Property:   properties,
-			AssetKey:   "logo",
-			AssetValue: logo.ID,
-		}
-		assets = append(assets, &tmp)
+	if len(logos) > 0 {
+		assets = append(assets, generateNativeMedia(logos, orm.AssetImageType, "logo")...)
 	}
-
-	if data.Rating != 0 {
-
-		tmp := orm.Asset{
-			AssetType:  orm.AssetNumberType,
-			AssetKey:   "rating",
-			AssetValue: fmt.Sprintf("%v", data.Rating),
-		}
-		assets = append(assets, &tmp)
+	if len(data.Ratings) > 0 {
+		assets = append(assets, generateNativeFloat(data.Ratings, orm.AssetTextType, "rating")...)
 	}
-
-	if data.Price != 0 {
-
-		tmp := orm.Asset{
-			AssetType:  orm.AssetNumberType,
-			AssetKey:   "price",
-			AssetValue: fmt.Sprintf("%v", data.Price),
-		}
-		assets = append(assets, &tmp)
+	if len(data.Prices) > 0 {
+		assets = append(assets, generateNativeFloat(data.Prices, orm.AssetNumberType, "price")...)
 	}
-
-	if data.SalePrice != 0 {
-
-		tmp := orm.Asset{
-			AssetType:  orm.AssetNumberType,
-			AssetKey:   "saleprice",
-			AssetValue: fmt.Sprintf("%v", data.SalePrice),
-		}
-		assets = append(assets, &tmp)
+	if len(data.SalePrices) > 0 {
+		assets = append(assets, generateNativeFloat(data.SalePrices, orm.AssetNumberType, "saleprice")...)
 	}
-
-	if data.Downloads != 0 {
-
-		tmp := orm.Asset{
-			AssetType:  orm.AssetNumberType,
-			AssetKey:   "downloads",
-			AssetValue: fmt.Sprintf("%d", data.Downloads),
-		}
-		assets = append(assets, &tmp)
-	}
-
-	if data.Phone != "" {
-
-		tmp := orm.Asset{
-			AssetType:  orm.AssetNumberType,
-			AssetKey:   "phone",
-			AssetValue: data.Phone,
-		}
-		assets = append(assets, &tmp)
+	if len(data.Downloads) > 0 {
+		assets = append(assets, generateNativeInt(data.Downloads, orm.AssetNumberType, "downloads")...)
 	}
 
 	return assets
+}
+
+func generateNativeFloat(assets []orm.NativeFloat, typ orm.AssetTypes, key string) []*orm.Asset {
+	var res []*orm.Asset
+	for _, val := range assets {
+		tmp := map[string]interface{}{
+			"label": val.Label,
+		}
+		res = append(res, &orm.Asset{
+			AssetValue: fmt.Sprintf("%v", val.Val),
+			AssetType:  typ,
+			AssetKey:   key,
+			Property:   tmp,
+		})
+	}
+	return res
+}
+
+func generateNativeInt(assets []orm.NativeInt, typ orm.AssetTypes, key string) []*orm.Asset {
+	var res []*orm.Asset
+	for _, val := range assets {
+		tmp := map[string]interface{}{
+			"label": val.Label,
+		}
+		res = append(res, &orm.Asset{
+			AssetValue: fmt.Sprintf("%d", val.Val),
+			AssetType:  typ,
+			AssetKey:   key,
+			Property:   tmp,
+		})
+	}
+	return res
+}
+
+func generateNativeString(assets []orm.NativeString, typ orm.AssetTypes, key string) []*orm.Asset {
+	var res []*orm.Asset
+	for _, val := range assets {
+		tmp := map[string]interface{}{
+			"len":   utf8.RuneCountInString(val.Val),
+			"label": val.Label,
+		}
+		res = append(res, &orm.Asset{
+			AssetValue: val.Val,
+			AssetType:  typ,
+			AssetKey:   key,
+			Property:   tmp,
+		})
+	}
+	return res
+}
+
+func generateNativeMedia(assets []*model.Upload, typ orm.AssetTypes, key string) []*orm.Asset {
+	var res []*orm.Asset
+
+	for _, val := range assets {
+		tmp := orm.Asset{
+			AssetType: typ,
+			Property: func() map[string]interface{} {
+				if key == "video" {
+					return map[string]interface{}{"label": val.Label}
+				}
+				return map[string]interface{}{"width": val.Attr.Native.Width, "height": val.Attr.Native.Height, "label": val.Label}
+			}(),
+			AssetKey:   key,
+			AssetValue: val.ID,
+		}
+		res = append(res, &tmp)
+	}
+	return res
 }

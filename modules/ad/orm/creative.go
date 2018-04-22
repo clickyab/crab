@@ -8,7 +8,6 @@ import (
 	campaignOrm "clickyab.com/crab/modules/campaign/orm"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
-	"github.com/sirupsen/logrus"
 )
 
 // CreativeStatusType is the creative active status
@@ -53,23 +52,23 @@ const (
 //		list = yes
 // }
 type Creative struct {
-	ID         int64              `json:"id" db:"id"`
-	UserID     int64              `json:"user_id" db:"user_id"`
-	CampaignID int64              `json:"campaign_id" db:"campaign_id"`
-	Status     CreativeStatusType `json:"status" db:"status"`
-	Type       CreativeTypes      `json:"type" db:"type"`
-	URL        string             `json:"url" db:"url"`
-	MaxBid     int64              `json:"max_bid" db:"max_bid"`
-	Attributes string             `json:"-" db:"attributes"`
-	CreatedAt  time.Time          `json:"created_at" db:"created_at"`
-	UpdatedAt  time.Time          `json:"updated_at" db:"updated_at"`
-	ArchivedAt mysql.NullTime     `json:"archived_at" db:"archived_at"`
+	ID         int64                  `json:"id" db:"id"`
+	UserID     int64                  `json:"user_id" db:"user_id"`
+	CampaignID int64                  `json:"campaign_id" db:"campaign_id"`
+	Status     CreativeStatusType     `json:"status" db:"status"`
+	Type       CreativeTypes          `json:"type" db:"type"`
+	URL        string                 `json:"url" db:"url"`
+	MaxBid     int64                  `json:"max_bid" db:"max_bid"`
+	Attributes mysql.GenericJSONField `json:"attributes" db:"attributes"`
+	CreatedAt  time.Time              `json:"created_at" db:"created_at"`
+	UpdatedAt  time.Time              `json:"updated_at" db:"updated_at"`
+	ArchivedAt mysql.NullTime         `json:"archived_at" db:"archived_at"`
 }
 
 // CreativeSaveResult to return creative and related assets after insert or update
 type CreativeSaveResult struct {
-	Creative *Creative              `json:"creative"`
-	Assets   map[string]interface{} `json:"assets"`
+	Creative *Creative                `json:"creative"`
+	Assets   map[string][]interface{} `json:"assets"`
 }
 
 // AdUser creative user obj
@@ -126,14 +125,13 @@ func (m *Manager) AddCreative(cr *Creative, assets []*Asset) (*CreativeSaveResul
 		assets[i].CreativeID = cr.ID
 		err = m.CreateAsset(assets[i])
 		if err != nil {
-			logrus.Warn(err)
 			return nil, err
 		}
 		finalAsset = append(finalAsset, *assets[i])
 	}
 	return &CreativeSaveResult{
 		Creative: cr,
-		Assets:   BeautyAsset(finalAsset),
+		Assets:   beautyAsset(finalAsset),
 	}, nil
 }
 
@@ -171,7 +169,7 @@ func (m *Manager) EditCreative(cr *Creative, assets []*Asset) (*CreativeSaveResu
 	}
 	return &CreativeSaveResult{
 		Creative: cr,
-		Assets:   BeautyAsset(finalAsset),
+		Assets:   beautyAsset(finalAsset),
 	}, nil
 }
 
