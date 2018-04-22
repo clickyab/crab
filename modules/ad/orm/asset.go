@@ -104,3 +104,10 @@ func beautyAsset(assets []Asset) map[string][]interface{} {
 
 	return bAssets
 }
+
+// FindAssetsBeautyByCreativeID find asset and beautify assets by creative id
+func (m *Manager) FindAssetsBeautyByCreativeID(id int64) map[string][]interface{} {
+	// find creative assets
+	assets := m.ListAssetsWithFilter("creative_id=?", id)
+	return beautyAsset(assets)
+}
