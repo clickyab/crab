@@ -1,6 +1,6 @@
 {
 	"get": {
-		"description": "getCreative to get creative by id",
+		"description": "getCreativeByCampaign to get creative by id",
 		"parameters": [
 			{
 				"description": "",
@@ -21,7 +21,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/orm_CreativeSaveResult"
+					"$ref": "#/definitions/controllers_getCreativeResp"
 				}
 			},
 			"400": {

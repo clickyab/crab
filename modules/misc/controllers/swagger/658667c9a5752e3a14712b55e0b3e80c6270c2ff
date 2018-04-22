@@ -3,32 +3,25 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
 				"required": false,
 				"type": "int"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "status",
+				"required": false,
+				"type": "string"
 			},
 			{
 				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
@@ -45,16 +38,30 @@
 				"type": "string"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "to",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the name field",
 				"in": "query",
-				"name": "status",
+				"name": "name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the domain field",
+				"in": "query",
+				"name": "domain",
 				"required": false,
 				"type": "string"
 			},
@@ -66,16 +73,9 @@
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " search the name field",
-				"in": "query",
-				"name": "name",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},

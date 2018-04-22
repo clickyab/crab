@@ -53,7 +53,7 @@ func (c Controller) editNativeCreativePut(ctx context.Context, w http.ResponseWr
 	framework.Write(w, res, http.StatusOK)
 }
 
-// getCreative to get crative by id
+// getCreative to get creative by id
 // @Route {
 // 		url = /creative/:id
 //		method = get
