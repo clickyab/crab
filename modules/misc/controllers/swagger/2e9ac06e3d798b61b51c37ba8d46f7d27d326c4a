@@ -3,16 +3,9 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the owner_email field",
-				"in": "query",
-				"name": "owner_email",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
@@ -24,16 +17,23 @@
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "from",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the owner_email field",
 				"in": "query",
-				"name": "kind",
+				"name": "owner_email",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
