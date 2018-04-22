@@ -41,40 +41,45 @@ type imageSize struct {
 //}
 type NativeAssetPayload struct {
 	//Required assets
-	Title       string `json:"title" validate:"required"`
-	Description string `json:"description" validate:"required"`
-	CTA         string `json:"cta" validate:"required"`
+	Titles       []orm.NativeString `json:"title" validate:"required"`
+	Descriptions []orm.NativeString `json:"description" validate:"required"`
+	CTAs         []orm.NativeString `json:"cta" validate:"required"`
 	//Optional assets
-	Icon      string   `json:"icon" validate:"omitempty"`
-	Images    []string `json:"images" validate:"omitempty"`
-	Video     string   `json:"video" validate:"omitempty"`
-	Logo      string   `json:"logo" validate:"omitempty"`
-	Rating    float64  `json:"rating" validate:"omitempty"`
-	Price     float64  `json:"price" validate:"omitempty"`
-	SalePrice float64  `json:"sale_price" validate:"omitempty"`
-	Downloads int64    `json:"downloads" validate:"omitempty"`
-	Phone     string   `json:"phone" validate:"omitempty"`
+	Icons      []orm.NativeString `json:"icon" validate:"omitempty"`
+	Images     []orm.NativeString `json:"images" validate:"omitempty"`
+	Videos     []orm.NativeString `json:"video" validate:"omitempty"`
+	Logos      []orm.NativeString `json:"logo" validate:"omitempty"`
+	Ratings    []orm.NativeFloat  `json:"rating" validate:"omitempty"`
+	Prices     []orm.NativeFloat  `json:"price" validate:"omitempty"`
+	SalePrices []orm.NativeFloat  `json:"sale_price" validate:"omitempty"`
+	Downloads  []orm.NativeInt    `json:"downloads" validate:"omitempty"`
+	Phones     []orm.NativeString `json:"phone" validate:"omitempty"`
 }
 
 // @Validate{
 //}
 type createNativePayload struct {
-	CampaignID      int64                 `json:"campaign_id" validate:"required"`
-	URL             string                `json:"url" validate:"required"`
-	MaxBid          int64                 `json:"max_bid" validate:"required,gt=0"`
-	Assets          NativeAssetPayload    `json:"assets"`
-	CurrentUser     *aaa.User             `json:"-"`
-	CurrentDomain   *dm.Domain            `json:"-"`
-	CurrentCampaign *campaignOrm.Campaign `json:"-"`
-	CampaignOwner   *aaa.User             `json:"-"`
-	Images          []*uploadOrm.Upload   `json:"-"`
-	Logo            *uploadOrm.Upload     `json:"-"`
-	Video           *uploadOrm.Upload     `json:"-"`
-	Icon            *uploadOrm.Upload     `json:"-"`
+	CampaignID      int64                  `json:"campaign_id" validate:"required"`
+	URL             string                 `json:"url" validate:"required"`
+	MaxBid          int64                  `json:"max_bid" validate:"required,gt=0"`
+	Attributes      map[string]interface{} `json:"attributes"`
+	Assets          NativeAssetPayload     `json:"assets"`
+	CurrentUser     *aaa.User              `json:"-"`
+	CurrentDomain   *dm.Domain             `json:"-"`
+	CurrentCampaign *campaignOrm.Campaign  `json:"-"`
+	CampaignOwner   *aaa.User              `json:"-"`
+	Images          []*uploadOrm.Upload    `json:"-"`
+	Logos           []*uploadOrm.Upload    `json:"-"`
+	Videos          []*uploadOrm.Upload    `json:"-"`
+	Icons           []*uploadOrm.Upload    `json:"-"`
 }
 
 func (p *createNativePayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	if err := p.Assets.Validate(ctx, w, r); err != nil {
+		return err
+	}
+	err := emptyValNotPermitted(p.Assets)
+	if err != nil {
 		return err
 	}
 	currentUser := authz.MustGetUser(ctx)
@@ -96,28 +101,24 @@ func (p *createNativePayload) ValidateExtra(ctx context.Context, w http.Response
 	return nil
 }
 
-func validateImage(kind string, images ...string) ([]*uploadOrm.Upload, error) {
+func validateImage(kind string, image string) (*uploadOrm.Upload, error) {
 	var width, height int
 	uploadDBM := uploadOrm.NewModelManager()
-	var res = make([]*uploadOrm.Upload, 0)
-	for _, img := range images {
-		uploadFile, err := uploadDBM.FindSectionUploadByID(img, "native")
-		if err != nil {
-			return nil, errors.FileNotFound("image")
-		}
-		if uploadFile.Attr.Native == nil {
+	uploadFile, err := uploadDBM.FindSectionUploadByID(image, "native")
+	if err != nil {
+		return nil, errors.FileNotFound("image")
+	}
+	if uploadFile.Attr.Native == nil {
+		return nil, errors.InvalideImageSize
+	}
+
+	if kind == "image" || kind == "icon" {
+		width, height = uploadFile.Attr.Native.Width, uploadFile.Attr.Native.Height
+		if !isValidSize(width, height, kind) {
 			return nil, errors.InvalideImageSize
 		}
-
-		if kind == "image" || kind == "icon" {
-			width, height = uploadFile.Attr.Native.Width, uploadFile.Attr.Native.Height
-			if !isValidSize(width, height, kind) {
-				return nil, errors.InvalideImageSize
-			}
-		}
-		res = append(res, uploadFile)
 	}
-	return res, nil
+	return uploadFile, nil
 }
 
 func validateVideo(video string) (*uploadOrm.Upload, error) {
@@ -160,10 +161,11 @@ func (c Controller) addNativeCreative(ctx context.Context, r *http.Request, p *c
 		Type:       orm.CreativeNativeType,
 		UserID:     p.CurrentUser.ID,
 		MaxBid:     p.MaxBid,
+		Attributes: p.Attributes,
 	}
 
 	db := orm.NewOrmManager()
-	assets := generateNativeAssets(p.Assets, p.Images, p.Icon, p.Logo, p.Video)
+	assets := generateNativeAssets(p.Assets, p.Images, p.Icons, p.Logos, p.Videos)
 	res, err := db.AddCreative(creative, assets)
 	if err != nil {
 		return res, errors.DBError
@@ -179,50 +181,148 @@ func checkCreatePerm(p *createNativePayload) error {
 		return errors.AccessDenied
 	}
 
-	if len(p.Assets.Images) > 0 {
-		images, err := validateImage("image", p.Assets.Images...)
+	var images = make([]*uploadOrm.Upload, 0)
+
+	for i := range p.Assets.Images {
+		img, err := validateImage("image", p.Assets.Images[i].Val)
 		if err != nil {
 			return err
 		}
-		p.Images = images
-		for i := range images { //check perm on upload file
-			if fileOwnerCheckPerm(images[i], p.CurrentDomain.ID, p.CurrentUser) != nil {
-				return err
-			}
+		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
+			return err
 		}
+		img.Label = p.Assets.Images[i].Label
+
+		images = append(images, img)
 	}
 
-	if p.Assets.Icon != "" {
-		icon, err := validateImage("icon", p.Assets.Icon)
+	p.Images = images
+
+	var icons = make([]*uploadOrm.Upload, 0)
+
+	for i := range p.Assets.Icons {
+		img, err := validateImage("image", p.Assets.Images[i].Val)
 		if err != nil {
 			return err
 		}
-		if fileOwnerCheckPerm(icon[0], p.CurrentDomain.ID, p.CurrentUser) != nil {
+		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
 			return err
 		}
-		p.Icon = icon[0]
+		img.Label = p.Assets.Images[i].Label
+
+		icons = append(icons, img)
 	}
 
-	if p.Assets.Logo != "" {
-		logo, err := validateImage("logo", p.Assets.Logo)
+	p.Icons = icons
+
+	var logos = make([]*uploadOrm.Upload, 0)
+
+	for i := range p.Assets.Logos {
+		img, err := validateImage("logo", p.Assets.Logos[i].Val)
 		if err != nil {
 			return err
 		}
-		if fileOwnerCheckPerm(logo[0], p.CurrentDomain.ID, p.CurrentUser) != nil {
+		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
 			return err
 		}
-		p.Logo = logo[0]
+		img.Label = p.Assets.Logos[i].Label
+
+		logos = append(logos, img)
 	}
 
-	if p.Assets.Video != "" {
-		video, err := validateVideo(p.Assets.Video)
+	p.Logos = logos
+
+	var videos = make([]*uploadOrm.Upload, 0)
+
+	for i := range p.Assets.Videos {
+		video, err := validateVideo(p.Assets.Videos[i].Val)
 		if err != nil {
 			return err
 		}
-		if fileOwnerCheckPerm(video, p.CurrentDomain.ID, p.CurrentUser) != nil {
+		if err := fileOwnerCheckPerm(video, p.CurrentDomain.ID, p.CurrentUser); err != nil {
 			return err
 		}
-		p.Video = video
+		video.Label = p.Assets.Videos[i].Label
+
+		videos = append(videos, video)
+	}
+
+	p.Videos = videos
+	return nil
+}
+
+func emptyValNotPermitted(payload NativeAssetPayload) error {
+	err := emptyStringNotAllowed(payload.Titles)
+	if err != nil {
+		return err
+	}
+	err = emptyStringNotAllowed(payload.Descriptions)
+	if err != nil {
+		return err
+	}
+	err = emptyStringNotAllowed(payload.Images)
+	if err != nil {
+		return err
+	}
+	err = emptyStringNotAllowed(payload.Phones)
+	if err != nil {
+		return err
+	}
+	err = emptyStringNotAllowed(payload.CTAs)
+	if err != nil {
+		return err
+	}
+	err = emptyStringNotAllowed(payload.Videos)
+	if err != nil {
+		return err
+	}
+	err = emptyStringNotAllowed(payload.Logos)
+	if err != nil {
+		return err
+	}
+	err = emptyStringNotAllowed(payload.Icons)
+	if err != nil {
+		return err
+	}
+	err = emptyIntNotAllowed(payload.Downloads)
+	if err != nil {
+		return err
+	}
+	err = emptyFloatNotAllowed(payload.Ratings)
+	if err != nil {
+		return err
+	}
+	err = emptyFloatNotAllowed(payload.Prices)
+	if err != nil {
+		return err
+	}
+	err = emptyFloatNotAllowed(payload.SalePrices)
+	return err
+}
+
+func emptyStringNotAllowed(data []orm.NativeString) error {
+	for _, v := range data {
+		if v.Val == "" {
+			return errors.EmptyValErr
+		}
+	}
+	return nil
+}
+
+func emptyIntNotAllowed(data []orm.NativeInt) error {
+	for _, v := range data {
+		if v.Val == 0 {
+			return errors.EmptyValErr
+		}
+	}
+	return nil
+}
+
+func emptyFloatNotAllowed(data []orm.NativeFloat) error {
+	for _, v := range data {
+		if v.Val == 0 {
+			return errors.EmptyValErr
+		}
 	}
 	return nil
 }

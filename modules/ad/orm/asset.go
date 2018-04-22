@@ -2,9 +2,11 @@ package orm
 
 import (
 	"fmt"
-	"reflect"
 	"time"
 
+	"strconv"
+
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
 )
 
@@ -58,40 +60,185 @@ func (m *Manager) DeleteAllCreativeAssets(crID int64) error {
 	return err
 }
 
-// BeautyAsset make assets of a creative beaty and key=>value for response
-func BeautyAsset(assets []Asset) map[string]interface{} {
-	var bAssets = make(map[string]interface{})
+// NativeString native string payload
+type NativeString struct {
+	Label string `json:"label,omitempty"`
+	Val   string `json:"val"`
+}
 
+// NativeFloat native float payload
+type NativeFloat struct {
+	Label string  `json:"label,omitempty"`
+	Val   float64 `json:"val"`
+}
+
+// NativeInt native int payload
+type NativeInt struct {
+	Label string `json:"label,omitempty"`
+	Val   int64  `json:"val"`
+}
+
+// beautyAsset make assets of a creative beaty and key=>value for response
+func beautyAsset(assets []Asset) map[string][]interface{} {
+	var bAssets = make(map[string][]interface{})
 	for _, asset := range assets {
-		if _, ok := bAssets[asset.AssetKey]; ok {
-			var tmp = make([]interface{}, 0)
-			if reflect.TypeOf(bAssets[asset.AssetKey]).Kind() == reflect.Slice {
-				tmp = append(tmp, interfaceSlice(bAssets[asset.AssetKey])...)
-			} else {
-				tmp = append(tmp, bAssets[asset.AssetKey])
-			}
-			tmp = append(tmp, asset.AssetValue)
 
-			bAssets[asset.AssetKey] = tmp
+		typ := asset.AssetType
+		if typ == AssetNumberType {
+			val, err := strconv.ParseFloat(asset.AssetValue, 10)
+			assert.Nil(err)
+			tmp := NativeFloat{
+				Val:   val,
+				Label: asset.Property["label"].(string),
+			}
+			bAssets[asset.AssetKey] = append(bAssets[asset.AssetKey], tmp)
 		} else {
-			bAssets[asset.AssetKey] = asset.AssetValue
+			tmp := NativeString{
+				Val:   asset.AssetValue,
+				Label: asset.Property["label"].(string),
+			}
+			bAssets[asset.AssetKey] = append(bAssets[asset.AssetKey], tmp)
 		}
+
 	}
 
 	return bAssets
 }
 
-func interfaceSlice(slice interface{}) []interface{} {
-	s := reflect.ValueOf(slice)
-	if s.Kind() != reflect.Slice {
-		panic("InterfaceSlice() given a non-slice type")
-	}
-
-	ret := make([]interface{}, s.Len())
-
-	for i := 0; i < s.Len(); i++ {
-		ret[i] = s.Index(i).Interface()
-	}
-
-	return ret
-}
+// beautyAsset make assets of a creative beaty and key=>value for response
+//func beautyAsset1(assets []Asset) map[string]interface{} {
+//	var bAssets = make(map[string]interface{})
+//
+//	var imgAsset = make([]NativeString, 0)
+//	var logoAsset = make([]NativeString, 0)
+//	var videoAsset = make([]NativeString, 0)
+//	var iconAsset = make([]NativeString, 0)
+//	var titleAsset = make([]NativeString, 0)
+//	var describAsset = make([]NativeString, 0)
+//	var ctaAsset = make([]NativeString, 0)
+//	var ratingAsset = make([]NativeFloat, 0)
+//	var priceAsset = make([]NativeFloat, 0)
+//	var salePriceAsset = make([]NativeFloat, 0)
+//	var downloadAsset = make([]NativeInt, 0)
+//	var phoneAsset = make([]NativeString, 0)
+//	for _, asset := range assets {
+//
+//		switch asset.AssetKey {
+//		case "image":
+//			imgAsset = append(imgAsset, NativeString{
+//				Val:   asset.AssetValue,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		case "video":
+//			videoAsset = append(videoAsset, NativeString{
+//				Val:   asset.AssetValue,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		case "logo":
+//			logoAsset = append(logoAsset, NativeString{
+//				Val:   asset.AssetValue,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		case "icon":
+//			iconAsset = append(iconAsset, NativeString{
+//				Val:   asset.AssetValue,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		case "title":
+//			titleAsset = append(titleAsset, NativeString{
+//				Val:   asset.AssetValue,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		case "description":
+//			describAsset = append(describAsset, NativeString{
+//				Val:   asset.AssetValue,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		case "cta":
+//			ctaAsset = append(ctaAsset, NativeString{
+//				Val:   asset.AssetValue,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		case "rating":
+//			val, _ := strconv.ParseFloat(asset.AssetValue, 10)
+//			ratingAsset = append(ratingAsset, NativeFloat{
+//				Val:   val,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		case "price":
+//			val, _ := strconv.ParseFloat(asset.AssetValue, 10)
+//			priceAsset = append(priceAsset, NativeFloat{
+//				Val:   val,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		case "saleprice":
+//			val, _ := strconv.ParseFloat(asset.AssetValue, 10)
+//			salePriceAsset = append(salePriceAsset, NativeFloat{
+//				Val:   val,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		case "downloads":
+//			val, _ := strconv.ParseInt(asset.AssetValue, 10, 0)
+//			downloadAsset = append(downloadAsset, NativeInt{
+//				Val:   val,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		case "phone":
+//			phoneAsset = append(phoneAsset, NativeString{
+//				Val:   asset.AssetValue,
+//				Label: asset.Property["label"].(string),
+//			})
+//
+//		}
+//	}
+//
+//	if len(imgAsset) > 0 {
+//		bAssets["image"] = imgAsset
+//	}
+//	if len(videoAsset) > 0 {
+//		bAssets["video"] = videoAsset
+//	}
+//	if len(logoAsset) > 0 {
+//		bAssets["logo"] = logoAsset
+//	}
+//	if len(iconAsset) > 0 {
+//		bAssets["icon"] = iconAsset
+//	}
+//	if len(titleAsset) > 0 {
+//		bAssets["title"] = titleAsset
+//	}
+//	if len(describAsset) > 0 {
+//		bAssets["description"] = describAsset
+//	}
+//	if len(ctaAsset) > 0 {
+//		bAssets["cta"] = ctaAsset
+//	}
+//	if len(ratingAsset) > 0 {
+//		bAssets["rating"] = ratingAsset
+//	}
+//	if len(priceAsset) > 0 {
+//		bAssets["price"] = priceAsset
+//	}
+//	if len(salePriceAsset) > 0 {
+//		bAssets["saleprice"] = salePriceAsset
+//	}
+//	if len(downloadAsset) > 0 {
+//		bAssets["downloads"] = downloadAsset
+//	}
+//	if len(phoneAsset) > 0 {
+//		bAssets["phone"] = phoneAsset
+//	}
+//
+//	return bAssets
+//}

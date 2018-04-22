@@ -41,7 +41,9 @@ type Upload struct {
 	Size      int64     `json:"size"  db:"size"`
 	UserID    int64     `json:"user_id"  db:"user_id"`
 	Section   string    `json:"section" db:"section"`
-	Attr      FileAttr  `json:"attr"`
+	Attr      FileAttr  `json:"attr" db:"attr"`
+
+	Label string `json:"-" db:"-"`
 }
 
 // BannerAttr banner ad type attr

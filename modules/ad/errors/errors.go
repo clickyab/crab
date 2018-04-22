@@ -25,6 +25,8 @@ var (
 	AccessDenied = t9e.G("access Denied!you have not access to do this on creatives")
 	// DBError to show when query has error
 	DBError = t9e.G("database error! please check request data and try again")
+	// EmptyValErr native asset should not have empty value
+	EmptyValErr = t9e.G("native asset should not have empty value")
 	// InvalideImageSize when width or height of image is not correct
 	InvalideImageSize = t9e.G("invalid image size! please check request uploaded image width and height")
 )
