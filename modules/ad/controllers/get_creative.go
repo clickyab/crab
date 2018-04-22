@@ -16,7 +16,7 @@ import (
 	"github.com/rs/xmux"
 )
 
-// getCreative to get crative by id
+// getCreative to get creative by id
 // @Rest {
 // 		url = /creative/:id
 //		protected = true
