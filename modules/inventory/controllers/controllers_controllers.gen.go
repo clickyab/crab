@@ -53,7 +53,7 @@ func (ctrl *Controller) changeLabelPut(ctx context.Context, w http.ResponseWrite
 	framework.Write(w, res, http.StatusOK)
 }
 
-// changeStatus change inventory status
+// inventoryChangeStatus change inventory status
 // @Route {
 // 		url = /inventory/:id
 //		method = patch
@@ -65,9 +65,9 @@ func (ctrl *Controller) changeLabelPut(ctx context.Context, w http.ResponseWrite
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
 // }
-func (ctrl *Controller) changeStatusPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (ctrl *Controller) inventoryChangeStatusPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := ctrl.MustGetPayload(ctx).(*changeStatusPayload)
-	res, err := ctrl.changeStatus(ctx, r, pl)
+	res, err := ctrl.inventoryChangeStatus(ctx, r, pl)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return

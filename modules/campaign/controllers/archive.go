@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	"strconv"
-
 	"time"
 
 	"clickyab.com/crab/modules/campaign/errors"
@@ -13,23 +12,19 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/framework/controller"
+	"github.com/clickyab/services/mysql"
 	"github.com/rs/xmux"
 )
 
-// @Validate{
-//}
-type copyCampaignPayload struct {
-	Title string `json:"title" validate:"gt=3"`
-}
-
-// copy a campaign by id
+// archive will archive campaign
 // @Rest {
-// 		url = /copy/:id
+// 		url = /archive/:id
 //		protected = true
 // 		method = patch
-//		resource = copy_campaign:self
+//		resource = archive_campaign:self
 // }
-func (c Controller) copyCampaign(ctx context.Context, r *http.Request, p *copyCampaignPayload) (*orm.Campaign, error) {
+func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.NormalResponse, error) {
 	currentUser := authz.MustGetUser(ctx)
 	d := domain.MustGetDomain(ctx)
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
@@ -37,31 +32,31 @@ func (c Controller) copyCampaign(ctx context.Context, r *http.Request, p *copyCa
 		return nil, errors.InvalidIDErr
 	}
 
+	// load campaign
 	cpManager := orm.NewOrmManager()
 	campaign, err := cpManager.FindCampaignByIDDomain(id, d.ID)
 	if err != nil {
-		return campaign, errors.NotFoundError(id)
+		return nil, errors.NotFoundError(id)
 	}
-
 	userManager := aaa.NewAaaManager()
 	owner, err := userManager.FindUserWithParentsByID(campaign.UserID, campaign.DomainID)
 	assert.Nil(err)
-	_, ok := aaa.CheckPermOn(owner, currentUser, "copy_campaign", campaign.DomainID)
+	_, ok := aaa.CheckPermOn(owner, currentUser, "archive_campaign", campaign.DomainID)
 	if !ok {
-		return campaign, errors.AccessDenied
+		return nil, errors.AccessDenied
 	}
-
-	// check for archive campaign
+	// if campaign current mode is archive nothing can be done
 	if campaign.ArchivedAt.Valid && campaign.ArchivedAt.Time.Before(time.Now()) {
-		return campaign, errors.ArchivedEditError
+		//nothing can do
+		return nil, errors.ChangeArchiveError
 	}
 
-	campaign.Title = p.Title
-	campaign.ID = 0
-	err = cpManager.CreateCampaign(campaign)
+	campaign.ArchivedAt = mysql.NullTime{Valid: true, Time: time.Now()}
+
+	err = cpManager.UpdateCampaign(campaign)
 	if err != nil {
-		return campaign, errors.DuplicateNameError
+		return nil, errors.UpdateCampaignErr
 	}
 
-	return campaign, nil
+	return nil, nil
 }

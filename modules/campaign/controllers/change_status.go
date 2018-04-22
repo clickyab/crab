@@ -14,28 +14,35 @@ import (
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
-	"github.com/clickyab/services/mysql"
 	"github.com/rs/xmux"
 )
 
-// budget will update campaign finance stat=archive,start,pause
+// @Validate{
+//}
+type changeCampaignStatus struct {
+	Status orm.Status `json:"status" validate:"required"`
+}
+
+func (pl *changeCampaignStatus) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	if !pl.Status.IsValid() {
+		return errors.InvalidCampaignStatusError
+	}
+	return nil
+}
+
+// changeStatus will update campaign finance status=start,pause
 // @Rest {
-// 		url = /:id/:stat
+// 		url = /status/:id
 //		protected = true
 // 		method = patch
 //		resource = change_campaign_status:self
 // }
-func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.NormalResponse, error) {
+func (c *Controller) changeStatus(ctx context.Context, r *http.Request, pl *changeCampaignStatus) (*controller.NormalResponse, error) {
 	currentUser := authz.MustGetUser(ctx)
 	d := domain.MustGetDomain(ctx)
 	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if err != nil {
 		return nil, errors.InvalidIDErr
-	}
-	//get and validate action name
-	stat := xmux.Param(ctx, "stat")
-	if stat == "" || (stat != "archive" && stat != "start" && stat != "pause") {
-		return nil, errors.InvalidCampaignStatusError
 	}
 
 	// load campaign
@@ -57,16 +64,7 @@ func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.
 		return nil, errors.ChangeArchiveError
 	}
 
-	if stat == "start" {
-		campaign.Status = orm.StartStatus
-		assert.Nil(cpManager.UpdateCampaign(campaign))
-	} else if stat == "pause" {
-		campaign.Status = orm.PauseStatus
-		assert.Nil(cpManager.UpdateCampaign(campaign))
-	} else { // archive is selected
-		campaign.ArchivedAt = mysql.NullTime{Valid: true, Time: time.Now()}
-		assert.Nil(cpManager.UpdateCampaign(campaign))
-	}
+	campaign.Status = pl.Status
 	err = cpManager.UpdateCampaign(campaign)
 	if err != nil {
 		return nil, errors.UpdateCampaignErr

@@ -1,18 +1,11 @@
 {
 	"patch": {
-		"description": "budget will update campaign finance stat=archive,start,pause",
+		"description": "archive will archive campaign",
 		"parameters": [
 			{
 				"description": "",
 				"in": "path",
 				"name": "id",
-				"required": true,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "path",
-				"name": "stat",
 				"required": true,
 				"type": "string"
 			},

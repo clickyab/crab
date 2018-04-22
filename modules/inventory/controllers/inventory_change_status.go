@@ -53,14 +53,14 @@ func (pl *changeStatusPayload) ValidateExtra(ctx context.Context, w http.Respons
 	return nil
 }
 
-// changeStatus change inventory status
+// inventoryChangeStatus change inventory status
 // @Rest {
 // 		url = /inventory/:id
 //		method = patch
 //		protected = true
 //		resource = edit_inventory:self
 // }
-func (ctrl *Controller) changeStatus(ctx context.Context, r *http.Request, pl *changeStatusPayload) (*orm.Inventory, error) {
+func (ctrl *Controller) inventoryChangeStatus(ctx context.Context, r *http.Request, pl *changeStatusPayload) (*orm.Inventory, error) {
 	currentUser := authz.MustGetUser(ctx)
 	_, ok := aaa.CheckPermOn(pl.owner, currentUser, "edit_inventory", pl.currentDomain.ID)
 	if !ok {

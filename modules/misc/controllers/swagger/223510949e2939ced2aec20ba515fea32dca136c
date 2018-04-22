@@ -1,6 +1,6 @@
 {
 	"patch": {
-		"description": "inventoryChangeStatus change inventory status",
+		"description": "changeStatus will update campaign finance status=start,pause",
 		"parameters": [
 			{
 				"description": "",
@@ -22,7 +22,7 @@
 				"name": "payload_data",
 				"required": false,
 				"schema": {
-					"$ref": "#/definitions/controllers_changeStatusPayload"
+					"$ref": "#/definitions/controllers_changeCampaignStatus"
 				}
 			}
 		],
@@ -30,7 +30,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/orm_Inventory"
+					"$ref": "#/definitions/controller_NormalResponse"
 				}
 			},
 			"400": {

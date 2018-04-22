@@ -9,6 +9,27 @@ import (
 	"github.com/clickyab/services/framework"
 )
 
+// archive will archive campaign
+// @Route {
+// 		url = /archive/:id
+//		method = patch
+//		middleware = authz.Authenticate
+//		resource = archive_campaign:self
+//		200 = controller.NormalResponse
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) archivePatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.archive(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // attributes will update campaign attribute
 // @Route {
 // 		url = /attributes/:id
@@ -68,6 +89,50 @@ func (c Controller) updateBasePut(ctx context.Context, w http.ResponseWriter, r 
 func (c *Controller) budgetPut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := c.MustGetPayload(ctx).(*budgetPayload)
 	res, err := c.budget(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
+// changeStatus will update campaign finance status=start,pause
+// @Route {
+// 		url = /status/:id
+//		method = patch
+//		payload = changeCampaignStatus
+//		middleware = authz.Authenticate
+//		resource = change_campaign_status:self
+//		200 = controller.NormalResponse
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) changeStatusPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*changeCampaignStatus)
+	res, err := c.changeStatus(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
+// copy a campaign by id
+// @Route {
+// 		url = /copy/:id
+//		method = patch
+//		payload = copyCampaignPayload
+//		middleware = authz.Authenticate
+//		resource = copy_campaign:self
+//		200 = orm.Campaign
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) copyCampaignPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*copyCampaignPayload)
+	res, err := c.copyCampaign(ctx, r, pl)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return
@@ -139,42 +204,20 @@ func (c *Controller) getGet(ctx context.Context, w http.ResponseWriter, r *http.
 	framework.Write(w, res, http.StatusOK)
 }
 
-// budget will update campaign finance stat=archive,start,pause
+// getCampaignAds get all campaign ads
 // @Route {
-// 		url = /:id/:stat
-//		method = patch
+// 		url = /get/:id/ad
+//		method = get
 //		middleware = authz.Authenticate
-//		resource = change_campaign:self
-//		200 = controller.NormalResponse
+//		resource = get_banner:self
+//		200 = sliceAds
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
 // }
-func (c *Controller) archivePatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (c Controller) getCampaignAdsGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
-	res, err := c.archive(ctx, r)
-	if err != nil {
-		framework.Write(w, err, http.StatusBadRequest)
-		return
-	}
-	framework.Write(w, res, http.StatusOK)
-}
-
-// copy a campaign by id
-// @Route {
-// 		url = /:id
-//		method = patch
-//		payload = copyCampaignPayload
-//		middleware = authz.Authenticate
-//		resource = copy_campaign:self
-//		200 = orm.Campaign
-//		400 = controller.ErrorResponseSimple
-//		401 = controller.ErrorResponseSimple
-//		403 = controller.ErrorResponseSimple
-// }
-func (c Controller) copyCampaignPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := c.MustGetPayload(ctx).(*copyCampaignPayload)
-	res, err := c.copyCampaign(ctx, r, pl)
+	res, err := c.getCampaignAds(ctx, r)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return
@@ -196,27 +239,6 @@ func (c Controller) copyCampaignPatch(ctx context.Context, w http.ResponseWriter
 func (c Controller) getCreativeByCampaignGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	res, err := c.getCreativeByCampaign(ctx, r)
-	if err != nil {
-		framework.Write(w, err, http.StatusBadRequest)
-		return
-	}
-	framework.Write(w, res, http.StatusOK)
-}
-
-// getCampaignAds get all campaign ads
-// @Route {
-// 		url = /get/:id/ad
-//		method = get
-//		middleware = authz.Authenticate
-//		resource = get_banner:self
-//		200 = sliceAds
-//		400 = controller.ErrorResponseSimple
-//		401 = controller.ErrorResponseSimple
-//		403 = controller.ErrorResponseSimple
-// }
-func (c Controller) getCampaignAdsGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-
-	res, err := c.getCampaignAds(ctx, r)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return
