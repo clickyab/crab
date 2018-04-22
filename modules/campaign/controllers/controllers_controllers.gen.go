@@ -182,6 +182,27 @@ func (c Controller) copyCampaignPatch(ctx context.Context, w http.ResponseWriter
 	framework.Write(w, res, http.StatusOK)
 }
 
+// getCreativeByCampaign to get creative by id
+// @Route {
+// 		url = /creative/:id
+//		method = get
+//		middleware = authz.Authenticate
+//		resource = get_creative:self
+//		200 = getCreativeResp
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) getCreativeByCampaignGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getCreativeByCampaign(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // getCampaignAds get all campaign ads
 // @Route {
 // 		url = /get/:id/ad
