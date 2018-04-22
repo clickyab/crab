@@ -10,8 +10,14 @@ const (
 )
 
 func init() {
-	Register("avatar", int64(512*kb), 15, model.JPGMime, model.PJPGMime, model.PNGMime)
-	Register("banner", int64(512*kb), 15, model.JPGMime, model.PJPGMime, model.PNGMime, model.GifMime)
-	Register("native", int64(512*kb), 15, model.JPGMime, model.PJPGMime, model.PNGMime)
-	Register("video", int64(16*512*kb), 15, model.VideoMime)
+	Register("user-avatar", int64(512*kb), 15, model.JPGMime, model.PJPGMime, model.PNGMime)
+
+	Register("banner-image", int64(512*kb), 15, model.JPGMime, model.PJPGMime, model.PNGMime, model.GifMime)
+	Register("banner-video", int64(16*512*kb), 15, model.VideoMime)
+
+	Register("native-image", int64(512*kb), 15, model.JPGMime, model.PJPGMime, model.PNGMime)
+	Register("native-video", int64(16*512*kb), 15, model.VideoMime)
+
+	Register("vast-image", int64(512*kb), 15, model.JPGMime, model.PJPGMime, model.PNGMime)
+	Register("vast-video", int64(16*512*kb), 15, model.VideoMime)
 }

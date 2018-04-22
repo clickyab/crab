@@ -104,7 +104,7 @@ func (p *createNativePayload) ValidateExtra(ctx context.Context, w http.Response
 func validateImage(kind string, image string) (*uploadOrm.Upload, error) {
 	var width, height int
 	uploadDBM := uploadOrm.NewModelManager()
-	uploadFile, err := uploadDBM.FindSectionUploadByID(image, "native")
+	uploadFile, err := uploadDBM.FindSectionUploadByID(image, "native-image")
 	if err != nil {
 		return nil, errors.FileNotFound("image")
 	}
@@ -123,7 +123,7 @@ func validateImage(kind string, image string) (*uploadOrm.Upload, error) {
 
 func validateVideo(video string) (*uploadOrm.Upload, error) {
 	uploadDBM := uploadOrm.NewModelManager()
-	uploadFile, err := uploadDBM.FindSectionUploadByID(video, "video")
+	uploadFile, err := uploadDBM.FindSectionUploadByID(video, "native-video")
 	if err != nil {
 		return nil, errors.FileNotFound("video")
 	}
