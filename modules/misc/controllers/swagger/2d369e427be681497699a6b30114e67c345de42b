@@ -1,43 +1,172 @@
 {
 	"properties": {
 		"cta": {
-			"type": "string"
+			"items": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"description": {
-			"type": "string"
+			"items": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"downloads": {
-			"type": "integer"
+			"items": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"icon": {
-			"type": "string"
+			"items": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"images": {
 			"items": {
-				"type": "string"
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "string"
+					}
+				},
+				"type": "object"
 			},
 			"type": "array"
 		},
 		"logo": {
-			"type": "string"
+			"items": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"phone": {
-			"type": "string"
+			"items": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"price": {
-			"type": "number"
+			"items": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "number"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"rating": {
-			"type": "number"
+			"items": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "number"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"sale_price": {
-			"type": "number"
+			"items": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "number"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"title": {
-			"type": "string"
+			"items": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		},
 		"video": {
-			"type": "string"
+			"items": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"val": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
 		}
 	},
 	"type": "object"

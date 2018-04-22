@@ -2,7 +2,10 @@
 	"properties": {
 		"assets": {
 			"additionalProperties": {
-				"type": "string"
+				"items": {
+					"type": "string"
+				},
+				"type": "array"
 			},
 			"type": "object"
 		},
@@ -11,6 +14,12 @@
 				"archived_at": {
 					"format": "dateTime",
 					"type": "string"
+				},
+				"attributes": {
+					"additionalProperties": {
+						"type": "string"
+					},
+					"type": "object"
 				},
 				"campaign_id": {
 					"type": "integer"

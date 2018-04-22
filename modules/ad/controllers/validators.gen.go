@@ -32,40 +32,40 @@ func (pl *NativeAssetPayload) Validate(ctx context.Context, w http.ResponseWrite
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
-		case "Title":
+		case "Titles":
 			res["title"] = trans.E("invalid value")
 
-		case "Description":
+		case "Descriptions":
 			res["description"] = trans.E("invalid value")
 
-		case "CTA":
+		case "CTAs":
 			res["cta"] = trans.E("invalid value")
 
-		case "Icon":
+		case "Icons":
 			res["icon"] = trans.E("invalid value")
 
 		case "Images":
 			res["images"] = trans.E("invalid value")
 
-		case "Video":
+		case "Videos":
 			res["video"] = trans.E("invalid value")
 
-		case "Logo":
+		case "Logos":
 			res["logo"] = trans.E("invalid value")
 
-		case "Rating":
+		case "Ratings":
 			res["rating"] = trans.E("invalid value")
 
-		case "Price":
+		case "Prices":
 			res["price"] = trans.E("invalid value")
 
-		case "SalePrice":
+		case "SalePrices":
 			res["sale_price"] = trans.E("invalid value")
 
 		case "Downloads":
 			res["downloads"] = trans.E("invalid value")
 
-		case "Phone":
+		case "Phones":
 			res["phone"] = trans.E("invalid value")
 
 		default:
