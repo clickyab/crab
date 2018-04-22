@@ -26,7 +26,7 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "kind",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
@@ -45,9 +45,9 @@
 				"type": "int"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the name field",
 				"in": "query",
-				"name": "to",
+				"name": "name",
 				"required": false,
 				"type": "string"
 			},
@@ -59,16 +59,23 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "status",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the name field",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "name",
+				"name": "to",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
@@ -78,13 +85,6 @@
 				"name": "p",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": "the security token, get it from login route",
