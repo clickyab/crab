@@ -80,6 +80,31 @@ func (c *Controller) Routes(r framework.Mux) {
 		group.PUT("controllers-Controller-editNativeCreativePut", "/native/:id", framework.Mix(c.editNativeCreativePut, m1...))
 		// End route with key 1
 
+		/* Route {
+			"Route": "/creative/:id",
+			"Method": "GET",
+			"Function": "Controller.getCreativeGet",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "get_creative",
+			"Scope": "self"
+		} with key 2 */
+		m2 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("get_creative", "get_creative")
+		m2 = append(m2, authz.AuthorizeGenerator("get_creative", "self"))
+
+		group.GET("controllers-Controller-getCreativeGet", "/creative/:id", framework.Mix(c.getCreativeGet, m2...))
+		// End route with key 2
+
 		initializer.DoInitialize(c)
 	})
 }

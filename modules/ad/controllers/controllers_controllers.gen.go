@@ -52,3 +52,24 @@ func (c Controller) editNativeCreativePut(ctx context.Context, w http.ResponseWr
 	}
 	framework.Write(w, res, http.StatusOK)
 }
+
+// getCreative to get crative by id
+// @Route {
+// 		url = /creative/:id
+//		method = get
+//		middleware = authz.Authenticate
+//		resource = get_creative:self
+//		200 = orm.CreativeSaveResult
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) getCreativeGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getCreative(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
