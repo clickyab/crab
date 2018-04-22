@@ -34,7 +34,7 @@ import (
 )
 
 var (
-	routes = make(map[model.Mime]kind)
+	routes = make(map[string]kind)
 	lock   = sync.RWMutex{}
 	// UPath default upload path
 	UPath = config.RegisterString("crab.modules.upload.path", "/statics/uploads", "a path to the location that uploaded file should save")
@@ -63,10 +63,9 @@ type uploadResponse struct {
 // }
 func (c *Controller) upload(ctx context.Context, r *http.Request) (*uploadResponse, error) {
 	fileType := xmux.Param(ctx, "module")
-	m := model.Mime(fileType)
 	lock.RLock()
 	defer lock.RUnlock()
-	s, ok := routes[m]
+	s, ok := routes[fileType]
 	if !ok {
 		return nil, errors.InvalidFileTypeError
 	}
@@ -128,7 +127,10 @@ func (c *Controller) upload(ctx context.Context, r *http.Request) (*uploadRespon
 	var f = &os.File{}
 	var fn string
 
-	if fileType == "video" { //validate video stuff like duration
+	tArr := strings.Split(fileType, "-")
+	assert.True(len(tArr) == 2)
+
+	if tArr[1] == "video" { //validate video stuff like duration
 		f, fn = generateFinalFile(currentUser.ID, basePath, videoSaveFormat.String())
 		attr, err = videoUploadHandler(ctx, file, chunkPathDir, extension, f, attr, fileInfo, s.maxSize)
 		if err != nil {
@@ -139,7 +141,7 @@ func (c *Controller) upload(ctx context.Context, r *http.Request) (*uploadRespon
 
 	} else { //image selected
 		f, fn = generateFinalFile(currentUser.ID, basePath, extension)
-		attr, err = imageUploadHandler(fileMime, fileType, chunkPathDir, file, fileObj, f, fileInfo, s.maxSize)
+		attr, err = imageUploadHandler(fileMime, tArr[0], chunkPathDir, file, fileObj, f, fileInfo, s.maxSize)
 		if err != nil {
 			_ = os.RemoveAll(chunkPathDir)
 			_ = os.RemoveAll(f.Name())
@@ -247,7 +249,7 @@ func makeBaseDir(fileType string, now time.Time) (string, error) {
 
 // Register add a route and settings for uploads
 // name will be the route, maxsize is maximum allowed size for file upload file and the mimes is alloed mime types
-func Register(name model.Mime, maxSize int64, maxChunk int, mimes ...model.Mime) {
+func Register(name string, maxSize int64, maxChunk int, mimes ...model.Mime) {
 	assert.True(len(mimes) > 0)
 	lock.Lock()
 	defer lock.Unlock()
@@ -357,7 +359,7 @@ func getDimension(mime model.Mime, dimensionHandler io.Reader, bannerType string
 				Height: imgConf.Height,
 			},
 		}
-	case "avatar":
+	case "user":
 		a = model.FileAttr{
 			Avatar: &model.AvatarAttr{
 				Width:  imgConf.Width,

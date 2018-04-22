@@ -27,7 +27,7 @@ func (c *Controller) avatar(ctx context.Context, r *http.Request, p *avatarPaylo
 		cu.Avatar.String = ""
 		cu.Avatar.Valid = false
 	} else {
-		up, err := model.NewModelManager().FindUploadByID(p.Avatar)
+		up, err := model.NewModelManager().FindSectionUploadByID(p.Avatar, "user-avatar")
 		if err != nil {
 			return nil, t9e.G("user avatar not found")
 		}
