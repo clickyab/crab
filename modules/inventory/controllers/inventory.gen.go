@@ -233,7 +233,7 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		/* Route {
 			"Route": "/inventory/:id",
 			"Method": "PATCH",
-			"Function": "Controller.changeStatusPatch",
+			"Function": "Controller.inventoryChangeStatusPatch",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -254,7 +254,7 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m8 = append(m8, middleware.PayloadUnMarshallerGenerator(changeStatusPayload{}))
-		group.PATCH("controllers-Controller-changeStatusPatch", "/inventory/:id", framework.Mix(ctrl.changeStatusPatch, m8...))
+		group.PATCH("controllers-Controller-inventoryChangeStatusPatch", "/inventory/:id", framework.Mix(ctrl.inventoryChangeStatusPatch, m8...))
 		// End route with key 8
 
 		/* Route {

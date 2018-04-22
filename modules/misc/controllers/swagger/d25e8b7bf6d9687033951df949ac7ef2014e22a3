@@ -3,6 +3,13 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
@@ -10,9 +17,23 @@
 				"type": "string"
 			},
 			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
+				"name": "status",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the label field",
+				"in": "query",
+				"name": "label",
 				"required": false,
 				"type": "string"
 			},
@@ -33,30 +54,9 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "status",
+				"name": "sort",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " search the label field",
-				"in": "query",
-				"name": "label",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",
