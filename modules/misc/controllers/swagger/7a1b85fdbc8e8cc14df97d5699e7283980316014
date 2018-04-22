@@ -3,9 +3,37 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the owner_email field",
+				"in": "query",
+				"name": "owner_email",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
@@ -17,16 +45,9 @@
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": "",
 				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
@@ -34,6 +55,13 @@
 				"description": "",
 				"in": "query",
 				"name": "strategy",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "exchange",
 				"required": false,
 				"type": "string"
 			},
@@ -55,34 +83,6 @@
 				"description": "",
 				"in": "query",
 				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the owner_email field",
-				"in": "query",
-				"name": "owner_email",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "exchange",
 				"required": false,
 				"type": "string"
 			},
