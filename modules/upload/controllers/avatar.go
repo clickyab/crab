@@ -1,6 +1,11 @@
 package controllers
 
-import "clickyab.com/crab/modules/upload/model"
+import (
+	"mime"
+
+	"clickyab.com/crab/modules/upload/model"
+	"github.com/clickyab/services/assert"
+)
 
 type byteSize int64
 
@@ -20,4 +25,7 @@ func init() {
 
 	Register("vast-image", int64(512*kb), 15, model.JPGMime, model.PJPGMime, model.PNGMime)
 	Register("vast-video", int64(16*512*kb), 15, model.VideoMime)
+
+	// register mp4 mime
+	assert.Nil(mime.AddExtensionType(".mp4", "video/mp4"))
 }
