@@ -15,14 +15,16 @@ import (
 	uploadOrm "clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/mysql"
 	"github.com/rs/xmux"
 )
 
 // @Validate{
 //}
 type editNativePayload struct {
+	Name            string                 `json:"name" validate:"required"`
 	URL             string                 `json:"url" validate:"required"`
-	MaxBid          int64                  `json:"max_bid" validate:"required,gt=0"`
+	MaxBid          int64                  `json:"max_bid"`
 	Attributes      map[string]interface{} `json:"attributes"`
 	Assets          NativeAssetPayload     `json:"assets"`
 	CurrentUser     *aaa.User              `json:"-"`
@@ -93,8 +95,9 @@ func (c Controller) editNativeCreative(ctx context.Context, r *http.Request, p *
 	p.CurrentCreative.URL = p.URL
 	p.CurrentCreative.Status = orm.PendingCreativeStatus
 	p.CurrentCreative.Type = orm.CreativeNativeType
-	p.CurrentCreative.MaxBid = p.MaxBid
+	p.CurrentCreative.MaxBid = mysql.NullInt64{Valid: p.MaxBid != 0, Int64: p.MaxBid}
 	p.CurrentCreative.Attributes = p.Attributes
+	p.CurrentCreative.Name = p.Name
 
 	db := orm.NewOrmManager()
 	assets := generateNativeAssets(p.Assets, p.Images, p.Icons, p.Logos, p.Videos)

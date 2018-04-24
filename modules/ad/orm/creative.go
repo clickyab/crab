@@ -58,7 +58,8 @@ type Creative struct {
 	Status     CreativeStatusType     `json:"status" db:"status"`
 	Type       CreativeTypes          `json:"type" db:"type"`
 	URL        string                 `json:"url" db:"url"`
-	MaxBid     int64                  `json:"max_bid" db:"max_bid"`
+	Name       string                 `json:"name" db:"name"`
+	MaxBid     mysql.NullInt64        `json:"max_bid" db:"max_bid"`
 	Attributes mysql.GenericJSONField `json:"attributes" db:"attributes"`
 	CreatedAt  time.Time              `json:"created_at" db:"created_at"`
 	UpdatedAt  time.Time              `json:"updated_at" db:"updated_at"`
