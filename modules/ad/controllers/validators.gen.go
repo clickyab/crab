@@ -100,11 +100,11 @@ func (p *createNativePayload) Validate(ctx context.Context, w http.ResponseWrite
 		case "CampaignID":
 			res["campaign_id"] = trans.E("invalid value")
 
+		case "Name":
+			res["name"] = trans.E("invalid value")
+
 		case "URL":
 			res["url"] = trans.E("invalid value")
-
-		case "MaxBid":
-			res["max_bid"] = trans.E("invalid value")
 
 		default:
 			logrus.Panicf("the field %s is not translated", i)
@@ -135,11 +135,11 @@ func (p *editNativePayload) Validate(ctx context.Context, w http.ResponseWriter,
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
+		case "Name":
+			res["name"] = trans.E("invalid value")
+
 		case "URL":
 			res["url"] = trans.E("invalid value")
-
-		case "MaxBid":
-			res["max_bid"] = trans.E("invalid value")
 
 		default:
 			logrus.Panicf("the field %s is not translated", i)

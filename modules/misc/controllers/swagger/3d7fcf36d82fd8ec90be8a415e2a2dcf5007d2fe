@@ -10,37 +10,9 @@
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -52,9 +24,37 @@
 				"type": "string"
 			},
 			{
-				"description": " search the supplier field",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "supplier",
+				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
@@ -66,6 +66,13 @@
 				"type": "string"
 			},
 			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": " page number",
 				"in": "query",
 				"name": "p",
@@ -73,16 +80,9 @@
 				"type": "int"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the supplier field",
 				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
+				"name": "supplier",
 				"required": false,
 				"type": "string"
 			},

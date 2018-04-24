@@ -185,6 +185,9 @@
 		"max_bid": {
 			"type": "integer"
 		},
+		"name": {
+			"type": "string"
+		},
 		"url": {
 			"type": "string"
 		}
