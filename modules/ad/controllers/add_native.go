@@ -18,6 +18,7 @@ import (
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
+	"github.com/clickyab/services/mysql"
 )
 
 var (
@@ -60,8 +61,9 @@ type NativeAssetPayload struct {
 //}
 type createNativePayload struct {
 	CampaignID      int64                  `json:"campaign_id" validate:"required"`
+	Name            string                 `json:"name" validate:"required"`
 	URL             string                 `json:"url" validate:"required"`
-	MaxBid          int64                  `json:"max_bid" validate:"required,gt=0"`
+	MaxBid          int64                  `json:"max_bid"`
 	Attributes      map[string]interface{} `json:"attributes"`
 	Assets          NativeAssetPayload     `json:"assets"`
 	CurrentUser     *aaa.User              `json:"-"`
@@ -160,8 +162,9 @@ func (c Controller) addNativeCreative(ctx context.Context, r *http.Request, p *c
 		CampaignID: p.CurrentCampaign.ID,
 		Type:       orm.CreativeNativeType,
 		UserID:     p.CurrentUser.ID,
-		MaxBid:     p.MaxBid,
+		MaxBid:     mysql.NullInt64{Valid: p.MaxBid != 0, Int64: p.MaxBid},
 		Attributes: p.Attributes,
+		Name:       p.Name,
 	}
 
 	db := orm.NewOrmManager()
