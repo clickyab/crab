@@ -31,6 +31,7 @@ import (
 	"github.com/clickyab/services/safe"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -112,8 +113,12 @@ func (c *Controller) upload(ctx context.Context, r *http.Request) (*uploadRespon
 	}
 
 	extension := strings.ToLower(filepath.Ext(fileObj.Name()))
+	logrus.Debug(fileObj.Name())
+	logrus.Debug(extension)
 
 	fileMime := mime.TypeByExtension(extension)
+	logrus.Debug(fileMime)
+	logrus.Debug(s.mimes)
 	if !checkForValidMimes(fileMime, s.mimes) {
 		_ = os.RemoveAll(chunkPathDir)
 		return nil, errors.WrongMimeType
