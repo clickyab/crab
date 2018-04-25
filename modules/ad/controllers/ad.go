@@ -26,9 +26,6 @@ func generateNativeAssets(data NativeAssetPayload, images, icons, logos, videos 
 	var assets []*orm.Asset
 
 	assets = append(assets, generateNativeString(data.Titles, orm.AssetTextType, "title")...)
-	assets = append(assets, generateNativeString(data.Descriptions, orm.AssetTextType, "description")...)
-	assets = append(assets, generateNativeString(data.CTAs, orm.AssetTextType, "cta")...)
-	assets = append(assets, generateNativeString(data.Phones, orm.AssetNumberType, "phone")...)
 
 	if len(icons) > 0 {
 		assets = append(assets, generateNativeMedia(icons, orm.AssetImageType, "icon")...)
@@ -53,6 +50,18 @@ func generateNativeAssets(data NativeAssetPayload, images, icons, logos, videos 
 	}
 	if len(data.Downloads) > 0 {
 		assets = append(assets, generateNativeInt(data.Downloads, orm.AssetNumberType, "downloads")...)
+	}
+
+	if len(data.Descriptions) > 0 {
+		assets = append(assets, generateNativeString(data.Descriptions, orm.AssetTextType, "description")...)
+	}
+
+	if len(data.CTAs) > 0 {
+		assets = append(assets, generateNativeString(data.CTAs, orm.AssetTextType, "cta")...)
+	}
+
+	if len(data.Phones) > 0 {
+		assets = append(assets, generateNativeString(data.Phones, orm.AssetNumberType, "phone")...)
 	}
 
 	return assets
