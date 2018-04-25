@@ -77,6 +77,22 @@ func (p *editNativePayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 	}
 	p.CampaignOwner = campaignOwner
 
+	// extra fields required for app campaigns required
+	if targetCampaign.Kind == campaignOrm.AppCampaign {
+		if len(p.Assets.Images) == 0 {
+			return errors.InvalidIDErr
+		}
+		if len(p.Assets.Icons) == 0 {
+			return errors.IconRequiredErr
+		}
+		if len(p.Assets.CTAs) == 0 {
+			return errors.CtaRequiredErr
+		}
+		if len(p.Assets.Videos) == 0 {
+			return errors.VideoRequiredErr
+		}
+	}
+
 	return nil
 }
 

@@ -29,6 +29,18 @@ var (
 	EmptyValErr = t9e.G("native asset should not have empty value")
 	// InvalideImageSize when width or height of image is not correct
 	InvalideImageSize = t9e.G("invalid image size! please check request uploaded image width and height")
+
+	// ImageRequiredErr image required in app native
+	ImageRequiredErr = t9e.G("image required in app native")
+
+	// VideoRequiredErr video required in app native
+	VideoRequiredErr = t9e.G("video required in app native")
+
+	// CtaRequiredErr cta required in app native
+	CtaRequiredErr = t9e.G("cta required in app native")
+
+	// IconRequiredErr icon required in app native
+	IconRequiredErr = t9e.G("icon required in app native")
 )
 
 // AdNotFound maker

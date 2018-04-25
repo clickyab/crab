@@ -43,8 +43,8 @@ type imageSize struct {
 type NativeAssetPayload struct {
 	//Required assets
 	Titles       []orm.NativeString `json:"title" validate:"required"`
-	Descriptions []orm.NativeString `json:"description" validate:"required"`
-	CTAs         []orm.NativeString `json:"cta" validate:"required"`
+	Descriptions []orm.NativeString `json:"description"`
+	CTAs         []orm.NativeString `json:"cta"`
 	//Optional assets
 	Icons      []orm.NativeString `json:"icon" validate:"omitempty"`
 	Images     []orm.NativeString `json:"images" validate:"omitempty"`
@@ -99,6 +99,22 @@ func (p *createNativePayload) ValidateExtra(ctx context.Context, w http.Response
 		return campignErr.NotFoundError(targetCampaign.ID)
 	}
 	p.CampaignOwner = campaignOwner
+
+	// extra fields required for app campaigns required
+	if targetCampaign.Kind == campaignOrm.AppCampaign {
+		if len(p.Assets.Images) == 0 {
+			return errors.ImageRequiredErr
+		}
+		if len(p.Assets.Icons) == 0 {
+			return errors.IconRequiredErr
+		}
+		if len(p.Assets.CTAs) == 0 {
+			return errors.CtaRequiredErr
+		}
+		if len(p.Assets.Videos) == 0 {
+			return errors.VideoRequiredErr
+		}
+	}
 
 	return nil
 }
