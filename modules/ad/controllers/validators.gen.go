@@ -35,12 +35,6 @@ func (pl *NativeAssetPayload) Validate(ctx context.Context, w http.ResponseWrite
 		case "Titles":
 			res["title"] = trans.E("invalid value")
 
-		case "Descriptions":
-			res["description"] = trans.E("invalid value")
-
-		case "CTAs":
-			res["cta"] = trans.E("invalid value")
-
 		case "Icons":
 			res["icon"] = trans.E("invalid value")
 
