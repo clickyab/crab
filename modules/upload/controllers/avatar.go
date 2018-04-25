@@ -28,4 +28,6 @@ func init() {
 
 	// register mp4 mime
 	assert.Nil(mime.AddExtensionType(".mp4", "video/mp4"))
+	assert.Nil(mime.AddExtensionType(".jpeg", "image/jpeg"))
+	assert.Nil(mime.AddExtensionType(".pjpeg", "image/pjpeg"))
 }

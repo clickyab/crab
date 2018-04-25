@@ -3,6 +3,13 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
@@ -10,9 +17,9 @@
 				"type": "string"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the domain field",
 				"in": "query",
-				"name": "to",
+				"name": "domain",
 				"required": false,
 				"type": "string"
 			},
@@ -24,9 +31,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "status",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
@@ -38,16 +45,16 @@
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": "",
 				"in": "query",
-				"name": "c",
+				"name": "status",
 				"required": false,
-				"type": "int"
+				"type": "string"
 			},
 			{
-				"description": " search the domain field",
+				"description": " search the name field",
 				"in": "query",
-				"name": "domain",
+				"name": "name",
 				"required": false,
 				"type": "string"
 			},
@@ -59,16 +66,9 @@
 				"type": "int"
 			},
 			{
-				"description": " search the name field",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
