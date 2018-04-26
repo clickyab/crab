@@ -19,8 +19,21 @@ type InitPaymentResp struct {
 	BankURL string                 `json:"bank_url"`
 }
 
+// RedirectParams params when redirect
+type RedirectParams struct {
+	StatusCode int64
+	RefNum     string
+	ResNum     string
+	// other params that may differ between banks
+	Attr map[string]string
+}
+
 // CommonPay for similar actions across payment gates
 type CommonPay struct {
+	FAmount int64
+	FResNum string
+	FUserID int64
+	BankObj Payable
 }
 
 // FrontRedirect redirect to front route
@@ -37,8 +50,14 @@ func (s *CommonPay) FrontRedirect(w http.ResponseWriter, r *http.Request, code i
 // Payable handle payment
 type Payable interface {
 	InitPayment(r *http.Request) *InitPaymentResp
-	VerifyPayment(string, string, string) error
+	VerifyTransaction(string, string) error
 	FrontRedirect(http.ResponseWriter, *http.Request, int, url.Values) error
+	GetParams(r *http.Request) RedirectParams
+	RedirectValidation(RedirectParams) error
+	HashVerification(int64, string, string) error
+	SetAmount(int64)
+	SetUserID(int64)
+	SetResNum(string)
 
 	MID() int64
 	UserID() int64

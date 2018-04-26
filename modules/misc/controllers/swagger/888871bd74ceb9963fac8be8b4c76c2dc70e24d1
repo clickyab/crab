@@ -1,0 +1,25 @@
+{
+	"post": {
+		"description": "backFromBank return from bank",
+		"parameters": [
+			{
+				"description": "",
+				"in": "path",
+				"name": "bank",
+				"required": true,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "path",
+				"name": "hash",
+				"required": true,
+				"type": "string"
+			}
+		],
+		"responses": {},
+		"tags": [
+			"controllers"
+		]
+	}
+}

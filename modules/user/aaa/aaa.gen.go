@@ -53,7 +53,7 @@ func getSelectFields(tb string, alias string) string {
 		return fmt.Sprintf(`%[1]sid,%[1]sname,%[1]sdescription,%[1]sdomain_id,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case UserTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]semail,%[1]spassword,%[1]saccess_token,%[1]savatar,%[1]sstatus,%[1]screated_at,%[1]supdated_at,%[1]sold_password,%[1]scity_id,%[1]sland_line,%[1]scellphone,%[1]spostal_code,%[1]sfirst_name,%[1]slast_name,%[1]saddress,%[1]sgender,%[1]sssn,%[1]sattributes`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]semail,%[1]spassword,%[1]saccess_token,%[1]savatar,%[1]sstatus,%[1]screated_at,%[1]supdated_at,%[1]sold_password,%[1]scity_id,%[1]sland_line,%[1]scellphone,%[1]spostal_code,%[1]sfirst_name,%[1]slast_name,%[1]saddress,%[1]sgender,%[1]sssn,%[1]sbalance,%[1]sattributes`, alias)
 
 	}
 	return ""

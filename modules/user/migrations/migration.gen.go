@@ -3,6 +3,7 @@
 // db/20180325060232_users.sql
 // db/20180325061015_roles.sql
 // db/20180325073312_role_seed.sql
+// db/20180426105326_addbalance.sql
 // DO NOT EDIT!
 
 package migrations
@@ -130,6 +131,26 @@ func db20180325073312_role_seedSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180426105326_addbalanceSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xce\x41\x4a\xc5\x30\x18\x04\xe0\x7d\x4e\x31\xbb\xb7\x90\x07\xee\xbb\x8a\x26\x4a\x21\xa6\xda\x26\x07\x48\xd3\x1f\x1b\x8c\x69\x68\x52\xea\xf1\xa5\x48\x05\xc1\xc5\x5b\xce\x30\x03\x1f\xbb\x5e\x71\xf7\x19\xde\x57\x57\x09\x36\x1f\x71\x78\x53\x08\x09\x85\x7c\x0d\x4b\xc2\xc5\xe6\x0b\x42\x01\x7d\x91\xdf\x2a\x4d\xd8\x67\x4a\xa8\x73\x28\xf8\xf9\x1d\xa3\x50\xe0\x72\x8e\x81\x26\xc6\x95\x91\x3d\x0c\x7f\x50\x12\x5b\xa1\xb5\x80\x0b\x81\xd1\x45\x97\x3c\xa1\xd5\x06\x56\x0f\xed\xb3\x96\x02\x42\x3e\x71\xab\x0c\xee\xa1\x3b\x03\x6d\x95\x6a\xd8\x1f\x90\x58\xf6\x74\x92\x7e\x3d\x47\x79\x93\x68\x5d\x62\xa4\x09\xa3\xf3\x1f\xff\xa8\x44\xdf\xbd\xe2\xb1\x53\xf6\x45\xe3\xe4\x35\x8c\x7d\x07\x00\x00\xff\xff\x63\x13\xeb\x9c\x11\x01\x00\x00"
+
+func db20180426105326_addbalanceSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180426105326_addbalanceSql,
+		"db/20180426105326_addbalance.sql",
+	)
+}
+
+func db20180426105326_addbalanceSql() (*asset, error) {
+	bytes, err := db20180426105326_addbalanceSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180426105326_addbalance.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -182,9 +203,10 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"db/20180325060232_users.sql":     db20180325060232_usersSql,
-	"db/20180325061015_roles.sql":     db20180325061015_rolesSql,
-	"db/20180325073312_role_seed.sql": db20180325073312_role_seedSql,
+	"db/20180325060232_users.sql":      db20180325060232_usersSql,
+	"db/20180325061015_roles.sql":      db20180325061015_rolesSql,
+	"db/20180325073312_role_seed.sql":  db20180325073312_role_seedSql,
+	"db/20180426105326_addbalance.sql": db20180426105326_addbalanceSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -229,9 +251,10 @@ type bintree struct {
 
 var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
-		"20180325060232_users.sql":     &bintree{db20180325060232_usersSql, map[string]*bintree{}},
-		"20180325061015_roles.sql":     &bintree{db20180325061015_rolesSql, map[string]*bintree{}},
-		"20180325073312_role_seed.sql": &bintree{db20180325073312_role_seedSql, map[string]*bintree{}},
+		"20180325060232_users.sql":      &bintree{db20180325060232_usersSql, map[string]*bintree{}},
+		"20180325061015_roles.sql":      &bintree{db20180325061015_rolesSql, map[string]*bintree{}},
+		"20180325073312_role_seed.sql":  &bintree{db20180325073312_role_seedSql, map[string]*bintree{}},
+		"20180426105326_addbalance.sql": &bintree{db20180426105326_addbalanceSql, map[string]*bintree{}},
 	}},
 }}
 
