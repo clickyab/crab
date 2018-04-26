@@ -25,6 +25,20 @@ var (
 	MakeOnlinePaymentErr error = t9e.G("error while making online payments")
 	//GateWayNotSupportedErr gate way not supported
 	GateWayNotSupportedErr error = t9e.G("gateway not supported")
+	// PriceMismatchErr price mismatch
+	PriceMismatchErr error = t9e.G("price did not match")
+	// HashMismatchErr hash did not match
+	HashMismatchErr error = t9e.G("hash did not match")
+	// RequestVerifyErr request to verify url fail
+	RequestVerifyErr error = t9e.G("request to verify url fail")
+	// RespVerifyErr response from verify method failed
+	RespVerifyErr error = t9e.G("response from verify method failed")
+	// NotSupportedBankErr bank not supported
+	NotSupportedBankErr error = t9e.G("bank not supported")
+	// MerchantMismatchErr merchant id mismatch
+	MerchantMismatchErr error = t9e.G("merchant id mismatch")
+	// AccessDenied error
+	AccessDenied error = t9e.G("access denied! you don't have access for this action")
 )
 
 // NotFoundError maker

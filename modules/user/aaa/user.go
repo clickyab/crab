@@ -76,6 +76,7 @@ type User struct {
 	Address     mysql.NullString                         `json:"address" db:"address"`
 	Gender      GenderType                               `json:"gender" db:"gender"`
 	SSN         mysql.NullString                         `json:"ssn" db:"ssn"`
+	Balance     int64                                    `json:"balance" db:"balance"`
 	Attributes  mysql.GenericJSONField                   `json:"attributes" db:"attributes"`
 	Corporation *Corporation                             `json:"corporation, omitempty" db:"-"`
 	parents     []int64                                  `json:"-" db:"-"`
