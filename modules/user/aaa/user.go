@@ -198,7 +198,7 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 		}
 		u.Corporation = uc
 	}
-	dManager, err := domainOrm.NewOrmManagerFromTransaction(m.GetRDbMap())
+	dManager, err := domainOrm.NewOrmManagerFromTransaction(m.GetWDbMap())
 	if err != nil {
 		return nil, err
 	}

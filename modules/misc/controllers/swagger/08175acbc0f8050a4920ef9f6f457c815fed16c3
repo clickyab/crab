@@ -12,6 +12,9 @@
 		"avatar": {
 			"type": "string"
 		},
+		"balance": {
+			"type": "integer"
+		},
 		"cellphone": {
 			"type": "string"
 		},

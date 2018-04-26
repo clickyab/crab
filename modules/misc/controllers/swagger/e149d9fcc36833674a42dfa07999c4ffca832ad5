@@ -1,0 +1,87 @@
+{
+	"properties": {
+		"amount": {
+			"type": "integer"
+		},
+		"attr": {
+			"additionalProperties": {
+				"type": "string"
+			},
+			"type": "object"
+		},
+		"bank_status": {
+			"type": "integer"
+		},
+		"cid": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"domain_id": {
+			"type": "integer"
+		},
+		"error_reason": {
+			"properties": {
+				"BankReason": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"gateway_id": {
+			"type": "integer"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"ref_num": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"res_num": {
+			"type": "string"
+		},
+		"status": {
+			"type": "string"
+		},
+		"trace_number": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"updated_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"user_id": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

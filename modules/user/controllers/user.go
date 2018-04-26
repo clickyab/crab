@@ -58,6 +58,7 @@ type userResponse struct {
 	LegalName     string                 `json:"legal_name,omitempty"`
 	LegalRegister string                 `json:"legal_register,omitempty"`
 	EconomicCode  string                 `json:"economic_code,omitempty"`
+	Balance       int64                  `json:"balance"`
 	Attributes    mysql.GenericJSONField `json:"attributes,omitempty"`
 }
 
@@ -74,6 +75,7 @@ func (u Controller) createLoginResponseWithToken(user *aaa.User, token string) *
 	us.PostalCode = user.PostalCode.String
 	us.Attributes = user.Attributes
 	us.Address = user.Address.String
+	us.Balance = user.Balance
 	if user.Gender != aaa.NotSpecifiedGender {
 		us.Gender = user.Gender
 	}

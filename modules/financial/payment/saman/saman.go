@@ -13,12 +13,11 @@ import (
 
 	"net/url"
 
-	"clickyab.com/crab/modules/financial/errors"
+	"clickyab.com/crab/modules/financial/orm"
 	"clickyab.com/crab/modules/financial/payment"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/framework"
-	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/simplehash"
 )
 
@@ -30,39 +29,39 @@ var (
 	bankName      = config.RegisterString("crab.modules.financial.saman.name", "saman", "saman bank name")
 
 	verifyMethodErrors = map[int64]error{
-		-1:  t9e.G("[BANK VERIFY ERR] error in processing request data (problem in one of the params or unsuccessful reverse transaction method"),
-		-3:  t9e.G("[BANK VERIFY ERR] params have illegal characters"),
-		-4:  t9e.G("[BANK VERIFY ERR] merchant authentication failed"),
-		-6:  t9e.G("[BANK VERIFY ERR] money already back to customer or 30 min timeout reached"),
-		-7:  t9e.G("[BANK VERIFY ERR] digital code is empty"),
-		-8:  t9e.G("[BANK VERIFY ERR] length of params is too long"),
-		-9:  t9e.G("[BANK VERIFY ERR] illegal characters in return amount"),
-		-10: t9e.G("[BANK VERIFY ERR] digital code is not base 64"),
-		-11: t9e.G("[BANK VERIFY ERR] params length is too short"),
-		-12: t9e.G("[BANK VERIFY ERR] return amount is negative"),
-		-13: t9e.G("[BANK VERIFY ERR] return amount for reverse is more than not returned amount in digital code"),
-		-14: t9e.G("[BANK VERIFY ERR] transaction not found"),
-		-15: t9e.G("[BANK VERIFY ERR] return amount is float"),
-		-16: t9e.G("[BANK VERIFY ERR] internal bank error"),
-		-17: t9e.G("[BANK VERIFY ERR] can not return some of the amount"),
-		-18: t9e.G("[BANK VERIFY ERR] ip address is not valid or password of pass of reverse transaction method is wrong"),
+		-1:  orm.VERIFYRequestData,
+		-3:  orm.VERIFYParams,
+		-4:  orm.VERIFYMerchant,
+		-6:  orm.VERIFYTimeout,
+		-7:  orm.VERIFYEmptyDigitalCode,
+		-8:  orm.VERIFYLongParamsLength,
+		-9:  orm.VERIFYIllegalCharsReturnAmount,
+		-10: orm.VERIFYDigitalCodeInvalid,
+		-11: orm.VERIFYLongParams,
+		-12: orm.VERIFYNegativeReturnAmount,
+		-13: orm.VERIFYReturnAmountMismatch,
+		-14: orm.VERIFYNotFoundTransaction,
+		-15: orm.VERIFYFloatReturnAmount,
+		-16: orm.VERIFYInternalBankErr,
+		-17: orm.VERIFYReturnSomeOfAmount,
+		-18: orm.VERIFYIPPassReverseInvalid,
 	}
 	payMethodErrors = map[int64]error{
-		-1: t9e.G("[BANK PAY ERR] transaction cancelled by user"),
-		79: t9e.G("[BANK PAY ERR] return amount is more than transaction amount"),
-		12: t9e.G("[BANK PAY ERR] verify method called before finding transaction"),
-		14: t9e.G("[BANK PAY ERR] card number is invalid"),
-		15: t9e.G("[BANK PAY ERR] no such card owner"),
-		33: t9e.G("[BANK PAY ERR] card is expired"),
-		38: t9e.G("[BANK PAY ERR] password inserted wrong for 3 times"),
-		55: t9e.G("[BANK PAY ERR] password of card is invalid"),
-		61: t9e.G("[BANK PAY ERR] the amount is more than valid amount"),
-		93: t9e.G("[BANK PAY ERR] transaction has been authorized but pin and pan is wrong"),
-		68: t9e.G("[BANK PAY ERR] response timeout"),
-		34: t9e.G("[BANK PAY ERR] ccv2 and expDate is wrong or empty"),
-		51: t9e.G("[BANK PAY ERR] no sufficient user funds"),
-		84: t9e.G("[BANK PAY ERR] card issuer is down"),
-		96: t9e.G("[BANK PAY ERR] other bank errors caused this"),
+		-1: orm.PAYTransactionCancelled,
+		79: orm.PAYReturnMoreThanTransaction,
+		12: orm.PAYEarlyVerifyCalled,
+		14: orm.PAYWrongCardNumber,
+		15: orm.PAYCardNotFound,
+		33: orm.PAYCardExpired,
+		38: orm.PAYExceedWrongPassCard,
+		55: orm.PAYPasswordCardWrong,
+		61: orm.PAYAmountMoreThanValid,
+		93: orm.PAYPanPinWrong,
+		68: orm.PAYResponseTimeout,
+		34: orm.PAYCCV2ExpDate,
+		51: orm.PAYSufficientFunds,
+		84: orm.PAYCardIssuerInvalid,
+		96: orm.PAYOtherBankErr,
 	}
 )
 
@@ -86,13 +85,22 @@ type verifyResponse struct {
 // Saman handle payment for saman gateway
 type Saman struct {
 	payment.CommonPay
-	FAmount int64
-	FResNum string
-	FUserID int64
 }
 
-// VerifyPayment for saman bank
-func (s *Saman) VerifyPayment(resNum, refNum, hash string) error {
+// RedirectValidation validate redirect from bank
+func (s *Saman) RedirectValidation(p payment.RedirectParams) error {
+	if p.Attr["state"] != "OK" || p.StatusCode != 0 {
+		return s.PaymentErr(p.StatusCode)
+	}
+
+	if p.Attr["mID"] != fmt.Sprint(merchantID.Int64()) {
+		return orm.MerchantMismatchErr
+	}
+	return nil
+}
+
+// VerifyTransaction for saman bank
+func (s *Saman) VerifyTransaction(resNum, refNum string) error {
 	body := fmt.Sprintf(verifyBody, refNum, s.MID())
 	client := &http.Client{}
 
@@ -104,7 +112,7 @@ func (s *Saman) VerifyPayment(resNum, refNum, hash string) error {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return errors.RequestVerifyErr
+		return orm.RequestVerifyErr
 	}
 	defer func() {
 		assert.Nil(resp.Body.Close())
@@ -112,7 +120,7 @@ func (s *Saman) VerifyPayment(resNum, refNum, hash string) error {
 
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return errors.RespVerifyErr
+		return orm.RespVerifyErr
 	}
 
 	var verifyResponse verifyResponse
@@ -127,13 +135,16 @@ func (s *Saman) VerifyPayment(resNum, refNum, hash string) error {
 	}
 
 	if s.Amount() != paid {
-		return errors.PriceMismatchErr
+		return orm.PriceMismatchErr
 	}
+	return nil
+}
 
-	//check hash
+// HashVerification double verification
+func (s *Saman) HashVerification(paid int64, hash, resNum string) error {
 	generatedHash := simplehash.SHA1(fmt.Sprintf("%d-%s-%d-%s", s.UserID(), bankName.String(), paid, resNum))
 	if generatedHash != hash {
-		return errors.HashMismatchErr
+		return orm.HashMismatchErr
 	}
 	return nil
 }
@@ -210,7 +221,7 @@ func (s *Saman) PaymentErr(code int64) error {
 	if ok {
 		return res
 	}
-	return t9e.G("[BANK PAY ERR] unexpected error occurred")
+	return orm.PayNotSupported
 }
 
 // VerifyErr verify error
@@ -219,5 +230,41 @@ func (s *Saman) VerifyErr(code int64) error {
 	if ok {
 		return res
 	}
-	return t9e.G("[BANK VERIFY ERR] unexpected error occurred")
+	return orm.VERIFYNotSupported
+}
+
+// GetParams get bank redirect params
+func (s *Saman) GetParams(r *http.Request) payment.RedirectParams {
+	stateCode := r.PostFormValue("StateCode")
+	stateCodeInt, err := strconv.ParseInt(stateCode, 10, 0)
+	assert.Nil(err)
+	res := payment.RedirectParams{
+		RefNum:     r.PostFormValue("RefNum"),
+		StatusCode: stateCodeInt,
+		ResNum:     r.PostFormValue("ResNum"),
+		Attr: map[string]string{
+			"state":       r.PostFormValue("State"),
+			"traceNumber": r.PostFormValue("TRACENO"),
+			"cID":         r.PostFormValue("CID"),
+			"securePan":   r.PostFormValue("SecurePan"),
+			"mID":         r.PostFormValue("MID"),
+		},
+	}
+
+	return res
+}
+
+// SetAmount set amount in underlay struct
+func (s *Saman) SetAmount(amount int64) {
+	s.FAmount = amount
+}
+
+// SetUserID set user id
+func (s *Saman) SetUserID(userID int64) {
+	s.FUserID = userID
+}
+
+// SetResNum set res num
+func (s *Saman) SetResNum(res string) {
+	s.FResNum = res
 }

@@ -6,8 +6,6 @@ import (
 
 	"clickyab.com/crab/modules/financial/errors"
 
-	"strconv"
-
 	"fmt"
 
 	"net/url"
@@ -72,21 +70,26 @@ func (c *Controller) getPaymentData(ctx context.Context, r *http.Request, p *ini
 	if gate.Status == "disable" {
 		return nil, errors.DisableGateWayErr
 	}
-	// TODO : implement other gateways later
-	if gate.Name != "saman" {
-		return nil, errors.GateWayNotSupportedErr
+
+	var pay = payment.CommonPay{
+		p.payAmount,
+		<-random.ID,
+		currentUser.ID,
+		nil,
 	}
-	var pay = saman.Saman{
-		FAmount: p.payAmount,
-		FResNum: <-random.ID,
-		FUserID: currentUser.ID,
+
+	// TODO : implement other gateways later
+	if gate.Name == "saman" {
+		pay.BankObj = &saman.Saman{CommonPay: pay}
+	} else {
+		return nil, errors.GateWayNotSupportedErr
 	}
 
 	// create online payment
 	onlinePay := &orm.OnlinePayment{
 		Status:    orm.Init,
-		Amount:    pay.Amount(),
-		ResNum:    pay.ResNum(),
+		Amount:    pay.BankObj.Amount(),
+		ResNum:    pay.BankObj.ResNum(),
 		UserID:    currentUser.ID,
 		DomainID:  dm.ID,
 		GatewayID: gate.ID,
@@ -97,7 +100,7 @@ func (c *Controller) getPaymentData(ctx context.Context, r *http.Request, p *ini
 	if err != nil {
 		return nil, errors.MakeOnlinePaymentErr
 	}
-	return pay.InitPayment(r), nil
+	return pay.BankObj.InitPayment(r), nil
 
 }
 
@@ -111,99 +114,98 @@ func (c *Controller) backFromBank(ctx context.Context, w http.ResponseWriter, r 
 
 	// get data from bank redirect request
 	bankName := xmux.Param(ctx, "bank")
-	resNum := r.PostFormValue("ResNum")
-	refNum := r.PostFormValue("RefNum")
-	state := r.PostFormValue("State")
-	traceNumber := r.PostFormValue("TRACENO")
-	cID := r.PostFormValue("CID")
-	securePan := r.PostFormValue("SecurePan")
-	mID := r.PostFormValue("MID")
-	stateCode := r.PostFormValue("StateCode")
-	stateCodeInt, err := strconv.ParseInt(stateCode, 10, 0)
-	assert.Nil(err)
 	payHash := xmux.Param(ctx, "hash")
-
-	bankObj := &saman.Saman{
-		FResNum: resNum,
-	}
 
 	payOrm := orm.NewOrmManager()
 
-	transaction, err := payOrm.FindInitPaymentByResNum(resNum)
+	l := &payment.CommonPay{}
+
+	gateway, err := payOrm.FindActiveGatewayByName(bankName)
+	if err != nil {
+		params := url.Values{}
+		params.Set("success", "false")
+		assert.Nil(l.FrontRedirect(w, r, http.StatusFound, params))
+		return
+	}
+
+	if gateway.Name == "saman" {
+		l.BankObj = &saman.Saman{
+			CommonPay: payment.CommonPay{},
+		}
+	} else {
+		// Failed payment  redirect to failed page
+		params := url.Values{}
+		params.Set("success", "false")
+		assert.Nil(l.BankObj.FrontRedirect(w, r, http.StatusFound, params))
+		return
+	}
+	redirectParams := l.BankObj.GetParams(r)
+
+	transaction, err := payOrm.FindInitPaymentByResNum(redirectParams.ResNum)
 	if err != nil {
 		// Failed payment  redirect to failed page
 		params := url.Values{}
-		params.Set("success", "no")
-		assert.Nil(bankObj.FrontRedirect(w, r, http.StatusFound, params))
+		params.Set("success", "false")
+		assert.Nil(l.FrontRedirect(w, r, http.StatusFound, params))
 		return
 	}
 
-	bankObj.FUserID = transaction.UserID
-	bankObj.FAmount = transaction.Amount
+	l.BankObj.SetAmount(transaction.Amount)
+	l.BankObj.SetUserID(transaction.UserID)
+	l.BankObj.SetResNum(transaction.ResNum)
 
-	if state != "OK" || stateCodeInt != 0 {
-		// Failed payment update transaction and redirect to failed page
-		transaction.Status = orm.BackToSite
-		transaction.BankStatus = mysql.NullInt64{Valid: true, Int64: stateCodeInt}
-		transaction.Reason = mysql.NullString{Valid: true, String: bankObj.PaymentErr(stateCodeInt).Error()}
-		assert.Nil(payOrm.UpdateOnlinePayment(transaction))
-		params := url.Values{}
-		params.Set("success", "no")
-		params.Set("payment", fmt.Sprint(transaction.ID))
-		assert.Nil(bankObj.FrontRedirect(w, r, http.StatusFound, params))
-		return
-	}
-
-	// TODO add others when implement other banks
-	if bankName != "saman" {
-		transaction.Status = orm.BackToSite
-		transaction.BankStatus = mysql.NullInt64{Valid: true, Int64: stateCodeInt}
-		transaction.Reason = mysql.NullString{Valid: true, String: errors.NotSupportedBankErr.Error()}
-		transaction.RefNum = mysql.NullString{Valid: refNum != "", String: refNum}
-		assert.Nil(payOrm.UpdateOnlinePayment(transaction))
-		params := url.Values{}
-		params.Set("success", "no")
-		params.Set("payment", fmt.Sprint(transaction.ID))
-		assert.Nil(bankObj.FrontRedirect(w, r, http.StatusFound, params))
-		return
-	}
-
-	if mID != fmt.Sprint(bankObj.MID()) {
-		// Failed payment update transaction and redirect to failed page
-		transaction.Status = orm.BackToSite
-		transaction.BankStatus = mysql.NullInt64{Valid: true, Int64: stateCodeInt}
-		transaction.Reason = mysql.NullString{Valid: true, String: errors.MerchantMismatchErr.Error()}
-		transaction.RefNum = mysql.NullString{Valid: refNum != "", String: refNum}
-		assert.Nil(payOrm.UpdateOnlinePayment(transaction))
-		params := url.Values{}
-		params.Set("success", "no")
-		params.Set("payment", fmt.Sprint(transaction.ID))
-		assert.Nil(bankObj.FrontRedirect(w, r, http.StatusFound, params))
-		return
-	}
-
-	err = bankObj.VerifyPayment(resNum, refNum, payHash)
+	err = l.BankObj.HashVerification(l.BankObj.Amount(), payHash, redirectParams.ResNum)
 	if err != nil {
 		// Failed payment update transaction and redirect to failed page
 		transaction.Status = orm.BackToSite
-		transaction.BankStatus = mysql.NullInt64{Valid: true, Int64: stateCodeInt}
-		transaction.Reason = mysql.NullString{Valid: true, String: err.Error()}
-		transaction.RefNum = mysql.NullString{Valid: refNum != "", String: refNum}
+		transaction.BankStatus = mysql.NullInt64{Valid: true, Int64: redirectParams.StatusCode}
+		transaction.ErrorReason = orm.NullBankReason{Valid: true, BankReason: orm.BankReasonState(err.Error())}
+		transaction.RefNum = mysql.NullString{Valid: redirectParams.RefNum != "", String: redirectParams.RefNum}
 		assert.Nil(payOrm.UpdateOnlinePayment(transaction))
 		params := url.Values{}
-		params.Set("success", "no")
+		params.Set("success", "false")
 		params.Set("payment", fmt.Sprint(transaction.ID))
-		assert.Nil(bankObj.FrontRedirect(w, r, http.StatusFound, params))
+		assert.Nil(l.BankObj.FrontRedirect(w, r, http.StatusFound, params))
 		return
 	}
+
+	err = l.BankObj.RedirectValidation(redirectParams)
+	if err != nil {
+		transaction.Status = orm.BackToSite
+		transaction.BankStatus = mysql.NullInt64{Valid: true, Int64: redirectParams.StatusCode}
+		transaction.ErrorReason = orm.NullBankReason{Valid: true, BankReason: orm.BankReasonState(err.Error())}
+		transaction.RefNum = mysql.NullString{Valid: redirectParams.RefNum != "", String: redirectParams.RefNum}
+		assert.Nil(payOrm.UpdateOnlinePayment(transaction))
+		params := url.Values{}
+		params.Set("success", "false")
+		params.Set("payment", fmt.Sprint(transaction.ID))
+		assert.Nil(l.BankObj.FrontRedirect(w, r, http.StatusFound, params))
+		return
+	}
+
+	err = l.BankObj.VerifyTransaction(redirectParams.ResNum, redirectParams.RefNum)
+	if err != nil {
+		// Failed payment update transaction and redirect to failed page
+		transaction.Status = orm.BackToSite
+		transaction.BankStatus = mysql.NullInt64{Valid: true, Int64: redirectParams.StatusCode}
+		transaction.ErrorReason = orm.NullBankReason{Valid: true, BankReason: orm.BankReasonState(err.Error())}
+		transaction.RefNum = mysql.NullString{Valid: redirectParams.RefNum != "", String: redirectParams.RefNum}
+		assert.Nil(payOrm.UpdateOnlinePayment(transaction))
+		params := url.Values{}
+		params.Set("success", "false")
+		params.Set("payment", fmt.Sprint(transaction.ID))
+		assert.Nil(l.BankObj.FrontRedirect(w, r, http.StatusFound, params))
+		return
+	}
+
 	// Success payment occurred charge user and redirect to success page
 	transaction.Status = orm.Finalized
-	transaction.RefNum = mysql.NullString{Valid: true, String: refNum}
-	transaction.BankStatus = mysql.NullInt64{Valid: true, Int64: stateCodeInt}
-	transaction.TraceNumber = mysql.NullString{Valid: true, String: traceNumber}
-	transaction.CID = mysql.NullString{Valid: true, String: cID}
+	transaction.RefNum = mysql.NullString{Valid: true, String: redirectParams.RefNum}
+	transaction.BankStatus = mysql.NullInt64{Valid: true, Int64: redirectParams.StatusCode}
+	transaction.TraceNumber = mysql.NullString{Valid: true, String: redirectParams.Attr["traceNumber"]}
+	transaction.CID = mysql.NullString{Valid: true, String: redirectParams.Attr["cID"]}
 	transaction.Attr = map[string]interface{}{
-		"SecurePan": securePan,
+		"SecurePan": redirectParams.Attr["securePan"],
 	}
 
 	// charge user
@@ -219,7 +221,7 @@ func (c *Controller) backFromBank(ctx context.Context, w http.ResponseWriter, r 
 	assert.Nil(err)
 
 	params := url.Values{}
-	params.Set("success", "yes")
+	params.Set("success", "true")
 	params.Set("payment", fmt.Sprint(transaction.ID))
-	assert.Nil(bankObj.FrontRedirect(w, r, http.StatusMovedPermanently, params))
+	assert.Nil(l.BankObj.FrontRedirect(w, r, http.StatusMovedPermanently, params))
 }

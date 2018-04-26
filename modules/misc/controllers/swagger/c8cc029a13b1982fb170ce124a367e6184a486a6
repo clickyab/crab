@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"BankReason": {
+			"type": "string"
+		},
+		"Valid": {
+			"type": "boolean"
+		}
+	},
+	"type": "object"
+}

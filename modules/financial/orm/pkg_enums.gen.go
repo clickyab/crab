@@ -272,3 +272,76 @@ func (e OnlinePaymentStatus) Value() (driver.Value, error) {
 	}
 	return string(e), nil
 }
+
+// IsValid try to validate enum value on ths type
+func (e BankReasonState) IsValid() bool {
+	return array.StringInArray(
+		string(e),
+		string(VERIFYRequestData),
+		string(VERIFYParams),
+		string(VERIFYMerchant),
+		string(VERIFYTimeout),
+		string(VERIFYEmptyDigitalCode),
+		string(VERIFYLongParamsLength),
+		string(VERIFYIllegalCharsReturnAmount),
+		string(VERIFYDigitalCodeInvalid),
+		string(VERIFYLongParams),
+		string(VERIFYNegativeReturnAmount),
+		string(VERIFYReturnAmountMismatch),
+		string(VERIFYNotFoundTransaction),
+		string(VERIFYFloatReturnAmount),
+		string(VERIFYInternalBankErr),
+		string(VERIFYReturnSomeOfAmount),
+		string(VERIFYIPPassReverseInvalid),
+		string(VERIFYNotSupported),
+		string(PAYTransactionCancelled),
+		string(PAYReturnMoreThanTransaction),
+		string(PAYEarlyVerifyCalled),
+		string(PAYWrongCardNumber),
+		string(PAYCardNotFound),
+		string(PAYCardExpired),
+		string(PAYExceedWrongPassCard),
+		string(PAYPasswordCardWrong),
+		string(PAYAmountMoreThanValid),
+		string(PAYPanPinWrong),
+		string(PAYResponseTimeout),
+		string(PAYCCV2ExpDate),
+		string(PAYSufficientFunds),
+		string(PAYCardIssuerInvalid),
+		string(PAYOtherBankErr),
+		string(PayNotSupported),
+		string(HashMismatchErr),
+		string(MerchantMismatchErr),
+		string(RequestVerifyErr),
+		string(RespVerifyErr),
+		string(PriceMismatchErr),
+	)
+}
+
+// Scan convert the json array ino string slice
+func (e *BankReasonState) Scan(src interface{}) error {
+	var b []byte
+	switch src.(type) {
+	case []byte:
+		b = src.([]byte)
+	case string:
+		b = []byte(src.(string))
+	case nil:
+		b = make([]byte, 0)
+	default:
+		return t9e.G("unsupported type")
+	}
+	if !BankReasonState(b).IsValid() {
+		return t9e.G("invalid value")
+	}
+	*e = BankReasonState(b)
+	return nil
+}
+
+// Value try to get the string slice representation in database
+func (e BankReasonState) Value() (driver.Value, error) {
+	if !e.IsValid() {
+		return nil, t9e.G("invalid status")
+	}
+	return string(e), nil
+}

@@ -16,7 +16,7 @@ import (
 //		payload = initPaymentPayload
 //		middleware = authz.Authenticate
 //		resource = make_payment:self
-//		200 = saman.InitPaymentResp
+//		200 = payment.InitPaymentResp
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
@@ -86,6 +86,27 @@ func (c *Controller) billingListGet(ctx context.Context, w http.ResponseWriter, 
 func (c *Controller) getGatewaysGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	res, err := c.getGateways(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
+// getPaymentTransaction get single payment transaction
+// @Route {
+// 		url = /payment/:id
+//		method = get
+//		middleware = authz.Authenticate
+//		resource = make_payment:self
+//		200 = orm.OnlinePayment
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) getPaymentTransactionGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getPaymentTransaction(ctx, r)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return

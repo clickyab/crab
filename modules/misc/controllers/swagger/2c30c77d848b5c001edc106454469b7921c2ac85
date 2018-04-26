@@ -1,29 +1,27 @@
 {
-	"post": {
-		"description": "getPaymentData get payment data",
+	"get": {
+		"description": "getPaymentTransaction get single payment transaction",
 		"parameters": [
+			{
+				"description": "",
+				"in": "path",
+				"name": "id",
+				"required": true,
+				"type": "string"
+			},
 			{
 				"description": "the security token, get it from login route",
 				"in": "header",
 				"name": "token",
 				"required": true,
 				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "body",
-				"name": "payload_data",
-				"required": false,
-				"schema": {
-					"$ref": "#/definitions/controllers_initPaymentPayload"
-				}
 			}
 		],
 		"responses": {
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/payment_InitPaymentResp"
+					"$ref": "#/definitions/orm_OnlinePayment"
 				}
 			},
 			"400": {
