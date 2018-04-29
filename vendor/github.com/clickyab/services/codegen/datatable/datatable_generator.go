@@ -219,7 +219,7 @@ func (u *Controller) list{{ .Data.Entity|ucfirst }}(ctx context.Context, w http.
 			u.JSON(w, http.StatusBadRequest, err)
 			return
 		}
-		from="{{ .Data.DateFilter }}"+":"+fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
+		from="{{ .Data.DateFilter }}"+"*"+fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	if e := r.URL.Query().Get("to"); e != ""{
@@ -229,7 +229,7 @@ func (u *Controller) list{{ .Data.Entity|ucfirst }}(ctx context.Context, w http.
 			u.JSON(w, http.StatusBadRequest, err)
 			return
 		}
-		to="{{ .Data.DateFilter }}"+":"+toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
+		to="{{ .Data.DateFilter }}"+"*"+toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	search := make(map[string]string)

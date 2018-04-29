@@ -1,0 +1,46 @@
+{
+	"properties": {
+		"_actions": {
+			"type": "string"
+		},
+		"click": {
+			"type": "integer"
+		},
+		"conversion": {
+			"type": "integer"
+		},
+		"conversion_rate": {
+			"type": "number"
+		},
+		"cpa": {
+			"type": "number"
+		},
+		"domain": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"ecpc": {
+			"type": "number"
+		},
+		"ecpm": {
+			"type": "number"
+		},
+		"ectr": {
+			"type": "number"
+		},
+		"impression": {
+			"type": "integer"
+		},
+		"spend": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

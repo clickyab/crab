@@ -9,52 +9,10 @@ import (
 )
 
 type (
-	CampaignDailyDataTableArray []CampaignDailyDataTable
-
 	CampaignDetailsArray []CampaignDetails
+
+	PublisherDetailsArray []PublisherDetails
 )
-
-func (cddta CampaignDailyDataTableArray) Filter(u permission.Interface) CampaignDailyDataTableArray {
-	res := make(CampaignDailyDataTableArray, len(cddta))
-	for i := range cddta {
-		res[i] = cddta[i].Filter(u)
-	}
-
-	return res
-}
-
-// Filter is for filtering base on permission
-func (cddt CampaignDailyDataTable) Filter(u permission.Interface) CampaignDailyDataTable {
-	action := []string{}
-	res := CampaignDailyDataTable{}
-
-	res.CreatedAt = cddt.CreatedAt
-
-	res.Imp = cddt.Imp
-
-	res.Click = cddt.Click
-
-	res.Conv = cddt.Conv
-
-	res.Cpm = cddt.Cpm
-
-	res.Cpc = cddt.Cpc
-
-	res.Spent = cddt.Spent
-
-	res.Cpa = cddt.Cpa
-
-	res.Ctr = cddt.Ctr
-
-	res.Actions = cddt.Actions
-
-	res.Actions = strings.Join(action, ",")
-	return res
-}
-
-func init() {
-
-}
 
 func (cda CampaignDetailsArray) Filter(u permission.Interface) CampaignDetailsArray {
 	res := make(CampaignDetailsArray, len(cda))
@@ -122,10 +80,6 @@ func (cd CampaignDetails) Filter(u permission.Interface) CampaignDetails {
 
 	res.Exchange = cd.Exchange
 
-	res.OwnerID = cd.OwnerID
-
-	res.DomainID = cd.DomainID
-
 	res.Actions = cd.Actions
 
 	if _, ok := u.HasOn("campaign_archive", cd.OwnerID, cd.ParentIDs, cd.DomainID, permission.ScopeSelf, permission.ScopeGlobal); ok {
@@ -157,5 +111,49 @@ func init() {
 	permission.Register("campaign_detail", "campaign_detail")
 
 	permission.Register("campaign_edit", "campaign_edit")
+
+}
+
+func (pda PublisherDetailsArray) Filter(u permission.Interface) PublisherDetailsArray {
+	res := make(PublisherDetailsArray, len(pda))
+	for i := range pda {
+		res[i] = pda[i].Filter(u)
+	}
+
+	return res
+}
+
+// Filter is for filtering base on permission
+func (pd PublisherDetails) Filter(u permission.Interface) PublisherDetails {
+	action := []string{}
+	res := PublisherDetails{}
+
+	res.Domain = pd.Domain
+
+	res.Impression = pd.Impression
+
+	res.Click = pd.Click
+
+	res.ECPC = pd.ECPC
+
+	res.ECTR = pd.ECTR
+
+	res.ECPM = pd.ECPM
+
+	res.Spend = pd.Spend
+
+	res.Conversion = pd.Conversion
+
+	res.ConversionRate = pd.ConversionRate
+
+	res.CPA = pd.CPA
+
+	res.Actions = pd.Actions
+
+	res.Actions = strings.Join(action, ",")
+	return res
+}
+
+func init() {
 
 }

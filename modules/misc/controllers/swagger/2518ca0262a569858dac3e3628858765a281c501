@@ -9,29 +9,39 @@
 					"click": {
 						"type": "integer"
 					},
-					"conv": {
+					"conversion": {
 						"type": "integer"
 					},
-					"cpa": {
-						"type": "integer"
-					},
-					"cpc": {
-						"type": "integer"
-					},
-					"cpm": {
-						"type": "integer"
-					},
-					"created_at": {
-						"format": "dateTime",
-						"type": "string"
-					},
-					"ctr": {
+					"conversion_rate": {
 						"type": "number"
 					},
-					"imp": {
+					"cpa": {
+						"type": "number"
+					},
+					"domain": {
+						"properties": {
+							"String": {
+								"type": "string"
+							},
+							"Valid": {
+								"type": "boolean"
+							}
+						},
+						"type": "object"
+					},
+					"ecpc": {
+						"type": "number"
+					},
+					"ecpm": {
+						"type": "number"
+					},
+					"ectr": {
+						"type": "number"
+					},
+					"impression": {
 						"type": "integer"
 					},
-					"spent": {
+					"spend": {
 						"type": "integer"
 					}
 				},

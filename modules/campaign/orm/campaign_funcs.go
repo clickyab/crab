@@ -12,12 +12,7 @@ import (
 	domainOrm "clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/permission"
-)
-
-var (
-	defaultCTR = config.RegisterFloat64("crab.modules.campaign.ctr", .1, "default ctr in the system")
 )
 
 const (
