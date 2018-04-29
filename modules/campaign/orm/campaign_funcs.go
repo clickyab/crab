@@ -26,21 +26,20 @@ const (
 )
 
 // AddCampaign for creating campaign with minimum info
-func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *domainOrm.Domain) (Campaign, Schedule, error) {
-	ca := Campaign{
-		Title:    c.Title,
-		DomainID: d.ID,
-		UserID:   u.ID,
-		Kind:     c.Kind,
-		Exchange: All,
-		TLD:      c.TLD,
-		Strategy: CPC,
-		Status:   c.Status,
-		StartAt:  c.StartAt,
-		EndAt:    c.EndAt,
-		Progress: ProgressInProgress,
-	}
+func (m *Manager) AddCampaign(ca *Campaign, c CampaignBase, u *aaa.User, d *domainOrm.Domain) (Schedule, error) {
 	var s Schedule
+
+	ca.Title = c.Title
+	ca.DomainID = d.ID
+	ca.UserID = u.ID
+	ca.Kind = c.Kind
+	ca.Exchange = All
+	ca.TLD = c.TLD
+	ca.Strategy = CPC
+	ca.Status = c.Status
+	ca.StartAt = c.StartAt
+	ca.EndAt = c.EndAt
+	ca.Progress = ProgressInProgress
 
 	err := m.Begin()
 	assert.Nil(err)
@@ -52,8 +51,8 @@ func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *domainOrm.Domain) 
 		assert.Nil(m.Rollback())
 	}()
 
-	if err = m.CreateCampaign(&ca); err != nil {
-		return ca, s, err
+	if err = m.CreateCampaign(ca); err != nil {
+		return s, err
 	}
 
 	s = Schedule{
@@ -62,7 +61,7 @@ func (m *Manager) AddCampaign(c CampaignBase, u *aaa.User, d *domainOrm.Domain) 
 	}
 	err = m.CreateSchedule(&s)
 
-	return ca, s, err
+	return s, err
 }
 
 // UpdateCampaignByID for updating campaign with minimum info

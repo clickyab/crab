@@ -3,17 +3,13 @@ package controllers
 import (
 	"context"
 	"net/http"
-	"strconv"
 
 	"time"
 
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
-	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
-	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/assert"
-	"github.com/rs/xmux"
+	"github.com/fatih/structs"
 )
 
 // @Validate{
@@ -30,38 +26,39 @@ type copyCampaignPayload struct {
 //		resource = copy_campaign:self
 // }
 func (c Controller) copyCampaign(ctx context.Context, r *http.Request, p *copyCampaignPayload) (*orm.Campaign, error) {
-	currentUser := authz.MustGetUser(ctx)
-	d := domain.MustGetDomain(ctx)
-	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
+	baseData, err := CheckUserCamapignDomain(ctx)
 	if err != nil {
-		return nil, errors.InvalidIDErr
+		return nil, err
 	}
-
-	cpManager := orm.NewOrmManager()
-	campaign, err := cpManager.FindCampaignByIDDomain(id, d.ID)
-	if err != nil {
-		return campaign, errors.NotFoundError(id)
-	}
-
-	userManager := aaa.NewAaaManager()
-	owner, err := userManager.FindUserWithParentsByID(campaign.UserID, campaign.DomainID)
-	assert.Nil(err)
-	_, ok := aaa.CheckPermOn(owner, currentUser, "copy_campaign", campaign.DomainID)
+	uScope, ok := aaa.CheckPermOn(baseData.owner, baseData.currentUser, "copy_campaign", baseData.campaign.DomainID)
 	if !ok {
-		return campaign, errors.AccessDenied
+		return nil, errors.AccessDenied
+	}
+
+	err = baseData.campaign.SetAuditUserData(baseData.currentUser.ID, false, 0, "copy_campaign", uScope)
+	if err != nil {
+		return nil, err
 	}
 
 	// check for archive campaign
-	if campaign.ArchivedAt.Valid && campaign.ArchivedAt.Time.Before(time.Now()) {
-		return campaign, errors.ArchivedEditError
+	if baseData.campaign.ArchivedAt.Valid && baseData.campaign.ArchivedAt.Time.Before(time.Now()) {
+		return nil, errors.ArchivedEditError
 	}
 
-	campaign.Title = p.Title
-	campaign.ID = 0
-	err = cpManager.CreateCampaign(campaign)
+	baseData.campaign.Title = p.Title
+	baseData.campaign.ID = 0
+
+	d := structs.Map(baseData.campaign)
+	err = baseData.campaign.SetAuditDescribe(d, "copy new campaign")
 	if err != nil {
-		return campaign, errors.DuplicateNameError
+		return nil, err
 	}
 
-	return campaign, nil
+	db := orm.NewOrmManager()
+	err = db.CreateCampaign(baseData.campaign)
+	if err != nil {
+		return nil, errors.DuplicateNameError
+	}
+
+	return baseData.campaign, nil
 }

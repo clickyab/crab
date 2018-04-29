@@ -10,6 +10,7 @@ import (
 	domainOrm "clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	userError "clickyab.com/crab/modules/user/errors"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/rs/xmux"
 )
@@ -27,9 +28,10 @@ type Controller struct {
 
 // BaseData basic data needed in almost all routes
 type BaseData struct {
-	campaign *orm.Campaign
-	domain   *domainOrm.Domain
-	owner    *aaa.User
+	campaign    *orm.Campaign
+	domain      *domainOrm.Domain
+	owner       *aaa.User
+	currentUser *aaa.User
 }
 
 // CheckUserCamapignDomain func to check campaign exist and is for current user and domain and return base data
@@ -53,10 +55,28 @@ func CheckUserCamapignDomain(ctx context.Context) (*BaseData, error) {
 		return nil, userError.NotFoundWithDomainError(d.Name)
 	}
 
+	err = ca.SetAuditDomainID(d.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = ca.SetAuditOwnerID(ca.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = ca.SetAuditEntity("campaign", ca.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	currentUser := authz.MustGetUser(ctx)
+
 	res := BaseData{
-		campaign: ca,
-		domain:   d,
-		owner:    owner,
+		campaign:    ca,
+		domain:      d,
+		owner:       owner,
+		currentUser: currentUser,
 	}
 
 	return &res, nil

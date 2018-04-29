@@ -11,9 +11,9 @@ import (
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/location/location"
 	"clickyab.com/crab/modules/user/aaa"
-	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/array"
 	"github.com/clickyab/services/mysql"
+	"github.com/fatih/structs"
 )
 
 // @Validate{
@@ -95,10 +95,14 @@ func (c *Controller) attributes(ctx context.Context, r *http.Request, p *attribu
 	db := orm.NewOrmManager()
 
 	// check access
-	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(p.baseData.owner, currentUser, "edit_attributes", p.baseData.domain.ID)
+	uScope, ok := aaa.CheckPermOn(p.baseData.owner, p.baseData.currentUser, "edit_attributes", p.baseData.domain.ID)
 	if !ok {
 		return nil, errors.AccessDenied
+	}
+
+	err := p.baseData.campaign.SetAuditUserData(p.baseData.currentUser.ID, false, 0, "edit_attributes", uScope)
+	if err != nil {
+		return nil, err
 	}
 
 	attrs := orm.CampaignAttributes{
@@ -112,6 +116,13 @@ func (c *Controller) attributes(ctx context.Context, r *http.Request, p *attribu
 		Cellular:     p.Cellular,
 		ISP:          p.ISP,
 	}
+
+	d := structs.Map(attrs)
+	err = p.baseData.campaign.SetAuditDescribe(d, "update campaign attributes")
+	if err != nil {
+		return nil, err
+	}
+
 	attr, err := db.AttachCampaignAttributes(attrs)
 	if err != nil {
 		return nil, errors.UpdateError
