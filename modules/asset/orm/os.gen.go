@@ -29,8 +29,9 @@ func (m *Manager) CreateOS(os *OS) error {
 
 // UpdateOS try to update OS in database
 func (m *Manager) UpdateOS(os *OS) error {
-	now := time.Now()
-	os.UpdatedAt = now
+
+	os.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

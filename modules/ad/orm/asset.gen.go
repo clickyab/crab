@@ -29,8 +29,9 @@ func (m *Manager) CreateAsset(a *Asset) error {
 
 // UpdateAsset try to update Asset in database
 func (m *Manager) UpdateAsset(a *Asset) error {
-	now := time.Now()
-	a.UpdatedAt = now
+
+	a.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

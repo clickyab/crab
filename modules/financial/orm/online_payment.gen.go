@@ -29,8 +29,9 @@ func (m *Manager) CreateOnlinePayment(op *OnlinePayment) error {
 
 // UpdateOnlinePayment try to update OnlinePayment in database
 func (m *Manager) UpdateOnlinePayment(op *OnlinePayment) error {
-	now := time.Now()
-	op.UpdatedAt = now
+
+	op.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

@@ -15,6 +15,12 @@ const (
 	// AdvisorTableFull is the Advisor table name
 	AdvisorTableFull = "advisors"
 
+	// AuditLogDetailTableFull is the AuditLogDetail table name
+	AuditLogDetailTableFull = "audit_log_details"
+
+	// AuditLogTableFull is the AuditLog table name
+	AuditLogTableFull = "audit_logs"
+
 	// CorporationTableFull is the Corporation table name
 	CorporationTableFull = "corporations"
 
@@ -39,6 +45,12 @@ func getSelectFields(tb string, alias string) string {
 
 	case AdvisorTableFull:
 		return fmt.Sprintf(`%[1]suser_id,%[1]sadvisor_id,%[1]sdomain_id,%[1]screated_at`, alias)
+
+	case AuditLogDetailTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]saudit_log_id,%[1]sdata,%[1]screated_at,%[1]supdated_at`, alias)
+
+	case AuditLogTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]sdomain_id,%[1]suser_id,%[1]suser_perm,%[1]sperm_scope,%[1]saction,%[1]starget_model,%[1]starget_id,%[1]sowner_id,%[1]simpersonate,%[1]simpersonator_id,%[1]sdescription,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case CorporationTableFull:
 		return fmt.Sprintf(`%[1]suser_id,%[1]slegal_name,%[1]slegal_register,%[1]seconomic_code`, alias)
@@ -91,6 +103,22 @@ func (m *Manager) Initialize() {
 		"UserID",
 		"AdvisorID",
 		"DomainID",
+	)
+
+	m.AddTableWithName(
+		AuditLogDetail{},
+		AuditLogDetailTableFull,
+	).SetKeys(
+		true,
+		"ID",
+	)
+
+	m.AddTableWithName(
+		AuditLog{},
+		AuditLogTableFull,
+	).SetKeys(
+		true,
+		"ID",
 	)
 
 	m.AddTableWithName(

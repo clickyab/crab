@@ -30,6 +30,28 @@ func (c *Controller) archivePatch(ctx context.Context, w http.ResponseWriter, r 
 	framework.Write(w, res, http.StatusOK)
 }
 
+// assignInventory in campaign
+// @Route {
+// 		url = /inventory/:id
+//		method = put
+//		payload = assignInventoryPayload
+//		middleware = authz.Authenticate
+//		resource = edit_campaign:self
+//		200 = orm.Campaign
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) assignInventoryPut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*assignInventoryPayload)
+	res, err := c.assignInventory(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // attributes will update campaign attribute
 // @Route {
 // 		url = /attributes/:id
@@ -239,28 +261,6 @@ func (c Controller) getCampaignAdsGet(ctx context.Context, w http.ResponseWriter
 func (c Controller) getCreativeByCampaignGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	res, err := c.getCreativeByCampaign(ctx, r)
-	if err != nil {
-		framework.Write(w, err, http.StatusBadRequest)
-		return
-	}
-	framework.Write(w, res, http.StatusOK)
-}
-
-// assignInventory in campaign
-// @Route {
-// 		url = /inventory/:id
-//		method = put
-//		payload = assignInventoryPayload
-//		middleware = authz.Authenticate
-//		resource = edit_campaign:self
-//		200 = orm.Campaign
-//		400 = controller.ErrorResponseSimple
-//		401 = controller.ErrorResponseSimple
-//		403 = controller.ErrorResponseSimple
-// }
-func (c Controller) assignInventoryPut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := c.MustGetPayload(ctx).(*assignInventoryPayload)
-	res, err := c.assignInventory(ctx, r, pl)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return

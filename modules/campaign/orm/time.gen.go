@@ -29,8 +29,9 @@ func (m *Manager) CreateSchedule(s *Schedule) error {
 
 // UpdateSchedule try to update Schedule in database
 func (m *Manager) UpdateSchedule(s *Schedule) error {
-	now := time.Now()
-	s.UpdatedAt = now
+
+	s.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

@@ -29,8 +29,9 @@ func (m *Manager) CreateBankSnap(bs *BankSnap) error {
 
 // UpdateBankSnap try to update BankSnap in database
 func (m *Manager) UpdateBankSnap(bs *BankSnap) error {
-	now := time.Now()
-	bs.UpdatedAt = now
+
+	bs.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

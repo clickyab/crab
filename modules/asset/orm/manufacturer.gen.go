@@ -29,8 +29,9 @@ func (m *Manager) CreateManufacturer(mm *Manufacturer) error {
 
 // UpdateManufacturer try to update Manufacturer in database
 func (m *Manager) UpdateManufacturer(mm *Manufacturer) error {
-	now := time.Now()
-	mm.UpdatedAt = now
+
+	mm.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

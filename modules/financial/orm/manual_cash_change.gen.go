@@ -29,8 +29,9 @@ func (m *Manager) CreateManualCashChange(mcc *ManualCashChange) error {
 
 // UpdateManualCashChange try to update ManualCashChange in database
 func (m *Manager) UpdateManualCashChange(mcc *ManualCashChange) error {
-	now := time.Now()
-	mcc.UpdatedAt = now
+
+	mcc.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

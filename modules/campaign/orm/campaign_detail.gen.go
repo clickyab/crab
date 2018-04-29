@@ -26,8 +26,9 @@ func (m *Manager) CreateCampaignDetail(cd *CampaignDetail) error {
 
 // UpdateCampaignDetail try to update CampaignDetail in database
 func (m *Manager) UpdateCampaignDetail(cd *CampaignDetail) error {
-	now := time.Now()
-	cd.UpdatedAt = now
+
+	cd.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

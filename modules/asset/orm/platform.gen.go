@@ -29,8 +29,9 @@ func (m *Manager) CreatePlatform(p *Platform) error {
 
 // UpdatePlatform try to update Platform in database
 func (m *Manager) UpdatePlatform(p *Platform) error {
-	now := time.Now()
-	p.UpdatedAt = now
+
+	p.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

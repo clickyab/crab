@@ -70,8 +70,9 @@ func (m *Manager) CreateRolePermission(rp *RolePermission) error {
 
 // UpdateRolePermission try to update RolePermission in database
 func (m *Manager) UpdateRolePermission(rp *RolePermission) error {
-	now := time.Now()
-	rp.UpdatedAt = now
+
+	rp.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -141,8 +142,9 @@ func (m *Manager) CreateRole(r *Role) error {
 
 // UpdateRole try to update Role in database
 func (m *Manager) UpdateRole(r *Role) error {
-	now := time.Now()
-	r.UpdatedAt = now
+
+	r.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -255,8 +257,9 @@ func (m *Manager) CreateUser(u *User) error {
 
 // UpdateUser try to update User in database
 func (m *Manager) UpdateUser(u *User) error {
-	now := time.Now()
-	u.UpdatedAt = now
+
+	u.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

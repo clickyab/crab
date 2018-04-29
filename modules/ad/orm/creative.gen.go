@@ -29,8 +29,9 @@ func (m *Manager) CreateCreative(c *Creative) error {
 
 // UpdateCreative try to update Creative in database
 func (m *Manager) UpdateCreative(c *Creative) error {
-	now := time.Now()
-	c.UpdatedAt = now
+
+	c.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

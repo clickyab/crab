@@ -29,8 +29,9 @@ func (m *Manager) CreateBrowser(b *Browser) error {
 
 // UpdateBrowser try to update Browser in database
 func (m *Manager) UpdateBrowser(b *Browser) error {
-	now := time.Now()
-	b.UpdatedAt = now
+
+	b.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
