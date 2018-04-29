@@ -8,6 +8,7 @@ import (
 	"clickyab.com/crab/libs"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
 )
 
@@ -29,35 +30,35 @@ var creativeTableFull = "creatives"
 //		_archive = campaign_archive:self
 // }
 type CampaignDetails struct {
-	ID             int64        `json:"id" db:"id" type:"number"`
-	Title          string       `sort:"true" type:"string" search:"true"  json:"title" db:"title"`
-	Status         Status       `sort:"true" type:"enum" filter:"true"  json:"status" db:"status"`
-	Kind           CampaignKind `sort:"true" type:"enum" filter:"true"  json:"kind" db:"kind"`
-	TotalImp       int64        `sort:"true" type:"number" json:"total_imp" db:"total_imp"`
-	TotalClick     int64        `sort:"true" type:"number" json:"total_click" db:"total_click"`
-	ECTR           float64      `sort:"true" type:"number" json:"ectr" db:"ectr"`
-	ECPC           int64        `sort:"true" type:"number" json:"ecpc" db:"ecpc"`
-	ECPM           int64        `sort:"true" type:"number" json:"ecpm" db:"ecpm"`
-	TotalSpend     int64        `sort:"true" type:"number" json:"total_spend" db:"total_spend"`
-	MaxBid         int64        `sort:"true" type:"number" json:"max_bid" db:"max_bid"`
-	Conversion     int64        `sort:"true" type:"number" json:"conversion" db:"conversion"`
-	TotalBudget    int64        `sort:"true" type:"number" json:"total_budget" db:"total_budget"`
-	TodaySpend     int64        `sort:"true" type:"number" json:"today_spend" db:"today_spend"`
-	CreatedAt      time.Time    `sort:"true" type:"date" json:"created_at" db:"created_at"`
-	StartAt        time.Time    `sort:"true" type:"date" json:"start_at" db:"start_at"`
-	EndAt          time.Time    `sort:"true" type:"date" json:"end_at" db:"end_at"`
-	TodayCTR       float64      `sort:"true" type:"number" json:"today_ctr" db:"today_ctr"`
-	TodayImp       int64        `sort:"true" type:"number" json:"today_imp" db:"today_imp"`
-	TodayClick     int64        `sort:"true" type:"number" json:"today_click" db:"today_click"`
-	Creative       int64        `sort:"true" type:"number" json:"creative" db:"creative"`
-	OwnerEmail     string       `sort:"true" type:"number" search:"true" json:"owner_email" db:"owner_email"`
-	ConversionRate int64        `sort:"true" type:"number" json:"conversion_rate" db:"conversion_rate"`
-	CPA            int64        `sort:"true" type:"number" json:"cpa" db:"cpa"`
-	Strategy       Strategy     `sort:"true" type:"enum" filter:"true" json:"strategy" db:"strategy"`
-	Exchange       ExchangeType `sort:"true" type:"enum" filter:"true" json:"exchange" db:"exchange"`
+	ID             int64          `json:"id" db:"id" type:"number"`
+	Title          string         `sort:"true" type:"string" search:"true"  json:"title" db:"title"`
+	Status         Status         `sort:"true" type:"enum" filter:"true"  json:"status" db:"status"`
+	Kind           CampaignKind   `sort:"true" type:"enum" filter:"true"  json:"kind" db:"kind"`
+	TotalImp       int64          `sort:"true" type:"number" json:"total_imp" db:"total_imp"`
+	TotalClick     int64          `sort:"true" type:"number" json:"total_click" db:"total_click"`
+	ECTR           float64        `sort:"true" type:"number" json:"ectr" db:"ectr"`
+	ECPC           float64        `sort:"true" type:"number" json:"ecpc" db:"ecpc"`
+	ECPM           float64        `sort:"true" type:"number" json:"ecpm" db:"ecpm"`
+	TotalSpend     int64          `sort:"true" type:"number" json:"total_spend" db:"total_spend"`
+	MaxBid         int64          `sort:"true" type:"number" json:"max_bid" db:"max_bid"`
+	Conversion     float64        `sort:"true" type:"number" json:"conversion" db:"conversion"`
+	TotalBudget    int64          `sort:"true" type:"number" json:"total_budget" db:"total_budget"`
+	TodaySpend     int64          `sort:"true" type:"number" json:"today_spend" db:"today_spend"`
+	CreatedAt      time.Time      `sort:"true" type:"date" json:"created_at" db:"created_at"`
+	StartAt        time.Time      `sort:"true" type:"date" json:"start_at" db:"start_at"`
+	EndAt          mysql.NullTime `sort:"true" type:"date" json:"end_at" db:"end_at"`
+	TodayCTR       float64        `sort:"true" type:"number" json:"today_ctr" db:"today_ctr"`
+	TodayImp       int64          `sort:"true" type:"number" json:"today_imp" db:"today_imp"`
+	TodayClick     int64          `sort:"true" type:"number" json:"today_click" db:"today_click"`
+	Creative       int64          `sort:"true" type:"number" json:"creative" db:"creative"`
+	OwnerEmail     string         `sort:"true" type:"number" search:"true" json:"owner_email" db:"owner_email"`
+	ConversionRate float64        `sort:"true" type:"number" json:"conversion_rate" db:"conversion_rate"`
+	CPA            int64          `sort:"true" type:"number" json:"cpa" db:"cpa"`
+	Strategy       Strategy       `sort:"true" type:"enum" filter:"true" json:"strategy" db:"strategy"`
+	Exchange       ExchangeType   `sort:"true" type:"enum" filter:"true" json:"exchange" db:"exchange"`
 
-	OwnerID   int64   `db:"-" json:"owner_id" visible:"false"`
-	DomainID  int64   `db:"-" json:"domain_id"`
+	OwnerID   int64   `db:"-" json:"-" visible:"false"`
+	DomainID  int64   `db:"-" json:"-"`
 	ParentIDs []int64 `db:"-" json:"-" visible:"false"`
 	Actions   string  `db:"-" json:"_actions" visible:"false"`
 }
@@ -119,15 +120,15 @@ func (m *Manager) FillCampaigns(
 
 	q := fmt.Sprintf(`FROM %s AS c
   JOIN %s u ON c.user_id = ?
-  LEFT JOIN %s AS pu ON (pu.user_id = owner.id AND cp.domain_id = ?)
+  LEFT JOIN %s AS pu ON (pu.user_id = u.id AND c.domain_id = ?)
   LEFT JOIN %s AS parent ON parent.id = pu.advisor_id
-  JOIN %s cd ON (c.id = cd.campaign_id AND cd.daily_id = ?)
-  JOIN %s c2 ON c.id = c2.campaign_id
+  LEFT JOIN %s cd ON (c.id = cd.campaign_id AND cd.daily_id = ?)
+  LEFT JOIN %s c2 ON (c.id = c2.campaign_id  AND cd.daily_id = ?)
   LEFT JOIN %s c3 ON (c.id = c3.campaign_id AND c3.status = 'accepted')
 	%s
 GROUP BY c.id, cd.daily_id, c3.campaign_id `,
 		CampaignTableFull, aaa.UserTableFull, aaa.AdvisorTableFull, aaa.UserTableFull,
-		aaa.AdvisorTableFull, aaa.AdvisorTableFull, creativeTableFull, conds)
+		CampaignDetailTableFull, CampaignDetailTableFull, creativeTableFull, conds)
 
 	if sort != "" {
 		q += fmt.Sprintf(" ORDER BY %s %s ", sort, order)
@@ -148,18 +149,18 @@ GROUP BY c.id, cd.daily_id, c3.campaign_id `,
   COALESCE(avg(c2.cpm), 0)                         AS ecpm,
   COALESCE(c.total_spend, 0)                       AS total_spend,
   COALESCE(c.max_bid, 0)                           AS max_bid,
-  COALESCE(avg(c2.cpa) / avg(c2.click)             AS conversion,
+  COALESCE(avg(c2.cpa) / avg(c2.click),0)             AS conversion,
   COALESCE(c.total_budget, 0)                      AS total_budget,
   COALESCE(c.today_spend, 0)                       AS today_spend,
-  COALESCE(c.created_at, 0)                        AS created_at,
-  COALESCE(c.start_at, 0)                          AS start_at,
-  COALESCE(c.end_at, 0)                            AS end_at,
+  c.created_at                     AS created_at,
+  c.start_at                         AS start_at,
+  c.end_at                            AS end_at,
   COALESCE(sum(cd.imp) / sum(cd.click) * 10, 0)    AS today_ctr,
   COALESCE(sum(cd.imp), 0)                         AS today_imp,
   COALESCE(sum(cd.click), 0)                       AS today_click,
   COALESCE(count(c3.id), 0)                        AS creative,
   u.email                                          AS owner_email,
-  COALESCE((sum(cs.cpa) * 100) / sum(cd.click), 0) AS conversion_rate,
+  COALESCE((sum(cd.cpa) * 100) / sum(cd.click), 0) AS conversion_rate,
   COALESCE(sum(cd.cpa), 0)                         AS cpa,
   c.strategy                                       AS strategy,
   c.exchange                                       AS exchange  %s`, q)

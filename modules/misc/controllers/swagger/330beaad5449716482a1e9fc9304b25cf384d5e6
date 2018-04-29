@@ -7,10 +7,10 @@
 						"type": "string"
 					},
 					"conversion": {
-						"type": "integer"
+						"type": "number"
 					},
 					"conversion_rate": {
-						"type": "integer"
+						"type": "number"
 					},
 					"cpa": {
 						"type": "integer"
@@ -22,14 +22,11 @@
 					"creative": {
 						"type": "integer"
 					},
-					"domain_id": {
-						"type": "integer"
-					},
 					"ecpc": {
-						"type": "integer"
+						"type": "number"
 					},
 					"ecpm": {
-						"type": "integer"
+						"type": "number"
 					},
 					"ectr": {
 						"type": "number"
@@ -52,9 +49,6 @@
 					},
 					"owner_email": {
 						"type": "string"
-					},
-					"owner_id": {
-						"type": "integer"
 					},
 					"start_at": {
 						"format": "dateTime",

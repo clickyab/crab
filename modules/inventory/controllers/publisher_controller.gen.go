@@ -85,7 +85,7 @@ func (u *Controller) listPublisher(ctx context.Context, w http.ResponseWriter, r
 			u.JSON(w, http.StatusBadRequest, err)
 			return
 		}
-		from = "created_at" + ":" + fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
+		from = "created_at" + "*" + fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	if e := r.URL.Query().Get("to"); e != "" {
@@ -95,7 +95,7 @@ func (u *Controller) listPublisher(ctx context.Context, w http.ResponseWriter, r
 			u.JSON(w, http.StatusBadRequest, err)
 			return
 		}
-		to = "created_at" + ":" + toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
+		to = "created_at" + "*" + toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	search := make(map[string]string)

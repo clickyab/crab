@@ -21,15 +21,15 @@ import (
 	"github.com/rs/xmux"
 )
 
-type listCampaigndailyResponse struct {
-	Total   int64                           `json:"total"`
-	Data    orm.CampaignDailyDataTableArray `json:"data"`
-	Page    int                             `json:"page"`
-	PerPage int                             `json:"per_page"`
-	Hash    string                          `json:"hash"`
+type listPublisherdetailsResponse struct {
+	Total   int64                     `json:"total"`
+	Data    orm.PublisherDetailsArray `json:"data"`
+	Page    int                       `json:"page"`
+	PerPage int                       `json:"per_page"`
+	Hash    string                    `json:"hash"`
 }
 
-type listCampaigndailyDefResponse struct {
+type listPublisherdetailsDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
@@ -39,23 +39,24 @@ type listCampaigndailyDefResponse struct {
 }
 
 var (
-	listCampaigndailyDefinition permission.Columns
-	Campaigndailytmp            = []byte{}
+	listPublisherdetailsDefinition permission.Columns
+	Publisherdetailstmp            = []byte{}
 )
 
 // @Route {
-// 		url = /daily/:id
+// 		url = /publisher-details/:id
 //		method = get
 //		_c_ = int , count per page
 //		_p_ = int , page number
 //		_q_ = string , parameter for search
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
-//		resource = campaign_list:self
-//		_sort_ = string, the sort and order like id:asc or id:desc available column "created_at","imp","click","conv","spent","ctr"
-//		200 = listCampaigndailyResponse
+//		resource = campaign_publisher:self
+//		_sort_ = string, the sort and order like id:asc or id:desc available column "impression","click","ecpc","ectr","ecpm","spend","conversion","conversion_rate","cpa"
+//		_domain_ = string , search the domain field
+//		200 = listPublisherdetailsResponse
 // }
-func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (u *Controller) listPublisherdetails(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	m := orm.NewOrmManager()
 	usr := authz.MustGetUser(ctx)
 	domain := domain.MustGetDomain(ctx)
@@ -72,7 +73,7 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 			u.JSON(w, http.StatusBadRequest, err)
 			return
 		}
-		from = "" + ":" + fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
+		from = "daily_id" + "*" + fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	if e := r.URL.Query().Get("to"); e != "" {
@@ -82,10 +83,14 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 			u.JSON(w, http.StatusBadRequest, err)
 			return
 		}
-		to = "" + ":" + toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
+		to = "daily_id" + "*" + toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	search := make(map[string]string)
+
+	if e := r.URL.Query().Get("q"); e != "" {
+		search["domain"] = e
+	}
 
 	s := r.URL.Query().Get("sort")
 	parts := strings.SplitN(s, ":", 2)
@@ -93,7 +98,7 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 		parts = append(parts, "asc")
 	}
 	sort := parts[0]
-	if !array.StringInArray(sort, "created_at", "imp", "click", "conv", "spent", "ctr") {
+	if !array.StringInArray(sort, "impression", "click", "ecpc", "ectr", "ecpm", "spend", "conversion", "conversion_rate", "cpa") {
 		sort = ""
 	}
 	order := strings.ToUpper(parts[1])
@@ -106,13 +111,13 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
-	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_list", "self", domain.ID)
-	dt, cnt, err := m.FillCampaignDailyDataTableArray(pc, filter, from, to, search, params, sort, order, p, c)
+	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_publisher", "self", domain.ID)
+	dt, cnt, err := m.FillCampaignPublisher(pc, filter, from, to, search, params, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
 		return
 	}
-	res := listCampaigndailyResponse{
+	res := listPublisherdetailsResponse{
 		Total:   cnt,
 		Data:    dt.Filter(usr),
 		Page:    p,
@@ -120,7 +125,7 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 	}
 
 	h := sha1.New()
-	_, _ = h.Write(Campaigndailytmp)
+	_, _ = h.Write(Publisherdetailstmp)
 	res.Hash = fmt.Sprintf("%x", h.Sum(nil))
 
 	u.OKResponse(
@@ -130,42 +135,42 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 }
 
 // @Route {
-// 		url = /daily/:id/definition
+// 		url = /publisher-details/:id/definition
 //		method = get
-//		resource = campaign_list:self
-//		200 = listCampaigndailyDefResponse
+//		resource = campaign_publisher:self
+//		200 = listPublisherdetailsDefResponse
 // }
-func (u *Controller) defCampaigndaily(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (u *Controller) defPublisherdetails(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	h := sha1.New()
-	_, _ = h.Write(Campaigndailytmp)
+	_, _ = h.Write(Publisherdetailstmp)
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listCampaigndailyDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "", Hash: hash, Columns: listCampaigndailyDefinition},
+		listPublisherdetailsDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "daily_id", Hash: hash, Columns: listPublisherdetailsDefinition},
 	)
 }
 
 func init() {
-	Campaigndailytmp = []byte(` [
+	Publisherdetailstmp = []byte(` [
 		{
-			"data": "created_at",
-			"name": "CreatedAt",
-			"searchable": false,
-			"sortable": true,
+			"data": "domain",
+			"name": "Domain",
+			"searchable": true,
+			"sortable": false,
 			"visible": true,
 			"filter": false,
-			"title": "CreatedAt",
-			"type": "date",
+			"title": "Domain",
+			"type": "string",
 			"filter_valid_map": null
 		},
 		{
-			"data": "imp",
-			"name": "Imp",
+			"data": "impression",
+			"name": "Impression",
 			"searchable": false,
 			"sortable": true,
 			"visible": true,
 			"filter": false,
-			"title": "Imp",
+			"title": "Impression",
 			"type": "number",
 			"filter_valid_map": null
 		},
@@ -181,69 +186,80 @@ func init() {
 			"filter_valid_map": null
 		},
 		{
-			"data": "conv",
-			"name": "Conv",
+			"data": "ecpc",
+			"name": "ECPC",
 			"searchable": false,
 			"sortable": true,
 			"visible": true,
 			"filter": false,
-			"title": "Conv",
+			"title": "ECPC",
 			"type": "number",
 			"filter_valid_map": null
 		},
 		{
-			"data": "cpm",
-			"name": "Cpm",
-			"searchable": false,
-			"sortable": false,
-			"visible": true,
-			"filter": false,
-			"title": "Cpm",
-			"type": "",
-			"filter_valid_map": null
-		},
-		{
-			"data": "cpc",
-			"name": "Cpc",
-			"searchable": false,
-			"sortable": false,
-			"visible": true,
-			"filter": false,
-			"title": "Cpc",
-			"type": "",
-			"filter_valid_map": null
-		},
-		{
-			"data": "spent",
-			"name": "Spent",
+			"data": "ectr",
+			"name": "ECTR",
 			"searchable": false,
 			"sortable": true,
 			"visible": true,
 			"filter": false,
-			"title": "Spent",
-			"type": "",
+			"title": "ECTR",
+			"type": "number",
+			"filter_valid_map": null
+		},
+		{
+			"data": "ecpm",
+			"name": "ECPM",
+			"searchable": false,
+			"sortable": true,
+			"visible": true,
+			"filter": false,
+			"title": "ECPM",
+			"type": "number",
+			"filter_valid_map": null
+		},
+		{
+			"data": "spend",
+			"name": "Spend",
+			"searchable": false,
+			"sortable": true,
+			"visible": true,
+			"filter": false,
+			"title": "Spend",
+			"type": "number",
+			"filter_valid_map": null
+		},
+		{
+			"data": "conversion",
+			"name": "Conversion",
+			"searchable": false,
+			"sortable": true,
+			"visible": true,
+			"filter": false,
+			"title": "Conversion",
+			"type": "number",
+			"filter_valid_map": null
+		},
+		{
+			"data": "conversion_rate",
+			"name": "ConversionRate",
+			"searchable": false,
+			"sortable": true,
+			"visible": true,
+			"filter": false,
+			"title": "ConversionRate",
+			"type": "number",
 			"filter_valid_map": null
 		},
 		{
 			"data": "cpa",
-			"name": "Cpa",
-			"searchable": false,
-			"sortable": false,
-			"visible": true,
-			"filter": false,
-			"title": "Cpa",
-			"type": "",
-			"filter_valid_map": null
-		},
-		{
-			"data": "ctr",
-			"name": "Ctr",
+			"name": "CPA",
 			"searchable": false,
 			"sortable": true,
 			"visible": true,
 			"filter": false,
-			"title": "Ctr",
-			"type": "",
+			"title": "CPA",
+			"type": "number",
 			"filter_valid_map": null
 		},
 		{
@@ -258,5 +274,5 @@ func init() {
 			"filter_valid_map": null
 		}
 	] `)
-	assert.Nil(json.Unmarshal(Campaigndailytmp, &listCampaigndailyDefinition))
+	assert.Nil(json.Unmarshal(Publisherdetailstmp, &listPublisherdetailsDefinition))
 }

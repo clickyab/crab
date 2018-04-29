@@ -94,7 +94,7 @@ func (u *Controller) listCampaigns(ctx context.Context, w http.ResponseWriter, r
 			u.JSON(w, http.StatusBadRequest, err)
 			return
 		}
-		from = "" + ":" + fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
+		from = "" + "*" + fromTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	if e := r.URL.Query().Get("to"); e != "" {
@@ -104,7 +104,7 @@ func (u *Controller) listCampaigns(ctx context.Context, w http.ResponseWriter, r
 			u.JSON(w, http.StatusBadRequest, err)
 			return
 		}
-		to = "" + ":" + toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
+		to = "" + "*" + toTime.Truncate(time.Hour*24).Format("2006-01-02 00:00:00")
 	}
 
 	search := make(map[string]string)
@@ -476,28 +476,6 @@ func init() {
 				"all_except_clickyab": "AllExceptClickyab",
 				"clickyab": "Clickyab"
 			}
-		},
-		{
-			"data": "owner_id",
-			"name": "OwnerID",
-			"searchable": false,
-			"sortable": false,
-			"visible": false,
-			"filter": false,
-			"title": "OwnerID",
-			"type": "",
-			"filter_valid_map": null
-		},
-		{
-			"data": "domain_id",
-			"name": "DomainID",
-			"searchable": false,
-			"sortable": false,
-			"visible": true,
-			"filter": false,
-			"title": "DomainID",
-			"type": "",
-			"filter_valid_map": null
 		},
 		{
 			"data": "_actions",

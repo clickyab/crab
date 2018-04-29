@@ -107,7 +107,7 @@ const (
 	CPC Strategy = "cpc"
 	// CPA is cpa
 	CPA Strategy = "cpa"
-	wh  string   = " WHERE "
+	wh           = " WHERE "
 )
 
 // Status is campaign status start/pause

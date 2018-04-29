@@ -81,8 +81,8 @@ func (m *Manager) FillPublisherDataTableArray(
 
 	//check for date filter
 	if from != "" && to != "" {
-		fromArr := strings.Split(from, ":")
-		toArr := strings.Split(to, ":")
+		fromArr := strings.Split(from, "*")
+		toArr := strings.Split(to, "*")
 		where = append(where, fmt.Sprintf(`%s BETWEEN ? AND ?`, fromArr[0]))
 		params = append(params, fromArr[1], toArr[1])
 	}
@@ -244,8 +244,8 @@ func (m *Manager) FillSinglePublisherDataTableArray(
 
 	//check for date filter
 	if from != "" && to != "" {
-		fromArr := strings.Split(from, ":")
-		toArr := strings.Split(to, ":")
+		fromArr := strings.Split(from, "*")
+		toArr := strings.Split(to, "*")
 		where = append(where, fmt.Sprintf(`p.%s BETWEEN ? AND ?`, fromArr[0]))
 		params = append(params, fromArr[1], toArr[1])
 	}

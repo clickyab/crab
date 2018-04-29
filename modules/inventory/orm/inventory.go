@@ -375,8 +375,8 @@ func (m *Manager) FillInventoryDataTableArray(
 
 	//check for date filter
 	if from != "" && to != "" {
-		fromArr := strings.Split(from, ":")
-		toArr := strings.Split(to, ":")
+		fromArr := strings.Split(from, "*")
+		toArr := strings.Split(to, "*")
 		where = append(where, fmt.Sprintf(`i.%s BETWEEN ? AND ?`, fromArr[0]))
 		params = append(params, fromArr[1], toArr[1])
 	}

@@ -24,6 +24,20 @@
 				"type": "int"
 			},
 			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
@@ -38,16 +52,9 @@
 				"type": "string"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the domain field",
 				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
+				"name": "domain",
 				"required": false,
 				"type": "string"
 			},
@@ -63,7 +70,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_listCampaigndailyResponse"
+					"$ref": "#/definitions/controllers_listPublisherdetailsResponse"
 				}
 			},
 			"401": {
