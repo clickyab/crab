@@ -29,8 +29,9 @@ func (m *Manager) CreateCampaign(c *Campaign) error {
 
 // UpdateCampaign try to update Campaign in database
 func (m *Manager) UpdateCampaign(c *Campaign) error {
-	now := time.Now()
-	c.UpdatedAt = now
+
+	c.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

@@ -29,8 +29,9 @@ func (m *Manager) CreatePublisher(p *Publisher) error {
 
 // UpdatePublisher try to update Publisher in database
 func (m *Manager) UpdatePublisher(p *Publisher) error {
-	now := time.Now()
-	p.UpdatedAt = now
+
+	p.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

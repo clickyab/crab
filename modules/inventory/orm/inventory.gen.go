@@ -29,8 +29,9 @@ func (m *Manager) CreateInventory(i *Inventory) error {
 
 // UpdateInventory try to update Inventory in database
 func (m *Manager) UpdateInventory(i *Inventory) error {
-	now := time.Now()
-	i.UpdatedAt = now
+
+	i.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

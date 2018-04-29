@@ -29,8 +29,9 @@ func (m *Manager) CreateISP(isp *ISP) error {
 
 // UpdateISP try to update ISP in database
 func (m *Manager) UpdateISP(isp *ISP) error {
-	now := time.Now()
-	isp.UpdatedAt = now
+
+	isp.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()

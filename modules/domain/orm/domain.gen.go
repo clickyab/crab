@@ -29,8 +29,9 @@ func (m *Manager) CreateDomain(d *Domain) error {
 
 // UpdateDomain try to update Domain in database
 func (m *Manager) UpdateDomain(d *Domain) error {
-	now := time.Now()
-	d.UpdatedAt = now
+
+	d.UpdatedAt = time.Now()
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
