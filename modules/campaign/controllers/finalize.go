@@ -9,7 +9,7 @@ import (
 	"clickyab.com/crab/modules/campaign/orm"
 	inventoryOrm "clickyab.com/crab/modules/inventory/orm"
 	"clickyab.com/crab/modules/user/aaa"
-	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/fatih/structs"
 )
 
 type finalizeResult struct {
@@ -32,13 +32,24 @@ func (c *Controller) finalize(ctx context.Context, r *http.Request) (*finalizeRe
 
 	db := orm.NewOrmManager()
 	// check access
-	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(baseData.owner, currentUser, "edit_campaign", baseData.domain.ID)
+	uScope, ok := aaa.CheckPermOn(baseData.owner, baseData.currentUser, "edit_campaign", baseData.domain.ID)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
 
+	err = baseData.campaign.SetAuditUserData(baseData.currentUser.ID, false, 0, "edit_campaign", uScope)
+	if err != nil {
+		return nil, err
+	}
+
 	baseData.campaign.Progress = orm.ProgressFinalized
+
+	d := structs.Map(baseData.campaign)
+	err = baseData.campaign.SetAuditDescribe(d, "finalize camapaign")
+	if err != nil {
+		return nil, err
+	}
+
 	err = db.UpdateCampaign(baseData.campaign)
 	if err != nil {
 		return nil, errors.UpdateError

@@ -8,9 +8,9 @@ import (
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/user/aaa"
-	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/xlog"
+	"github.com/fatih/structs"
 )
 
 // @Validate{
@@ -86,13 +86,17 @@ func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaign
 	db := orm.NewOrmManager()
 
 	// check access
-	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(p.baseData.owner, currentUser, "edit_campaign", p.baseData.domain.ID)
+	uScope, ok := aaa.CheckPermOn(p.baseData.owner, p.baseData.currentUser, "edit_campaign", p.baseData.domain.ID)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
 
-	err := db.UpdateCampaignByID(orm.CampaignBase{
+	err := p.baseData.campaign.SetAuditUserData(p.baseData.currentUser.ID, false, 0, "edit_campaign", uScope)
+	if err != nil {
+		return nil, err
+	}
+
+	baseData := orm.CampaignBase{
 		Title:   p.Title,
 		TLD:     p.TLD,
 		Status:  p.Status,
@@ -173,8 +177,15 @@ func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaign
 				Valid:  p.Schedule.H23 != "",
 			},
 		},
-	}, p.baseData.campaign)
+	}
 
+	d := structs.Map(baseData)
+	err = p.baseData.campaign.SetAuditDescribe(d, "edit campaign base data")
+	if err != nil {
+		return nil, err
+	}
+
+	err = db.UpdateCampaignByID(baseData, p.baseData.campaign)
 	if err != nil {
 		if err.Error() == errors.StartTimeError.Error() {
 			return nil, err

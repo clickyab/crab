@@ -5,6 +5,24 @@ import "github.com/clickyab/services/gettext/t9e"
 var (
 	//InvalidIDErr invalid id error
 	InvalidIDErr = t9e.G("invalid id, please check your request data.")
+	// InalidAuditAction when audit log action is invalid
+	InalidAuditAction = t9e.G("invalid audit action, please check your data.")
+	// InalidAuditDomainID when audit log action is invalid
+	InalidAuditDomainID = t9e.G("invalid domain id for audit data")
+	// InalidAuditPerm when audit log user perm is invalid
+	InalidAuditPerm = t9e.G("invalid user perm for audit data")
+	// InalidAuditPermScope when audit log user perm scope is invalid
+	InalidAuditPermScope = t9e.G("invalid user perm scope for audit data")
+	// InalidAuditUserID when audit log action is invalid
+	InalidAuditUserID = t9e.G("invalid user id for audit data")
+	// InalidAuditOwnerID when audit log action is invalid
+	InalidAuditOwnerID = t9e.G("invalid owner id for audit data")
+	// InalidAuditTargetID when audit log target id is invalid
+	InalidAuditTargetID = t9e.G("invalid target id for audit data")
+	// InalidAuditTargetModel when audit log target model is invalid
+	InalidAuditTargetModel = t9e.G("invalid target model for audit data")
+	// InalidAuditDetail when audit log action is invalid
+	InalidAuditDetail = t9e.G("audit detail data can not be empty")
 	//InvalidEmailError invalid email error
 	InvalidEmailError = t9e.G("invalid email, please check your request data.")
 	//InvalidEmailPassError invalid email or password for login error

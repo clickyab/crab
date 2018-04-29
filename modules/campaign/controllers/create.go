@@ -14,6 +14,7 @@ import (
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/xlog"
+	"github.com/fatih/structs"
 )
 
 // @Validate{
@@ -112,12 +113,12 @@ type baseResult struct {
 func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCampaignPayload) (*baseResult, error) {
 	d := domain.MustGetDomain(ctx)
 	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(currentUser, currentUser, "edit_campaign", d.ID)
+	uScope, ok := aaa.CheckPermOn(currentUser, currentUser, "edit_campaign", d.ID)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
 
-	ca, sc, err := orm.NewOrmManager().AddCampaign(orm.CampaignBase{
+	baseCampaign := orm.CampaignBase{
 		Kind:    p.Kind,
 		TLD:     p.TLD,
 		Title:   p.Title,
@@ -199,7 +200,32 @@ func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCa
 				Valid:  p.Schedule.H23 != "",
 			},
 		},
-	}, currentUser, d)
+	}
+
+	ca := orm.Campaign{}
+
+	err := ca.SetAuditDomainID(d.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = ca.SetAuditUserData(currentUser.ID, false, 0, "edit_campaign", uScope)
+	if err != nil {
+		return nil, err
+	}
+
+	err = ca.SetAuditOwnerID(currentUser.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	data := structs.Map(ca)
+	err = ca.SetAuditDescribe(data, "create new campaign")
+	if err != nil {
+		return nil, err
+	}
+
+	sc, err := orm.NewOrmManager().AddCampaign(&ca, baseCampaign, currentUser, d)
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug("can't insert new campaign")
 

@@ -8,7 +8,9 @@ import (
 
 	"database/sql/driver"
 
+	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/mysql"
+	gorp "gopkg.in/gorp.v2"
 )
 
 // CampaignKind is kind of campaign <web,app>
@@ -165,6 +167,17 @@ type Campaign struct {
 	CreatedAt        time.Time             `json:"created_at" db:"created_at"`
 	UpdatedAt        time.Time             `json:"updated_at" db:"updated_at"`
 	ArchivedAt       mysql.NullTime        `json:"archived_at" db:"archived_at"`
+	aaa.AuditExtraData
+}
+
+// PostInsert to set campaign id in audit
+func (ca *Campaign) PostInsert(s gorp.SqlExecutor) error {
+	err := ca.SetAuditEntity("camapgin", ca.ID)
+	if err != nil {
+		return err
+	}
+
+	return ca.AuditExtraData.PostInsert(s)
 }
 
 // CampaignBase is minimum data for creating campaign (stage one)

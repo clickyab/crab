@@ -4,11 +4,12 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/fatih/structs"
+
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	userError "clickyab.com/crab/modules/user/errors"
-	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/xlog"
 )
 
@@ -59,17 +60,28 @@ func (c *Controller) budget(ctx context.Context, r *http.Request, p *budgetPaylo
 	db := orm.NewOrmManager()
 
 	// check access
-	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(p.baseData.owner, currentUser, "edit_budget", p.baseData.domain.ID)
+	uScope, ok := aaa.CheckPermOn(p.baseData.owner, p.baseData.currentUser, "edit_budget", p.baseData.domain.ID)
 	if !ok {
 		return nil, errors.AccessDenied
+	}
+
+	err := p.baseData.campaign.SetAuditUserData(p.baseData.currentUser.ID, false, 0, "edit_campaign", uScope)
+	if err != nil {
+		return nil, err
 	}
 
 	p.baseData.campaign.TotalBudget = p.TotalBudget
 	p.baseData.campaign.DailyBudget = p.DailyBudget
 	p.baseData.campaign.Strategy = p.Strategy
 	p.baseData.campaign.MaxBid = p.MaxBid
-	err := db.UpdateCampaign(p.baseData.campaign)
+
+	d := structs.Map(p.baseData.campaign)
+	err = p.baseData.campaign.SetAuditDescribe(d, "edit campaign budget data")
+	if err != nil {
+		return nil, err
+	}
+
+	err = db.UpdateCampaign(p.baseData.campaign)
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug("update base campaign")
 
