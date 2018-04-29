@@ -44,7 +44,7 @@ var (
 )
 
 // @Route {
-// 		url = /campaigns
+// 		url = /list
 //		method = get
 //		_c_ = int , count per page
 //		_p_ = int , page number
@@ -160,7 +160,7 @@ func (u *Controller) listCampaigns(ctx context.Context, w http.ResponseWriter, r
 }
 
 // @Route {
-// 		url = /campaigns/definition
+// 		url = /list/definition
 //		method = get
 //		resource = campaign_list:self
 //		200 = listCampaignsDefResponse
