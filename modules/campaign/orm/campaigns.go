@@ -16,7 +16,7 @@ var creativeTableFull = "creatives"
 
 // CampaignDetails is the campaign daily data in data table
 // @DataTable {
-//		url = /campaigns
+//		url = /list
 //		entity = campaigns
 //		checkable = false
 //		multiselect = false
@@ -85,6 +85,7 @@ func (m *Manager) FillCampaigns(
 		where = append(where, fmt.Sprintf("%s=?", field))
 		params = append(params, value)
 	}
+
 	for column, val := range search {
 		where = append(where, fmt.Sprintf("%s LIKE ?", column))
 		params = append(params, "%"+val+"%")

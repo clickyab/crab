@@ -192,54 +192,6 @@ type CampaignBase struct { // stage one create
 	Schedule ScheduleSheet  `json:"schedule" db:"-"`
 }
 
-// CampaignDataTable is the campaign full data in data table
-// @DataTable {
-//		url = /list
-//		entity = campaign
-//		view = campaign_list:self
-//		checkable = false
-//		multiselect = false
-//		datefilter = cp.created_at
-//		controller = clickyab.com/crab/modules/campaign/controllers
-//		fill = FillCampaignDataTableArray
-//		_edit = campaign_edit:self
-//		_copy = campaign_copy:self
-// }
-type CampaignDataTable struct {
-	ID        int64     `json:"id" db:"id" type:"number"`
-	CreatedAt time.Time `json:"created_at" db:"created_at" type:"date" sort:"true" map:"cp.created_at"`
-	Active    bool      `json:"active" db:"active" type:"bool"`
-
-	Kind CampaignKind `json:"kind" db:"kind" type:"enum" filter:"true" map:"cp.kind"`
-
-	Status      Status           `json:"status" db:"status" type:"enum"`
-	StartAt     time.Time        `json:"start_at" db:"start_at" type:"date" sort:"true"`
-	EndAt       mysql.NullTime   `json:"end_at" db:"end_at" type:"date"`
-	Title       string           `json:"title" db:"title" type:"string" search:"true" map:"cp.title"`
-	TotalBudget int64            `json:"total_budget" db:"total_budget" type:"number"`
-	DailyBudget int64            `json:"daily_budget" db:"daily_budget" type:"number"`
-	Strategy    Strategy         `json:"strategy" db:"strategy" type:"enum" filter:"true" map:"cp.cost_type"`
-	MaxBid      int64            `json:"max_bid" db:"max_bid" type:"number" sort:"true"`
-	AvgCPC      float64          `json:"avg_cpc" db:"avg_cpc" graph:"avg_cpc,Avg. CPC,line,false"`
-	AvgCPM      float64          `json:"avg_cpm" db:"avg_cpm"`
-	Ctr         float64          `json:"ctr" db:"ctr" graph:"ctr,CTR,line,false"`
-	TotalImp    int64            `json:"total_imp" db:"total_imp" graph:"imp,Total Impression,bar,true"`
-	TotalClick  int64            `json:"total_click" db:"total_click" graph:"click,Click,line,true"`
-	TotalConv   int64            `json:"total_conv" db:"total_conv"`
-	TotalCpc    int64            `json:"total_cpc" db:"total_cpc"`
-	TotalCpm    int64            `json:"total_cpm" db:"total_cpm"`
-	TotalSpent  int64            `json:"total_spent" db:"-" graph:"total_spent,Total spent,line,false"`
-	TodayImp    int64            `json:"today_imp" db:"today_imp"`
-	TodayClick  int64            `json:"today_click" db:"today_click"`
-	TodayCtr    float64          `json:"today_ctr" db:"today_ctr"`
-	ParentIDs   []int64          `db:"-" json:"-" visible:"false"`
-	ParentEmail mysql.NullString `db:"parent_email" json:"parent_email"`
-	OwnerEmail  string           `db:"owner_email" json:"owner_email" type:"string" search:"true" map:"owner.email"`
-	OwnerID     int64            `db:"owner_id" json:"owner_id" visible:"false"`
-	DomainID    int64            `db:"domain_id" json:"domain_id"`
-	Actions     string           `db:"-" json:"_actions" visible:"false"`
-}
-
 // CampaignGraph is the campaign full data in data table
 // @Graph {
 //		url = /graph/all

@@ -14,7 +14,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_listCampaignDefResponse"
+					"$ref": "#/definitions/controllers_listCampaignsDefResponse"
 				}
 			},
 			"401": {
