@@ -441,31 +441,6 @@ func (c *Controller) Routes(r framework.Mux) {
 		// End route with key 15
 
 		/* Route {
-			"Route": "/get/:id/ad",
-			"Method": "GET",
-			"Function": "Controller.getCampaignAdsGet",
-			"RoutePkg": "controllers",
-			"RouteMiddleware": [
-				"authz.Authenticate"
-			],
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "c",
-			"Payload": "",
-			"Resource": "get_banner",
-			"Scope": "self"
-		} with key 16 */
-		m16 := append(groupMiddleware, []framework.Middleware{
-			authz.Authenticate,
-		}...)
-
-		permission.Register("get_banner", "get_banner")
-		m16 = append(m16, authz.AuthorizeGenerator("get_banner", "self"))
-
-		group.GET("controllers-Controller-getCampaignAdsGet", "/get/:id/ad", framework.Mix(c.getCampaignAdsGet, m16...))
-		// End route with key 16
-
-		/* Route {
 			"Route": "/creative/:id",
 			"Method": "GET",
 			"Function": "Controller.getCreativeByCampaignGet",
@@ -479,40 +454,16 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "get_creative",
 			"Scope": "self"
-		} with key 17 */
-		m17 := append(groupMiddleware, []framework.Middleware{
+		} with key 16 */
+		m16 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("get_creative", "get_creative")
-		m17 = append(m17, authz.AuthorizeGenerator("get_creative", "self"))
+		m16 = append(m16, authz.AuthorizeGenerator("get_creative", "self"))
 
-		group.GET("controllers-Controller-getCreativeByCampaignGet", "/creative/:id", framework.Mix(c.getCreativeByCampaignGet, m17...))
-		// End route with key 17
-
-		/* Route {
-			"Route": "/native/fetch",
-			"Method": "POST",
-			"Function": "Controller.getNativeDataPost",
-			"RoutePkg": "controllers",
-			"RouteMiddleware": [
-				"authz.Authenticate"
-			],
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "c",
-			"Payload": "getNativeDataPayload",
-			"Resource": "",
-			"Scope": ""
-		} with key 18 */
-		m18 := append(groupMiddleware, []framework.Middleware{
-			authz.Authenticate,
-		}...)
-
-		// Make sure payload is the last middleware
-		m18 = append(m18, middleware.PayloadUnMarshallerGenerator(getNativeDataPayload{}))
-		group.POST("controllers-Controller-getNativeDataPost", "/native/fetch", framework.Mix(c.getNativeDataPost, m18...))
-		// End route with key 18
+		group.GET("controllers-Controller-getCreativeByCampaignGet", "/creative/:id", framework.Mix(c.getCreativeByCampaignGet, m16...))
+		// End route with key 16
 
 		/* Route {
 			"Route": "/progress/:id",
@@ -528,16 +479,16 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "get_campaign",
 			"Scope": "self"
-		} with key 19 */
-		m19 := append(groupMiddleware, []framework.Middleware{
+		} with key 17 */
+		m17 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("get_campaign", "get_campaign")
-		m19 = append(m19, authz.AuthorizeGenerator("get_campaign", "self"))
+		m17 = append(m17, authz.AuthorizeGenerator("get_campaign", "self"))
 
-		group.GET("controllers-Controller-getCampaignProgressGet", "/progress/:id", framework.Mix(c.getCampaignProgressGet, m19...))
-		// End route with key 19
+		group.GET("controllers-Controller-getCampaignProgressGet", "/progress/:id", framework.Mix(c.getCampaignProgressGet, m17...))
+		// End route with key 17
 
 		initializer.DoInitialize(c)
 	})

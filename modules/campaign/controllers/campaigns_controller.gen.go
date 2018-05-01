@@ -114,7 +114,7 @@ func (u *Controller) listCampaigns(ctx context.Context, w http.ResponseWriter, r
 	}
 
 	if e := r.URL.Query().Get("q"); e != "" {
-		search["owner_email"] = e
+		search["u.email"] = e
 	}
 
 	s := r.URL.Query().Get("sort")
