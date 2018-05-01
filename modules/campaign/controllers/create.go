@@ -12,11 +12,14 @@ import (
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/safe"
 	"github.com/clickyab/services/xlog"
 	"github.com/fatih/structs"
 )
+
+var campaignSeed = config.RegisterBoolean("crab.modules.campaign.seed", true, "insert detail after campaign created")
 
 // @Validate{
 //}
@@ -237,8 +240,13 @@ func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCa
 		Campaign: ca,
 		Schedule: sc,
 	}
-	safe.GoRoutine(ctx, func() {
-		Seed(&ca)
-	})
+
+	// only in development
+	if campaignSeed.Bool() {
+		safe.GoRoutine(ctx, func() {
+			Seed(&ca)
+		})
+	}
+
 	return &res, nil
 }
