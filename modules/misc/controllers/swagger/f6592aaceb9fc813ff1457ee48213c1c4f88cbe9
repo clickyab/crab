@@ -12,6 +12,10 @@
 		"daily_budget": {
 			"type": "integer"
 		},
+		"end_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
 		"imp": {
 			"type": "integer"
 		},
@@ -24,7 +28,14 @@
 		"owner_email": {
 			"type": "string"
 		},
+		"start_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
 		"status": {
+			"type": "string"
+		},
+		"title": {
 			"type": "string"
 		},
 		"total_budget": {
