@@ -226,27 +226,6 @@ func (c *Controller) getGet(ctx context.Context, w http.ResponseWriter, r *http.
 	framework.Write(w, res, http.StatusOK)
 }
 
-// getCampaignAds get all campaign ads
-// @Route {
-// 		url = /get/:id/ad
-//		method = get
-//		middleware = authz.Authenticate
-//		resource = get_banner:self
-//		200 = sliceAds
-//		400 = controller.ErrorResponseSimple
-//		401 = controller.ErrorResponseSimple
-//		403 = controller.ErrorResponseSimple
-// }
-func (c Controller) getCampaignAdsGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-
-	res, err := c.getCampaignAds(ctx, r)
-	if err != nil {
-		framework.Write(w, err, http.StatusBadRequest)
-		return
-	}
-	framework.Write(w, res, http.StatusOK)
-}
-
 // getCreativeByCampaign to get creative by id
 // @Route {
 // 		url = /creative/:id
@@ -261,26 +240,6 @@ func (c Controller) getCampaignAdsGet(ctx context.Context, w http.ResponseWriter
 func (c Controller) getCreativeByCampaignGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	res, err := c.getCreativeByCampaign(ctx, r)
-	if err != nil {
-		framework.Write(w, err, http.StatusBadRequest)
-		return
-	}
-	framework.Write(w, res, http.StatusOK)
-}
-
-// getNativeData getNativeData
-// @Route {
-// 		url = /native/fetch
-//		method = post
-//		payload = getNativeDataPayload
-//		middleware = authz.Authenticate
-//		200 = getNativeDataResp
-//		400 = controller.ErrorResponseSimple
-//		401 = controller.ErrorResponseSimple
-// }
-func (c Controller) getNativeDataPost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := c.MustGetPayload(ctx).(*getNativeDataPayload)
-	res, err := c.getNativeData(ctx, r, pl)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return
