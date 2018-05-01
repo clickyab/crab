@@ -17,6 +17,14 @@ func TimeToID(d time.Time) int64 {
 	return (h / 24) + 1
 }
 
+func TimeToIDHour(d time.Time) (int64, int64) {
+	d = d.Truncate(time.Hour * 24)
+	h := int64(d.Sub(epoch).Hours())
+	dateID := (h / 24) + 1
+	hourID := ((dateID - 1) * 24) + 1
+	return dateID, hourID
+}
+
 func IDToTime(d int64) time.Time {
 	return epoch.AddDate(0, 0, int(d-1))
 }
