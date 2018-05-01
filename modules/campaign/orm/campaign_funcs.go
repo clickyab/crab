@@ -137,12 +137,12 @@ func (m *Manager) FillCampaignGraph(
 	res := make([]CampaignGraph, 0)
 
 	query := fmt.Sprintf(`SELECT cd.daily_id as id,
-	COALESCE(AVG(cd.cpc),0) AS avg_cpc,
-	COALESCE(AVG(cd.cpm),0) AS avg_cpm,
+	COALESCE(SUM(cd.cpc)/SUM(cd.click),0) AS avg_cpc,
+	COALESCE((SUM(cd.cpm)/SUM(cd.imp))*1000,0) AS avg_cpm,
 	COALESCE(SUM(cd.click),0) AS total_click,
 	COALESCE(SUM(cd.imp),0) AS total_imp,
 	COALESCE((SUM(cd.click)/SUM(cd.imp))*10,0) AS ctr,
-	COALESCE(SUM(cd.cpc)+SUM(cd.cpm),0) AS total_spent
+	COALESCE(SUM(cd.cpc)+SUM(cd.cpm)+SUM(cd.cpa),0) AS total_spent
 	FROM %s AS cp INNER JOIN %s AS owner ON owner.id=cp.user_id
 	LEFT JOIN %s AS pu ON (pu.user_id=owner.id AND cp.domain_id=?)
 	LEFT JOIN %s AS parent ON parent.id=pu.advisor_id
@@ -156,6 +156,9 @@ func (m *Manager) FillCampaignGraph(
 		libs.TimeToID(from),
 		libs.TimeToID(to)))
 	var params []interface{}
+	params = append(params, pc.GetDomainID())
+	//check for domain
+	where = append(where, fmt.Sprintf("%s=?", "cp.domain_id"))
 	params = append(params, pc.GetDomainID())
 
 	for field, value := range filters {
