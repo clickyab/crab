@@ -489,6 +489,31 @@ func (c *Controller) Routes(r framework.Mux) {
 		group.POST("controllers-Controller-getNativeDataPost", "/native/fetch", framework.Mix(c.getNativeDataPost, m17...))
 		// End route with key 17
 
+		/* Route {
+			"Route": "/progress/:id",
+			"Method": "GET",
+			"Function": "Controller.getCampaignProgressGet",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "get_campaign",
+			"Scope": "self"
+		} with key 18 */
+		m18 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("get_campaign", "get_campaign")
+		m18 = append(m18, authz.AuthorizeGenerator("get_campaign", "self"))
+
+		group.GET("controllers-Controller-getCampaignProgressGet", "/progress/:id", framework.Mix(c.getCampaignProgressGet, m18...))
+		// End route with key 18
+
 		initializer.DoInitialize(c)
 	})
 }
