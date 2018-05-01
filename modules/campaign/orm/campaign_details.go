@@ -51,7 +51,7 @@ type CampaignDetails struct {
 	TodayImp       int64          `sort:"true" type:"number" json:"today_imp" db:"today_imp"`
 	TodayClick     int64          `sort:"true" type:"number" json:"today_click" db:"today_click"`
 	Creative       int64          `sort:"true" type:"number" json:"creative" db:"creative"`
-	OwnerEmail     string         `sort:"true" type:"number" search:"true" json:"owner_email" db:"owner_email"`
+	OwnerEmail     string         `sort:"true" type:"number" search:"true" map:"u.email" json:"owner_email" db:"owner_email"`
 	ConversionRate float64        `sort:"true" type:"number" json:"conversion_rate" db:"conversion_rate"`
 	CPA            int64          `sort:"true" type:"number" json:"cpa" db:"cpa"`
 	Strategy       Strategy       `sort:"true" type:"enum" filter:"true" json:"strategy" db:"strategy"`
@@ -79,19 +79,30 @@ func (m *Manager) FillCampaigns(
 		pc.GetDomainID(),
 		libs.TimeToID(time.Now()),
 	}
+	var countParams = []interface{}{
+		pc.GetID(),
+	}
+
 	var where []string
 
-	params = append(params, pc.GetDomainID())
 	for field, value := range filters {
 		where = append(where, fmt.Sprintf("%s=?", field))
 		params = append(params, value)
+		countParams = append(countParams, value)
 	}
 
+	var whereLike []string
 	for column, val := range search {
-		where = append(where, fmt.Sprintf("%s LIKE ?", column))
+		whereLike = append(whereLike, fmt.Sprintf("%s LIKE ?", column))
 		params = append(params, "%"+val+"%")
+		countParams = append(countParams, "%"+val+"%")
+	}
+	if len(whereLike) > 0 {
+		wl := "(" + strings.Join(whereLike, " OR ") + ")"
+		where = append(where, wl)
 	}
 
+	//check for perm
 	// find current user childes
 	userManager := aaa.NewAaaManager()
 	childes := userManager.GetUserChildesIDDomain(pc.GetID(), pc.GetDomainID())
@@ -105,12 +116,9 @@ func (m *Manager) FillCampaigns(
 			}(),
 		),
 		)
-		for i := range childes {
-			params = append(params, childes[i])
-		}
-
+		params = append(params, strings.Trim(strings.Join(strings.Fields(fmt.Sprint(childes)), ","), "[]"))
+		countParams = append(countParams, strings.Trim(strings.Join(strings.Fields(fmt.Sprint(childes)), ","), "[]"))
 	}
-	//check for perm
 
 	var conds string
 	if len(where) > 0 {
@@ -118,58 +126,77 @@ func (m *Manager) FillCampaigns(
 	}
 	conds += strings.Join(where, " AND ")
 
-	q := fmt.Sprintf(`FROM %s AS c
-  JOIN %s u ON c.user_id = ?
-  LEFT JOIN %s AS pu ON (pu.user_id = u.id AND c.domain_id = ?)
-  LEFT JOIN %s AS parent ON parent.id = pu.advisor_id
-  LEFT JOIN %s cd ON (c.id = cd.campaign_id AND cd.daily_id = ?)
-  LEFT JOIN %s c2 ON (c.id = c2.campaign_id  AND cd.daily_id = ?)
-  LEFT JOIN %s c3 ON (c.id = c3.campaign_id AND c3.status = 'accepted')
-	%s
-GROUP BY c.id, cd.daily_id, c3.campaign_id `,
-		CampaignTableFull, aaa.UserTableFull, aaa.AdvisorTableFull, aaa.UserTableFull,
-		CampaignDetailTableFull, CampaignDetailTableFull, creativeTableFull, conds)
+	q := fmt.Sprintf(`
+		SELECT
+		c.id                                             AS id,
+		c.title                                          AS title,
+		c.status                                         AS status,
+		c.kind                                           AS kind,
+		COALESCE(SUM(c2.imp), 0)                         AS total_imp,
+		COALESCE(SUM(c2.click), 0)                       AS total_click,
+		COALESCE((SUM(c2.click)/SUM(c2.imp))*10,0) 	     AS ectr,
+		COALESCE(SUM(c2.cpc)/SUM(c2.click),0)            AS ecpc,
+		COALESCE(SUM(c2.cpm)/SUM(c2.imp),0)              AS ecpm,
+		COALESCE(c.total_spend, 0)                       AS total_spend,
+		COALESCE(c.max_bid, 0)                           AS max_bid,
+		COALESCE(SUM(c2.cpa) / SUM(c2.click),0)          AS conversion,
+		c.total_budget			                         AS total_budget,
+		COALESCE(c.today_spend, 0)                       AS today_spend,
+		c.created_at                     				 AS created_at,
+		c.start_at                         				 AS start_at,
+		c.end_at                            			 AS end_at,
+		COALESCE(SUM(cd.click)/SUM(cd.imp)*10, 0)    	 AS today_ctr,
+		COALESCE(SUM(cd.imp), 0)                         AS today_imp,
+		COALESCE(SUM(cd.click), 0)                       AS today_click,
+		COALESCE(COUNT(c3.id), 0)                        AS creative,
+		u.email                                          AS owner_email,
+		COALESCE((SUM(cd.cpa)*100)/SUM(cd.click), 0) 	 AS conversion_rate,
+		COALESCE(SUM(cd.cpa), 0)                         AS cpa,
+		c.strategy                                       AS strategy,
+		c.exchange                                       AS exchange
+		FROM %s AS c
+		JOIN %s u ON c.user_id = ?
+		LEFT JOIN %s AS pu ON (pu.user_id = u.id AND c.domain_id = ?)
+		LEFT JOIN %s AS parent ON parent.id = pu.advisor_id
+		LEFT JOIN %s cd ON (c.id = cd.campaign_id  AND cd.daily_id = ?)
+		LEFT JOIN %s c2 ON (c.id = c2.campaign_id)
+		LEFT JOIN %s c3 ON (c.id = c3.campaign_id AND c3.status = 'accepted')
+			%s
+		GROUP BY c.id`,
+		CampaignTableFull,
+		aaa.UserTableFull,
+		aaa.AdvisorTableFull,
+		aaa.UserTableFull,
+		CampaignDetailTableFull,
+		CampaignDetailTableFull,
+		creativeTableFull,
+		conds,
+	)
 
 	if sort != "" {
 		q += fmt.Sprintf(" ORDER BY %s %s ", sort, order)
 	}
+
 	limit := c
 	offset := (p - 1) * c
 	q += fmt.Sprintf(" LIMIT %d OFFSET %d ", limit, offset)
 
-	fields := fmt.Sprintf(`SELECT
-  c.id                                             AS id,
-  c.title                                          AS title,
-  c.status                                         AS status,
-  c.kind                                           AS kind,
-  COALESCE(sum(c2.imp), 0)                         AS total_imp,
-  COALESCE(sum(c2.click), 0)                       AS total_click,
-  COALESCE(avg(c2.imp) / avg(c2.click) * 10, 0)    AS ectr,
-  COALESCE(avg(c2.cpc), 0)                         AS ecpc,
-  COALESCE(avg(c2.cpm), 0)                         AS ecpm,
-  COALESCE(c.total_spend, 0)                       AS total_spend,
-  COALESCE(c.max_bid, 0)                           AS max_bid,
-  COALESCE(avg(c2.cpa) / avg(c2.click),0)             AS conversion,
-  COALESCE(c.total_budget, 0)                      AS total_budget,
-  COALESCE(c.today_spend, 0)                       AS today_spend,
-  c.created_at                     AS created_at,
-  c.start_at                         AS start_at,
-  c.end_at                            AS end_at,
-  COALESCE(sum(cd.imp) / sum(cd.click) * 10, 0)    AS today_ctr,
-  COALESCE(sum(cd.imp), 0)                         AS today_imp,
-  COALESCE(sum(cd.click), 0)                       AS today_click,
-  COALESCE(count(c3.id), 0)                        AS creative,
-  u.email                                          AS owner_email,
-  COALESCE((sum(cd.cpa) * 100) / sum(cd.click), 0) AS conversion_rate,
-  COALESCE(sum(cd.cpa), 0)                         AS cpa,
-  c.strategy                                       AS strategy,
-  c.exchange                                       AS exchange  %s`, q)
+	countQuery := fmt.Sprintf(
+		`
+		SELECT COUNT(1)
+		FROM %s AS c
+		JOIN %s u ON c.user_id = ?
+		%s`,
+		CampaignTableFull,
+		aaa.UserTableFull,
+		conds,
+	)
 
-	count, err := m.GetRDbMap().SelectInt(fmt.Sprintf(`SELECT COUNT(c.id) %s`, q), params...)
+	count, err := m.GetRDbMap().SelectInt(countQuery, countParams...)
 	assert.Nil(err)
 
 	var res CampaignDetailsArray
-	_, err = m.GetRDbMap().Select(&res, fields, params...)
+	_, err = m.GetRDbMap().Select(&res, q, params...)
 	assert.Nil(err)
 
 	return res, count, nil
