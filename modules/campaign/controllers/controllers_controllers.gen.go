@@ -287,3 +287,24 @@ func (c Controller) getNativeDataPost(ctx context.Context, w http.ResponseWriter
 	}
 	framework.Write(w, res, http.StatusOK)
 }
+
+// getCampaignProgress getCampaignProgress
+// @Route {
+// 		url = /progress/:id
+//		method = GET
+//		middleware = authz.Authenticate
+//		resource = get_campaign:self
+//		200 = orm.CampaignProgress
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) getCampaignProgressGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getCampaignProgress(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}

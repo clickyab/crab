@@ -1,0 +1,38 @@
+{
+	"properties": {
+		"avg_cpc": {
+			"type": "number"
+		},
+		"click": {
+			"type": "integer"
+		},
+		"ctr": {
+			"type": "number"
+		},
+		"daily_budget": {
+			"type": "integer"
+		},
+		"imp": {
+			"type": "integer"
+		},
+		"kind": {
+			"type": "string"
+		},
+		"max_bid": {
+			"type": "integer"
+		},
+		"owner_email": {
+			"type": "string"
+		},
+		"status": {
+			"type": "string"
+		},
+		"total_budget": {
+			"type": "integer"
+		},
+		"total_spend": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}
