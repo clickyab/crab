@@ -19,21 +19,21 @@ import (
 )
 
 var (
-	maxRangeChart = config.RegisterDuration("srv.graph.max_range", 24*90*time.Hour, "maximum possible for graph date range")
-	epochChart    time.Time
-	layoutChart                 = "2006010215"
-	factorChart   time.Duration = 24
+	maxRangeChartdaily = config.RegisterDuration("srv.graph.max_range", 24*90*time.Hour, "maximum possible for graph date range")
+	epochChartdaily    time.Time
+	layoutChartdaily                 = "2006010215"
+	factorChartdaily   time.Duration = 24
 )
 
-type graphChartResponse struct {
-	Format string           `json:"format"`
-	From   time.Time        `json:"from"`
-	To     time.Time        `json:"to"`
-	Type   string           `json:"type"`
-	Data   []graphChartData `json:"data"`
+type graphChartdailyResponse struct {
+	Format string                `json:"format"`
+	From   time.Time             `json:"from"`
+	To     time.Time             `json:"to"`
+	Type   string                `json:"type"`
+	Data   []graphChartdailyData `json:"data"`
 }
 
-type graphChartData struct {
+type graphChartdailyData struct {
 	Title     string    `json:"title"`
 	Name      string    `json:"name"`
 	Hidden    bool      `json:"hidden"`
@@ -48,49 +48,34 @@ type graphChartData struct {
 }
 
 // @Route {
-//		url = /graph/all
+//		url = /graph/daily/:id
 //		method = get
 //		resource = campaign_graph:self
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
-//		200 = graphChartResponse
-//		_kind_ = string , filter the kind field valid values are "web","app"
-//		_owner_email_ = string , search the owner_email field
-//		_title_ = string , search the title field
+//		200 = graphChartdailyResponse
 // }
-func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (ctrl *Controller) graphChartdaily(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	usr := authz.MustGetUser(ctx)
 	domain := domain.MustGetDomain(ctx)
 	filter := make(map[string]string)
 
-	if e := r.URL.Query().Get("kind"); e != "" && orm.CampaignKind(e).IsValid() {
-		filter["cp.kind"] = e
-	}
-
 	search := make(map[string]string)
-
-	if e := r.URL.Query().Get("owner_email"); e != "" {
-		search["owner.email"] = e
-	}
-
-	if e := r.URL.Query().Get("title"); e != "" {
-		search["cp.title"] = e
-	}
 
 	params := make(map[string]string)
 	for _, i := range xmux.Params(ctx) {
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
-	from, to, err := dateParamChart(r.URL.Query().Get("from"), r.URL.Query().Get("to"))
+	from, to, err := dateParamChartdaily(r.URL.Query().Get("from"), r.URL.Query().Get("to"))
 	if err != nil {
 		ctrl.BadResponse(w, err)
 		return
 	}
-	l, fn := dateRangeChart(from, to)
-	tm := make(map[string]graphChartData)
+	l, fn := dateRangeChartdaily(from, to)
+	tm := make(map[string]graphChartdailyData)
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_graph", "self", domain.ID)
 
-	tm["avg_cpc"] = graphChartData{
+	tm["avg_cpc"] = graphChartdailyData{
 		Name:      "avg_cpc",
 		Title:     "Avg. CPC",
 		Type:      "line",
@@ -100,7 +85,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		Data:      make([]float64, l),
 	}
 
-	tm["avg_cpm"] = graphChartData{
+	tm["avg_cpm"] = graphChartdailyData{
 		Name:      "avg_cpm",
 		Title:     "Avg. CPM",
 		Type:      "line",
@@ -110,7 +95,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		Data:      make([]float64, l),
 	}
 
-	tm["ctr"] = graphChartData{
+	tm["ctr"] = graphChartdailyData{
 		Name:      "ctr",
 		Title:     "CTR",
 		Type:      "line",
@@ -120,7 +105,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		Data:      make([]float64, l),
 	}
 
-	tm["imp"] = graphChartData{
+	tm["imp"] = graphChartdailyData{
 		Name:      "imp",
 		Title:     "Total Impression",
 		Type:      "bar",
@@ -130,7 +115,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		Data:      make([]float64, l),
 	}
 
-	tm["click"] = graphChartData{
+	tm["click"] = graphChartdailyData{
 		Name:      "click",
 		Title:     "Click",
 		Type:      "line",
@@ -140,7 +125,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		Data:      make([]float64, l),
 	}
 
-	tm["total_spent"] = graphChartData{
+	tm["total_spent"] = graphChartdailyData{
 		Name:      "total_spent",
 		Title:     "Total spent",
 		Type:      "line",
@@ -149,7 +134,7 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		OmitEmpty: false,
 		Data:      make([]float64, l),
 	}
-	for i, v := range orm.NewOrmManager().FillCampaignGraph(pc, filter, search, params, from, to) {
+	for i, v := range orm.NewOrmManager().FillCampaignGraphDaily(pc, filter, search, params, from, to) {
 		m, err := fn(v.ID)
 		assert.Nil(err)
 
@@ -255,12 +240,12 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 		}
 		tm["total_spent"] = txtotal_spent
 	}
-	res := graphChartResponse{
+	res := graphChartdailyResponse{
 		From:   from,
 		To:     to,
 		Format: "daily",  // hourly|daily|weekly|monthly|yearly
 		Type:   "number", //  number|percent
-		Data:   make([]graphChartData, 0),
+		Data:   make([]graphChartdailyData, 0),
 	}
 	for _, v := range tm {
 		if v.Sum == 0 && v.OmitEmpty {
@@ -274,14 +259,14 @@ func (ctrl *Controller) graphChart(ctx context.Context, w http.ResponseWriter, r
 	ctrl.OKResponse(w, res)
 }
 
-func dateParamChart(f, t string) (time.Time, time.Time, error) {
+func dateParamChartdaily(f, t string) (time.Time, time.Time, error) {
 	from, err := time.Parse(time.RFC3339Nano, f)
-	from = from.Truncate(time.Hour * factorChart)
+	from = from.Truncate(time.Hour * factorChartdaily)
 	if err != nil {
 		return time.Time{}, time.Time{}, errors.New("wrong date format")
 	}
 	to, err := time.Parse(time.RFC3339Nano, t)
-	to = to.Truncate(time.Hour * factorChart)
+	to = to.Truncate(time.Hour * factorChartdaily)
 	if err != nil {
 		return time.Time{}, time.Time{}, errors.New("wrong date format")
 	}
@@ -290,43 +275,43 @@ func dateParamChart(f, t string) (time.Time, time.Time, error) {
 	}
 	if from.IsZero() && to.IsZero() {
 		to = time.Now()
-		from = to.AddDate(0, 0, -maxRangeChart.Int())
+		from = to.AddDate(0, 0, -maxRangeChartdaily.Int())
 	} else if from.IsZero() {
-		from = to.AddDate(0, 0, -maxRangeChart.Int())
+		from = to.AddDate(0, 0, -maxRangeChartdaily.Int())
 	} else if to.IsZero() {
-		to = from.AddDate(0, 0, maxRangeChart.Int())
+		to = from.AddDate(0, 0, maxRangeChartdaily.Int())
 	}
 
 	if to.After(time.Now()) {
 		to = time.Now()
 	}
 
-	if from.Before(to.AddDate(0, 0, -maxRangeChart.Int())) {
-		from = to.AddDate(0, 0, -maxRangeChart.Int())
+	if from.Before(to.AddDate(0, 0, -maxRangeChartdaily.Int())) {
+		from = to.AddDate(0, 0, -maxRangeChartdaily.Int())
 	}
 
-	if from.Before(epochChart) {
-		from = epochChart
+	if from.Before(epochChartdaily) {
+		from = epochChartdaily
 	}
 
 	return from, to, nil
 }
 
-func timeToIDChart(d time.Time) int64 {
-	h := int64(d.Truncate(time.Hour * factorChart).Sub(epochChart).Hours())
+func timeToIDChartdaily(d time.Time) int64 {
+	h := int64(d.Truncate(time.Hour * factorChartdaily).Sub(epochChartdaily).Hours())
 	return (h / 24) + 1
 }
 
-func dateRangeChart(f, t time.Time) (int, func(int64) (int, error)) {
-	from := f.Truncate(time.Hour * factorChart)
-	to := t.Truncate(time.Hour * factorChart)
+func dateRangeChartdaily(f, t time.Time) (int, func(int64) (int, error)) {
+	from := f.Truncate(time.Hour * factorChartdaily)
+	to := t.Truncate(time.Hour * factorChartdaily)
 	res := make(map[string]int)
 	for i := 0; ; i++ {
 		x := from.AddDate(0, 0, i)
 		if x.After(to) {
 			break
 		}
-		res[fmt.Sprint(timeToIDChart(x))] = i
+		res[fmt.Sprint(timeToIDChartdaily(x))] = i
 	}
 	return len(res), func(m int64) (int, error) {
 
@@ -334,10 +319,10 @@ func dateRangeChart(f, t time.Time) (int, func(int64) (int, error)) {
 
 			return v, nil
 		}
-		return 0, errors.New("out of range. probably mismatch key type. check FillCampaignGraph annotation (e.g. daily to hourly or vice versa)")
+		return 0, errors.New("out of range. probably mismatch key type. check FillCampaignGraphDaily annotation (e.g. daily to hourly or vice versa)")
 	}
 }
 
 func init() {
-	epochChart, _ = time.Parse(layoutChart, "2018010100")
+	epochChartdaily, _ = time.Parse(layoutChartdaily, "2018010100")
 }
