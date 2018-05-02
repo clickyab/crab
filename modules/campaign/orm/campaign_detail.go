@@ -7,7 +7,7 @@ import (
 // CampaignDetail campaign detail model in database
 // @Model {
 //		table = campaign_detail
-//		primary = false, campaign_id,daily_id
+//		primary = false, campaign_id,hour_id,publisher_id
 // }
 type CampaignDetail struct {
 	CampaignID  int64     `json:"campaign_id" db:"campaign_id"`

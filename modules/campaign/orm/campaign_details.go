@@ -119,7 +119,7 @@ func (m *Manager) FillCampaigns(
 
 	var conds string
 	if len(where) > 0 {
-		conds += wh
+		conds += " WHERE "
 	}
 	conds += strings.Join(where, " AND ")
 
