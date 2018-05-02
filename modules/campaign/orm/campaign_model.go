@@ -9,6 +9,7 @@ import (
 	"database/sql/driver"
 
 	"clickyab.com/crab/modules/user/aaa"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
 	gorp "gopkg.in/gorp.v2"
 )
@@ -76,7 +77,18 @@ func (nt *NullInventoryState) UnmarshalJSON(b []byte) error {
 
 // Scan implements the Scanner interface.
 func (nt *NullInventoryState) Scan(value interface{}) error {
-	nt.InventoryState, nt.Valid = value.(InventoryState)
+	var b []byte
+	switch value.(type) {
+	case []byte:
+		b = value.([]byte)
+	case string:
+		b = []byte(value.(string))
+	case nil:
+		b = make([]byte, 0)
+	default:
+		return t9e.G("unsupported type")
+	}
+	nt.InventoryState, nt.Valid = InventoryState(b), InventoryState(b) != ""
 	return nil
 }
 
