@@ -50,7 +50,10 @@ func (m *Manager) FillPublishersBaseStatistics(
 	contextparams map[string]string,
 	sort, order string, p, c int) (PublishersBaseStatisticsArray, int64, error) {
 
+	var where []string
+	var params []interface{}
 	var res PublishersBaseStatisticsArray
+
 	query := fmt.Sprintf(`
 		SELECT 
 		COUNT(DISTINCT(pub.id))						AS count,
@@ -59,7 +62,7 @@ func (m *Manager) FillPublishersBaseStatistics(
 
 		FROM %s AS pub
 		
-		INNER JOIN %s AS cd ON cd.publisher_id=pub.id AND  cd.daily_id BETWEEN ? AND ?
+		INNER JOIN %s AS cd ON cd.publisher_id=pub.id
 		INNER JOIN %s AS camp ON cd.campaign_id=camp.id AND camp.domain_id = ?
 		`,
 		PublisherTableFull,
@@ -67,9 +70,7 @@ func (m *Manager) FillPublishersBaseStatistics(
 		caOrm.CampaignTableFull,
 	)
 
-	var where []string
-	var params []interface{}
-
+	params = append(params, pc.GetDomainID())
 	if from != "" && to != "" {
 		fromArr := strings.Split(from, "*")
 		toArr := strings.Split(to, "*")
@@ -81,10 +82,9 @@ func (m *Manager) FillPublishersBaseStatistics(
 		if err != nil {
 			return nil, 0, errors.DBError
 		}
+		where = append(where, "cd.daily_id BETWEEN ? AND ?")
 		params = append(params, libs.TimeToID(fromTime), libs.TimeToID(toTime))
 	}
-
-	params = append(params, pc.GetDomainID())
 
 	for field, value := range filters {
 		where = append(where, fmt.Sprintf("%s=?", field))
