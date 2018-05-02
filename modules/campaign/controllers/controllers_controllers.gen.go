@@ -250,7 +250,7 @@ func (c Controller) getCreativeByCampaignGet(ctx context.Context, w http.Respons
 // getCampaignProgress getCampaignProgress
 // @Route {
 // 		url = /progress/:id
-//		method = GET
+//		method = get
 //		middleware = authz.Authenticate
 //		resource = get_campaign:self
 //		200 = orm.CampaignProgress
