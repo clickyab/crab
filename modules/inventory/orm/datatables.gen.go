@@ -48,11 +48,17 @@ func (idt InventoryDataTable) Filter(u permission.Interface) InventoryDataTable 
 
 	res.Status = idt.Status
 
+	if _, ok := u.HasOn("edit_inventory", idt.OwnerID, idt.ParentIDs, idt.DomainID, permission.ScopeSelf, permission.ScopeGlobal); ok {
+		action = append(action, "edit")
+	}
+
 	res.Actions = strings.Join(action, ",")
 	return res
 }
 
 func init() {
+
+	permission.Register("edit_inventory", "edit_inventory")
 
 }
 
