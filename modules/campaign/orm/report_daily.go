@@ -124,7 +124,7 @@ func (m *Manager) FillDaily(
 
 	var conds string
 	if len(where) > 0 {
-		conds += " WHERE "
+		conds += wh
 	}
 	conds += strings.Join(where, " AND ")
 

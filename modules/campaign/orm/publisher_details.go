@@ -58,35 +58,6 @@ func (m *Manager) FillCampaignPublisher(
 	var res PublisherDetailsArray
 	var where []string
 	var whereLike []string
-	countQuery := fmt.Sprintf(`SELECT COUNT(p.id) FROM %s AS c
-		INNER JOIN %s AS owner ON owner.id=c.user_id
-		LEFT JOIN %s AS cd ON cd.campaign_id=c.id
-		LEFT JOIN %s AS p ON p.id=cd.publisher_id`,
-		CampaignTableFull,
-		aaa.UserTableFull,
-		CampaignDetailTableFull,
-		"publishers",
-	)
-	query := fmt.Sprintf(`SELECT
-		p.domain 											AS domain,
-		COALESCE(SUM(cd.imp),0) 							AS impression,
-		COALESCE(SUM(cd.click),0) 							AS click,
-		COALESCE(AVG(cd.cpc),0) 							AS ecpc,
-		COALESCE(AVG(cd.cpm),0) 							AS ecpm,
-		COALESCE((SUM(cd.click)/SUM(cd.imp))*10,0)  		AS ectr,
-		COALESCE((SUM(cd.cpc)+SUM(cd.cpm)+SUM(cd.cpa)),0) 	AS spend,
-		COALESCE(SUM(cd.conv),0) 							AS conversion,
-		COALESCE((SUM(cd.conv)/SUM(cd.click))*100,0) 		AS conversion_rate,
-		COALESCE(SUM(cd.cpa),0) 							AS cpa
-		FROM %s AS c
-		INNER JOIN %s AS owner ON owner.id=c.user_id
-		LEFT JOIN %s AS cd ON cd.campaign_id=c.id
-		LEFT JOIN %s AS p ON p.id=cd.publisher_id`,
-		CampaignTableFull,
-		aaa.UserTableFull,
-		CampaignDetailTableFull,
-		"publishers",
-	)
 
 	//add inventory
 	val, ok := contextparams["id"]
@@ -143,25 +114,53 @@ func (m *Manager) FillCampaignPublisher(
 
 	}
 
-	wl, lp := generateSearchQuery(search)
-	whereLike = append(whereLike, wl)
-	params = append(params, lp...)
+	for column, val := range search {
+		whereLike = append(whereLike, fmt.Sprintf("%s LIKE ?", column))
+		params = append(params, "%"+val+"%")
+	}
 
-	//check for perm
-	if len(where)+len(whereLike) > 0 {
-		query = fmt.Sprintf("%s %s ", query, "WHERE")
-		countQuery = fmt.Sprintf("%s %s ", countQuery, "WHERE")
+	if len(whereLike) > 0 {
+		wl := "(" + strings.Join(whereLike, " OR ") + ")"
+		where = append(where, wl)
 	}
-	query += strings.Join(where, " AND ")
-	countQuery += strings.Join(where, " AND ")
-	if len(where) > 0 && len(whereLike) > 0 {
-		query = fmt.Sprintf("%s %s ", query, "AND")
-		countQuery = fmt.Sprintf("%s %s ", countQuery, "AND")
+
+	var conds string
+	if len(where) > 0 {
+		conds += wh
 	}
-	query += strings.Join(whereLike, " OR ")
-	countQuery += strings.Join(whereLike, " OR ")
-	query += fmt.Sprintf(" GROUP BY p.id ")
-	countQuery += fmt.Sprintf(" GROUP BY p.id ")
+	conds += strings.Join(where, " AND ")
+
+	countQuery := fmt.Sprintf(`SELECT COUNT(p.id) FROM %s AS c
+		INNER JOIN %s AS owner ON owner.id=c.user_id
+		LEFT JOIN %s AS cd ON cd.campaign_id=c.id
+		LEFT JOIN %s AS p ON p.id=cd.publisher_id %s `,
+		CampaignTableFull,
+		aaa.UserTableFull,
+		CampaignDetailTableFull,
+		"publishers",
+		conds,
+	)
+	query := fmt.Sprintf(`SELECT
+		p.domain 											AS domain,
+		COALESCE(SUM(cd.imp),0) 							AS impression,
+		COALESCE(SUM(cd.click),0) 							AS click,
+		COALESCE(AVG(cd.cpc),0) 							AS ecpc,
+		COALESCE(AVG(cd.cpm),0) 							AS ecpm,
+		COALESCE((SUM(cd.click)/SUM(cd.imp))*10,0)  		AS ectr,
+		COALESCE((SUM(cd.cpc)+SUM(cd.cpm)+SUM(cd.cpa)),0) 	AS spend,
+		COALESCE(SUM(cd.conv),0) 							AS conversion,
+		COALESCE((SUM(cd.conv)/SUM(cd.click))*100,0) 		AS conversion_rate,
+		COALESCE(SUM(cd.cpa),0) 							AS cpa
+		FROM %s AS c
+		INNER JOIN %s AS owner ON owner.id=c.user_id
+		LEFT JOIN %s AS cd ON cd.campaign_id=c.id
+		LEFT JOIN %s AS p ON p.id=cd.publisher_id %s `,
+		CampaignTableFull,
+		aaa.UserTableFull,
+		CampaignDetailTableFull,
+		"publishers",
+		conds,
+	)
 	limit := c
 	offset := (p - 1) * c
 	if sort != "" {
@@ -175,20 +174,4 @@ func (m *Manager) FillCampaignPublisher(
 	assert.Nil(err)
 
 	return res, count, nil
-}
-
-func generateSearchQuery(search map[string]string) (string, []interface{}) {
-	var params []interface{}
-	var whereLike []string
-	wl := ""
-
-	for column, val := range search {
-		whereLike = append(whereLike, fmt.Sprintf("%s LIKE ?", column))
-		params = append(params, "%"+val+"%")
-	}
-	if len(whereLike) > 0 {
-		wl = "(" + strings.Join(whereLike, " OR ") + ")"
-	}
-
-	return wl, params
 }
