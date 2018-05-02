@@ -11,6 +11,8 @@ import (
 type (
 	InventoryDataTableArray []InventoryDataTable
 
+	PublishersBaseStatisticsArray []PublishersBaseStatistics
+
 	PublisherDataTableArray []PublisherDataTable
 
 	SinglePublisherDataTableArray []SinglePublisherDataTable
@@ -59,6 +61,44 @@ func (idt InventoryDataTable) Filter(u permission.Interface) InventoryDataTable 
 func init() {
 
 	permission.Register("edit_inventory", "edit_inventory")
+
+}
+
+func (pbsa PublishersBaseStatisticsArray) Filter(u permission.Interface) PublishersBaseStatisticsArray {
+	res := make(PublishersBaseStatisticsArray, len(pbsa))
+	for i := range pbsa {
+		res[i] = pbsa[i].Filter(u)
+	}
+
+	return res
+}
+
+// Filter is for filtering base on permission
+func (pbs PublishersBaseStatistics) Filter(u permission.Interface) PublishersBaseStatistics {
+	action := []string{}
+	res := PublishersBaseStatistics{}
+
+	res.Count = pbs.Count
+
+	res.AvgImp = pbs.AvgImp
+
+	res.ExchangeCount = pbs.ExchangeCount
+
+	res.Name = pbs.Name
+
+	res.Domain = pbs.Domain
+
+	res.Supplier = pbs.Supplier
+
+	res.Kind = pbs.Kind
+
+	res.Status = pbs.Status
+
+	res.Actions = strings.Join(action, ",")
+	return res
+}
+
+func init() {
 
 }
 

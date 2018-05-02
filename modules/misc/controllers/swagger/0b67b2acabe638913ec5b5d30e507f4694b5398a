@@ -1,0 +1,49 @@
+{
+	"properties": {
+		"data": {
+			"items": {
+				"properties": {
+					"avg_imp": {
+						"type": "number"
+					},
+					"count": {
+						"type": "integer"
+					},
+					"domain": {
+						"type": "string"
+					},
+					"exchange_count": {
+						"type": "integer"
+					},
+					"kind": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"supplier": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"hash": {
+			"type": "string"
+		},
+		"page": {
+			"type": "integer"
+		},
+		"per_page": {
+			"type": "integer"
+		},
+		"total": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

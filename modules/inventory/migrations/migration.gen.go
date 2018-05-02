@@ -8,6 +8,7 @@
 // db/20180408115448_perm.sql
 // db/20180411103507_perm.sql
 // db/20180411121024_perm.sql
+// db/20180502094428_publisher_base_graph_perm.sql
 // DO NOT EDIT!
 
 package migrations
@@ -235,6 +236,26 @@ func db20180411121024_permSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180502094428_publisher_base_graph_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x90\x4f\x4b\xc3\x40\x10\x47\xef\xf9\x14\x3f\x72\x69\x8b\xc9\x41\xaf\xc5\x83\xd0\x15\x0b\xb1\xc5\xfc\xd1\x63\xd8\x6c\x46\x33\xb8\xcd\x2e\x3b\x5b\xea\xc7\x97\x54\x14\x41\x90\x40\xaf\x8f\x19\x7e\x8f\x97\xe7\xb8\x3a\xf0\x5b\xd0\x91\xd0\xf8\x24\xcf\x51\x3d\x15\xe0\x11\x42\x26\xb2\x1b\xb1\x68\xfc\x02\x2c\xa0\x0f\x32\xc7\x48\x3d\x4e\x03\x8d\x88\x03\x0b\xbe\xfe\xa6\x23\x16\x68\xef\x2d\x53\x9f\x6c\x77\x95\x2a\x6b\x6c\x77\xf5\x1e\xc1\x59\x6a\x3d\x85\x03\x8b\x4c\x67\xcb\x33\xe0\x3e\xc3\x04\x33\x88\x71\x9e\x56\x78\xbe\x2b\x1a\x55\x61\x79\x9d\xa5\xfe\xd8\x59\x96\x81\x42\xdb\x69\xa1\x56\xa2\x8e\x2c\x91\x8d\xa4\x59\x2a\x64\x5f\xd3\xd5\xfa\x92\x85\x9b\x79\x0b\xc9\xef\x2a\x1b\x77\x1a\xbf\xbb\xfc\x44\x99\xe0\xac\x2c\xc1\x59\x4b\x3d\x3a\x6d\xde\x93\x8d\x2a\x54\xad\x70\x5f\xee\x1f\xff\x88\xbf\x3c\xa8\x52\x9d\xa5\x6f\xff\x51\x5c\x7f\x06\x00\x00\xff\xff\xfe\x8b\x4f\x6e\xaf\x01\x00\x00"
+
+func db20180502094428_publisher_base_graph_permSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180502094428_publisher_base_graph_permSql,
+		"db/20180502094428_publisher_base_graph_perm.sql",
+	)
+}
+
+func db20180502094428_publisher_base_graph_permSql() (*asset, error) {
+	bytes, err := db20180502094428_publisher_base_graph_permSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180502094428_publisher_base_graph_perm.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -287,14 +308,15 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"db/20180325071129_inventories.sql": db20180325071129_inventoriesSql,
-	"db/20180325082537_seed.sql":        db20180325082537_seedSql,
-	"db/20180407071332_perm.sql":        db20180407071332_permSql,
-	"db/20180407071721_fix.sql":         db20180407071721_fixSql,
-	"db/20180408110333_adddomainid.sql": db20180408110333_adddomainidSql,
-	"db/20180408115448_perm.sql":        db20180408115448_permSql,
-	"db/20180411103507_perm.sql":        db20180411103507_permSql,
-	"db/20180411121024_perm.sql":        db20180411121024_permSql,
+	"db/20180325071129_inventories.sql":               db20180325071129_inventoriesSql,
+	"db/20180325082537_seed.sql":                      db20180325082537_seedSql,
+	"db/20180407071332_perm.sql":                      db20180407071332_permSql,
+	"db/20180407071721_fix.sql":                       db20180407071721_fixSql,
+	"db/20180408110333_adddomainid.sql":               db20180408110333_adddomainidSql,
+	"db/20180408115448_perm.sql":                      db20180408115448_permSql,
+	"db/20180411103507_perm.sql":                      db20180411103507_permSql,
+	"db/20180411121024_perm.sql":                      db20180411121024_permSql,
+	"db/20180502094428_publisher_base_graph_perm.sql": db20180502094428_publisher_base_graph_permSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -339,14 +361,15 @@ type bintree struct {
 
 var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
-		"20180325071129_inventories.sql": &bintree{db20180325071129_inventoriesSql, map[string]*bintree{}},
-		"20180325082537_seed.sql":        &bintree{db20180325082537_seedSql, map[string]*bintree{}},
-		"20180407071332_perm.sql":        &bintree{db20180407071332_permSql, map[string]*bintree{}},
-		"20180407071721_fix.sql":         &bintree{db20180407071721_fixSql, map[string]*bintree{}},
-		"20180408110333_adddomainid.sql": &bintree{db20180408110333_adddomainidSql, map[string]*bintree{}},
-		"20180408115448_perm.sql":        &bintree{db20180408115448_permSql, map[string]*bintree{}},
-		"20180411103507_perm.sql":        &bintree{db20180411103507_permSql, map[string]*bintree{}},
-		"20180411121024_perm.sql":        &bintree{db20180411121024_permSql, map[string]*bintree{}},
+		"20180325071129_inventories.sql":               &bintree{db20180325071129_inventoriesSql, map[string]*bintree{}},
+		"20180325082537_seed.sql":                      &bintree{db20180325082537_seedSql, map[string]*bintree{}},
+		"20180407071332_perm.sql":                      &bintree{db20180407071332_permSql, map[string]*bintree{}},
+		"20180407071721_fix.sql":                       &bintree{db20180407071721_fixSql, map[string]*bintree{}},
+		"20180408110333_adddomainid.sql":               &bintree{db20180408110333_adddomainidSql, map[string]*bintree{}},
+		"20180408115448_perm.sql":                      &bintree{db20180408115448_permSql, map[string]*bintree{}},
+		"20180411103507_perm.sql":                      &bintree{db20180411103507_permSql, map[string]*bintree{}},
+		"20180411121024_perm.sql":                      &bintree{db20180411121024_permSql, map[string]*bintree{}},
+		"20180502094428_publisher_base_graph_perm.sql": &bintree{db20180502094428_publisher_base_graph_permSql, map[string]*bintree{}},
 	}},
 }}
 
