@@ -10,20 +10,6 @@
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": "the security token, get it from login route",
 				"in": "header",
 				"name": "token",
@@ -35,7 +21,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_graphChartdailyResponse"
+					"$ref": "#/definitions/controllers_listCreativecampaignreportDefResponse"
 				}
 			},
 			"401": {

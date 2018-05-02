@@ -91,7 +91,8 @@ func (m *Manager) Initialize() {
 	).SetKeys(
 		false,
 		"CampaignID",
-		"DailyID",
+		"HourID",
+		"PublisherID",
 	)
 
 	m.AddTableWithName(
