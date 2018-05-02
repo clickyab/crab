@@ -1,0 +1,42 @@
+{
+	"properties": {
+		"_actions": {
+			"type": "string"
+		},
+		"click": {
+			"type": "integer"
+		},
+		"conversion": {
+			"type": "integer"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"ecpc": {
+			"type": "number"
+		},
+		"ecpm": {
+			"type": "number"
+		},
+		"ectr": {
+			"type": "number"
+		},
+		"impression": {
+			"type": "integer"
+		},
+		"name": {
+			"type": "string"
+		},
+		"spend": {
+			"type": "integer"
+		},
+		"status": {
+			"type": "string"
+		},
+		"type": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
