@@ -7,24 +7,25 @@ import (
 
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/mysql"
 )
 
 // CampaignProgress campaign progress object
 type CampaignProgress struct {
-	TotalSpend  int64        `json:"total_spend" db:"total_spend"`
-	Click       int64        `json:"click" db:"click"`
-	Imp         int64        `json:"imp" db:"imp"`
-	DailyBudget int64        `json:"daily_budget" db:"daily_budget"`
-	TotalBudget int64        `json:"total_budget" db:"total_budget"`
-	Ctr         float64      `json:"ctr" db:"ctr"`
-	AvgCPC      float64      `json:"avg_cpc" db:"avg_cpc"`
-	MaxBid      int64        `json:"max_bid" db:"max_bid"`
-	OwnerEmail  string       `json:"owner_email" db:"owner_email"`
-	Status      Status       `json:"status" db:"status"`
-	Kind        CampaignKind `json:"kind" db:"kind"`
-	StartAt     time.Time    `json:"start_at" db:"start_at"`
-	EndAt       time.Time    `json:"end_at" db:"end_at"`
-	Title       string       `json:"title" db:"title"`
+	TotalSpend  int64          `json:"total_spend" db:"total_spend"`
+	Click       int64          `json:"click" db:"click"`
+	Imp         int64          `json:"imp" db:"imp"`
+	DailyBudget int64          `json:"daily_budget" db:"daily_budget"`
+	TotalBudget int64          `json:"total_budget" db:"total_budget"`
+	Ctr         float64        `json:"ctr" db:"ctr"`
+	AvgCPC      float64        `json:"avg_cpc" db:"avg_cpc"`
+	MaxBid      int64          `json:"max_bid" db:"max_bid"`
+	OwnerEmail  string         `json:"owner_email" db:"owner_email"`
+	Status      Status         `json:"status" db:"status"`
+	Kind        CampaignKind   `json:"kind" db:"kind"`
+	StartAt     time.Time      `json:"start_at" db:"start_at"`
+	EndAt       mysql.NullTime `json:"end_at" db:"end_at"`
+	Title       string         `json:"title" db:"title"`
 }
 
 // GetProgressData get progress bar data
