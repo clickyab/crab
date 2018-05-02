@@ -5,10 +5,44 @@ package orm
 import "github.com/clickyab/services/permission"
 
 type (
-	CampaignGraphArray []CampaignGraph
-
 	CampaignGraphDailyArray []CampaignGraphDaily
+
+	CampaignGraphArray []CampaignGraph
 )
+
+func (cgda CampaignGraphDailyArray) Filter(u permission.Interface) CampaignGraphDailyArray {
+	res := make(CampaignGraphDailyArray, len(cgda))
+	for i := range cgda {
+		res[i] = cgda[i].Filter(u)
+	}
+
+	return res
+}
+
+// Filter is for filtering base on permission
+func (cgd CampaignGraphDaily) Filter(u permission.Interface) CampaignGraphDaily {
+	res := CampaignGraphDaily{}
+
+	res.ID = cgd.ID
+
+	res.AvgCPC = cgd.AvgCPC
+
+	res.AvgCPM = cgd.AvgCPM
+
+	res.Ctr = cgd.Ctr
+
+	res.TotalImp = cgd.TotalImp
+
+	res.TotalClick = cgd.TotalClick
+
+	res.TotalSpent = cgd.TotalSpent
+
+	return res
+}
+
+func init() {
+
+}
 
 func (cga CampaignGraphArray) Filter(u permission.Interface) CampaignGraphArray {
 	res := make(CampaignGraphArray, len(cga))
@@ -42,40 +76,6 @@ func (cg CampaignGraph) Filter(u permission.Interface) CampaignGraph {
 	res.TotalClick = cg.TotalClick
 
 	res.TotalSpent = cg.TotalSpent
-
-	return res
-}
-
-func init() {
-
-}
-
-func (cgda CampaignGraphDailyArray) Filter(u permission.Interface) CampaignGraphDailyArray {
-	res := make(CampaignGraphDailyArray, len(cgda))
-	for i := range cgda {
-		res[i] = cgda[i].Filter(u)
-	}
-
-	return res
-}
-
-// Filter is for filtering base on permission
-func (cgd CampaignGraphDaily) Filter(u permission.Interface) CampaignGraphDaily {
-	res := CampaignGraphDaily{}
-
-	res.ID = cgd.ID
-
-	res.AvgCPC = cgd.AvgCPC
-
-	res.AvgCPM = cgd.AvgCPM
-
-	res.Ctr = cgd.Ctr
-
-	res.TotalImp = cgd.TotalImp
-
-	res.TotalClick = cgd.TotalClick
-
-	res.TotalSpent = cgd.TotalSpent
 
 	return res
 }
