@@ -19,7 +19,10 @@ import (
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
+	"github.com/clickyab/services/safe"
 )
+
+var creativeSeed = config.RegisterBoolean("crab.modules.creative.seed", true, "insert detail after creative created")
 
 var (
 	nativeValidImagesSizeConf = config.RegisterString("crab.modules.ad.native.images",
@@ -185,6 +188,13 @@ func (c Controller) addNativeCreative(ctx context.Context, r *http.Request, p *c
 	res, err := db.AddCreative(creative, assets)
 	if err != nil {
 		return res, errors.DBError
+	}
+
+	// only in development
+	if creativeSeed.Bool() {
+		safe.GoRoutine(ctx, func() {
+			Seed(creative)
+		})
 	}
 
 	return res, nil
