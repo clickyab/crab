@@ -27,9 +27,9 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		group := r.NewGroup("/inventory")
 
 		/* Route {
-			"Route": "/inventory/list",
+			"Route": "/base-publishers/statistics",
 			"Method": "GET",
-			"Function": "Controller.listInventory",
+			"Function": "Controller.listBase_publisher_statistics",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -38,23 +38,23 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "u",
 			"Payload": "",
-			"Resource": "list_inventory",
+			"Resource": "publisher_base_statistics",
 			"Scope": "self"
 		} with key 0 */
 		m0 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("list_inventory", "list_inventory")
-		m0 = append(m0, authz.AuthorizeGenerator("list_inventory", "self"))
+		permission.Register("publisher_base_statistics", "publisher_base_statistics")
+		m0 = append(m0, authz.AuthorizeGenerator("publisher_base_statistics", "self"))
 
-		group.GET("controllers-Controller-listInventory", "/inventory/list", framework.Mix(ctrl.listInventory, m0...))
+		group.GET("controllers-Controller-listBase_publisher_statistics", "/base-publishers/statistics", framework.Mix(ctrl.listBase_publisher_statistics, m0...))
 		// End route with key 0
 
 		/* Route {
-			"Route": "/inventory/list/definition",
+			"Route": "/base-publishers/statistics/definition",
 			"Method": "GET",
-			"Function": "Controller.defInventory",
+			"Function": "Controller.defBase_publisher_statistics",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -63,23 +63,23 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "u",
 			"Payload": "",
-			"Resource": "list_inventory",
+			"Resource": "publisher_base_statistics",
 			"Scope": "self"
 		} with key 1 */
 		m1 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("list_inventory", "list_inventory")
-		m1 = append(m1, authz.AuthorizeGenerator("list_inventory", "self"))
+		permission.Register("publisher_base_statistics", "publisher_base_statistics")
+		m1 = append(m1, authz.AuthorizeGenerator("publisher_base_statistics", "self"))
 
-		group.GET("controllers-Controller-defInventory", "/inventory/list/definition", framework.Mix(ctrl.defInventory, m1...))
+		group.GET("controllers-Controller-defBase_publisher_statistics", "/base-publishers/statistics/definition", framework.Mix(ctrl.defBase_publisher_statistics, m1...))
 		// End route with key 1
 
 		/* Route {
-			"Route": "/publisher/list/single/:id",
+			"Route": "/inventory/list",
 			"Method": "GET",
-			"Function": "Controller.listInvpublisher",
+			"Function": "Controller.listInventory",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -98,13 +98,13 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		permission.Register("list_inventory", "list_inventory")
 		m2 = append(m2, authz.AuthorizeGenerator("list_inventory", "self"))
 
-		group.GET("controllers-Controller-listInvpublisher", "/publisher/list/single/:id", framework.Mix(ctrl.listInvpublisher, m2...))
+		group.GET("controllers-Controller-listInventory", "/inventory/list", framework.Mix(ctrl.listInventory, m2...))
 		// End route with key 2
 
 		/* Route {
-			"Route": "/publisher/list/single/:id/definition",
+			"Route": "/inventory/list/definition",
 			"Method": "GET",
-			"Function": "Controller.defInvpublisher",
+			"Function": "Controller.defInventory",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -123,8 +123,58 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		permission.Register("list_inventory", "list_inventory")
 		m3 = append(m3, authz.AuthorizeGenerator("list_inventory", "self"))
 
-		group.GET("controllers-Controller-defInvpublisher", "/publisher/list/single/:id/definition", framework.Mix(ctrl.defInvpublisher, m3...))
+		group.GET("controllers-Controller-defInventory", "/inventory/list/definition", framework.Mix(ctrl.defInventory, m3...))
 		// End route with key 3
+
+		/* Route {
+			"Route": "/publisher/list/single/:id",
+			"Method": "GET",
+			"Function": "Controller.listInvpublisher",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "u",
+			"Payload": "",
+			"Resource": "list_inventory",
+			"Scope": "self"
+		} with key 4 */
+		m4 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("list_inventory", "list_inventory")
+		m4 = append(m4, authz.AuthorizeGenerator("list_inventory", "self"))
+
+		group.GET("controllers-Controller-listInvpublisher", "/publisher/list/single/:id", framework.Mix(ctrl.listInvpublisher, m4...))
+		// End route with key 4
+
+		/* Route {
+			"Route": "/publisher/list/single/:id/definition",
+			"Method": "GET",
+			"Function": "Controller.defInvpublisher",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "u",
+			"Payload": "",
+			"Resource": "list_inventory",
+			"Scope": "self"
+		} with key 5 */
+		m5 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("list_inventory", "list_inventory")
+		m5 = append(m5, authz.AuthorizeGenerator("list_inventory", "self"))
+
+		group.GET("controllers-Controller-defInvpublisher", "/publisher/list/single/:id/definition", framework.Mix(ctrl.defInvpublisher, m5...))
+		// End route with key 5
 
 		/* Route {
 			"Route": "/publisher/list",
@@ -140,16 +190,16 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "publisher_list",
 			"Scope": "self"
-		} with key 4 */
-		m4 := append(groupMiddleware, []framework.Middleware{
+		} with key 6 */
+		m6 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("publisher_list", "publisher_list")
-		m4 = append(m4, authz.AuthorizeGenerator("publisher_list", "self"))
+		m6 = append(m6, authz.AuthorizeGenerator("publisher_list", "self"))
 
-		group.GET("controllers-Controller-listPublisher", "/publisher/list", framework.Mix(ctrl.listPublisher, m4...))
-		// End route with key 4
+		group.GET("controllers-Controller-listPublisher", "/publisher/list", framework.Mix(ctrl.listPublisher, m6...))
+		// End route with key 6
 
 		/* Route {
 			"Route": "/publisher/list/definition",
@@ -165,16 +215,16 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "publisher_list",
 			"Scope": "self"
-		} with key 5 */
-		m5 := append(groupMiddleware, []framework.Middleware{
+		} with key 7 */
+		m7 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("publisher_list", "publisher_list")
-		m5 = append(m5, authz.AuthorizeGenerator("publisher_list", "self"))
+		m7 = append(m7, authz.AuthorizeGenerator("publisher_list", "self"))
 
-		group.GET("controllers-Controller-defPublisher", "/publisher/list/definition", framework.Mix(ctrl.defPublisher, m5...))
-		// End route with key 5
+		group.GET("controllers-Controller-defPublisher", "/publisher/list/definition", framework.Mix(ctrl.defPublisher, m7...))
+		// End route with key 7
 
 		/* Route {
 			"Route": "/addpub/:id",
@@ -190,18 +240,18 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"Payload": "addInventoryPayload",
 			"Resource": "edit_inventory",
 			"Scope": "self"
-		} with key 6 */
-		m6 := append(groupMiddleware, []framework.Middleware{
+		} with key 8 */
+		m8 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("edit_inventory", "edit_inventory")
-		m6 = append(m6, authz.AuthorizeGenerator("edit_inventory", "self"))
+		m8 = append(m8, authz.AuthorizeGenerator("edit_inventory", "self"))
 
 		// Make sure payload is the last middleware
-		m6 = append(m6, middleware.PayloadUnMarshallerGenerator(addInventoryPayload{}))
-		group.PATCH("controllers-Controller-addPresetPatch", "/addpub/:id", framework.Mix(ctrl.addPresetPatch, m6...))
-		// End route with key 6
+		m8 = append(m8, middleware.PayloadUnMarshallerGenerator(addInventoryPayload{}))
+		group.PATCH("controllers-Controller-addPresetPatch", "/addpub/:id", framework.Mix(ctrl.addPresetPatch, m8...))
+		// End route with key 8
 
 		/* Route {
 			"Route": "/:id",
@@ -217,18 +267,18 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"Payload": "changeLabelPayload",
 			"Resource": "edit_inventory",
 			"Scope": "self"
-		} with key 7 */
-		m7 := append(groupMiddleware, []framework.Middleware{
+		} with key 9 */
+		m9 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("edit_inventory", "edit_inventory")
-		m7 = append(m7, authz.AuthorizeGenerator("edit_inventory", "self"))
+		m9 = append(m9, authz.AuthorizeGenerator("edit_inventory", "self"))
 
 		// Make sure payload is the last middleware
-		m7 = append(m7, middleware.PayloadUnMarshallerGenerator(changeLabelPayload{}))
-		group.PUT("controllers-Controller-changeLabelPut", "/:id", framework.Mix(ctrl.changeLabelPut, m7...))
-		// End route with key 7
+		m9 = append(m9, middleware.PayloadUnMarshallerGenerator(changeLabelPayload{}))
+		group.PUT("controllers-Controller-changeLabelPut", "/:id", framework.Mix(ctrl.changeLabelPut, m9...))
+		// End route with key 9
 
 		/* Route {
 			"Route": "/inventory/:id",
@@ -244,18 +294,18 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"Payload": "changeStatusPayload",
 			"Resource": "edit_inventory",
 			"Scope": "self"
-		} with key 8 */
-		m8 := append(groupMiddleware, []framework.Middleware{
+		} with key 10 */
+		m10 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("edit_inventory", "edit_inventory")
-		m8 = append(m8, authz.AuthorizeGenerator("edit_inventory", "self"))
+		m10 = append(m10, authz.AuthorizeGenerator("edit_inventory", "self"))
 
 		// Make sure payload is the last middleware
-		m8 = append(m8, middleware.PayloadUnMarshallerGenerator(changeStatusPayload{}))
-		group.PATCH("controllers-Controller-inventoryChangeStatusPatch", "/inventory/:id", framework.Mix(ctrl.inventoryChangeStatusPatch, m8...))
-		// End route with key 8
+		m10 = append(m10, middleware.PayloadUnMarshallerGenerator(changeStatusPayload{}))
+		group.PATCH("controllers-Controller-inventoryChangeStatusPatch", "/inventory/:id", framework.Mix(ctrl.inventoryChangeStatusPatch, m10...))
+		// End route with key 10
 
 		/* Route {
 			"Route": "/create",
@@ -271,18 +321,18 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"Payload": "createInventoryPayload",
 			"Resource": "add_inventory",
 			"Scope": "self"
-		} with key 9 */
-		m9 := append(groupMiddleware, []framework.Middleware{
+		} with key 11 */
+		m11 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("add_inventory", "add_inventory")
-		m9 = append(m9, authz.AuthorizeGenerator("add_inventory", "self"))
+		m11 = append(m11, authz.AuthorizeGenerator("add_inventory", "self"))
 
 		// Make sure payload is the last middleware
-		m9 = append(m9, middleware.PayloadUnMarshallerGenerator(createInventoryPayload{}))
-		group.POST("controllers-Controller-createPresetPost", "/create", framework.Mix(ctrl.createPresetPost, m9...))
-		// End route with key 9
+		m11 = append(m11, middleware.PayloadUnMarshallerGenerator(createInventoryPayload{}))
+		group.POST("controllers-Controller-createPresetPost", "/create", framework.Mix(ctrl.createPresetPost, m11...))
+		// End route with key 11
 
 		/* Route {
 			"Route": "/duplicate",
@@ -298,18 +348,18 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"Payload": "duplicateInventoryPayload",
 			"Resource": "duplicate_inventory",
 			"Scope": "self"
-		} with key 10 */
-		m10 := append(groupMiddleware, []framework.Middleware{
+		} with key 12 */
+		m12 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("duplicate_inventory", "duplicate_inventory")
-		m10 = append(m10, authz.AuthorizeGenerator("duplicate_inventory", "self"))
+		m12 = append(m12, authz.AuthorizeGenerator("duplicate_inventory", "self"))
 
 		// Make sure payload is the last middleware
-		m10 = append(m10, middleware.PayloadUnMarshallerGenerator(duplicateInventoryPayload{}))
-		group.POST("controllers-Controller-duplicatePost", "/duplicate", framework.Mix(ctrl.duplicatePost, m10...))
-		// End route with key 10
+		m12 = append(m12, middleware.PayloadUnMarshallerGenerator(duplicateInventoryPayload{}))
+		group.POST("controllers-Controller-duplicatePost", "/duplicate", framework.Mix(ctrl.duplicatePost, m12...))
+		// End route with key 12
 
 		/* Route {
 			"Route": "/removepub/:id",
@@ -325,18 +375,18 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"Payload": "removeInventoryPayload",
 			"Resource": "edit_inventory",
 			"Scope": "self"
-		} with key 11 */
-		m11 := append(groupMiddleware, []framework.Middleware{
+		} with key 13 */
+		m13 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("edit_inventory", "edit_inventory")
-		m11 = append(m11, authz.AuthorizeGenerator("edit_inventory", "self"))
+		m13 = append(m13, authz.AuthorizeGenerator("edit_inventory", "self"))
 
 		// Make sure payload is the last middleware
-		m11 = append(m11, middleware.PayloadUnMarshallerGenerator(removeInventoryPayload{}))
-		group.PATCH("controllers-Controller-removePresetPatch", "/removepub/:id", framework.Mix(ctrl.removePresetPatch, m11...))
-		// End route with key 11
+		m13 = append(m13, middleware.PayloadUnMarshallerGenerator(removeInventoryPayload{}))
+		group.PATCH("controllers-Controller-removePresetPatch", "/removepub/:id", framework.Mix(ctrl.removePresetPatch, m13...))
+		// End route with key 13
 
 		initializer.DoInitialize(ctrl)
 	})
