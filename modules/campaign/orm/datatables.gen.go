@@ -12,6 +12,8 @@ type (
 	CampaignDetailsArray []CampaignDetails
 
 	PublisherDetailsArray []PublisherDetails
+
+	CampaignDailyArray []CampaignDaily
 )
 
 func (cda CampaignDetailsArray) Filter(u permission.Interface) CampaignDetailsArray {
@@ -149,6 +151,48 @@ func (pd PublisherDetails) Filter(u permission.Interface) PublisherDetails {
 	res.CPA = pd.CPA
 
 	res.Actions = pd.Actions
+
+	res.Actions = strings.Join(action, ",")
+	return res
+}
+
+func init() {
+
+}
+
+func (cda CampaignDailyArray) Filter(u permission.Interface) CampaignDailyArray {
+	res := make(CampaignDailyArray, len(cda))
+	for i := range cda {
+		res[i] = cda[i].Filter(u)
+	}
+
+	return res
+}
+
+// Filter is for filtering base on permission
+func (cd CampaignDaily) Filter(u permission.Interface) CampaignDaily {
+	action := []string{}
+	res := CampaignDaily{}
+
+	res.Date = cd.Date
+
+	res.Impression = cd.Impression
+
+	res.Click = cd.Click
+
+	res.ECTR = cd.ECTR
+
+	res.ECPC = cd.ECPC
+
+	res.ECPM = cd.ECPM
+
+	res.Spend = cd.Spend
+
+	res.Conversion = cd.Conversion
+
+	res.ConversionRate = cd.ConversionRate
+
+	res.CPA = cd.CPA
 
 	res.Actions = strings.Join(action, ",")
 	return res
