@@ -75,13 +75,10 @@ func (m *Manager) FillCampaigns(
 
 	// ORDER MATTER
 	var params = []interface{}{
-		pc.GetID(),
 		pc.GetDomainID(),
 		libs.TimeToID(time.Now()),
 	}
-	var countParams = []interface{}{
-		pc.GetID(),
-	}
+	var countParams []interface{}
 
 	var where []string
 
@@ -155,9 +152,8 @@ func (m *Manager) FillCampaigns(
 		c.strategy                                       AS strategy,
 		c.exchange                                       AS exchange
 		FROM %s AS c
-		JOIN %s u ON c.user_id = ?
+		JOIN %s u ON u.id = c.user_id
 		LEFT JOIN %s AS pu ON (pu.user_id = u.id AND c.domain_id = ?)
-		LEFT JOIN %s AS parent ON parent.id = pu.advisor_id
 		LEFT JOIN %s cd ON (c.id = cd.campaign_id  AND cd.daily_id = ?)
 		LEFT JOIN %s c2 ON (c.id = c2.campaign_id)
 		LEFT JOIN %s c3 ON (c.id = c3.campaign_id AND c3.status = 'accepted')
@@ -166,7 +162,6 @@ func (m *Manager) FillCampaigns(
 		CampaignTableFull,
 		aaa.UserTableFull,
 		aaa.AdvisorTableFull,
-		aaa.UserTableFull,
 		CampaignDetailTableFull,
 		CampaignDetailTableFull,
 		creativeTableFull,
@@ -185,7 +180,7 @@ func (m *Manager) FillCampaigns(
 		`
 		SELECT COUNT(1)
 		FROM %s AS c
-		JOIN %s u ON c.user_id = ?
+		JOIN %s u ON u.id = c.user_id
 		%s`,
 		CampaignTableFull,
 		aaa.UserTableFull,
