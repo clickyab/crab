@@ -102,6 +102,12 @@ func (c Controller) assignInventory(ctx context.Context, r *http.Request, p *ass
 	p.baseData.campaign.InventoryType = orm.NullInventoryState{Valid: true, InventoryState: p.InvState}
 	p.baseData.campaign.InventoryDomains = p.pubDomains
 
+	d := structs.Map(p.baseData.campaign)
+	err = p.baseData.campaign.SetAuditDescribe(d, "add inventory to campaign")
+	if err != nil {
+		return nil, err
+	}
+
 	err = orm.NewOrmManager().UpdateCampaign(p.baseData.campaign)
 	if err != nil {
 		return nil, errors.UpdateCampaignErr
