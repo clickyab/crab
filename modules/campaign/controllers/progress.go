@@ -18,7 +18,7 @@ import (
 // @Rest {
 // 		url = /progress/:id
 //		protected = true
-// 		method = GET
+// 		method = get
 //		resource = get_campaign:self
 // }
 func (c Controller) getCampaignProgress(ctx context.Context, r *http.Request) (*orm.CampaignProgress, error) {
