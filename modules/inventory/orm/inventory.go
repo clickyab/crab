@@ -331,6 +331,7 @@ func (m *Manager) Duplicate(id int64) (*Inventory, error) {
 //		checkable = false
 //		multiselect = false
 //		map_prefix = i
+//		_edit = edit_inventory:self
 //		controller = clickyab.com/crab/modules/inventory/controllers
 //		fill = FillInventoryDataTableArray
 // }
