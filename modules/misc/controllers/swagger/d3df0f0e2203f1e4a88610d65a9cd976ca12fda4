@@ -62,8 +62,8 @@
 				"postal_code": {
 					"type": "string"
 				},
-				"province_id": {
-					"type": "integer"
+				"province": {
+					"type": "string"
 				},
 				"province_name": {
 					"type": "string"
