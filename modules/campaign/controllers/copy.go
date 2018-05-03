@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"database/sql"
 	"net/http"
 
 	"time"
@@ -39,6 +40,7 @@ func (c Controller) copyCampaign(ctx context.Context, r *http.Request) (*orm.Cam
 		return nil, errors.ArchivedEditError
 	}
 
+	oldID := baseData.campaign.ID
 	baseData.campaign.Title += " - copy"
 	baseData.campaign.ID = 0
 
@@ -52,6 +54,32 @@ func (c Controller) copyCampaign(ctx context.Context, r *http.Request) (*orm.Cam
 	err = db.CreateCampaign(baseData.campaign)
 	if err != nil {
 		return nil, errors.DuplicateNameError
+	}
+
+	sc, err := db.GetSchedule(oldID)
+	if err != nil {
+		return nil, errors.NotFoundSchedule
+	}
+	if sc != nil {
+		sc.CampaignID = baseData.campaign.ID
+		sc.ID = 0
+
+		err = db.CreateSchedule(sc)
+		if err != nil {
+			return nil, errors.TimeScheduleError
+		}
+	}
+
+	attrs, err := db.FindCampaignAttributesByCampaignID(oldID)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, errors.NotFoundAttributes
+	}
+	if attrs != nil {
+		attrs.CampaignID = baseData.campaign.ID
+		_, err := db.AttachCampaignAttributes(*attrs)
+		if err != nil {
+			return nil, errors.UpdateError
+		}
 	}
 
 	return baseData.campaign, nil
