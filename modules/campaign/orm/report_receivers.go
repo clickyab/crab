@@ -12,7 +12,7 @@ import (
 // @Model {
 //		table = campaign_report_receivers
 //		primary = false, campaign_id,user_id
-//		find_by = campaign_id,user_id
+//		list = yes
 // }
 type CampaignReportReceivers struct {
 	CampaignID int64     `json:"campaign_id" db:"campaign_id"`
