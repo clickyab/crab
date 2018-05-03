@@ -238,7 +238,7 @@ func (m *Manager) FindProvinceByName(n string) (*Province, error) {
 }
 
 // FindProvinceByCode return the Province base on its code
-func (m *Manager) FindProvinceByCode(c int64) (*Province, error) {
+func (m *Manager) FindProvinceByCode(c string) (*Province, error) {
 	var res Province
 	err := m.GetRDbMap().SelectOne(
 		&res,
