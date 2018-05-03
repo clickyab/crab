@@ -117,9 +117,9 @@ func (m *Manager) FillCampaigns(
 		countParams = append(countParams, strings.Trim(strings.Join(strings.Fields(fmt.Sprint(childes)), ","), "[]"))
 	}
 
-	var conds string
+	var conds = wh + " c.archived_at IS NULL "
 	if len(where) > 0 {
-		conds += wh
+		conds += " AND "
 	}
 	conds += strings.Join(where, " AND ")
 
