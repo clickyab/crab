@@ -1,0 +1,60 @@
+{
+	"properties": {
+		"data": {
+			"items": {
+				"properties": {
+					"avg": {
+						"type": "number"
+					},
+					"data": {
+						"items": {
+							"type": "number"
+						},
+						"type": "array"
+					},
+					"hidden": {
+						"type": "boolean"
+					},
+					"max": {
+						"type": "number"
+					},
+					"min": {
+						"type": "number"
+					},
+					"name": {
+						"type": "string"
+					},
+					"order": {
+						"type": "integer"
+					},
+					"sum": {
+						"type": "number"
+					},
+					"title": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"format": {
+			"type": "string"
+		},
+		"from": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"to": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"type": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
