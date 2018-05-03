@@ -16,12 +16,15 @@ import (
 	"clickyab.com/crab/modules/user/mailer"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
+	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 )
+
+var frontVerifyMailPath = config.RegisterString("crab.modules.user.verify.mail.front.path", "/user/register/verification", "front redirect forget pass route")
 
 const (
 	verifyKeyPrefix = "VERIFY"
@@ -43,14 +46,9 @@ func verifyEmail(u *aaa.User, r *http.Request) error {
 		return e
 	}
 	ul := &url.URL{
-		Scheme: func() string {
-			if r.TLS != nil {
-				return "https"
-			}
-			return "http"
-		}(),
-		Host: r.Host,
-		Path: fmt.Sprintf("/api/user/email/verify/%s", h),
+		Scheme: framework.Scheme(r),
+		Host:   r.Host,
+		Path:   fmt.Sprintf(frontVerifyMailPath.String()+"/%s", h),
 	}
 	temp := fmt.Sprintf(`
 	%s
