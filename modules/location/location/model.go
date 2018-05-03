@@ -1,6 +1,8 @@
 package location
 
 import (
+	"fmt"
+
 	"github.com/clickyab/services/assert"
 )
 
@@ -19,13 +21,14 @@ type Country struct {
 // Province model in database
 // @Model {
 //		table = provinces
-//		primary = true, id
-//		find_by = id,name
+//		primary = false, name
+//		find_by = name,code
 //		belong_to = Country:country_id
 // }
 type Province struct {
-	ID        int64  `json:"id" db:"id"`
+	Code      int64  `json:"code" db:"code"`
 	Name      string `json:"name" db:"name"`
+	FAName    string `json:"fa_name" db:"fa_name"`
 	CountryID int64  `json:"country_id" db:"country_id"`
 }
 
@@ -34,12 +37,11 @@ type Province struct {
 //		table = cities
 //		primary = true, id
 //		find_by = id,name
-//		belong_to = Province:province_id
 // }
 type City struct {
-	ID         int64  `json:"id" db:"id"`
-	Name       string `json:"name" db:"name"`
-	ProvinceID int64  `json:"province_id" db:"province_id"`
+	ID       int64  `json:"id" db:"id"`
+	Name     string `json:"name" db:"name"`
+	Province string `json:"province" db:"province"`
 }
 
 // CityInfo is city info
@@ -53,7 +55,7 @@ type CityInfo struct {
 }
 
 // FindAllByCityID find city by id
-func (m Manager) FindAllByCityID(id int64) CityInfo {
+func (m *Manager) FindAllByCityID(id int64) CityInfo {
 	c := CityInfo{}
 	e := m.GetRDbMap().SelectOne(&c,
 		`SELECT c.name AS city_name,
@@ -68,4 +70,16 @@ func (m Manager) FindAllByCityID(id int64) CityInfo {
 	where c.id=?`, id)
 	assert.Nil(e)
 	return c
+}
+
+// GetProvinceCities get city by province id
+func (m *Manager) GetProvinceCities(province string) []City {
+	var res []City
+	q := fmt.Sprintf("SELECT %s FROM %s AS c WHERE province=?",
+		getSelectFields(CityTableFull, "c"),
+		CityTableFull,
+	)
+	_, err := m.GetRDbMap().Select(&res, q, province)
+	assert.Nil(err)
+	return res
 }

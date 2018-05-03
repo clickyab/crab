@@ -42,9 +42,6 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 		return fmt.Sprintf(`select count(name) as total from %s where name in (%s)`, t, strings.Repeat("?,", m)[:2*m-1])
 	}
 
-	if array.StringInArray(orm.Foreign, l.Region...) && len(l.Region) > 1 {
-		return errors.InvalidError("region")
-	}
 	o := asset.NewOrmManager()
 
 	// TODO: add other validation field
@@ -55,11 +52,20 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 		asset.CategoryTableFull:     l.IAB,
 		asset.ManufacturerTableFull: l.Manufacturer,
 		asset.PlatformTableFull:     l.Device,
-		location.ProvinceTableFull:  l.Region,
 	}
 	for i := range stringArrays {
 		if len(stringArrays[i]) == 0 {
 			delete(stringArrays, i)
+		}
+	}
+
+	if len(l.Region) > 0 {
+		if array.StringInArray(orm.Foreign, l.Region...) {
+			if len(l.Region) > 1 {
+				return errors.InvalidError("region")
+			}
+		} else {
+			stringArrays[location.ProvinceTableFull] = l.Region
 		}
 	}
 

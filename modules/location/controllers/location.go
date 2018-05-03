@@ -58,17 +58,13 @@ type cities []location.City
 
 // list of cities
 // @Rest {
-// 		url = /cities/:provinces_id
+// 		url = /cities/:province
 //		method = get
 // }
 func (ctrl *Controller) cities(ctx context.Context, r *http.Request) (cities, error) {
-	d, e := strconv.ParseInt(xmux.Param(ctx, "provinces_id"), 10, 64)
-	if e != nil || d == 0 {
-		return nil, errors.InvalidIDErr
-	}
+	province := xmux.Param(ctx, "province")
 	m := location.NewLocationManager()
-	c := &location.Province{ID: d}
-	res := m.GetProvinceCities(c)
+	res := m.GetProvinceCities(province)
 	if len(res) == 0 {
 		return nil, errors.InvalidIDErr
 
