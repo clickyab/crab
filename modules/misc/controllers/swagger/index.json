@@ -4,6 +4,7 @@
 		"application/json"
 	],
 	"definitions": {
+		"aaa_UserSearchResult": "file://5e14b24877e04042f3421f158e2215909bbe8890",
 		"controller_ErrorResponseSimple": "file://035d0d82ff8e72fec8d60b07faa9b516e0ab40c0",
 		"controller_NormalResponse": "file://79ffc6e5cd8d5b843aa71b6e8c5ff43c8ee12e76",
 		"controllers_NativeAssetPayload": "file://2d369e427be681497699a6b30114e67c345de42b",
@@ -132,9 +133,11 @@
 		"user_forgetPayload": "file://278252767381faac04ea52478750705a188ef3df",
 		"user_loginPayload": "file://a3152804bb2c7852c77d345a2186b7b647a941ee",
 		"user_registerPayload": "file://e58b6e35a3a18cfe0c6853307c71d4d79fc839be",
+		"user_searchUserPayload": "file://e6c92d18dbe50f7d32847c8f0ffe2f57b6f6d5a5",
 		"user_storePayload": "file://192632ed3ad4757b14475d79f76b67567f41be35",
 		"user_userPayload": "file://32e49b32f8778691637df812d65329bb0ba5a7c9",
 		"user_userResponse": "file://08175acbc0f8050a4920ef9f6f457c815fed16c3",
+		"user_userSearchResp": "file://e1f1c1ea75eae1475126e72907aa3f1f5e188c3a",
 		"user_verifyEmailCodePayload": "file://e68fb6da09fcd8f870939a85ff1f7c7a9d662815",
 		"user_verifyResendPayload": "file://81d85ecbfe8cd545656a36d66f72430ceafcef62"
 	},
@@ -220,6 +223,7 @@
 		"/user/password/verify/{token}": "file://bcfa209fe734c5bec872d15d9815f72a5a4776de",
 		"/user/ping": "file://4416a4e4c163a273509696c8f207e7a9fb05874e",
 		"/user/register": "file://f8ecee7efdede6882e6b06b4d398a7c92528c5b1",
+		"/user/search/mail": "file://a697dae16959d690f6ccb4dbe7960a712f8db1b0",
 		"/user/store": "file://81c617ef1932a06e426689a8caa90863f41c61d4",
 		"/user/update": "file://951d1a07ddde52ec17cf0844784bb4dbfbc9c164"
 	},
