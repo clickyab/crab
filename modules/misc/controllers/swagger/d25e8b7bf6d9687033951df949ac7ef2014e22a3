@@ -3,9 +3,9 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " parameter for search",
+				"description": " search the label field",
 				"in": "query",
-				"name": "q",
+				"name": "label",
 				"required": false,
 				"type": "string"
 			},
@@ -19,23 +19,16 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
 				"name": "status",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "c",
+				"name": "q",
 				"required": false,
-				"type": "int"
+				"type": "string"
 			},
 			{
 				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
@@ -45,11 +38,18 @@
 				"type": "string"
 			},
 			{
-				"description": " search the label field",
+				"description": "",
 				"in": "query",
-				"name": "label",
+				"name": "sort",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": " page number",
