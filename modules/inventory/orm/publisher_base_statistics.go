@@ -56,7 +56,7 @@ func (m *Manager) FillPublishersBaseStatistics(
 	query := fmt.Sprintf(`
 		SELECT 
 		COUNT(DISTINCT(pub.id)) AS count,
-		COALESCE(SUM(cd.imp),0) AS avg_imp,
+		COALESCE((SUM(cd.imp)/(COUNT(1)/30)),0) AS avg_imp,
 		COALESCE(COUNT(DISTINCT(pub.supplier)),0) AS exchange_count
 		FROM %s AS pub
 		INNER JOIN %s AS cd ON cd.publisher_id=pub.id

@@ -3,23 +3,16 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " page number",
+				"description": " count per page",
 				"in": "query",
-				"name": "p",
+				"name": "c",
 				"required": false,
 				"type": "int"
 			},
 			{
-				"description": "",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "kind",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
@@ -31,30 +24,16 @@
 				"type": "string"
 			},
 			{
-				"description": " parameter for search",
+				"description": " page number",
 				"in": "query",
-				"name": "q",
+				"name": "p",
 				"required": false,
-				"type": "string"
+				"type": "int"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the name field",
-				"in": "query",
-				"name": "name",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
@@ -73,11 +52,32 @@
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "c",
+				"name": "to",
 				"required": false,
-				"type": "int"
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the name field",
+				"in": "query",
+				"name": "name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
 			},
 			{
 				"description": "the security token, get it from login route",
