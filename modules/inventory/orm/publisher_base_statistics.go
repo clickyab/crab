@@ -8,7 +8,6 @@ import (
 	"clickyab.com/crab/libs"
 	"clickyab.com/crab/modules/ad/errors"
 	caOrm "clickyab.com/crab/modules/campaign/orm"
-	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/permission"
 )
@@ -56,21 +55,16 @@ func (m *Manager) FillPublishersBaseStatistics(
 
 	query := fmt.Sprintf(`
 		SELECT 
-		COUNT(DISTINCT(pub.id))						AS count,
-		COALESCE((SUM(cd.imp)/(COUNT(1)/30)),0) 	AS avg_imp,
-		COALESCE(COUNT(DISTINCT(camp.exchange)),0)	AS exchange_count
-
+		COUNT(DISTINCT(pub.id)) AS count,
+		COALESCE(SUM(cd.imp),0) AS avg_imp,
+		COALESCE(COUNT(DISTINCT(pub.supplier)),0) AS exchange_count
 		FROM %s AS pub
-		
 		INNER JOIN %s AS cd ON cd.publisher_id=pub.id
-		INNER JOIN %s AS camp ON cd.campaign_id=camp.id AND camp.domain_id = ?
 		`,
 		PublisherTableFull,
 		caOrm.CampaignDetailTableFull,
-		caOrm.CampaignTableFull,
 	)
 
-	params = append(params, pc.GetDomainID())
 	if from != "" && to != "" {
 		fromArr := strings.Split(from, "*")
 		toArr := strings.Split(to, "*")
@@ -101,29 +95,9 @@ func (m *Manager) FillPublishersBaseStatistics(
 		where = append(where, wl)
 	}
 
-	currentUserID := pc.GetID()
-	highestScope := pc.GetCurrentScope()
-
-	// find current user childes
-	userManager := aaa.NewAaaManager()
-	childes := userManager.GetUserChildesIDDomain(currentUserID, pc.GetDomainID())
-	childes = append(childes, currentUserID)
-	// self or parent
-	if highestScope == permission.ScopeSelf {
-		//check if parent or owner
-		where = append(where, fmt.Sprintf("camp.user_id IN (%s)",
-			func() string {
-				return strings.TrimRight(strings.Repeat("?,", len(childes)), ",")
-			}(),
-		),
-		)
-		for i := range childes {
-			params = append(params, childes[i])
-		}
-
+	if len(where) > 0 {
+		query += fmt.Sprintf("%s %s", " WHERE ", strings.Join(where, " AND "))
 	}
-
-	query += fmt.Sprintf("%s %s", " WHERE ", strings.Join(where, " AND "))
 
 	_, err := m.GetRDbMap().Select(&res, query, params...)
 	assert.Nil(err)
