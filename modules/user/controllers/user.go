@@ -46,7 +46,7 @@ type userResponse struct {
 	CityName      string                 `json:"city_name,omitempty"`
 	CityID        int64                  `json:"city_id,omitempty"`
 	ProvinceName  string                 `json:"province_name,omitempty"`
-	ProvinceID    int64                  `json:"province_id,omitempty"`
+	Province      string                 `json:"province,omitempty"`
 	CountryName   string                 `json:"country_name,omitempty"`
 	CountryID     int64                  `json:"country_id,omitempty"`
 	LandLine      string                 `json:"land_line,omitempty"`
@@ -94,7 +94,7 @@ func (u Controller) createLoginResponseWithToken(user *aaa.User, token string) *
 		us.CityName = l.CityName
 		us.CityID = l.CityID
 		us.ProvinceName = l.ProvinceName
-		us.ProvinceID = l.ProvinceID
+		us.Province = l.Province
 		us.CountryName = l.CountryName
 		us.CountryID = l.CountryID
 	}

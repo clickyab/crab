@@ -6,7 +6,6 @@ import (
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
-	"clickyab.com/crab/modules/user/errors"
 )
 
 type searchUserPayload struct {
@@ -25,7 +24,7 @@ func (c *Controller) searchByMail(ctx context.Context, r *http.Request, p *searc
 	dm := domain.MustGetDomain(ctx)
 	foundUsers := aaa.NewAaaManager().ListUserByEmail(p.Email, dm.ID)
 	if len(foundUsers) == 0 {
-		return nil, errors.NotFoundWithEmail(p.Email)
+		return userSearchResp{}, nil
 	}
 	return userSearchResp(foundUsers), nil
 }
