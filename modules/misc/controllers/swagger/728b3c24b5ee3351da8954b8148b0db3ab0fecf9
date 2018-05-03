@@ -1,0 +1,36 @@
+{
+	"properties": {
+		"_actions": {
+			"type": "string"
+		},
+		"amount": {
+			"type": "integer"
+		},
+		"balance": {
+			"type": "integer"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"email": {
+			"type": "string"
+		},
+		"first_name": {
+			"type": "string"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"last_name": {
+			"type": "string"
+		},
+		"pay_model": {
+			"type": "string"
+		},
+		"user_id": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}
