@@ -26,7 +26,18 @@ type verifyEmailCodePayload struct {
 func (c *Controller) verifyEmailCode(ctx context.Context, r *http.Request, p *verifyEmailCodePayload) (*ResponseLoginOK, error) {
 	u, e := verifyCode(ctx, fmt.Sprintf("%s%s%s", hasher(p.Email+emailVerifyPath.String()), delimiter, p.Code))
 
-	if e != nil || u.Status != aaa.RegisteredUserStatus || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
+	if u == nil {
+		return nil, e
+	}
+
+	if u.Status != aaa.RegisteredUserStatus {
+		if u.Status == aaa.ActiveUserStatus {
+			return nil, errors.AlreadyVerifiedErr
+		}
+		return nil, errors.UserBlockedError
+	}
+
+	if e != nil || strings.ToLower(p.Email) != strings.ToLower(u.Email) {
 		return nil, errors.InvalidEmailError
 	}
 

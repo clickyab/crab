@@ -9,9 +9,13 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/mailer"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/config"
+	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/gettext/t9e"
 )
+
+var frontRecoverPath = config.RegisterString("crab.modules.user.recover.front.path", "/user/recover/verification", "front redirect forget pass route")
 
 // @Validate {
 // }
@@ -37,14 +41,9 @@ func (c *Controller) forgetPassword(ctx context.Context, r *http.Request, p *for
 	assert.Nil(e)
 
 	ul := &url.URL{
-		Scheme: func() string {
-			if r.TLS != nil {
-				return "https"
-			}
-			return "http"
-		}(),
-		Host: r.Host,
-		Path: fmt.Sprintf("/user/recover/verification/%s", ur),
+		Scheme: framework.Scheme(r),
+		Host:   r.Host,
+		Path:   fmt.Sprintf(frontRecoverPath.String()+"/%s", ur),
 	}
 	temp := fmt.Sprintf(`
 	%s

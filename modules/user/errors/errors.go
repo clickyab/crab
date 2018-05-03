@@ -33,6 +33,8 @@ var (
 	UserNotVerifiedError = t9e.G("user is not verified yet. please check your email and verify it.")
 	//UserBlockedError when user is block
 	UserBlockedError = t9e.G("your user is blocked! please try to connect with our support team.")
+	//AlreadyVerifiedErr user is verified before
+	AlreadyVerifiedErr = t9e.G("your user is verified before")
 )
 
 // NotFoundError maker
