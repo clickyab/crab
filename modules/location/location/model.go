@@ -26,7 +26,7 @@ type Country struct {
 //		belong_to = Country:country_id
 // }
 type Province struct {
-	Code      int64  `json:"code" db:"code"`
+	Code      string `json:"code" db:"code"`
 	Name      string `json:"name" db:"name"`
 	FAName    string `json:"fa_name" db:"fa_name"`
 	CountryID int64  `json:"country_id" db:"country_id"`

@@ -1,7 +1,7 @@
 {
 	"properties": {
 		"code": {
-			"type": "integer"
+			"type": "string"
 		},
 		"country_id": {
 			"type": "integer"
