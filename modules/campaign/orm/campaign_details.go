@@ -24,41 +24,41 @@ var creativeTableFull = "creatives"
 //		view = campaign_list:self
 //		controller = clickyab.com/crab/modules/campaign/controllers
 //		fill = FillCampaigns
-//		_detail = campaign_detail:self
-//		_edit = campaign_edit:self
-//		_copy = campaign_copy:self
-//		_archive = campaign_archive:self
+//		_detail = get_campaign:self
+//		_edit = edit_campaign:self
+//		_copy = copy_campaign:self
+//		_archive = archive_campaign:self
 // }
 type CampaignDetails struct {
-	ID             int64          `json:"id" db:"id" type:"number"`
-	Title          string         `sort:"true" type:"string" search:"true"  json:"title" db:"title"`
-	Status         Status         `sort:"true" type:"enum" filter:"true"  json:"status" db:"status"`
-	Kind           CampaignKind   `sort:"true" type:"enum" filter:"true"  json:"kind" db:"kind"`
-	TotalImp       int64          `sort:"true" type:"number" json:"total_imp" db:"total_imp"`
+	ID             int64          `json:"id" db:"id" visible:"true" type:"number"`
+	Title          string         `sort:"true" type:"string" search:"true" visible:"true" json:"title" db:"title"`
+	Status         Status         `sort:"true" type:"enum" filter:"true" visible:"true"  json:"status" db:"status"`
+	Kind           CampaignKind   `sort:"true" type:"enum" filter:"true" visible:"true" json:"kind" db:"kind"`
+	TotalImp       int64          `sort:"true" type:"number" visible:"true" json:"total_imp" db:"total_imp"`
 	TotalClick     int64          `sort:"true" type:"number" json:"total_click" db:"total_click"`
-	ECTR           float64        `sort:"true" type:"number" json:"ectr" db:"ectr"`
-	ECPC           float64        `sort:"true" type:"number" json:"ecpc" db:"ecpc"`
-	ECPM           float64        `sort:"true" type:"number" json:"ecpm" db:"ecpm"`
-	TotalSpend     int64          `sort:"true" type:"number" json:"total_spend" db:"total_spend"`
-	MaxBid         int64          `sort:"true" type:"number" json:"max_bid" db:"max_bid"`
-	Conversion     float64        `sort:"true" type:"number" json:"conversion" db:"conversion"`
-	TotalBudget    int64          `sort:"true" type:"number" json:"total_budget" db:"total_budget"`
-	TodaySpend     int64          `sort:"true" type:"number" json:"today_spend" db:"today_spend"`
-	CreatedAt      time.Time      `sort:"true" type:"date" json:"created_at" db:"created_at"`
-	StartAt        time.Time      `sort:"true" type:"date" json:"start_at" db:"start_at"`
-	EndAt          mysql.NullTime `sort:"true" type:"date" json:"end_at" db:"end_at"`
-	TodayCTR       float64        `sort:"true" type:"number" json:"today_ctr" db:"today_ctr"`
-	TodayImp       int64          `sort:"true" type:"number" json:"today_imp" db:"today_imp"`
-	TodayClick     int64          `sort:"true" type:"number" json:"today_click" db:"today_click"`
-	Creative       int64          `sort:"true" type:"number" json:"creative" db:"creative"`
-	OwnerEmail     string         `sort:"true" type:"number" search:"true" map:"u.email" json:"owner_email" db:"owner_email"`
-	ConversionRate float64        `sort:"true" type:"number" json:"conversion_rate" db:"conversion_rate"`
-	CPA            int64          `sort:"true" type:"number" json:"cpa" db:"cpa"`
-	Strategy       Strategy       `sort:"true" type:"enum" filter:"true" json:"strategy" db:"strategy"`
-	Exchange       ExchangeType   `sort:"true" type:"enum" filter:"true" json:"exchange" db:"exchange"`
+	ECTR           float64        `sort:"true" type:"number" visible:"true" visible:"true" json:"ectr" db:"ectr"`
+	ECPC           float64        `sort:"true" type:"number" visible:"true" json:"ecpc" db:"ecpc"`
+	ECPM           float64        `sort:"true" type:"number" visible:"true" json:"ecpm" db:"ecpm"`
+	TotalSpend     int64          `sort:"true" type:"number" visible:"true" json:"total_spend" db:"total_spend"`
+	MaxBid         int64          `sort:"true" type:"number" visible:"false" json:"max_bid" db:"max_bid"`
+	Conversion     float64        `sort:"true" type:"number" visible:"false" json:"conversion" db:"conversion"`
+	TotalBudget    int64          `sort:"true" type:"number" visible:"false" json:"total_budget" db:"total_budget"`
+	TodaySpend     int64          `sort:"true" type:"number" visible:"false" json:"today_spend" db:"today_spend"`
+	CreatedAt      time.Time      `sort:"true" type:"date"  visible:"false" json:"created_at" db:"created_at"`
+	StartAt        time.Time      `sort:"true" type:"date"  visible:"false" json:"start_at" db:"start_at"`
+	EndAt          mysql.NullTime `sort:"true" type:"date"  visible:"false" json:"end_at" db:"end_at"`
+	TodayCTR       float64        `sort:"true" type:"number"  visible:"false" json:"today_ctr" db:"today_ctr"`
+	TodayImp       int64          `sort:"true" type:"number"  visible:"false" json:"today_imp" db:"today_imp"`
+	TodayClick     int64          `sort:"true" type:"number"  visible:"false" json:"today_click" db:"today_click"`
+	Creative       int64          `sort:"true" type:"number"  visible:"false" json:"creative" db:"creative"`
+	OwnerEmail     string         `sort:"true" type:"number"  visible:"false" search:"true" map:"u.email" json:"owner_email" db:"owner_email"`
+	ConversionRate float64        `sort:"true" type:"number"  visible:"false" json:"conversion_rate" db:"conversion_rate"`
+	CPA            int64          `sort:"true" type:"number"  visible:"false" json:"cpa" db:"cpa"`
+	Strategy       Strategy       `sort:"true" type:"enum" visible:"false" filter:"true" json:"strategy" db:"strategy"`
+	Exchange       ExchangeType   `sort:"true" type:"enum" visible:"false" filter:"true" json:"exchange" db:"exchange"`
 
-	OwnerID   int64   `db:"-" json:"-" visible:"false"`
-	DomainID  int64   `db:"-" json:"-"`
+	OwnerID   int64   `db:"owner_id" json:"-" visible:"false"`
+	DomainID  int64   `db:"domain_id" json:"-" visible:"false"`
 	ParentIDs []int64 `db:"-" json:"-" visible:"false"`
 	Actions   string  `db:"-" json:"_actions" visible:"false"`
 }
@@ -125,6 +125,7 @@ func (m *Manager) FillCampaigns(
 
 	q := fmt.Sprintf(`
 		SELECT
+		c.user_id                                             AS owner_id,
 		c.id                                             AS id,
 		c.title                                          AS title,
 		c.status                                         AS status,
