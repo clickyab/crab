@@ -391,3 +391,16 @@ func CheckPermOn(owner *User, currentUser *User, perm permission.Token, domainID
 	}
 	return s, ok
 }
+
+// ListUserByEmail find user by email and domain
+func (m *Manager) ListUserByEmail(email string, domainID int64) []User {
+	var res []User
+	q := fmt.Sprintf(
+		`SELECT u.* FROM %s AS u INNER JOIN %s AS du ON (du.user_id=u.id AND du.domain_id=? AND du.status=?) WHERE u.email LIKE ?`,
+		UserTableFull,
+		domainOrm.DomainUserTableFull,
+	)
+	_, err := m.GetRDbMap().Select(&res, q, domainID, domainOrm.EnableDomainStatus, "%"+email+"%")
+	assert.Nil(err)
+	return res
+}
