@@ -10,7 +10,7 @@ import (
 )
 
 // frontRouteRedirect frontend route after payment is done (success,fail)
-var frontRouteRedirect = config.RegisterString("crab.modules.financial.payment.front.url", "financial/verify", "saman bank name")
+var frontRouteRedirect = config.RegisterString("crab.modules.financial.payment.front.url", "user/financial-verify", "saman bank name")
 
 // InitPaymentResp init payment response
 type InitPaymentResp struct {
