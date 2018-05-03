@@ -7,6 +7,7 @@ import (
 
 	"time"
 
+	adOrm "clickyab.com/crab/modules/ad/orm"
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/user/aaa"
@@ -56,31 +57,108 @@ func (c Controller) copyCampaign(ctx context.Context, r *http.Request) (*orm.Cam
 		return nil, errors.DuplicateNameError
 	}
 
+	err = copySchedule(oldID, baseData.campaign.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = copyAttributes(oldID, baseData.campaign.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = copyReportsReceivers(oldID, baseData.campaign.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = copyCreativesAssets(oldID, baseData.campaign.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return baseData.campaign, nil
+}
+
+func copySchedule(oldID, newID int64) error {
+	db := orm.NewOrmManager()
+
 	sc, err := db.GetSchedule(oldID)
 	if err != nil {
-		return nil, errors.NotFoundSchedule
+		return errors.NotFoundSchedule
 	}
+
 	if sc != nil {
-		sc.CampaignID = baseData.campaign.ID
+		sc.CampaignID = newID
 		sc.ID = 0
 
 		err = db.CreateSchedule(sc)
 		if err != nil {
-			return nil, errors.TimeScheduleError
+			return errors.TimeScheduleError
 		}
 	}
+
+	return nil
+}
+
+func copyAttributes(oldID, newID int64) error {
+	db := orm.NewOrmManager()
 
 	attrs, err := db.FindCampaignAttributesByCampaignID(oldID)
 	if err != nil && err != sql.ErrNoRows {
-		return nil, errors.NotFoundAttributes
+		return errors.NotFoundAttributes
 	}
+
 	if attrs != nil {
-		attrs.CampaignID = baseData.campaign.ID
+		attrs.CampaignID = newID
 		_, err := db.AttachCampaignAttributes(*attrs)
 		if err != nil {
-			return nil, errors.UpdateError
+			return errors.UpdateError
 		}
 	}
 
-	return baseData.campaign, nil
+	return nil
+}
+
+func copyReportsReceivers(oldID, newID int64) error {
+	db := orm.NewOrmManager()
+
+	recs := db.ListCampaignReportReceiversWithFilter("campaign_id = ?", oldID)
+	if len(recs) > 0 {
+		var ids []int64
+		for _, v := range recs {
+			ids = append(ids, v.UserID)
+		}
+		err := db.UpdateReportReceivers(ids, newID)
+		if err != nil {
+			return errors.UpdateError
+		}
+	}
+
+	return nil
+}
+
+func copyCreativesAssets(oldID, newID int64) error {
+	adDb := adOrm.NewOrmManager()
+	creatives := adDb.ListCreativesWithFilter("campaign_id=?", oldID)
+
+	for _, cr := range creatives {
+		assets := adDb.ListAssetsWithFilter("creative_id=?", cr.ID)
+
+		cr.ID = 0
+		cr.CampaignID = newID
+
+		var ap []*adOrm.Asset
+		for k := range assets {
+			assets[k].CreativeID = 0
+			ap = append(ap, &assets[k])
+		}
+
+		_, err := adDb.AddCreative(&cr, ap)
+		if err != nil {
+			return errors.CreateError
+		}
+	}
+
+	return nil
 }
