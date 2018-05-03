@@ -205,7 +205,7 @@
 		"/inventory/publisher/list/single/{id}/definition": "file://3be707518152cecd206872dda549e8c129303505",
 		"/inventory/removepub/{id}": "file://6d2ade9c68900f108ed69696f03ce78b0c6fb426",
 		"/inventory/{id}": "file://cdd61e4e0cbd3872e304d24a1988241fa9f24da4",
-		"/location/cities/{provinces_id}": "file://d91466c5da6cdd588bfb3de14af7b34f7d8fecd5",
+		"/location/cities/{province}": "file://519c5b258a3218ed5747a6381102818021800067",
 		"/location/countries": "file://592cdf113d6e0c42b0aead5fc0bf20d4f84d5cc6",
 		"/location/provinces/{country_id}": "file://c4f9fb325bdaadf4712501f6f37d4ff1b941a029",
 		"/upload/module/{module}": "file://f28ba3fd2922b932d66b187d5aea952c2f85f4f9",

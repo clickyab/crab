@@ -10,9 +10,23 @@
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": "",
 				"in": "query",
-				"name": "c",
+				"name": "type",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the name field",
+				"in": "query",
+				"name": "name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
 				"required": false,
 				"type": "int"
 			},
@@ -20,13 +34,6 @@
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
 				"required": false,
 				"type": "string"
 			},
@@ -40,37 +47,30 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
 				"name": "status",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the name field",
+				"description": " count per page",
 				"in": "query",
-				"name": "name",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
 			{
 				"description": "",
 				"in": "query",
-				"name": "type",
+				"name": "sort",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",

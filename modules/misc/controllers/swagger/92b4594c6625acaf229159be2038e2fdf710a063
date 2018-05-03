@@ -1,11 +1,14 @@
 {
 	"items": {
 		"properties": {
+			"code": {
+				"type": "integer"
+			},
 			"country_id": {
 				"type": "integer"
 			},
-			"id": {
-				"type": "integer"
+			"fa_name": {
+				"type": "string"
 			},
 			"name": {
 				"type": "string"

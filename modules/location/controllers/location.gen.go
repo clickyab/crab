@@ -60,7 +60,7 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		// End route with key 1
 
 		/* Route {
-			"Route": "/cities/:provinces_id",
+			"Route": "/cities/:province",
 			"Method": "GET",
 			"Function": "Controller.citiesGet",
 			"RoutePkg": "location",
@@ -74,7 +74,7 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 		} with key 2 */
 		m2 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("location-Controller-citiesGet", "/cities/:provinces_id", framework.Mix(ctrl.citiesGet, m2...))
+		group.GET("location-Controller-citiesGet", "/cities/:province", framework.Mix(ctrl.citiesGet, m2...))
 		// End route with key 2
 
 		initializer.DoInitialize(ctrl)

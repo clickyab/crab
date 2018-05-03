@@ -45,7 +45,7 @@ func (ctrl *Controller) provincesGet(ctx context.Context, w http.ResponseWriter,
 
 // list of cities
 // @Route {
-// 		url = /cities/:provinces_id
+// 		url = /cities/:province
 //		method = get
 //		200 = cities
 //		400 = controller.ErrorResponseSimple
