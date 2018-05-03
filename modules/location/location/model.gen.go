@@ -69,37 +69,6 @@ func (m *Manager) FindCityByName(n string) (*City, error) {
 	return &res, nil
 }
 
-// GetProvinceCities return all Cities belong to Province
-func (m *Manager) GetProvinceCities(p *Province) []City {
-	var res []City
-	_, err := m.GetRDbMap().Select(
-		&res,
-		fmt.Sprintf(
-			"SELECT %s FROM %s WHERE province_id=?",
-			getSelectFields(CityTableFull, ""),
-			CityTableFull,
-		),
-		p.ID,
-	)
-
-	assert.Nil(err)
-	return res
-}
-
-// CountProvinceCities return count Cities belong to Province
-func (m *Manager) CountProvinceCities(p *Province) int64 {
-	res, err := m.GetRDbMap().SelectInt(
-		fmt.Sprintf(
-			"SELECT COUNT(*) FROM %s WHERE province_id=?",
-			CityTableFull,
-		),
-		p.ID,
-	)
-
-	assert.Nil(err)
-	return res
-}
-
 // CreateCountry try to save a new Country in database
 func (m *Manager) CreateCountry(c *Country) error {
 
@@ -252,13 +221,13 @@ func (m *Manager) UpdateProvince(p *Province) error {
 	return err
 }
 
-// FindProvinceByID return the Province base on its id
-func (m *Manager) FindProvinceByID(id int64) (*Province, error) {
+// FindProvinceByName return the Province base on its name
+func (m *Manager) FindProvinceByName(n string) (*Province, error) {
 	var res Province
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(ProvinceTableFull, ""), ProvinceTableFull),
-		id,
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(ProvinceTableFull, ""), ProvinceTableFull),
+		n,
 	)
 
 	if err != nil {
@@ -268,13 +237,13 @@ func (m *Manager) FindProvinceByID(id int64) (*Province, error) {
 	return &res, nil
 }
 
-// FindProvinceByName return the Province base on its name
-func (m *Manager) FindProvinceByName(n string) (*Province, error) {
+// FindProvinceByCode return the Province base on its code
+func (m *Manager) FindProvinceByCode(c int64) (*Province, error) {
 	var res Province
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(ProvinceTableFull, ""), ProvinceTableFull),
-		n,
+		fmt.Sprintf("SELECT %s FROM %s WHERE code=?", getSelectFields(ProvinceTableFull, ""), ProvinceTableFull),
+		c,
 	)
 
 	if err != nil {

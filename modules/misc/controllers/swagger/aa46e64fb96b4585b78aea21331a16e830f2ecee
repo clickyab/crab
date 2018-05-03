@@ -3,6 +3,48 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the user_id field",
+				"in": "query",
+				"name": "user_id",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "pay_model",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the last_name field",
+				"in": "query",
+				"name": "last_name",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the email field",
 				"in": "query",
 				"name": "email",
@@ -17,32 +59,11 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " count per page",
 				"in": "query",
-				"name": "sort",
+				"name": "c",
 				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the last_name field",
-				"in": "query",
-				"name": "last_name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the user_id field",
-				"in": "query",
-				"name": "user_id",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
+				"type": "int"
 			},
 			{
 				"description": " page number",
@@ -52,30 +73,9 @@
 				"type": "int"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": " search the first_name field",
 				"in": "query",
 				"name": "first_name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "pay_model",
 				"required": false,
 				"type": "string"
 			},

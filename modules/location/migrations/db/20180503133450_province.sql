@@ -2,6 +2,7 @@
 -- +migrate Up
 -- SQL in section 'Up' is executed when this migration is applied
 UPDATE users SET city_id=NULL;
+UPDATE campaign_attributes SET region=NULL;
 ALTER TABLE users DROP FOREIGN KEY user_city_id_fk;
 ALTER TABLE provinces DROP FOREIGN KEY provinces_countries_id_fk;
 ALTER TABLE cities DROP FOREIGN KEY cities_provinces_id_fk;

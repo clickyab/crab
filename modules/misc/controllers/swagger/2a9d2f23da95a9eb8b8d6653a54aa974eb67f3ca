@@ -6,8 +6,8 @@
 		"name": {
 			"type": "string"
 		},
-		"province_id": {
-			"type": "integer"
+		"province": {
+			"type": "string"
 		}
 	},
 	"type": "object"

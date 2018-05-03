@@ -5,7 +5,7 @@
 			{
 				"description": "",
 				"in": "path",
-				"name": "provinces_id",
+				"name": "province",
 				"required": true,
 				"type": "string"
 			}
