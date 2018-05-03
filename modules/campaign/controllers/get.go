@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/clickyab/services/xlog"
+
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/domain/middleware/domain"
@@ -64,6 +66,7 @@ func (c *Controller) get(ctx context.Context, r *http.Request) (*campaignGetResp
 
 	sc, err := dbm.GetSchedule(campaign.ID)
 	if err != nil {
+		xlog.GetWithError(ctx, err).Debug("campaign get route: find scheduales error")
 		return nil, errors.NotFoundSchedule
 	}
 	if sc != nil {
@@ -72,6 +75,7 @@ func (c *Controller) get(ctx context.Context, r *http.Request) (*campaignGetResp
 
 	attrs, err := dbm.FindCampaignAttributesByCampaignID(campaign.ID)
 	if err != nil && err != sql.ErrNoRows {
+		xlog.GetWithError(ctx, err).Debug("campaign get route: find attributes error")
 		return nil, errors.NotFoundAttributes
 	}
 	if attrs != nil {
@@ -82,6 +86,7 @@ func (c *Controller) get(ctx context.Context, r *http.Request) (*campaignGetResp
 		invDBM := inventoryOrm.NewOrmManager()
 		inv, err := invDBM.FindInventoryAndPubCount(campaign.InventoryID.Int64)
 		if err != nil {
+			xlog.GetWithError(ctx, err).Debug("campaign get route: find inventory error")
 			return nil, errors.InventoryNotFound
 		}
 
