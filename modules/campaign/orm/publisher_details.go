@@ -69,7 +69,7 @@ func (m *Manager) FillCampaignPublisher(
 		return nil, 0, errors.DBError
 	}
 
-	where = append(where, "c.id=?")
+	where = append(where, "cd.campaign_id=?")
 	params = append(params, intVal)
 
 	for field, value := range filters {
@@ -140,6 +140,10 @@ func (m *Manager) FillCampaignPublisher(
 		"publishers",
 		conds,
 	)
+	countQuery += " GROUP BY cd.publisher_id"
+	count, err := m.GetRDbMap().SelectInt(countQuery, params...)
+	assert.Nil(err)
+
 	query := fmt.Sprintf(`SELECT
 		p.domain 											AS domain,
 		COALESCE(SUM(cd.imp),0) 							AS impression,
@@ -151,24 +155,24 @@ func (m *Manager) FillCampaignPublisher(
 		COALESCE(SUM(cd.conv),0) 							AS conversion,
 		COALESCE((SUM(cd.conv)/SUM(cd.click))*100,0) 		AS conversion_rate,
 		COALESCE(SUM(cd.cpa),0) 							AS cpa
-		FROM %s AS c
+		FROM %s AS cd
+		INNER JOIN %s AS c ON c.id=cd.campaign_id
 		INNER JOIN %s AS owner ON owner.id=c.user_id
-		LEFT JOIN %s AS cd ON cd.campaign_id=c.id
 		LEFT JOIN %s AS p ON p.id=cd.publisher_id %s `,
+		CampaignDetailTableFull,
 		CampaignTableFull,
 		aaa.UserTableFull,
-		CampaignDetailTableFull,
 		"publishers",
 		conds,
 	)
+	query += " GROUP BY cd.publisher_id"
+
 	limit := c
 	offset := (p - 1) * c
 	if sort != "" {
 		query += fmt.Sprintf(" ORDER BY %s %s ", sort, order)
 	}
 	query += fmt.Sprintf(" LIMIT %d OFFSET %d ", limit, offset)
-	count, err := m.GetRDbMap().SelectInt(countQuery, params...)
-	assert.Nil(err)
 
 	_, err = m.GetRDbMap().Select(&res, query, params...)
 	assert.Nil(err)
