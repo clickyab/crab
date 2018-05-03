@@ -3,25 +3,11 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " search the name field",
+				"description": "",
 				"in": "query",
-				"name": "name",
+				"name": "status",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " search the supplier field",
-				"in": "query",
-				"name": "supplier",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": " parameter for search",
@@ -29,27 +15,6 @@
 				"name": "q",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
@@ -61,7 +26,42 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "status",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the supplier field",
+				"in": "query",
+				"name": "supplier",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the name field",
+				"in": "query",
+				"name": "name",
 				"required": false,
 				"type": "string"
 			},

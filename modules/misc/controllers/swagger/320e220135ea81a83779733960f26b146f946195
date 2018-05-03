@@ -3,11 +3,25 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " parameter for search",
+				"description": " page number",
 				"in": "query",
-				"name": "q",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " search the title field",
+				"in": "query",
+				"name": "title",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": " search the owner_email field",
@@ -17,16 +31,23 @@
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": "",
 				"in": "query",
-				"name": "p",
+				"name": "sort",
 				"required": false,
-				"type": "int"
+				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "from",
+				"name": "strategy",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -45,44 +66,23 @@
 				"type": "string"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "strategy",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the title field",
-				"in": "query",
-				"name": "title",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": "",
 				"in": "query",
 				"name": "exchange",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},

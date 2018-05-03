@@ -4,8 +4,10 @@ package orm
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/initializer"
 )
 
@@ -38,34 +40,72 @@ func (m *Manager) UpdateCampaignReportReceivers(crr *CampaignReportReceivers) er
 	return err
 }
 
-// FindCampaignReportReceiversByCampaignID return the CampaignReportReceivers base on its campaign_id
-func (m *Manager) FindCampaignReportReceiversByCampaignID(ci int64) (*CampaignReportReceivers, error) {
-	var res CampaignReportReceivers
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE campaign_id=?", getSelectFields(CampaignReportReceiversTableFull, ""), CampaignReportReceiversTableFull),
-		ci,
-	)
-
-	if err != nil {
-		return nil, err
+// ListCampaignReportReceiversWithFilter try to list all CampaignReportReceivers without pagination
+func (m *Manager) ListCampaignReportReceiversWithFilter(filter string, params ...interface{}) []CampaignReportReceivers {
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
 	}
+	var res []CampaignReportReceivers
+	_, err := m.GetRDbMap().Select(
+		&res,
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CampaignReportReceiversTableFull, ""), CampaignReportReceiversTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
 
-	return &res, nil
+	return res
 }
 
-// FindCampaignReportReceiversByUserID return the CampaignReportReceivers base on its user_id
-func (m *Manager) FindCampaignReportReceiversByUserID(ui int64) (*CampaignReportReceivers, error) {
-	var res CampaignReportReceivers
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE user_id=?", getSelectFields(CampaignReportReceiversTableFull, ""), CampaignReportReceiversTableFull),
-		ui,
-	)
+// ListCampaignReportReceivers try to list all CampaignReportReceivers without pagination
+func (m *Manager) ListCampaignReportReceivers() []CampaignReportReceivers {
+	return m.ListCampaignReportReceiversWithFilter("")
+}
 
-	if err != nil {
-		return nil, err
+// CountCampaignReportReceiversWithFilter count entity in CampaignReportReceivers table with valid where filter
+func (m *Manager) CountCampaignReportReceiversWithFilter(filter string, params ...interface{}) int64 {
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
+	}
+	cnt, err := m.GetRDbMap().SelectInt(
+		fmt.Sprintf("SELECT COUNT(*) FROM %s %s", CampaignReportReceiversTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
+
+	return cnt
+}
+
+// CountCampaignReportReceivers count entity in CampaignReportReceivers table
+func (m *Manager) CountCampaignReportReceivers() int64 {
+	return m.CountCampaignReportReceiversWithFilter("")
+}
+
+// ListCampaignReportReceiversWithPaginationFilter try to list all CampaignReportReceivers with pagination and filter
+func (m *Manager) ListCampaignReportReceiversWithPaginationFilter(
+	offset, perPage int, filter string, params ...interface{}) []CampaignReportReceivers {
+	var res []CampaignReportReceivers
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
 	}
 
-	return &res, nil
+	filter += " LIMIT ?, ? "
+	params = append(params, offset, perPage)
+
+	// TODO : better pagination without offset and limit
+	_, err := m.GetRDbMap().Select(
+		&res,
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CampaignReportReceiversTableFull, ""), CampaignReportReceiversTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
+
+	return res
+}
+
+// ListCampaignReportReceiversWithPagination try to list all CampaignReportReceivers with pagination
+func (m *Manager) ListCampaignReportReceiversWithPagination(offset, perPage int) []CampaignReportReceivers {
+	return m.ListCampaignReportReceiversWithPaginationFilter(offset, perPage, "")
 }
