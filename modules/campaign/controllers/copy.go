@@ -12,12 +12,6 @@ import (
 	"github.com/fatih/structs"
 )
 
-// @Validate{
-//}
-type copyCampaignPayload struct {
-	Title string `json:"title" validate:"gt=3"`
-}
-
 // copy a campaign by id
 // @Rest {
 // 		url = /copy/:id
@@ -25,7 +19,7 @@ type copyCampaignPayload struct {
 // 		method = patch
 //		resource = copy_campaign:self
 // }
-func (c Controller) copyCampaign(ctx context.Context, r *http.Request, p *copyCampaignPayload) (*orm.Campaign, error) {
+func (c Controller) copyCampaign(ctx context.Context, r *http.Request) (*orm.Campaign, error) {
 	baseData, err := CheckUserCamapignDomain(ctx)
 	if err != nil {
 		return nil, err
@@ -45,7 +39,7 @@ func (c Controller) copyCampaign(ctx context.Context, r *http.Request, p *copyCa
 		return nil, errors.ArchivedEditError
 	}
 
-	baseData.campaign.Title = p.Title
+	baseData.campaign.Title += " - copy"
 	baseData.campaign.ID = 0
 
 	d := structs.Map(baseData.campaign)
