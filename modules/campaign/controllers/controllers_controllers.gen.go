@@ -144,7 +144,6 @@ func (c *Controller) changeStatusPatch(ctx context.Context, w http.ResponseWrite
 // @Route {
 // 		url = /copy/:id
 //		method = patch
-//		payload = copyCampaignPayload
 //		middleware = authz.Authenticate
 //		resource = copy_campaign:self
 //		200 = orm.Campaign
@@ -153,8 +152,8 @@ func (c *Controller) changeStatusPatch(ctx context.Context, w http.ResponseWrite
 //		403 = controller.ErrorResponseSimple
 // }
 func (c Controller) copyCampaignPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := c.MustGetPayload(ctx).(*copyCampaignPayload)
-	res, err := c.copyCampaign(ctx, r, pl)
+
+	res, err := c.copyCampaign(ctx, r)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return
