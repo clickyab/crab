@@ -397,7 +397,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
 			"RecName": "c",
-			"Payload": "copyCampaignPayload",
+			"Payload": "",
 			"Resource": "copy_campaign",
 			"Scope": "self"
 		} with key 14 */
@@ -408,8 +408,6 @@ func (c *Controller) Routes(r framework.Mux) {
 		permission.Register("copy_campaign", "copy_campaign")
 		m14 = append(m14, authz.AuthorizeGenerator("copy_campaign", "self"))
 
-		// Make sure payload is the last middleware
-		m14 = append(m14, middleware.PayloadUnMarshallerGenerator(copyCampaignPayload{}))
 		group.PATCH("controllers-Controller-copyCampaignPatch", "/copy/:id", framework.Mix(c.copyCampaignPatch, m14...))
 		// End route with key 14
 

@@ -21,7 +21,6 @@
 		"controllers_changeCampaignStatus": "file://f402ebe899b5287cfa52ae37afcf91170ebb78e6",
 		"controllers_changeLabelPayload": "file://737bb49d87c16606b3c60fae12379d008757b9de",
 		"controllers_changeStatusPayload": "file://1b18daf272ad34b1b31295c3e5c787bafd822186",
-		"controllers_copyCampaignPayload": "file://a2ef5aa7ee656acd524203b28be17e26c8bfeb5b",
 		"controllers_createCampaignPayload": "file://b13ac2f4e0737917064b3ffc3a755bc0ef0190eb",
 		"controllers_createInventoryPayload": "file://fb2e36ee4c31d68fe502e65df39ee3bb3f9b21c6",
 		"controllers_createNativePayload": "file://b92249b18b5c75e8fe465e36e9a68583cea17ab6",
