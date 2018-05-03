@@ -13,6 +13,7 @@
 // db/20180501072827_detailfix.sql
 // db/20180501130023_perm.sql
 // db/20180502092621_perm.sql
+// db/20180503090939_perm.sql
 // DO NOT EDIT!
 
 package migrations
@@ -340,6 +341,26 @@ func db20180502092621_permSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180503090939_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x8f\x4f\x4b\xc3\x40\x10\xc5\xef\xf9\x14\x8f\x5c\x9a\x62\x7a\xd0\xab\x27\xa1\x2b\x06\x62\x8a\xf9\xa3\xc7\xb2\x6e\xc6\x76\x70\xb3\xbb\x64\x56\xaa\xdf\x5e\xb6\xa2\xa0\x22\x08\x3d\xce\xe3\xcd\xe3\xf7\xcb\x56\x2b\x9c\x4d\xbc\x9b\x75\x24\x0c\x21\x9d\xdd\x5d\x0d\x76\x10\x32\x91\xbd\xc3\x62\x08\x0b\xb0\x80\x5e\xc9\xbc\x44\x1a\x71\xd8\x93\x43\xdc\xb3\xe0\xe3\x2f\x95\x58\xa0\x43\xb0\x4c\x63\x56\x35\x9d\x6a\x7b\x54\x4d\xbf\xc1\xec\x2d\x6d\x03\xcd\x13\x8b\xa4\x5a\x71\x0c\x78\x2c\x91\xc2\x12\x62\x7c\xa0\x25\xee\xaf\xea\x41\x75\x28\xce\xcb\xdc\xf8\xf0\xb6\x35\x7a\x0a\x9a\x77\x2e\x2f\x73\x21\xfb\x94\x2f\x2f\x4f\x59\xbd\xf8\x7b\xf5\x9b\xfd\xda\x1f\xdc\xa7\xff\x97\x7c\x0a\xff\xa5\x3f\x7b\x6b\x69\xc4\xa3\x36\xcf\xd9\x5a\xd5\xaa\x57\xb8\x6e\x37\xb7\xbf\x60\x1f\x6e\x54\xab\x8e\xa0\xa8\x1a\x14\x3f\xd0\x12\x53\xf6\x1e\x00\x00\xff\xff\x36\x33\x48\xfe\x94\x01\x00\x00"
+
+func db20180503090939_permSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180503090939_permSql,
+		"db/20180503090939_perm.sql",
+	)
+}
+
+func db20180503090939_permSql() (*asset, error) {
+	bytes, err := db20180503090939_permSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180503090939_perm.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -405,6 +426,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20180501072827_detailfix.sql":                 db20180501072827_detailfixSql,
 	"db/20180501130023_perm.sql":                      db20180501130023_permSql,
 	"db/20180502092621_perm.sql":                      db20180502092621_permSql,
+	"db/20180503090939_perm.sql":                      db20180503090939_permSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -462,6 +484,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20180501072827_detailfix.sql":                 &bintree{db20180501072827_detailfixSql, map[string]*bintree{}},
 		"20180501130023_perm.sql":                      &bintree{db20180501130023_permSql, map[string]*bintree{}},
 		"20180502092621_perm.sql":                      &bintree{db20180502092621_permSql, map[string]*bintree{}},
+		"20180503090939_perm.sql":                      &bintree{db20180503090939_permSql, map[string]*bintree{}},
 	}},
 }}
 
