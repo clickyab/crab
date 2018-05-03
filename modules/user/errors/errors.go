@@ -52,3 +52,12 @@ func NotFoundWithDomainError(dName string) error {
 
 	return t9e.G("can't find user with related domain")
 }
+
+// NotFoundWithEmail maker
+func NotFoundWithEmail(email string) error {
+	if email != "" {
+		return t9e.G("can't find user with email %s", email)
+	}
+
+	return t9e.G("user not found, please check your request data.")
+}
