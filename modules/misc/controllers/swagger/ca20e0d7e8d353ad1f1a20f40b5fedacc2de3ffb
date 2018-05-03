@@ -3,13 +3,6 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": "",
-				"in": "path",
-				"name": "id",
-				"required": true,
-				"type": "string"
-			},
-			{
 				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
 				"name": "from",
@@ -35,7 +28,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_graphChartdailyResponse"
+					"$ref": "#/definitions/controllers_graphBillinggraphreportResponse"
 				}
 			},
 			"401": {

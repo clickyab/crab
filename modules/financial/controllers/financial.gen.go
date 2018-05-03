@@ -45,16 +45,16 @@ func (c *Controller) Routes(r framework.Mux) {
 		// End route with key 0
 
 		/* Route {
-			"Route": "/billing",
+			"Route": "/graph/spend",
 			"Method": "GET",
-			"Function": "Controller.listBillingreport",
+			"Function": "Controller.graphBillinggraphreport",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
 			],
 			"RouteFuncMiddleware": "",
 			"RecType": "Controller",
-			"RecName": "u",
+			"RecName": "ctrl",
 			"Payload": "",
 			"Resource": "get_billing",
 			"Scope": "self"
@@ -66,13 +66,13 @@ func (c *Controller) Routes(r framework.Mux) {
 		permission.Register("get_billing", "get_billing")
 		m1 = append(m1, authz.AuthorizeGenerator("get_billing", "self"))
 
-		group.GET("controllers-Controller-listBillingreport", "/billing", framework.Mix(c.listBillingreport, m1...))
+		group.GET("controllers-Controller-graphBillinggraphreport", "/graph/spend", framework.Mix(c.graphBillinggraphreport, m1...))
 		// End route with key 1
 
 		/* Route {
-			"Route": "/billing/definition",
+			"Route": "/billing",
 			"Method": "GET",
-			"Function": "Controller.defBillingreport",
+			"Function": "Controller.listBillingreport",
 			"RoutePkg": "controllers",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -91,8 +91,33 @@ func (c *Controller) Routes(r framework.Mux) {
 		permission.Register("get_billing", "get_billing")
 		m2 = append(m2, authz.AuthorizeGenerator("get_billing", "self"))
 
-		group.GET("controllers-Controller-defBillingreport", "/billing/definition", framework.Mix(c.defBillingreport, m2...))
+		group.GET("controllers-Controller-listBillingreport", "/billing", framework.Mix(c.listBillingreport, m2...))
 		// End route with key 2
+
+		/* Route {
+			"Route": "/billing/definition",
+			"Method": "GET",
+			"Function": "Controller.defBillingreport",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "u",
+			"Payload": "",
+			"Resource": "get_billing",
+			"Scope": "self"
+		} with key 3 */
+		m3 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("get_billing", "get_billing")
+		m3 = append(m3, authz.AuthorizeGenerator("get_billing", "self"))
+
+		group.GET("controllers-Controller-defBillingreport", "/billing/definition", framework.Mix(c.defBillingreport, m3...))
+		// End route with key 3
 
 		/* Route {
 			"Route": "/payment/init",
@@ -108,18 +133,18 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "initPaymentPayload",
 			"Resource": "make_payment",
 			"Scope": "self"
-		} with key 3 */
-		m3 := append(groupMiddleware, []framework.Middleware{
+		} with key 4 */
+		m4 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("make_payment", "make_payment")
-		m3 = append(m3, authz.AuthorizeGenerator("make_payment", "self"))
+		m4 = append(m4, authz.AuthorizeGenerator("make_payment", "self"))
 
 		// Make sure payload is the last middleware
-		m3 = append(m3, middleware.PayloadUnMarshallerGenerator(initPaymentPayload{}))
-		group.POST("controllers-Controller-getPaymentDataPost", "/payment/init", framework.Mix(c.getPaymentDataPost, m3...))
-		// End route with key 3
+		m4 = append(m4, middleware.PayloadUnMarshallerGenerator(initPaymentPayload{}))
+		group.POST("controllers-Controller-getPaymentDataPost", "/payment/init", framework.Mix(c.getPaymentDataPost, m4...))
+		// End route with key 4
 
 		/* Route {
 			"Route": "/add",
@@ -135,18 +160,18 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "registerBankSnapPayload",
 			"Resource": "create_bank_snap",
 			"Scope": "self"
-		} with key 4 */
-		m4 := append(groupMiddleware, []framework.Middleware{
+		} with key 5 */
+		m5 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("create_bank_snap", "create_bank_snap")
-		m4 = append(m4, authz.AuthorizeGenerator("create_bank_snap", "self"))
+		m5 = append(m5, authz.AuthorizeGenerator("create_bank_snap", "self"))
 
 		// Make sure payload is the last middleware
-		m4 = append(m4, middleware.PayloadUnMarshallerGenerator(registerBankSnapPayload{}))
-		group.POST("controllers-Controller-registerSnapPost", "/add", framework.Mix(c.registerSnapPost, m4...))
-		// End route with key 4
+		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(registerBankSnapPayload{}))
+		group.POST("controllers-Controller-registerSnapPost", "/add", framework.Mix(c.registerSnapPost, m5...))
+		// End route with key 5
 
 		/* Route {
 			"Route": "/",
@@ -162,16 +187,16 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "list_billing",
 			"Scope": "self"
-		} with key 5 */
-		m5 := append(groupMiddleware, []framework.Middleware{
+		} with key 6 */
+		m6 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("list_billing", "list_billing")
-		m5 = append(m5, authz.AuthorizeGenerator("list_billing", "self"))
+		m6 = append(m6, authz.AuthorizeGenerator("list_billing", "self"))
 
-		group.GET("controllers-Controller-billingListGet", "/", framework.Mix(c.billingListGet, m5...))
-		// End route with key 5
+		group.GET("controllers-Controller-billingListGet", "/", framework.Mix(c.billingListGet, m6...))
+		// End route with key 6
 
 		/* Route {
 			"Route": "/gateways",
@@ -187,13 +212,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "",
 			"Scope": ""
-		} with key 6 */
-		m6 := append(groupMiddleware, []framework.Middleware{
+		} with key 7 */
+		m7 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-getGatewaysGet", "/gateways", framework.Mix(c.getGatewaysGet, m6...))
-		// End route with key 6
+		group.GET("controllers-Controller-getGatewaysGet", "/gateways", framework.Mix(c.getGatewaysGet, m7...))
+		// End route with key 7
 
 		/* Route {
 			"Route": "/payment/:id",
@@ -209,16 +234,16 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "make_payment",
 			"Scope": "self"
-		} with key 7 */
-		m7 := append(groupMiddleware, []framework.Middleware{
+		} with key 8 */
+		m8 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("make_payment", "make_payment")
-		m7 = append(m7, authz.AuthorizeGenerator("make_payment", "self"))
+		m8 = append(m8, authz.AuthorizeGenerator("make_payment", "self"))
 
-		group.GET("controllers-Controller-getPaymentTransactionGet", "/payment/:id", framework.Mix(c.getPaymentTransactionGet, m7...))
-		// End route with key 7
+		group.GET("controllers-Controller-getPaymentTransactionGet", "/payment/:id", framework.Mix(c.getPaymentTransactionGet, m8...))
+		// End route with key 8
 
 		initializer.DoInitialize(c)
 	})
