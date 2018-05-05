@@ -54,6 +54,7 @@ func (m *Manager) FillCampaignCreative(
 	to string,
 	search map[string]string,
 	contextparams map[string]string,
+	queryParams map[string]string,
 	sort, order string, p, c int) (CreativeDataTableArray, int64, error) {
 
 	var params []interface{}
