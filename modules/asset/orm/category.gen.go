@@ -122,3 +122,98 @@ func (m *Manager) FindCategoryByName(n string) (*Category, error) {
 
 	return &res, nil
 }
+
+// CreateCategoryModel try to save a new CategoryModel in database
+func (m *Manager) CreateCategoryModel(cm *CategoryModel) error {
+
+	func(in interface{}) {
+		if ii, ok := in.(initializer.Simple); ok {
+			ii.Initialize()
+		}
+	}(cm)
+
+	return m.GetWDbMap().Insert(cm)
+}
+
+// UpdateCategoryModel try to update CategoryModel in database
+func (m *Manager) UpdateCategoryModel(cm *CategoryModel) error {
+
+	func(in interface{}) {
+		if ii, ok := in.(initializer.Simple); ok {
+			ii.Initialize()
+		}
+	}(cm)
+
+	_, err := m.GetWDbMap().Update(cm)
+	return err
+}
+
+// ListCategoryModelsWithFilter try to list all CategoryModels without pagination
+func (m *Manager) ListCategoryModelsWithFilter(filter string, params ...interface{}) []CategoryModel {
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
+	}
+	var res []CategoryModel
+	_, err := m.GetRDbMap().Select(
+		&res,
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CategoryModelTableFull, ""), CategoryModelTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
+
+	return res
+}
+
+// ListCategoryModels try to list all CategoryModels without pagination
+func (m *Manager) ListCategoryModels() []CategoryModel {
+	return m.ListCategoryModelsWithFilter("")
+}
+
+// CountCategoryModelsWithFilter count entity in CategoryModels table with valid where filter
+func (m *Manager) CountCategoryModelsWithFilter(filter string, params ...interface{}) int64 {
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
+	}
+	cnt, err := m.GetRDbMap().SelectInt(
+		fmt.Sprintf("SELECT COUNT(*) FROM %s %s", CategoryModelTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
+
+	return cnt
+}
+
+// CountCategoryModels count entity in CategoryModels table
+func (m *Manager) CountCategoryModels() int64 {
+	return m.CountCategoryModelsWithFilter("")
+}
+
+// ListCategoryModelsWithPaginationFilter try to list all CategoryModels with pagination and filter
+func (m *Manager) ListCategoryModelsWithPaginationFilter(
+	offset, perPage int, filter string, params ...interface{}) []CategoryModel {
+	var res []CategoryModel
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
+	}
+
+	filter += " LIMIT ?, ? "
+	params = append(params, offset, perPage)
+
+	// TODO : better pagination without offset and limit
+	_, err := m.GetRDbMap().Select(
+		&res,
+		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CategoryModelTableFull, ""), CategoryModelTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
+
+	return res
+}
+
+// ListCategoryModelsWithPagination try to list all CategoryModels with pagination
+func (m *Manager) ListCategoryModelsWithPagination(offset, perPage int) []CategoryModel {
+	return m.ListCategoryModelsWithPaginationFilter(offset, perPage, "")
+}

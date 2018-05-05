@@ -52,6 +52,7 @@ func (m *Manager) FillCampaignPublisher(
 	to string,
 	search map[string]string,
 	contextparams map[string]string,
+	queryParams map[string]string,
 	sort, order string, p, c int) (PublisherDetailsArray, int64, error) {
 
 	var params []interface{}

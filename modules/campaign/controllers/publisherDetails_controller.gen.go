@@ -35,6 +35,7 @@ type listPublisherdetailsDefResponse struct {
 	Multiselect bool               `json:"multiselect"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
+	QueryParams string             `json:"queryparams"`
 	Columns     permission.Columns `json:"columns"`
 }
 
@@ -111,8 +112,10 @@ func (u *Controller) listPublisherdetails(ctx context.Context, w http.ResponseWr
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
+	queryParams := make(map[string]string)
+
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_publisher", "self", domain.ID)
-	dt, cnt, err := m.FillCampaignPublisher(pc, filter, from, to, search, params, sort, order, p, c)
+	dt, cnt, err := m.FillCampaignPublisher(pc, filter, from, to, search, params, queryParams, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
 		return
@@ -146,7 +149,7 @@ func (u *Controller) defPublisherdetails(ctx context.Context, w http.ResponseWri
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listPublisherdetailsDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "daily_id", Hash: hash, Columns: listPublisherdetailsDefinition},
+		listPublisherdetailsDefResponse{Checkable: false, SearchKey: "q", QueryParams: "", Multiselect: false, DateFilter: "daily_id", Hash: hash, Columns: listPublisherdetailsDefinition},
 	)
 }
 

@@ -35,6 +35,7 @@ type listInvpublisherDefResponse struct {
 	Multiselect bool               `json:"multiselect"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
+	QueryParams string             `json:"queryparams"`
 	Columns     permission.Columns `json:"columns"`
 }
 
@@ -131,8 +132,10 @@ func (u *Controller) listInvpublisher(ctx context.Context, w http.ResponseWriter
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
+	queryParams := make(map[string]string)
+
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "list_inventory", "self", domain.ID)
-	dt, cnt, err := m.FillSinglePublisherDataTableArray(pc, filter, from, to, search, params, sort, order, p, c)
+	dt, cnt, err := m.FillSinglePublisherDataTableArray(pc, filter, from, to, search, params, queryParams, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
 		return
@@ -166,7 +169,7 @@ func (u *Controller) defInvpublisher(ctx context.Context, w http.ResponseWriter,
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listInvpublisherDefResponse{Checkable: true, SearchKey: "q", Multiselect: true, DateFilter: "created_at", Hash: hash, Columns: listInvpublisherDefinition},
+		listInvpublisherDefResponse{Checkable: true, SearchKey: "q", QueryParams: "", Multiselect: true, DateFilter: "created_at", Hash: hash, Columns: listInvpublisherDefinition},
 	)
 }
 
