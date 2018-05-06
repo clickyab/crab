@@ -85,6 +85,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "campaign_graph:self"
+		},
 		"tags": [
 			"controllers"
 		]

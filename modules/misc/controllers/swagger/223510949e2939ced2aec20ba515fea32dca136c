@@ -52,6 +52,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "change_campaign_status:self"
+		},
 		"tags": [
 			"controllers"
 		]

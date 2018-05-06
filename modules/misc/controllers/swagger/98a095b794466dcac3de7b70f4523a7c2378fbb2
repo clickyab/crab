@@ -45,6 +45,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "duplicate_inventory:self"
+		},
 		"tags": [
 			"controllers"
 		]

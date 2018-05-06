@@ -33,6 +33,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": false,
+			"resource": ""
+		},
 		"tags": [
 			"user"
 		]

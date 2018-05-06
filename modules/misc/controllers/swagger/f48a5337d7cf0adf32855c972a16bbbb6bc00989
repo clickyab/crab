@@ -45,6 +45,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "add_inventory:self"
+		},
 		"tags": [
 			"controllers"
 		]

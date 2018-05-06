@@ -43,6 +43,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "get_creative:self"
+		},
 		"tags": [
 			"controllers"
 		]

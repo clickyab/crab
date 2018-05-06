@@ -64,6 +64,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "campaign_list:self"
+		},
 		"tags": [
 			"controllers"
 		]
