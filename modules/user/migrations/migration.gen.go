@@ -6,6 +6,7 @@
 // db/20180423080834_audit_logs.sql
 // db/20180425142843_fixssn.sql
 // db/20180426105326_addbalance.sql
+// db/20180506081006_add_to_whitelabel_user_perm.sql
 // DO NOT EDIT!
 
 package migrations
@@ -193,6 +194,26 @@ func db20180426105326_addbalanceSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180506081006_add_to_whitelabel_user_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x90\xcd\x4a\xc3\x40\x14\x85\xf7\x79\x8a\x43\x36\x4d\x31\x5d\xe8\xd6\x95\xd0\x11\x03\x31\xc5\xfc\xe8\x32\x4c\x32\x97\xe6\xe2\x34\x33\xcc\x4c\x89\x8f\x2f\x53\x51\x10\x11\x02\x5d\xde\xc3\xb9\x9c\x8f\x2f\xd9\xed\x70\x73\xe2\xa3\x93\x81\xd0\xd9\x78\x36\x2f\x25\x78\x86\xa7\x31\xb0\x99\xb1\xe9\xec\x06\xec\x41\x1f\x34\x9e\x03\x29\x2c\x13\xcd\x08\x13\x7b\x7c\xfd\xc5\x12\x7b\x48\x6b\x35\x93\x4a\x8a\xaa\x11\x75\x8b\xa2\x6a\x0f\x70\x46\x53\x6f\xc9\x9d\xd8\xfb\x58\xcb\x2e\x01\xab\x1c\x31\xcc\xe1\x47\x63\x69\x8b\xd7\x87\xb2\x13\x0d\xb2\xdb\x3c\x95\x4a\xf5\xc1\xf4\xcb\xc4\x81\xb4\x1c\x48\xf7\x67\x4f\x2e\xcd\xd3\xa3\x36\x83\xd4\xe9\xf6\xfe\x9a\x81\xbb\x55\x03\xbf\x9c\xec\xcd\x32\x7f\x5b\xf9\x51\x12\xc3\x55\x52\x9c\xd1\x9a\x14\x06\x39\xbe\x27\x7b\x51\x8a\x56\xe0\xb1\x3e\x3c\xff\xe1\x7e\x7b\x12\xb5\xb8\x30\xa3\xa8\x90\xfd\x47\x19\xe1\x92\xcf\x00\x00\x00\xff\xff\xfe\x38\x33\xdd\xb3\x01\x00\x00"
+
+func db20180506081006_add_to_whitelabel_user_permSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180506081006_add_to_whitelabel_user_permSql,
+		"db/20180506081006_add_to_whitelabel_user_perm.sql",
+	)
+}
+
+func db20180506081006_add_to_whitelabel_user_permSql() (*asset, error) {
+	bytes, err := db20180506081006_add_to_whitelabel_user_permSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180506081006_add_to_whitelabel_user_perm.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -245,12 +266,13 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"db/20180325060232_users.sql":      db20180325060232_usersSql,
-	"db/20180325061015_roles.sql":      db20180325061015_rolesSql,
-	"db/20180325073312_role_seed.sql":  db20180325073312_role_seedSql,
-	"db/20180423080834_audit_logs.sql": db20180423080834_audit_logsSql,
-	"db/20180425142843_fixssn.sql":     db20180425142843_fixssnSql,
-	"db/20180426105326_addbalance.sql": db20180426105326_addbalanceSql,
+	"db/20180325060232_users.sql":                       db20180325060232_usersSql,
+	"db/20180325061015_roles.sql":                       db20180325061015_rolesSql,
+	"db/20180325073312_role_seed.sql":                   db20180325073312_role_seedSql,
+	"db/20180423080834_audit_logs.sql":                  db20180423080834_audit_logsSql,
+	"db/20180425142843_fixssn.sql":                      db20180425142843_fixssnSql,
+	"db/20180426105326_addbalance.sql":                  db20180426105326_addbalanceSql,
+	"db/20180506081006_add_to_whitelabel_user_perm.sql": db20180506081006_add_to_whitelabel_user_permSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -295,12 +317,13 @@ type bintree struct {
 
 var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
-		"20180325060232_users.sql":      &bintree{db20180325060232_usersSql, map[string]*bintree{}},
-		"20180325061015_roles.sql":      &bintree{db20180325061015_rolesSql, map[string]*bintree{}},
-		"20180325073312_role_seed.sql":  &bintree{db20180325073312_role_seedSql, map[string]*bintree{}},
-		"20180423080834_audit_logs.sql": &bintree{db20180423080834_audit_logsSql, map[string]*bintree{}},
-		"20180425142843_fixssn.sql":     &bintree{db20180425142843_fixssnSql, map[string]*bintree{}},
-		"20180426105326_addbalance.sql": &bintree{db20180426105326_addbalanceSql, map[string]*bintree{}},
+		"20180325060232_users.sql":                       &bintree{db20180325060232_usersSql, map[string]*bintree{}},
+		"20180325061015_roles.sql":                       &bintree{db20180325061015_rolesSql, map[string]*bintree{}},
+		"20180325073312_role_seed.sql":                   &bintree{db20180325073312_role_seedSql, map[string]*bintree{}},
+		"20180423080834_audit_logs.sql":                  &bintree{db20180423080834_audit_logsSql, map[string]*bintree{}},
+		"20180425142843_fixssn.sql":                      &bintree{db20180425142843_fixssnSql, map[string]*bintree{}},
+		"20180426105326_addbalance.sql":                  &bintree{db20180426105326_addbalanceSql, map[string]*bintree{}},
+		"20180506081006_add_to_whitelabel_user_perm.sql": &bintree{db20180506081006_add_to_whitelabel_user_permSql, map[string]*bintree{}},
 	}},
 }}
 

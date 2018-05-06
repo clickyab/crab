@@ -9,6 +9,28 @@ import (
 	"github.com/clickyab/services/framework"
 )
 
+// register is for register user
+// @Route {
+// 		url = /add-to/whitelabel
+//		method = post
+//		payload = addUserToWhitelabelPayload
+//		middleware = authz.Authenticate
+//		resource = add_to_whitelabel_user:global
+//		200 = controller.NormalResponse
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) registerToWhitelabelPost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*addUserToWhitelabelPayload)
+	res, err := c.registerToWhitelabel(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // route for add/update user avatar
 // @Route {
 // 		url = /avatar

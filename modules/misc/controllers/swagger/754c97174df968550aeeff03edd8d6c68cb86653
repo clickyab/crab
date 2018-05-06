@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"id": {
+			"type": "integer"
+		},
+		"state": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
