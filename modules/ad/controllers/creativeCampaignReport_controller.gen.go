@@ -35,6 +35,7 @@ type listCreativecampaignreportDefResponse struct {
 	Multiselect bool               `json:"multiselect"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
+	QueryParams string             `json:"queryparams"`
 	Columns     permission.Columns `json:"columns"`
 }
 
@@ -121,8 +122,10 @@ func (u *Controller) listCreativecampaignreport(ctx context.Context, w http.Resp
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
+	queryParams := make(map[string]string)
+
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_creative", "self", domain.ID)
-	dt, cnt, err := m.FillCampaignCreative(pc, filter, from, to, search, params, sort, order, p, c)
+	dt, cnt, err := m.FillCampaignCreative(pc, filter, from, to, search, params, queryParams, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
 		return
@@ -156,7 +159,7 @@ func (u *Controller) defCreativecampaignreport(ctx context.Context, w http.Respo
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listCreativecampaignreportDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "daily_id", Hash: hash, Columns: listCreativecampaignreportDefinition},
+		listCreativecampaignreportDefResponse{Checkable: false, SearchKey: "q", QueryParams: "", Multiselect: false, DateFilter: "daily_id", Hash: hash, Columns: listCreativecampaignreportDefinition},
 	)
 }
 

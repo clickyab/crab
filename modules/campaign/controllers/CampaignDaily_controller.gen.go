@@ -35,6 +35,7 @@ type listCampaigndailyDefResponse struct {
 	Multiselect bool               `json:"multiselect"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
+	QueryParams string             `json:"queryparams"`
 	Columns     permission.Columns `json:"columns"`
 }
 
@@ -106,8 +107,10 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
+	queryParams := make(map[string]string)
+
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_daily", "self", domain.ID)
-	dt, cnt, err := m.FillDaily(pc, filter, from, to, search, params, sort, order, p, c)
+	dt, cnt, err := m.FillDaily(pc, filter, from, to, search, params, queryParams, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
 		return
@@ -141,7 +144,7 @@ func (u *Controller) defCampaigndaily(ctx context.Context, w http.ResponseWriter
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listCampaigndailyDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "daily_id", Hash: hash, Columns: listCampaigndailyDefinition},
+		listCampaigndailyDefResponse{Checkable: false, SearchKey: "q", QueryParams: "", Multiselect: false, DateFilter: "daily_id", Hash: hash, Columns: listCampaigndailyDefinition},
 	)
 }
 

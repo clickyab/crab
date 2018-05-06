@@ -18,6 +18,9 @@ const (
 	// CategoryTableFull is the Category table name
 	CategoryTableFull = "categories"
 
+	// CategoryModelTableFull is the CategoryModel table name
+	CategoryModelTableFull = "category_model"
+
 	// ISPTableFull is the ISP table name
 	ISPTableFull = "isps"
 
@@ -41,7 +44,10 @@ func getSelectFields(tb string, alias string) string {
 		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sdeleted_at,%[1]sstatus,%[1]sname`, alias)
 
 	case CategoryTableFull:
-		return fmt.Sprintf(`%[1]sname,%[1]sdescription,%[1]sdeleted_at`, alias)
+		return fmt.Sprintf(`%[1]sname,%[1]sdescription,%[1]sdeleted_at,%[1]sstatus`, alias)
+
+	case CategoryModelTableFull:
+		return fmt.Sprintf(`%[1]smodel_id,%[1]scategory,%[1]smodel`, alias)
 
 	case ISPTableFull:
 		return fmt.Sprintf(`%[1]sname,%[1]skind,%[1]sstatus,%[1]screated_at,%[1]supdated_at`, alias)
@@ -97,6 +103,16 @@ func (m *Manager) Initialize() {
 	).SetKeys(
 		false,
 		"Name",
+	)
+
+	m.AddTableWithName(
+		CategoryModel{},
+		CategoryModelTableFull,
+	).SetKeys(
+		false,
+		"ModelID",
+		"Category",
+		"Model",
 	)
 
 	m.AddTableWithName(

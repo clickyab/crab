@@ -53,6 +53,9 @@
 		"multiselect": {
 			"type": "boolean"
 		},
+		"queryparams": {
+			"type": "string"
+		},
 		"searchkey": {
 			"type": "string"
 		}

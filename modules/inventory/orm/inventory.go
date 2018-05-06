@@ -352,6 +352,7 @@ func (m *Manager) FillInventoryDataTableArray(
 	to string,
 	search map[string]string,
 	contextparams map[string]string,
+	queryParams map[string]string,
 	sort, order string, p, c int) (InventoryDataTableArray, int64, error) {
 	var params []interface{}
 	var res InventoryDataTableArray

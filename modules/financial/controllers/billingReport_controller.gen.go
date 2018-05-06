@@ -35,6 +35,7 @@ type listBillingreportDefResponse struct {
 	Multiselect bool               `json:"multiselect"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
+	QueryParams string             `json:"queryparams"`
 	Columns     permission.Columns `json:"columns"`
 }
 
@@ -131,8 +132,10 @@ func (u *Controller) listBillingreport(ctx context.Context, w http.ResponseWrite
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
+	queryParams := make(map[string]string)
+
 	pc := permission.NewInterfaceComplete(usr, usr.ID, "get_billing", "self", domain.ID)
-	dt, cnt, err := m.FillBilling(pc, filter, from, to, search, params, sort, order, p, c)
+	dt, cnt, err := m.FillBilling(pc, filter, from, to, search, params, queryParams, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
 		return
@@ -166,7 +169,7 @@ func (u *Controller) defBillingreport(ctx context.Context, w http.ResponseWriter
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listBillingreportDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "created_at", Hash: hash, Columns: listBillingreportDefinition},
+		listBillingreportDefResponse{Checkable: false, SearchKey: "q", QueryParams: "", Multiselect: false, DateFilter: "created_at", Hash: hash, Columns: listBillingreportDefinition},
 	)
 }
 

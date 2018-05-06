@@ -17,5 +17,5 @@ type catResponse []orm.Category
 // }
 func (c *Controller) category(ctx context.Context, r *http.Request) (catResponse, error) {
 	m := orm.NewOrmManager()
-	return catResponse(m.ListCategories()), nil
+	return catResponse(m.ListCategoriesWithFilter("status=?", orm.EnableAssetStatus)), nil
 }

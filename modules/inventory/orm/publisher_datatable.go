@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"clickyab.com/crab/modules/asset/orm"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/permission"
 )
@@ -15,6 +16,7 @@ import (
 //		view = publisher_list:self
 //		searchkey = q
 //		checkable = true
+//		queryparams = cats,ali
 //		multiselect = true
 //		datefilter = created_at
 //		map_prefix = publishers
@@ -37,21 +39,36 @@ func (m *Manager) FillPublisherDataTableArray(
 	to string,
 	search map[string]string,
 	contextparams map[string]string,
+	queryParams map[string]string,
 	sort, order string, p, c int) (PublisherDataTableArray, int64, error) {
 	var params []interface{}
 	var res PublisherDataTableArray
 	var where []string
 	var whereLike []string
-	countQuery := fmt.Sprintf("SELECT COUNT(id) FROM %s",
-		PublisherTableFull,
+	countQuery := fmt.Sprintf(`SELECT COUNT(id) FROM %s LEFT JOIN %s AS cm ON (cm.model_id=publishers.id AND cm.model="publisher")`,
+		PublisherTableFull, orm.CategoryModelTableFull,
 	)
-	query := fmt.Sprintf("SELECT %s FROM %s",
+	query := fmt.Sprintf(`SELECT %s FROM %s LEFT JOIN %s AS cm ON (cm.model_id=publishers.id AND cm.model="publisher")`,
 		getSelectFields(PublisherTableFull, ""),
 		PublisherTableFull,
+		orm.CategoryModelTableFull,
 	)
 	for field, value := range filters {
 		where = append(where, fmt.Sprintf("%s=?", field))
 		params = append(params, value)
+	}
+
+	// check for category
+	categories := queryParams["cats"]
+	if categories != "" {
+		catArr := strings.Split(categories, ",")
+		where = append(where, fmt.Sprintf("cm.category IN (%s)",
+			func() string {
+				return strings.TrimRight(strings.Repeat("?,", len(catArr)), ",")
+			}()))
+		for i := range catArr {
+			params = append(params, catArr[i])
+		}
 	}
 
 	//check for date filter

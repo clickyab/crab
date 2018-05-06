@@ -71,6 +71,7 @@ func (m *Manager) FillCampaigns(
 	to string,
 	search map[string]string,
 	contextparams map[string]string,
+	queryParams map[string]string,
 	sort, order string, p, c int) (CampaignDetailsArray, int64, error) {
 
 	// ORDER MATTER

@@ -47,6 +47,7 @@ func (m *Manager) FillPublishersBaseStatistics(
 	to string,
 	search map[string]string,
 	contextparams map[string]string,
+	queryParams map[string]string,
 	sort, order string, p, c int) (PublishersBaseStatisticsArray, int64, error) {
 
 	var where []string

@@ -48,6 +48,7 @@ func (m *Manager) FillBilling(
 	to string,
 	search map[string]string,
 	contextparams map[string]string,
+	queryParams map[string]string,
 	sort, order string, p, c int) (BillingDataTableArray, int64, error) {
 
 	var params []interface{}

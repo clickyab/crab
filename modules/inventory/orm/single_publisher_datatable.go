@@ -39,6 +39,7 @@ func (m *Manager) FillSinglePublisherDataTableArray(
 	to string,
 	search map[string]string,
 	contextparams map[string]string,
+	queryParams map[string]string,
 	sort, order string, p, c int) (SinglePublisherDataTableArray, int64, error) {
 	var params []interface{}
 	var res SinglePublisherDataTableArray

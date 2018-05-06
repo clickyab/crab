@@ -51,6 +51,7 @@ func (m *Manager) FillDaily(
 	to string,
 	search map[string]string,
 	contextparams map[string]string,
+	queryParams map[string]string,
 	sort, order string, p, c int) (CampaignDailyArray, int64, error) {
 
 	var params []interface{}
