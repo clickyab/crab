@@ -1,0 +1,43 @@
+{
+	"properties": {
+		"account_type": {
+			"type": "string"
+		},
+		"corporation_info": {
+			"properties": {
+				"economic_code": {
+					"type": "string"
+				},
+				"legal_name": {
+					"type": "string"
+				},
+				"legal_register": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"email": {
+			"type": "string"
+		},
+		"first_name": {
+			"type": "string"
+		},
+		"last_name": {
+			"type": "string"
+		},
+		"mobile": {
+			"type": "string"
+		},
+		"notify_user": {
+			"type": "boolean"
+		},
+		"password": {
+			"type": "string"
+		},
+		"role_id": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

@@ -17,6 +17,13 @@
 				"type": "string"
 			},
 			{
+				"description": " search the label field",
+				"in": "query",
+				"name": "label",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
@@ -31,6 +38,13 @@
 				"type": "int"
 			},
 			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
 				"name": "from",
@@ -41,20 +55,6 @@
 				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
 				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the label field",
-				"in": "query",
-				"name": "label",
 				"required": false,
 				"type": "string"
 			},
