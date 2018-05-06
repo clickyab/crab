@@ -43,7 +43,7 @@ var (
 	IconRequiredErr = t9e.G("icon required in app native")
 
 	// InvalidStatusErr invalid status error
-	InvalidStatusErr = t9e.G("invalid status you can select %s or %s or %s.", "accepted", "rejected", "pending")
+	InvalidStatusErr = t9e.G("invalid status you can select accepted or rejected or pending.")
 
 	// UpdateStatusDbErr error in update creative status
 	UpdateStatusDbErr = t9e.G("an database error occurred when we try to update creative status ")
