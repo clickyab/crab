@@ -200,3 +200,14 @@ func (m *Manager) FindCreativeByIDAndType(crID int64, cType CreativeTypes) (*Cre
 	}
 	return &res, nil
 }
+
+// SetCreativesStatus to Change status of all Creative with campaign id
+func (m *Manager) SetCreativesStatus(campaignID int64, status CreativeStatusType) (int64, error) {
+	q := fmt.Sprintf("UPDATE %s SET status=? WHERE campaign_id=?", CreativeTableFull)
+	res, err := m.GetWDbMap().Exec(q, status, campaignID)
+	if err != nil {
+		return 0, err
+	}
+	rowEffected, err := res.RowsAffected()
+	return rowEffected, err
+}

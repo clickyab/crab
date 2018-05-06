@@ -3,30 +3,16 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " search the email field",
+				"description": "",
 				"in": "query",
-				"name": "email",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": "",
 				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
+				"name": "pay_model",
 				"required": false,
 				"type": "string"
 			},
@@ -34,13 +20,6 @@
 				"description": " search the user_id field",
 				"in": "query",
 				"name": "user_id",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
@@ -59,11 +38,11 @@
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": " search the email field",
 				"in": "query",
-				"name": "p",
+				"name": "email",
 				"required": false,
-				"type": "int"
+				"type": "string"
 			},
 			{
 				"description": " parameter for search",
@@ -73,11 +52,32 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "pay_model",
+				"name": "from",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",

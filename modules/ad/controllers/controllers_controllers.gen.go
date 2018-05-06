@@ -31,6 +31,28 @@ func (c Controller) addNativeCreativePost(ctx context.Context, w http.ResponseWr
 	framework.Write(w, res, http.StatusOK)
 }
 
+// changeCampaignCreativeStatus to campaign
+// @Route {
+// 		url = /campaign-creative-status/:id
+//		method = patch
+//		payload = changeStatus
+//		middleware = authz.Authenticate
+//		resource = change_creative_status:global
+//		200 = CreativeStatusChangeResult
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) changeCampaignCreativeStatusPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*changeStatus)
+	res, err := c.changeCampaignCreativeStatus(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // addNativeCreative to campaign
 // @Route {
 // 		url = /native/:id
