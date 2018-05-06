@@ -5,6 +5,8 @@ import "github.com/clickyab/services/gettext/t9e"
 var (
 	//InvalidIDErr invalid id error
 	InvalidIDErr = t9e.G("invalid id, please check your request data.")
+	//InvalidRoleIDErr invalid role id error
+	InvalidRoleIDErr = t9e.G("invalid role id, please check your request data.")
 	// InalidAuditAction when audit log action is invalid
 	InalidAuditAction = t9e.G("invalid audit action, please check your data.")
 	// InalidAuditDomainID when audit log action is invalid
@@ -35,6 +37,12 @@ var (
 	UserBlockedError = t9e.G("your user is blocked! please try to connect with our support team.")
 	//AlreadyVerifiedErr user is verified before
 	AlreadyVerifiedErr = t9e.G("your user is verified before")
+	//InvalidAccountType user account type
+	InvalidAccountType = t9e.G("invalid user account type! it can be personal or corporation")
+	//InvalidCorporationLegalName user account type
+	InvalidCorporationLegalName = t9e.G("invalid corporation legal name")
+	//DBError when have database error
+	DBError = t9e.G("oops. we have error in database action. please try again.")
 )
 
 // NotFoundError maker
@@ -59,6 +67,15 @@ func NotFoundWithDomainError(dName string) error {
 func NotFoundWithEmail(email string) error {
 	if email != "" {
 		return t9e.G("can't find user with email %s", email)
+	}
+
+	return t9e.G("user not found, please check your request data.")
+}
+
+// NotFoundRoleOfDomain maker
+func NotFoundRoleOfDomain(rName string, dID int64) error {
+	if rName != "" {
+		return t9e.G("user role %s with domain id %s not found", rName, dID)
 	}
 
 	return t9e.G("user not found, please check your request data.")

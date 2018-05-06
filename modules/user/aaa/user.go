@@ -64,8 +64,6 @@ type User struct {
 	AccessToken string                                   `json:"-" db:"access_token"`
 	Avatar      mysql.NullString                         `json:"avatar" db:"avatar"`
 	Status      UserValidStatus                          `json:"status" db:"status"`
-	CreatedAt   time.Time                                `json:"created_at" db:"created_at"`
-	UpdatedAt   time.Time                                `json:"updated_at" db:"updated_at"`
 	OldPassword mysql.StringJSONArray                    `json:"-"  db:"old_password"`
 	CityID      mysql.NullInt64                          `json:"city_id" db:"city_id"`
 	LandLine    mysql.NullString                         `json:"land_line" db:"land_line"`
@@ -83,6 +81,8 @@ type User struct {
 	childes     []int64                                  `json:"-" db:"-"`
 	roles       []Role                                   `db:"-"`
 	resource    map[permission.UserScope]map[string]bool `db:"-"`
+	CreatedAt   time.Time                                `json:"created_at" db:"created_at"`
+	UpdatedAt   time.Time                                `json:"updated_at" db:"updated_at"`
 }
 
 // Role role model in database
@@ -140,20 +140,11 @@ type Corporation struct {
 	EconomicCode  mysql.NullString `json:"economic_code" db:"economic_code"`
 }
 
-// RegisterUserPayload register
-type RegisterUserPayload struct {
-	Email     string
-	Password  string
-	FirstName string
-	Mobile    string
-	LastName  string
-	LegalName string
-}
-
 // RegisterUser try to register user
-func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, error) {
-	password, err := bcrypt.GenerateFromPassword([]byte(pl.Password), bcrypt.DefaultCost)
+func (m *Manager) RegisterUser(user *User, corp *Corporation, domainID, roleID int64) error {
+	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	assert.Nil(err)
+
 	err = m.Begin()
 	assert.Nil(err)
 	defer func() {
@@ -163,51 +154,52 @@ func (m *Manager) RegisterUser(pl RegisterUserPayload, domainID int64) (*User, e
 			assert.Nil(m.Commit())
 		}
 	}()
-	u := &User{
-		Email:       pl.Email,
-		Password:    string(password),
-		Status:      RegisteredUserStatus,
-		AccessToken: <-random.ID,
-		FirstName:   pl.FirstName,
-		LastName:    pl.LastName,
-		Cellphone:   mysql.NullString{String: pl.Mobile, Valid: pl.Mobile != ""},
-		Gender:      NotSpecifiedGender,
-	}
-	err = m.CreateUser(u)
-	if err != nil {
-		return nil, err
-	}
-	role, err := m.FindRoleByNameDomain(ucfg.DefaultRole.String(), domainID)
-	if err != nil {
-		return nil, fmt.Errorf("user role %s with domain id %d not found with error: %s", ucfg.DefaultRole.String(), domainID, err.Error())
-	}
-	ur := &RoleUser{RoleID: role.ID, UserID: u.ID}
-	err = m.CreateRoleUser(ur)
-	if err != nil {
-		return u, err
+
+	user.AccessToken = <-random.ID
+	user.Password = string(password)
+
+	if !user.Gender.IsValid() {
+		user.Gender = NotSpecifiedGender
 	}
 
-	if pl.LegalName != "" {
-		uc := &Corporation{
-			UserID:    u.ID,
-			LegalName: pl.LegalName,
-		}
-		err = m.CreateCorporation(uc)
-		if err != nil {
-			return nil, err
-		}
-		u.Corporation = uc
+	if !user.Status.IsValid() {
+		user.Status = RegisteredUserStatus
 	}
+
+	err = m.CreateUser(user)
+	if err != nil {
+		return err
+	}
+
+	ur := &RoleUser{RoleID: roleID, UserID: user.ID}
+	err = m.CreateRoleUser(ur)
+	if err != nil {
+		return err
+	}
+
+	if corp != nil && corp.LegalName != "" {
+		corp.UserID = user.ID
+		err = m.CreateCorporation(corp)
+		if err != nil {
+			return err
+		}
+
+		user.Corporation = corp
+	}
+
 	dManager, err := domainOrm.NewOrmManagerFromTransaction(m.GetWDbMap())
 	if err != nil {
-		return nil, err
+		return err
 	}
-	du := &domainOrm.DomainUser{UserID: u.ID, DomainID: domainID, Status: domainOrm.EnableDomainStatus}
+	du := &domainOrm.DomainUser{
+		UserID:   user.ID,
+		DomainID: domainID,
+		Status:   domainOrm.EnableDomainStatus,
+	}
+
 	err = dManager.CreateDomainUser(du)
-	if err != nil {
-		return nil, err
-	}
-	return u, nil
+
+	return err
 }
 
 // FindRoleByNameDomain return the Role base on its name and domain
@@ -215,8 +207,33 @@ func (m *Manager) FindRoleByNameDomain(n string, domainID int64) (*Role, error) 
 	var res Role
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE name=? AND domain_id=?", RoleTableFull),
+		fmt.Sprintf(
+			"SELECT %s FROM %s WHERE name=? AND domain_id=?",
+			getSelectFields(RoleTableFull, ""),
+			RoleTableFull,
+		),
 		n,
+		domainID,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+// FindRoleByIDAndDomain return the Role base on its name and domain
+func (m *Manager) FindRoleByIDAndDomain(rID, domainID int64) (*Role, error) {
+	var res Role
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf(
+			"SELECT %s FROM %s WHERE id=? AND domain_id=?",
+			getSelectFields(RoleTableFull, ""),
+			RoleTableFull,
+		),
+		rID,
 		domainID,
 	)
 

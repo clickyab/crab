@@ -6,8 +6,11 @@ import (
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/errors"
+	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
+	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
 	gom "github.com/go-sql-driver/mysql"
 )
@@ -32,15 +35,26 @@ func (c *Controller) register(ctx context.Context, r *http.Request, p *registerP
 	m := aaa.NewAaaManager()
 	d := domain.MustGetDomain(ctx)
 
-	res := aaa.RegisterUserPayload{
+	user := aaa.User{
 		Email:     p.Email,
 		Password:  p.Password,
 		FirstName: p.FirstName,
 		LastName:  p.LastName,
-		Mobile:    p.Mobile,
-		LegalName: p.LegalName,
+		Cellphone: mysql.NullString{String: p.Mobile, Valid: true},
 	}
-	usr, err := m.RegisterUser(res, d.ID)
+
+	corp := aaa.Corporation{}
+	if p.LegalName != "" {
+		corp.LegalName = p.LegalName
+	}
+
+	db := aaa.NewAaaManager()
+	role, err := db.FindRoleByNameDomain(ucfg.DefaultRole.String(), d.ID)
+	if err != nil {
+		return nil, errors.NotFoundRoleOfDomain(ucfg.DefaultRole.String(), d.ID)
+	}
+
+	err = m.RegisterUser(&user, &corp, d.ID, role.ID)
 	if err != nil {
 		mysqlError, ok := err.(*gom.MySQLError)
 		if !ok {
@@ -50,7 +64,7 @@ func (c *Controller) register(ctx context.Context, r *http.Request, p *registerP
 			return nil, trans.E("duplicate email %s", p.Email)
 		}
 	}
-	e := verifyEmail(usr, r)
+	e := verifyEmail(&user, r)
 	if e == errTooSoon {
 		return nil, nil
 	}
