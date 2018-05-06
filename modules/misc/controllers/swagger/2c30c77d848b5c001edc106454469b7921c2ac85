@@ -43,6 +43,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "make_payment:self"
+		},
 		"tags": [
 			"controllers"
 		]

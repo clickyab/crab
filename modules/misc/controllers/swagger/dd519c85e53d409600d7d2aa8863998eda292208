@@ -64,6 +64,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "publisher_base_statistics:self"
+		},
 		"tags": [
 			"controllers"
 		]

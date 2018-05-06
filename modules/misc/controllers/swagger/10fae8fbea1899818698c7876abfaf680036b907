@@ -45,6 +45,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "edit_campaign:self"
+		},
 		"tags": [
 			"controllers"
 		]

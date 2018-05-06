@@ -60,6 +60,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": ""
+		},
 		"tags": [
 			"controllers"
 		]

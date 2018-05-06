@@ -36,6 +36,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "list_billing:self"
+		},
 		"tags": [
 			"controllers"
 		]

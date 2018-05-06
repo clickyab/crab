@@ -24,6 +24,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": false,
+			"resource": ""
+		},
 		"tags": [
 			"location"
 		]

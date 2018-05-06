@@ -18,6 +18,10 @@
 			}
 		],
 		"responses": {},
+		"security": {
+			"protected": false,
+			"resource": ""
+		},
 		"tags": [
 			"controllers"
 		]

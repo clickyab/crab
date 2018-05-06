@@ -3,18 +3,25 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "status",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": " page number",
@@ -38,16 +45,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},
@@ -119,6 +119,10 @@
 					"type": "object"
 				}
 			}
+		},
+		"security": {
+			"protected": true,
+			"resource": "list_inventory:self"
 		},
 		"tags": [
 			"controllers"

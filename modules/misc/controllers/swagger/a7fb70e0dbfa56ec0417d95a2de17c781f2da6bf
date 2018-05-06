@@ -45,6 +45,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "create_bank_snap:self"
+		},
 		"tags": [
 			"controllers"
 		]

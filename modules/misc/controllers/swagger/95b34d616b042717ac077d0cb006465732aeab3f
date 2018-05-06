@@ -64,6 +64,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "get_billing:self"
+		},
 		"tags": [
 			"controllers"
 		]

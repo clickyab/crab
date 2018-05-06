@@ -71,6 +71,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": "campaign_creative:self"
+		},
 		"tags": [
 			"controllers"
 		]

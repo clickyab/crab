@@ -62,6 +62,10 @@
 				}
 			}
 		},
+		"security": {
+			"protected": true,
+			"resource": ""
+		},
 		"tags": [
 			"user"
 		]

@@ -3,30 +3,9 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " parameter for search",
+				"description": "",
 				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the first_name field",
-				"in": "query",
-				"name": "first_name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " search the email field",
-				"in": "query",
-				"name": "email",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
@@ -38,23 +17,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the email field",
 				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the last_name field",
-				"in": "query",
-				"name": "last_name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the user_id field",
-				"in": "query",
-				"name": "user_id",
+				"name": "email",
 				"required": false,
 				"type": "string"
 			},
@@ -76,6 +41,41 @@
 				"description": "",
 				"in": "query",
 				"name": "pay_model",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the user_id field",
+				"in": "query",
+				"name": "user_id",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the last_name field",
+				"in": "query",
+				"name": "last_name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the first_name field",
+				"in": "query",
+				"name": "first_name",
 				"required": false,
 				"type": "string"
 			},
@@ -140,6 +140,10 @@
 					"type": "object"
 				}
 			}
+		},
+		"security": {
+			"protected": true,
+			"resource": "get_billing:self"
 		},
 		"tags": [
 			"controllers"
