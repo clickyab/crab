@@ -52,18 +52,19 @@ const (
 //		list = yes
 // }
 type Creative struct {
-	ID         int64                  `json:"id" db:"id"`
-	UserID     int64                  `json:"user_id" db:"user_id"`
-	CampaignID int64                  `json:"campaign_id" db:"campaign_id"`
-	Status     CreativeStatusType     `json:"status" db:"status"`
-	Type       CreativeTypes          `json:"type" db:"type"`
-	URL        string                 `json:"url" db:"url"`
-	Name       string                 `json:"name" db:"name"`
-	MaxBid     mysql.NullInt64        `json:"max_bid" db:"max_bid"`
-	Attributes mysql.GenericJSONField `json:"attributes" db:"attributes"`
-	CreatedAt  time.Time              `json:"created_at" db:"created_at"`
-	UpdatedAt  time.Time              `json:"updated_at" db:"updated_at"`
-	ArchivedAt mysql.NullTime         `json:"archived_at" db:"archived_at"`
+	ID              int64                  `json:"id" db:"id"`
+	UserID          int64                  `json:"user_id" db:"user_id"`
+	CampaignID      int64                  `json:"campaign_id" db:"campaign_id"`
+	Status          CreativeStatusType     `json:"status" db:"status"`
+	Type            CreativeTypes          `json:"type" db:"type"`
+	URL             string                 `json:"url" db:"url"`
+	Name            string                 `json:"name" db:"name"`
+	MaxBid          mysql.NullInt64        `json:"max_bid" db:"max_bid"`
+	Attributes      mysql.GenericJSONField `json:"attributes" db:"attributes"`
+	RejectReasonsID int64                  `json:"reject_reason_id" db:"reject_reasons_id"`
+	CreatedAt       time.Time              `json:"created_at" db:"created_at"`
+	UpdatedAt       time.Time              `json:"updated_at" db:"updated_at"`
+	ArchivedAt      mysql.NullTime         `json:"archived_at" db:"archived_at"`
 }
 
 // CreativeSaveResult to return creative and related assets after insert or update
