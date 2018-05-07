@@ -8,6 +8,7 @@
 // db/20180422112913_perm.sql
 // db/20180423124500_fixcreative.sql
 // db/20180502070808_creatvie_detail.sql
+// db/20180507044253_add_creative_reject_reasons.sql
 // DO NOT EDIT!
 
 package migrations
@@ -235,6 +236,26 @@ func db20180502070808_creatvie_detailSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180507044253_add_creative_reject_reasonsSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\x92\xc1\x6f\xda\x30\x18\xc5\xef\xfe\x2b\xde\x0d\xa2\x51\x69\xbb\x4d\x8a\x7a\x70\x93\x8f\xce\x5a\x70\x98\xe3\x48\xed\x29\x0e\xc4\xac\x1e\x2c\xa0\xd8\x59\xf7\xe7\x4f\x81\x8e\x42\xa1\xd3\x6e\x49\xfc\xde\xf7\xbe\xf8\xfd\xd8\xcd\x0d\x3e\xfc\x74\xdf\xbb\x3a\x58\x94\xbb\xe1\xb5\xf8\x96\xc1\xb5\xf0\x76\x19\xdc\xb6\xc5\xa8\xdc\x8d\xe0\x3c\xec\x6f\xbb\xec\x83\x6d\xf0\xfc\x64\x5b\x84\x27\xe7\x71\xf0\x0d\x22\xe7\x51\xef\x76\x1b\x67\x1b\xc6\x33\x4d\x0a\x9a\xdf\x65\x04\xb3\xec\x6c\x1d\xdc\x2f\xeb\x0d\x78\x9a\xc2\x74\xf6\x87\x5d\x86\xaa\xb3\xb5\xdf\xb6\xbe\x72\x8d\x81\x90\x7a\xfc\xe9\x63\x84\x52\x16\xe2\x5e\x52\x0a\x59\x66\x19\xf8\x74\x98\x62\xea\x10\x3a\xb7\xe8\x83\xf5\x26\x66\x89\x22\xae\xe9\x65\x34\xc4\x14\x32\xd7\xa0\x07\x51\xe8\xe2\x35\xa9\x3a\x8f\x30\x18\x33\x73\x3d\x26\xd7\x2f\x51\xa5\xce\x2b\x21\x13\x45\x33\x92\x7a\xc2\xcc\xc1\x6a\xa0\xe9\x41\x1f\x65\x13\x66\x7c\xa8\x43\xef\x0d\x48\x96\xb3\xf1\xc8\xb6\xf5\x62\x63\x47\x13\x8c\x1a\xe7\xf7\x8f\xd1\xa9\x78\xbf\x8f\x6d\xaa\x3a\x18\xa4\x5c\x93\x16\x33\x7a\xcd\x4c\x69\xca\xcb\x4c\x23\x29\x95\x22\xa9\xab\xe1\xb4\xd0\x7c\x36\x9f\x30\xd3\xef\x9a\x2b\xce\x53\xd7\x21\x62\xae\xc4\x8c\xab\x47\x7c\xa5\x47\x8c\x87\x7f\x8c\x22\x46\xf2\x5e\x48\xc2\x2d\x44\xdb\x6e\xd3\x3b\x76\xcc\xf9\xc2\x15\x4f\x86\x2b\x2d\x48\xe3\x16\x7d\x58\x7d\x8e\xd9\x59\x57\xc7\xaa\x18\xf6\x5d\x25\xb9\x2c\xb4\xe2\x42\x6a\x5c\xb4\x56\xad\xd6\x6c\x9a\x2b\x12\xf7\xf2\x10\x7f\xa1\x88\xa0\x68\x4a\x8a\x64\x42\x05\xde\xe9\x06\x63\xd7\x44\x31\x3b\x43\x30\xdd\x3e\xb7\x7f\x21\x3c\x12\x38\x7c\xfc\x2f\x06\xbb\xed\x66\x63\x1b\x2c\xea\xe5\xfa\x5d\x0e\x53\x95\xcf\x71\xba\xfc\x25\x94\xd5\x6a\x6d\xe2\x7f\x0f\xb8\x42\x72\xcc\xf6\x27\x6f\x0c\x6f\x79\x8c\xff\x04\x00\x00\xff\xff\x2e\x5d\x08\x82\x72\x03\x00\x00"
+
+func db20180507044253_add_creative_reject_reasonsSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180507044253_add_creative_reject_reasonsSql,
+		"db/20180507044253_add_creative_reject_reasons.sql",
+	)
+}
+
+func db20180507044253_add_creative_reject_reasonsSql() (*asset, error) {
+	bytes, err := db20180507044253_add_creative_reject_reasonsSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180507044253_add_creative_reject_reasons.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -287,14 +308,15 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"db/20180325071354_creatives.sql":            db20180325071354_creativesSql,
-	"db/20180407151329_add_creative_perm.sql":    db20180407151329_add_creative_permSql,
-	"db/20180408053319_unique_index_assets.sql":  db20180408053319_unique_index_assetsSql,
-	"db/20180408105045_add_creative_max_bid.sql": db20180408105045_add_creative_max_bidSql,
-	"db/20180417122713_fix.sql":                  db20180417122713_fixSql,
-	"db/20180422112913_perm.sql":                 db20180422112913_permSql,
-	"db/20180423124500_fixcreative.sql":          db20180423124500_fixcreativeSql,
-	"db/20180502070808_creatvie_detail.sql":      db20180502070808_creatvie_detailSql,
+	"db/20180325071354_creatives.sql":                   db20180325071354_creativesSql,
+	"db/20180407151329_add_creative_perm.sql":           db20180407151329_add_creative_permSql,
+	"db/20180408053319_unique_index_assets.sql":         db20180408053319_unique_index_assetsSql,
+	"db/20180408105045_add_creative_max_bid.sql":        db20180408105045_add_creative_max_bidSql,
+	"db/20180417122713_fix.sql":                         db20180417122713_fixSql,
+	"db/20180422112913_perm.sql":                        db20180422112913_permSql,
+	"db/20180423124500_fixcreative.sql":                 db20180423124500_fixcreativeSql,
+	"db/20180502070808_creatvie_detail.sql":             db20180502070808_creatvie_detailSql,
+	"db/20180507044253_add_creative_reject_reasons.sql": db20180507044253_add_creative_reject_reasonsSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -339,14 +361,15 @@ type bintree struct {
 
 var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
-		"20180325071354_creatives.sql":            &bintree{db20180325071354_creativesSql, map[string]*bintree{}},
-		"20180407151329_add_creative_perm.sql":    &bintree{db20180407151329_add_creative_permSql, map[string]*bintree{}},
-		"20180408053319_unique_index_assets.sql":  &bintree{db20180408053319_unique_index_assetsSql, map[string]*bintree{}},
-		"20180408105045_add_creative_max_bid.sql": &bintree{db20180408105045_add_creative_max_bidSql, map[string]*bintree{}},
-		"20180417122713_fix.sql":                  &bintree{db20180417122713_fixSql, map[string]*bintree{}},
-		"20180422112913_perm.sql":                 &bintree{db20180422112913_permSql, map[string]*bintree{}},
-		"20180423124500_fixcreative.sql":          &bintree{db20180423124500_fixcreativeSql, map[string]*bintree{}},
-		"20180502070808_creatvie_detail.sql":      &bintree{db20180502070808_creatvie_detailSql, map[string]*bintree{}},
+		"20180325071354_creatives.sql":                   &bintree{db20180325071354_creativesSql, map[string]*bintree{}},
+		"20180407151329_add_creative_perm.sql":           &bintree{db20180407151329_add_creative_permSql, map[string]*bintree{}},
+		"20180408053319_unique_index_assets.sql":         &bintree{db20180408053319_unique_index_assetsSql, map[string]*bintree{}},
+		"20180408105045_add_creative_max_bid.sql":        &bintree{db20180408105045_add_creative_max_bidSql, map[string]*bintree{}},
+		"20180417122713_fix.sql":                         &bintree{db20180417122713_fixSql, map[string]*bintree{}},
+		"20180422112913_perm.sql":                        &bintree{db20180422112913_permSql, map[string]*bintree{}},
+		"20180423124500_fixcreative.sql":                 &bintree{db20180423124500_fixcreativeSql, map[string]*bintree{}},
+		"20180502070808_creatvie_detail.sql":             &bintree{db20180502070808_creatvie_detailSql, map[string]*bintree{}},
+		"20180507044253_add_creative_reject_reasons.sql": &bintree{db20180507044253_add_creative_reject_reasonsSql, map[string]*bintree{}},
 	}},
 }}
 

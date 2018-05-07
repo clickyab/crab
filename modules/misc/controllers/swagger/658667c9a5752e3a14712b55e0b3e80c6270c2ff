@@ -3,16 +3,9 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the name field",
 				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
+				"name": "name",
 				"required": false,
 				"type": "string"
 			},
@@ -24,18 +17,11 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " count per page",
 				"in": "query",
-				"name": "kind",
+				"name": "c",
 				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
-				"required": false,
-				"type": "string"
+				"type": "int"
 			},
 			{
 				"description": " page number",
@@ -43,6 +29,13 @@
 				"name": "p",
 				"required": false,
 				"type": "int"
+			},
+			{
+				"description": " search the domain field",
+				"in": "query",
+				"name": "domain",
+				"required": false,
+				"type": "string"
 			},
 			{
 				"description": " parameter for search",
@@ -66,16 +59,23 @@
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "c",
+				"name": "to",
 				"required": false,
-				"type": "int"
+				"type": "string"
 			},
 			{
-				"description": " search the name field",
+				"description": "",
 				"in": "query",
-				"name": "name",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},

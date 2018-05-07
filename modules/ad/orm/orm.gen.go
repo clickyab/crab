@@ -18,6 +18,9 @@ const (
 	// CreativeDetailTableFull is the CreativeDetail table name
 	CreativeDetailTableFull = "creative_detail"
 
+	// CreativeRejectReasonsTableFull is the CreativeRejectReasons table name
+	CreativeRejectReasonsTableFull = "creative_reject_reasons"
+
 	// CreativeTableFull is the Creative table name
 	CreativeTableFull = "creatives"
 )
@@ -34,8 +37,11 @@ func getSelectFields(tb string, alias string) string {
 	case CreativeDetailTableFull:
 		return fmt.Sprintf(`%[1]scampaign_id,%[1]screative_id,%[1]sdaily_id,%[1]shour_id,%[1]sfake_imp,%[1]sfake_click,%[1]simp,%[1]sclick,%[1]scpc,%[1]scpa,%[1]scpm,%[1]sconv,%[1]screated_at,%[1]supdated_at`, alias)
 
+	case CreativeRejectReasonsTableFull:
+		return fmt.Sprintf(`%[1]sid,%[1]sreason,%[1]sstatus,%[1]screated_at,%[1]supdated_at`, alias)
+
 	case CreativeTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]suser_id,%[1]scampaign_id,%[1]sstatus,%[1]stype,%[1]surl,%[1]sname,%[1]smax_bid,%[1]sattributes,%[1]screated_at,%[1]supdated_at,%[1]sarchived_at`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]suser_id,%[1]scampaign_id,%[1]sstatus,%[1]stype,%[1]surl,%[1]sname,%[1]smax_bid,%[1]sattributes,%[1]sreject_reasons_id,%[1]screated_at,%[1]supdated_at,%[1]sarchived_at`, alias)
 
 	}
 	return ""
@@ -80,6 +86,14 @@ func (m *Manager) Initialize() {
 		false,
 		"CreativeID",
 		"HourID",
+	)
+
+	m.AddTableWithName(
+		CreativeRejectReasons{},
+		CreativeRejectReasonsTableFull,
+	).SetKeys(
+		true,
+		"ID",
 	)
 
 	m.AddTableWithName(
