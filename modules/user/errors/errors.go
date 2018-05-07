@@ -3,6 +3,8 @@ package errors
 import "github.com/clickyab/services/gettext/t9e"
 
 var (
+	// AccessDenied error
+	AccessDenied error = t9e.G("access denied! you don't have access for this action")
 	//InvalidIDErr invalid id error
 	InvalidIDErr = t9e.G("invalid id, please check your request data.")
 	//InvalidRoleIDErr invalid role id error
@@ -43,6 +45,20 @@ var (
 	InvalidCorporationLegalName = t9e.G("invalid corporation legal name")
 	//DBError when have database error
 	DBError = t9e.G("oops. we have error in database action. please try again.")
+	// PersonalNotAllowedCorporation personal userPayload not allowed to update corporate account
+	PersonalNotAllowedCorporation = t9e.G("personal userPayload not allowed to update corporate account")
+	// CorporationUpdateErr cant update corporation
+	CorporationUpdateErr = t9e.G("cant update corporation")
+	// UserUpdateErr cant update user
+	UserUpdateErr = t9e.G("cant update user")
+	// GenderInvalid invalid gender
+	GenderInvalid = t9e.G("invalid gender")
+	// AssignManagersErr error while assigning managers
+	AssignManagersErr = t9e.G("error while assigning managers")
+	// EmptyManagerErr manager is empty error
+	EmptyManagerErr = t9e.G("manager is empty error")
+	// ManagerMismatchErr manager not found
+	ManagerMismatchErr = t9e.G("manager not found")
 )
 
 // NotFoundError maker
