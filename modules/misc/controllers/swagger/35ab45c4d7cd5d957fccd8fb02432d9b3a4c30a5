@@ -26,6 +26,9 @@
 		"name": {
 			"type": "string"
 		},
+		"reject_reason_id": {
+			"type": "integer"
+		},
 		"status": {
 			"type": "string"
 		},

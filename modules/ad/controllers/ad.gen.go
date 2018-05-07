@@ -182,6 +182,31 @@ func (c *Controller) Routes(r framework.Mux) {
 		group.GET("controllers-Controller-getCreativeGet", "/creative/:id", framework.Mix(c.getCreativeGet, m5...))
 		// End route with key 5
 
+		/* Route {
+			"Route": "/creative-reject-reasons",
+			"Method": "GET",
+			"Function": "Controller.getCreativeRejectReasonsGet",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "get_creative_reject_reason",
+			"Scope": "self"
+		} with key 6 */
+		m6 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("get_creative_reject_reason", "get_creative_reject_reason")
+		m6 = append(m6, authz.AuthorizeGenerator("get_creative_reject_reason", "self"))
+
+		group.GET("controllers-Controller-getCreativeRejectReasonsGet", "/creative-reject-reasons", framework.Mix(c.getCreativeRejectReasonsGet, m6...))
+		// End route with key 6
+
 		initializer.DoInitialize(c)
 	})
 }

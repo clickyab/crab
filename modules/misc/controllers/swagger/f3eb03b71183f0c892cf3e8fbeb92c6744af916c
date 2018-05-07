@@ -1,0 +1,33 @@
+{
+	"items": {
+		"properties": {
+			"created_at": {
+				"format": "dateTime",
+				"type": "string"
+			},
+			"id": {
+				"type": "integer"
+			},
+			"reason": {
+				"type": "string"
+			},
+			"status": {
+				"type": "string"
+			},
+			"updated_at": {
+				"properties": {
+					"Time": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"Valid": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			}
+		},
+		"type": "object"
+	},
+	"type": "array"
+}

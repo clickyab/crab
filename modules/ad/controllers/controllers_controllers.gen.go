@@ -95,3 +95,24 @@ func (c Controller) getCreativeGet(ctx context.Context, w http.ResponseWriter, r
 	}
 	framework.Write(w, res, http.StatusOK)
 }
+
+// getCreativeRejectReasons to get list of creative reject reasons
+// @Route {
+// 		url = /creative-reject-reasons
+//		method = get
+//		middleware = authz.Authenticate
+//		resource = get_creative_reject_reason:self
+//		200 = rejectReasons
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) getCreativeRejectReasonsGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getCreativeRejectReasons(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
