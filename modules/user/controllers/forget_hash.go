@@ -23,5 +23,8 @@ func (c *Controller) checkForgetHash(ctx context.Context, r *http.Request) (*Res
 	}
 	s, _, e := genVerifyCode(u, "change password")
 	assert.Nil(e)
-	return c.createLoginResponseWithToken(u, s), nil
+	return &ResponseLoginOK{
+		Token:   s,
+		Account: c.createUserResponse(u),
+	}, nil
 }

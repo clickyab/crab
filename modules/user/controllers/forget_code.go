@@ -30,5 +30,8 @@ func (c *Controller) checkForgetCode(ctx context.Context, r *http.Request, p *fo
 
 	s, _, e := genVerifyCode(u, "change password")
 	assert.Nil(e)
-	return c.createLoginResponseWithToken(u, s), nil
+	return &ResponseLoginOK{
+		Token:   s,
+		Account: c.createUserResponse(u),
+	}, nil
 }

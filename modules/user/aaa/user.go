@@ -18,6 +18,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const manageablePerm = "can_manage"
+
 // AccountType is the user account type
 type (
 	// AccountType is the user account type
@@ -440,8 +442,8 @@ func (m *Manager) FindUserByIDDomain(id, domainID int64) (*User, error) {
 	return &res, nil
 }
 
-// SearchManagersByMailDomain search managers by mail and domain
-func (m *Manager) SearchManagersByMailDomain(mail string, d int64) []UserSearchResult {
+// SearchAdvisorsByMailDomain search advisors by mail and domain
+func (m *Manager) SearchAdvisorsByMailDomain(mail string, d int64) []UserSearchResult {
 	var res []UserSearchResult
 	var params []interface{}
 	q := fmt.Sprintf(`SELECT u.id,u.email FROM %s AS u 
@@ -461,8 +463,8 @@ func (m *Manager) SearchManagersByMailDomain(mail string, d int64) []UserSearchR
 	return res
 }
 
-// FindManagersByMailDomain find managers by mails and domains
-func (m *Manager) FindManagersByMailDomain(ids []int64, d int64) []int64 {
+// FindManagersByIDsDomain find managers by ids and domains
+func (m *Manager) FindManagersByIDsDomain(ids []int64, d int64) []int64 {
 	var res []int64
 	var params []interface{}
 	q := fmt.Sprintf(`SELECT u.id FROM %s AS u 
@@ -489,9 +491,17 @@ func (m *Manager) FindManagersByMailDomain(ids []int64, d int64) []int64 {
 	return res
 }
 
+// deleteAdvisorsByUserID delete advisor by user id
+func (m *Manager) deleteAdvisorsByUserID(id, d int64) error {
+	// delete old managers
+	var err error
+	q := fmt.Sprintf(`DELETE FROM %s WHERE user_id=? AND domain_id=?`, AdvisorTableFull)
+	_, err = m.GetWDbMap().Exec(q, id, d)
+	return err
+}
+
 // AssignManagers assign managers to user
 func (m *Manager) AssignManagers(userID, d int64, managerIDs []int64) ([]*Advisor, error) {
-	var res []*Advisor
 	err := m.Begin()
 	assert.Nil(err)
 	defer func() {
@@ -501,12 +511,23 @@ func (m *Manager) AssignManagers(userID, d int64, managerIDs []int64) ([]*Adviso
 			assert.Nil(m.Commit())
 		}
 	}()
-	// delete old managers
-	q := fmt.Sprintf(`DELETE FROM %s WHERE user_id=? AND domain_id=?`, AdvisorTableFull)
-	_, err = m.GetWDbMap().Exec(q, userID, d)
+	err = m.deleteAdvisorsByUserID(userID, d)
 	if err != nil {
-		return res, err
+		return nil, err
 	}
+
+	res, err := m.assignManagers(managerIDs, d, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// assignManagers assign advisor to user
+func (m *Manager) assignManagers(managerIDs []int64, d, userID int64) ([]*Advisor, error) {
+	var res []*Advisor
+	var err error
 	// insert new managers
 	for i := range managerIDs {
 		advisor := &Advisor{

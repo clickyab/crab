@@ -1,0 +1,47 @@
+{
+	"properties": {
+		"address": {
+			"type": "string"
+		},
+		"cell_phone": {
+			"type": "string"
+		},
+		"city_id": {
+			"type": "integer"
+		},
+		"economic_code": {
+			"type": "string"
+		},
+		"first_name": {
+			"type": "string"
+		},
+		"gender": {
+			"type": "string"
+		},
+		"land_line": {
+			"type": "string"
+		},
+		"last_name": {
+			"type": "string"
+		},
+		"legal_name": {
+			"type": "string"
+		},
+		"legal_register": {
+			"type": "string"
+		},
+		"managers": {
+			"items": {
+				"type": "integer"
+			},
+			"type": "array"
+		},
+		"postal_code": {
+			"type": "string"
+		},
+		"ssn": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
