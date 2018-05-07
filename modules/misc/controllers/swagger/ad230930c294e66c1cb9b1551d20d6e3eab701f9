@@ -1,0 +1,56 @@
+{
+	"properties": {
+		"data": {
+			"items": {
+				"properties": {
+					"click": {
+						"type": "integer"
+					},
+					"conversion": {
+						"type": "integer"
+					},
+					"conversion_rate": {
+						"type": "number"
+					},
+					"cpa": {
+						"type": "integer"
+					},
+					"date": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"ecpc": {
+						"type": "number"
+					},
+					"ecpm": {
+						"type": "number"
+					},
+					"ectr": {
+						"type": "number"
+					},
+					"impression": {
+						"type": "integer"
+					},
+					"spend": {
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"hash": {
+			"type": "string"
+		},
+		"page": {
+			"type": "integer"
+		},
+		"per_page": {
+			"type": "integer"
+		},
+		"total": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

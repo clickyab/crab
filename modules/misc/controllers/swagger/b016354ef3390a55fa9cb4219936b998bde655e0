@@ -31,6 +31,13 @@
 				"type": "string"
 			},
 			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": "",
 				"in": "query",
 				"name": "sort",
@@ -41,13 +48,6 @@
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
 				"required": false,
 				"type": "int"
 			},

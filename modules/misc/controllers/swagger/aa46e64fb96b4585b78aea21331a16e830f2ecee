@@ -3,9 +3,23 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": "",
+				"description": " count per page",
 				"in": "query",
-				"name": "sort",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " search the last_name field",
+				"in": "query",
+				"name": "last_name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -27,13 +41,6 @@
 				"description": " search the first_name field",
 				"in": "query",
 				"name": "first_name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the last_name field",
-				"in": "query",
-				"name": "last_name",
 				"required": false,
 				"type": "string"
 			},
@@ -66,18 +73,11 @@
 				"type": "int"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "to",
+				"name": "sort",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",

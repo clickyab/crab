@@ -1,10 +1,10 @@
 {
 	"properties": {
-		"campaign": {
+		"id": {
 			"type": "integer"
 		},
-		"effected_creatives": {
-			"type": "integer"
+		"state": {
+			"type": "string"
 		}
 	},
 	"type": "object"
