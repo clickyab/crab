@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"time"
-
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
@@ -43,7 +41,7 @@ func (p *editUserPayload) ValidateExtra(ctx context.Context, w http.ResponseWrit
 
 	m := aaa.NewAaaManager()
 
-	managerIDs := m.FindManagersByMailDomain(p.Managers, dm.ID)
+	managerIDs := m.FindManagersByIDsDomain(p.Managers, dm.ID)
 
 	if len(managerIDs) != len(p.Managers) {
 		return errors.ManagerMismatchErr
@@ -83,7 +81,6 @@ func (c *Controller) adminEdit(ctx context.Context, r *http.Request, p *editUser
 	p.owner.Address = stringToNullString(p.Address)
 	p.owner.Gender = p.Gender
 	p.owner.SSN = stringToNullString(p.SSN)
-	p.owner.UpdatedAt = time.Now()
 
 	err := m.UpdateUser(p.owner)
 	if err != nil {

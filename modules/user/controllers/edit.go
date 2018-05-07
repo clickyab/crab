@@ -93,7 +93,10 @@ func (c *Controller) edit(ctx context.Context, r *http.Request, p *userPayload) 
 		}
 	}
 
-	return c.createLoginResponseWithToken(cu, authz.MustGetToken(ctx)), nil
+	return &ResponseLoginOK{
+		Token:   authz.MustGetToken(ctx),
+		Account: c.createUserResponse(cu),
+	}, nil
 }
 
 func stringToNullString(val string) mysql.NullString {

@@ -165,6 +165,74 @@ func (pl *checkMailPayload) Validate(ctx context.Context, w http.ResponseWriter,
 	return nil
 }
 
+func (p *editUserPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	err := func(in interface{}) error {
+		if v, ok := in.(interface {
+			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
+		}); ok {
+			return v.ValidateExtra(ctx, w, r)
+		}
+		return nil
+	}(p)
+	if err != nil {
+		return err
+	}
+	errs := validator.New().Struct(p)
+	if errs == nil {
+		return nil
+	}
+	res := middleware.GroupError{}
+	for _, i := range errs.(validator.ValidationErrors) {
+		switch i.Field() {
+		case "CityID":
+			res["city_id"] = trans.E("invalid value")
+
+		case "LandLine":
+			res["land_line"] = trans.E("invalid value")
+
+		case "CellPhone":
+			res["cell_phone"] = trans.E("invalid value")
+
+		case "PostalCode":
+			res["postal_code"] = trans.E("invalid value")
+
+		case "FirstName":
+			res["first_name"] = trans.E("invalid value")
+
+		case "LastName":
+			res["last_name"] = trans.E("invalid value")
+
+		case "Address":
+			res["address"] = trans.E("invalid value")
+
+		case "Gender":
+			res["gender"] = trans.E("invalid value")
+
+		case "SSN":
+			res["ssn"] = trans.E("invalid value")
+
+		case "LegalName":
+			res["legal_name"] = trans.E("invalid value")
+
+		case "LegalRegister":
+			res["legal_register"] = trans.E("invalid value")
+
+		case "EconomicCode":
+			res["economic_code"] = trans.E("invalid value")
+
+		case "Managers":
+			res["managers"] = trans.E("invalid value")
+
+		default:
+			logrus.Panicf("the field %s is not translated", i)
+		}
+	}
+	if len(res) > 0 {
+		return res
+	}
+	return nil
+}
+
 func (pl *forgetCodePayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	err := func(in interface{}) error {
 		if v, ok := in.(interface {

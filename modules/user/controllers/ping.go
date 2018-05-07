@@ -15,5 +15,8 @@ import (
 // }
 func (c *Controller) ping(ctx context.Context, r *http.Request) (*ResponseLoginOK, error) {
 	user := authz.MustGetUser(ctx)
-	return c.createLoginResponseWithToken(user, authz.MustGetToken(ctx)), nil
+	return &ResponseLoginOK{
+		Token:   authz.MustGetToken(ctx),
+		Account: c.createUserResponse(user),
+	}, nil
 }

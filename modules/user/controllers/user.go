@@ -62,14 +62,6 @@ type userResponse struct {
 	Attributes    mysql.GenericJSONField `json:"attributes,omitempty"`
 }
 
-func (u Controller) createLoginResponseWithToken(user *aaa.User, token string) *ResponseLoginOK {
-	return &ResponseLoginOK{
-		Token:   token,
-		Account: u.createUserResponse(user),
-	}
-
-}
-
 func (u Controller) createUserResponse(user *aaa.User) userResponse {
 	us := userResponse{}
 	us.ID = user.ID
@@ -110,5 +102,8 @@ func (u Controller) createUserResponse(user *aaa.User) userResponse {
 
 func (u Controller) createLoginResponse(user *aaa.User) *ResponseLoginOK {
 	token := aaa.GetNewToken(user)
-	return u.createLoginResponseWithToken(user, token)
+	return &ResponseLoginOK{
+		Token:   token,
+		Account: u.createUserResponse(user),
+	}
 }
