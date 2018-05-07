@@ -18,32 +18,17 @@ import (
 	gom "github.com/go-sql-driver/mysql"
 )
 
-// AccountType is the user account type
-type (
-	// AccountType is the user account type
-	// @Enum{
-	// }
-	AccountType string
-)
-
-const (
-	// PersonalUser male
-	PersonalUser AccountType = "personal"
-	// CorporationUser corporation
-	CorporationUser AccountType = "corporation"
-)
-
 // @Validate {
 // }
 type addUserToWhitelabelPayload struct {
-	Email           string      `json:"email" validate:"email" error:"email is invalid"`
-	Password        string      `json:"password" validate:"gt=5" error:"password is too short"`
-	RoleID          int64       `json:"role_id" validate:"required" error:"role id is required"`
-	FirstName       string      `json:"first_name" validate:"required" error:"first name is invalid"`
-	LastName        string      `json:"last_name" validate:"required" error:"last name is invalid"`
-	Mobile          string      `json:"mobile" validate:"required,lt=15"`
-	AccountType     AccountType `json:"account_type" validate:"required"`
-	NotifyUser      bool        `json:"notify_user" validate:"required"`
+	Email           string          `json:"email" validate:"email" error:"email is invalid"`
+	Password        string          `json:"password" validate:"gt=5" error:"password is too short"`
+	RoleID          int64           `json:"role_id" validate:"required" error:"role id is required"`
+	FirstName       string          `json:"first_name" validate:"required" error:"first name is invalid"`
+	LastName        string          `json:"last_name" validate:"required" error:"last name is invalid"`
+	Mobile          string          `json:"mobile" validate:"required,lt=15"`
+	AccountType     aaa.AccountType `json:"account_type" validate:"required"`
+	NotifyUser      bool            `json:"notify_user" validate:"required"`
 	CorporationInfo struct {
 		LegalName     string `json:"legal_name" validate:"omitempty"`
 		LegalRegister string `json:"legal_register" validate:"omitempty"`
@@ -56,7 +41,7 @@ func (l *addUserToWhitelabelPayload) ValidateExtra(ctx context.Context, w http.R
 		return errors.InvalidAccountType
 	}
 
-	if l.AccountType == CorporationUser {
+	if l.AccountType == aaa.CorporationUser {
 		if l.CorporationInfo.LegalName == "" {
 			return errors.InvalidCorporationLegalName
 		}
@@ -86,7 +71,7 @@ func (c *Controller) registerToWhitelabel(ctx context.Context, r *http.Request, 
 	}
 
 	corp := aaa.Corporation{}
-	if p.AccountType == CorporationUser {
+	if p.AccountType == aaa.CorporationUser {
 		corp.LegalName = p.CorporationInfo.LegalName
 		corp.LegalRegister = mysql.NullString{String: p.CorporationInfo.LegalRegister, Valid: (p.CorporationInfo.LegalRegister != "")}
 		corp.EconomicCode = mysql.NullString{String: p.CorporationInfo.EconomicCode, Valid: (p.CorporationInfo.EconomicCode != "")}

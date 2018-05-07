@@ -25,7 +25,6 @@ type loginPayload struct {
 func (c *Controller) login(ctx context.Context, r *http.Request, p *loginPayload) (*ResponseLoginOK, error) {
 	uDomain := domain.MustGetDomain(ctx)
 	currentUser, err := aaa.NewAaaManager().FindUserByEmailDomain(p.Email, uDomain)
-
 	if err != nil || bcrypt.CompareHashAndPassword([]byte(currentUser.Password), []byte(p.Password)) != nil {
 		return nil, errors.InvalidEmailPassError
 	}

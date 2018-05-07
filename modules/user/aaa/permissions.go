@@ -109,7 +109,7 @@ func (u *User) getUserPermissions(DomainID int64) map[permission.UserScope]map[s
 	roles := u.roles
 
 	for i := range roles {
-		roleIDs = append(roleIDs, string(roles[i].ID))
+		roleIDs = append(roleIDs, fmt.Sprintf("%d", roles[i].ID))
 	}
 
 	var ids string
@@ -119,7 +119,12 @@ func (u *User) getUserPermissions(DomainID int64) map[permission.UserScope]map[s
 		ids = strconv.FormatInt(roles[0].ID, 10)
 	}
 
-	query := fmt.Sprintf(`SELECT * from %s WHERE role_id IN (%s)`, RolePermissionTableFull, ids)
+	query := fmt.Sprintf(
+		`SELECT %s from %s WHERE role_id IN (%s)`,
+		getSelectFields(RolePermissionTableFull, ""),
+		RolePermissionTableFull,
+		ids,
+	)
 	_, err := NewAaaManager().GetRDbMap().Select(&rolePerm, query)
 	assert.Nil(err)
 	for i := range rolePerm {
