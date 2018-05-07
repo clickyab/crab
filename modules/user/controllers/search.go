@@ -28,3 +28,18 @@ func (c *Controller) searchByMail(ctx context.Context, r *http.Request, p *searc
 	}
 	return userSearchResp(foundUsers), nil
 }
+
+// searchMangerByMail search manager user by email
+// @Rest {
+// 		url = /search/managers/mail
+//		protected = true
+// 		method = post
+// }
+func (c *Controller) searchMangerByMail(ctx context.Context, r *http.Request, p *searchUserPayload) (userSearchResp, error) {
+	dm := domain.MustGetDomain(ctx)
+	foundUsers := aaa.NewAaaManager().SearchManagersByMailDomain(p.Email, dm.ID)
+	if len(foundUsers) == 0 {
+		return userSearchResp{}, nil
+	}
+	return userSearchResp(foundUsers), nil
+}

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"strings"
+
 	domainOrm "clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
@@ -91,6 +93,7 @@ type User struct {
 	SSN         mysql.NullString                         `json:"ssn" db:"ssn"`
 	Balance     int64                                    `json:"balance" db:"balance"`
 	Attributes  mysql.GenericJSONField                   `json:"attributes" db:"attributes"`
+	Advantage   int                                      `json:"advantage" db:"advantage"`
 	Corporation *Corporation                             `json:"corporation, omitempty" db:"-"`
 	parents     []int64                                  `json:"-" db:"-"`
 	childes     []int64                                  `json:"-" db:"-"`
@@ -411,4 +414,111 @@ func (m *Manager) ListUserByEmail(email string, domainID int64) []UserSearchResu
 	_, err := m.GetRDbMap().Select(&res, q, domainID, domainOrm.EnableDomainStatus, "%"+email+"%")
 	assert.Nil(err)
 	return res
+}
+
+// FindUserByIDDomain return the User base on its id and domain
+func (m *Manager) FindUserByIDDomain(id, domainID int64) (*User, error) {
+	var res User
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf(`SELECT %s FROM %s WHERE id=? 
+			INNER JOIN %s AS du ON (du.users_id=users.id AND du.domain_id=? AND du.status=?) 
+			LIMIT 1`,
+			getSelectFields(UserTableFull, ""),
+			UserTableFull,
+			domainOrm.DomainUserTableFull,
+		),
+		id,
+		domainID,
+		domainOrm.EnableDomainStatus,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+// SearchManagersByMailDomain search managers by mail and domain
+func (m *Manager) SearchManagersByMailDomain(mail string, d int64) []UserSearchResult {
+	var res []UserSearchResult
+	var params []interface{}
+	q := fmt.Sprintf(`SELECT u.id,u.email FROM %s AS u 
+	INNER JOIN %s AS du ON (du.user_id=u.id AND du.domain_id=? AND du.status=?)
+	INNER JOIN %s AS ru ON ru.user_id=u.id 
+	INNER JOIN %s AS rp ON rp.role_id=ru.role_id
+	WHERE u.email LIKE ? AND rp.perm=? GROUP BY u.id`,
+		UserTableFull,
+		domainOrm.DomainUserTableFull,
+		RoleUserTableFull,
+		RolePermissionTableFull,
+	)
+	params = append(params, d, domainOrm.EnableDomainStatus, "%"+mail+"%", manageablePerm)
+
+	_, err := m.GetRDbMap().Select(&res, q, params...)
+	assert.Nil(err)
+	return res
+}
+
+// FindManagersByMailDomain find managers by mails and domains
+func (m *Manager) FindManagersByMailDomain(ids []int64, d int64) []int64 {
+	var res []int64
+	var params []interface{}
+	q := fmt.Sprintf(`SELECT u.id FROM %s AS u 
+	INNER JOIN %s AS du ON (du.user_id=u.id AND du.domain_id=? AND du.status=?)
+	INNER JOIN %s AS ru ON ru.user_id=u.id 
+	INNER JOIN %s AS rp ON rp.role_id=ru.role_id
+	WHERE u.id IN (%s) AND rp.perm=? GROUP BY u.id`,
+		UserTableFull,
+		domainOrm.DomainUserTableFull,
+		RoleUserTableFull,
+		RolePermissionTableFull,
+		func() string {
+			return strings.TrimRight(strings.Repeat("?,", len(ids)), ",")
+		}(),
+	)
+	params = append(params, d, domainOrm.EnableDomainStatus)
+	for i := range ids {
+		params = append(params, ids[i])
+	}
+	params = append(params, manageablePerm)
+
+	_, err := m.GetRDbMap().Select(&res, q, params...)
+	assert.Nil(err)
+	return res
+}
+
+// AssignManagers assign managers to user
+func (m *Manager) AssignManagers(userID, d int64, managerIDs []int64) ([]*Advisor, error) {
+	var res []*Advisor
+	err := m.Begin()
+	assert.Nil(err)
+	defer func() {
+		if err != nil {
+			assert.Nil(m.Rollback())
+		} else {
+			assert.Nil(m.Commit())
+		}
+	}()
+	// delete old managers
+	q := fmt.Sprintf(`DELETE FROM %s WHERE user_id=? AND domain_id=?`, AdvisorTableFull)
+	_, err = m.GetWDbMap().Exec(q, userID, d)
+	if err != nil {
+		return res, err
+	}
+	// insert new managers
+	for i := range managerIDs {
+		advisor := &Advisor{
+			AdvisorID: managerIDs[i],
+			DomainID:  d,
+			UserID:    userID,
+		}
+		err = m.CreateAdvisor(advisor)
+		if err != nil {
+			return res, err
+		}
+		res = append(res, advisor)
+	}
+	return res, nil
 }

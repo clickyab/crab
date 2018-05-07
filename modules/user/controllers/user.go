@@ -63,8 +63,15 @@ type userResponse struct {
 }
 
 func (u Controller) createLoginResponseWithToken(user *aaa.User, token string) *ResponseLoginOK {
-	us := userResponse{}
+	return &ResponseLoginOK{
+		Token:   token,
+		Account: u.createUserResponse(user),
+	}
 
+}
+
+func (u Controller) createUserResponse(user *aaa.User) userResponse {
+	us := userResponse{}
 	us.ID = user.ID
 	us.Email = user.Email
 	us.FirstName = user.FirstName
@@ -98,11 +105,7 @@ func (u Controller) createLoginResponseWithToken(user *aaa.User, token string) *
 		us.CountryName = l.CountryName
 		us.CountryID = l.CountryID
 	}
-	return &ResponseLoginOK{
-		Token:   token,
-		Account: us,
-	}
-
+	return us
 }
 
 func (u Controller) createLoginResponse(user *aaa.User) *ResponseLoginOK {
