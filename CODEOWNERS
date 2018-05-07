@@ -4,15 +4,15 @@
 # User module is the user system and anything related to that
 modules/misc/           @Mehrdad-Dadkhah  @slifer2015
 modules/user/           @Mehrdad-Dadkhah  @slifer2015
-modules/domain/         @Mehrdad-Dadkhah  @okian
-modules/ad/             @Mehrdad-Dadkhah  @okian
+modules/domain/         @Mehrdad-Dadkhah
+modules/ad/             @Mehrdad-Dadkhah
 modules/campaign/       @Mehrdad-Dadkhah  @slifer2015
-modules/upload/         @Mehrdad-Dadkhah  @okian
+modules/upload/         @Mehrdad-Dadkhah
 modules/asset/          @Mehrdad-Dadkhah  @slifer2015
-modules/time/           @Mehrdad-Dadkhah  @okian
-modules/location/       @Mehrdad-Dadkhah  @okian
+modules/time/           @Mehrdad-Dadkhah
+modules/location/       @Mehrdad-Dadkhah
 modules/asset/          @Mehrdad-Dadkhah  @slifer2015
-modules/notifications/  @Mehrdad-Dadkhah  @okian
+modules/notifications/  @Mehrdad-Dadkhah
 
 
 *.mk        @Mehrdad-Dadkhah
@@ -23,5 +23,5 @@ Jenkinsfile @Mehrdad-Dadkhah
 scripts/    @Mehrdad-Dadkhah
 bin/        @Mehrdad-Dadkhah
 
-vendor/     @Mehrdad-Dadkhah @okian @slifer2015
+vendor/     @Mehrdad-Dadkhah  @slifer2015
 CODEOWNERS  @Mehrdad-Dadkhah
