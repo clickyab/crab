@@ -3,23 +3,23 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " page number",
 				"in": "query",
-				"name": "to",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " search the full_name field",
+				"in": "query",
+				"name": "full_name",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the land_line field",
 				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
+				"name": "land_line",
 				"required": false,
 				"type": "string"
 			},
@@ -31,23 +31,9 @@
 				"type": "int"
 			},
 			{
-				"description": " page number",
+				"description": " search the ssn field",
 				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " search the name field",
-				"in": "query",
-				"name": "name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the supplier field",
-				"in": "query",
-				"name": "supplier",
+				"name": "ssn",
 				"required": false,
 				"type": "string"
 			},
@@ -59,9 +45,9 @@
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the cellphone field",
 				"in": "query",
-				"name": "from",
+				"name": "cellphone",
 				"required": false,
 				"type": "string"
 			},
@@ -73,9 +59,30 @@
 				"type": "string"
 			},
 			{
-				"description": " search the domain field",
+				"description": "",
 				"in": "query",
-				"name": "domain",
+				"name": "status",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the email field",
+				"in": "query",
+				"name": "email",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -91,7 +98,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_listPublisherResponse"
+					"$ref": "#/definitions/user_listUsers_listResponse"
 				}
 			},
 			"401": {
@@ -143,10 +150,10 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "publisher_list:self"
+			"resource": "user_list:global"
 		},
 		"tags": [
-			"controllers"
+			"user"
 		]
 	}
 }

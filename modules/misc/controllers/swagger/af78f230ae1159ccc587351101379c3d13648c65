@@ -1,0 +1,94 @@
+{
+	"properties": {
+		"data": {
+			"items": {
+				"properties": {
+					"_actions": {
+						"type": "string"
+					},
+					"account_type": {
+						"type": "string"
+					},
+					"avatar": {
+						"properties": {
+							"String": {
+								"type": "string"
+							},
+							"Valid": {
+								"type": "boolean"
+							}
+						},
+						"type": "object"
+					},
+					"balance": {
+						"type": "integer"
+					},
+					"cellphone": {
+						"properties": {
+							"String": {
+								"type": "string"
+							},
+							"Valid": {
+								"type": "boolean"
+							}
+						},
+						"type": "object"
+					},
+					"created_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"full_name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "integer"
+					},
+					"land_line": {
+						"properties": {
+							"String": {
+								"type": "string"
+							},
+							"Valid": {
+								"type": "boolean"
+							}
+						},
+						"type": "object"
+					},
+					"ssn": {
+						"properties": {
+							"String": {
+								"type": "string"
+							},
+							"Valid": {
+								"type": "boolean"
+							}
+						},
+						"type": "object"
+					},
+					"status": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"hash": {
+			"type": "string"
+		},
+		"page": {
+			"type": "integer"
+		},
+		"per_page": {
+			"type": "integer"
+		},
+		"total": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}
