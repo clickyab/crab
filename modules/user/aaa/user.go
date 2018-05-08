@@ -371,7 +371,7 @@ func (m *Manager) FindUserWithParentsByID(id, d int64) (*User, error) {
 	var res User
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s AS u WHERE u.id=?", UserTableFull),
+		fmt.Sprintf("SELECT %s FROM %s AS u WHERE u.id=?", getSelectFields(UserTableFull, "u"), UserTableFull),
 		id,
 	)
 
