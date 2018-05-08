@@ -61,7 +61,7 @@ type Creative struct {
 	Name            string                 `json:"name" db:"name"`
 	MaxBid          mysql.NullInt64        `json:"max_bid" db:"max_bid"`
 	Attributes      mysql.GenericJSONField `json:"attributes" db:"attributes"`
-	RejectReasonsID int64                  `json:"reject_reason_id" db:"reject_reasons_id"`
+	RejectReasonsID mysql.NullInt64        `json:"reject_reason_id" db:"reject_reasons_id"`
 	CreatedAt       time.Time              `json:"created_at" db:"created_at"`
 	UpdatedAt       time.Time              `json:"updated_at" db:"updated_at"`
 	ArchivedAt      mysql.NullTime         `json:"archived_at" db:"archived_at"`
