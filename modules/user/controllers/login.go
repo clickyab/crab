@@ -37,5 +37,15 @@ func (c *Controller) login(ctx context.Context, r *http.Request, p *loginPayload
 		return nil, errors.UserBlockedError
 	}
 
-	return c.createLoginResponse(currentUser), nil
+	userPerms, err := currentUser.GetAllUserPerms(uDomain.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	token := aaa.GetNewToken(currentUser)
+	return &ResponseLoginOK{
+		Token:   token,
+		Account: c.createUserResponse(currentUser),
+		Perms:   userPerms,
+	}, nil
 }

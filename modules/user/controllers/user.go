@@ -24,6 +24,7 @@ type Controller struct {
 type ResponseLoginOK struct {
 	Token   string       `json:"token"`
 	Account userResponse `json:"account"`
+	Perms   *[]string    `json:"perms,omitempty"`
 }
 
 var (
