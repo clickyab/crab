@@ -74,6 +74,12 @@
 			},
 			"type": "object"
 		},
+		"perms": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
 		"token": {
 			"type": "string"
 		}
