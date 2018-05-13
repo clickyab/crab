@@ -1,0 +1,28 @@
+{
+	"properties": {
+		"attributes": {
+			"additionalProperties": {
+				"type": "string"
+			},
+			"type": "object"
+		},
+		"description": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"name": {
+			"type": "string"
+		},
+		"status": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

@@ -1,0 +1,14 @@
+{
+	"properties": {
+		"domain_id": {
+			"type": "integer"
+		},
+		"name": {
+			"type": "string"
+		},
+		"status": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
