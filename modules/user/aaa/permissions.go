@@ -146,3 +146,26 @@ func (u *User) GetChildesPerm(scope permission.UserScope, perm string, DomainID 
 	}
 	return u.childes
 }
+
+// GetAllUserPerms return a slice of user permissions with scope
+func (u *User) GetAllUserPerms(domainID int64) (*[]string, error) {
+	var perms []*RolePermission
+	q := fmt.Sprintf(
+		"select rp.* from %s rp "+
+			"JOIN %s ro on rp.role_id = ro.id "+
+			"JOIN %s ru on ro.id = ru.role_id "+
+			"WHERE ru.user_id=? and ro.domain_id=?",
+		RolePermissionTableFull,
+		RoleTableFull,
+		RoleUserTableFull,
+	)
+	_, err := NewAaaManager().GetRDbMap().Select(&perms, q, u.ID, domainID)
+	if err != nil {
+		return nil, err
+	}
+	var res []string
+	for _, perm := range perms {
+		res = append(res, fmt.Sprintf("%s:%s", perm.Perm, perm.Scope))
+	}
+	return &res, nil
+}
