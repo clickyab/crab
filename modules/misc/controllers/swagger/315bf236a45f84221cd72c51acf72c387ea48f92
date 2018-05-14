@@ -10,16 +10,23 @@
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " count per page",
 				"in": "query",
-				"name": "from",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "sort",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
@@ -33,9 +40,23 @@
 			{
 				"description": "",
 				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
 				"name": "status",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": "",
@@ -48,27 +69,6 @@
 				"description": " search the name field",
 				"in": "query",
 				"name": "name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
 				"required": false,
 				"type": "string"
 			},

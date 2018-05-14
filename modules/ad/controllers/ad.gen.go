@@ -131,6 +131,33 @@ func (c *Controller) Routes(r framework.Mux) {
 		// End route with key 3
 
 		/* Route {
+			"Route": "/change-creatives-status/:id",
+			"Method": "PUT",
+			"Function": "Controller.changeCreativesStatusPut",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "changeStatusPayload",
+			"Resource": "change_creatives_status",
+			"Scope": "global"
+		} with key 4 */
+		m4 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("change_creatives_status", "change_creatives_status")
+		m4 = append(m4, authz.AuthorizeGenerator("change_creatives_status", "global"))
+
+		// Make sure payload is the last middleware
+		m4 = append(m4, middleware.PayloadUnMarshallerGenerator(changeStatusPayload{}))
+		group.PUT("controllers-Controller-changeCreativesStatusPut", "/change-creatives-status/:id", framework.Mix(c.changeCreativesStatusPut, m4...))
+		// End route with key 4
+
+		/* Route {
 			"Route": "/native/:id",
 			"Method": "PUT",
 			"Function": "Controller.editNativeCreativePut",
@@ -144,18 +171,18 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "editNativePayload",
 			"Resource": "edit_creative",
 			"Scope": "self"
-		} with key 4 */
-		m4 := append(groupMiddleware, []framework.Middleware{
+		} with key 5 */
+		m5 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("edit_creative", "edit_creative")
-		m4 = append(m4, authz.AuthorizeGenerator("edit_creative", "self"))
+		m5 = append(m5, authz.AuthorizeGenerator("edit_creative", "self"))
 
 		// Make sure payload is the last middleware
-		m4 = append(m4, middleware.PayloadUnMarshallerGenerator(editNativePayload{}))
-		group.PUT("controllers-Controller-editNativeCreativePut", "/native/:id", framework.Mix(c.editNativeCreativePut, m4...))
-		// End route with key 4
+		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(editNativePayload{}))
+		group.PUT("controllers-Controller-editNativeCreativePut", "/native/:id", framework.Mix(c.editNativeCreativePut, m5...))
+		// End route with key 5
 
 		/* Route {
 			"Route": "/creative/:id",
@@ -171,16 +198,16 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "get_creative",
 			"Scope": "self"
-		} with key 5 */
-		m5 := append(groupMiddleware, []framework.Middleware{
+		} with key 6 */
+		m6 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("get_creative", "get_creative")
-		m5 = append(m5, authz.AuthorizeGenerator("get_creative", "self"))
+		m6 = append(m6, authz.AuthorizeGenerator("get_creative", "self"))
 
-		group.GET("controllers-Controller-getCreativeGet", "/creative/:id", framework.Mix(c.getCreativeGet, m5...))
-		// End route with key 5
+		group.GET("controllers-Controller-getCreativeGet", "/creative/:id", framework.Mix(c.getCreativeGet, m6...))
+		// End route with key 6
 
 		/* Route {
 			"Route": "/creative-reject-reasons",
@@ -196,16 +223,16 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "get_creative_reject_reason",
 			"Scope": "self"
-		} with key 6 */
-		m6 := append(groupMiddleware, []framework.Middleware{
+		} with key 7 */
+		m7 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("get_creative_reject_reason", "get_creative_reject_reason")
-		m6 = append(m6, authz.AuthorizeGenerator("get_creative_reject_reason", "self"))
+		m7 = append(m7, authz.AuthorizeGenerator("get_creative_reject_reason", "self"))
 
-		group.GET("controllers-Controller-getCreativeRejectReasonsGet", "/creative-reject-reasons", framework.Mix(c.getCreativeRejectReasonsGet, m6...))
-		// End route with key 6
+		group.GET("controllers-Controller-getCreativeRejectReasonsGet", "/creative-reject-reasons", framework.Mix(c.getCreativeRejectReasonsGet, m7...))
+		// End route with key 7
 
 		initializer.DoInitialize(c)
 	})

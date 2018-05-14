@@ -53,6 +53,28 @@ func (c Controller) changeCampaignCreativeStatusPatch(ctx context.Context, w htt
 	framework.Write(w, res, http.StatusOK)
 }
 
+// changeCreativesStatus bulk approve reject creatives status of a campaign
+// @Route {
+// 		url = /change-creatives-status/:id
+//		method = put
+//		payload = changeStatusPayload
+//		middleware = authz.Authenticate
+//		resource = change_creatives_status:global
+//		200 = ChangeStatusResult
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) changeCreativesStatusPut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*changeStatusPayload)
+	res, err := c.changeCreativesStatus(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // addNativeCreative to campaign
 // @Route {
 // 		url = /native/:id
