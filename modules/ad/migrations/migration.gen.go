@@ -9,6 +9,7 @@
 // db/20180423124500_fixcreative.sql
 // db/20180502070808_creatvie_detail.sql
 // db/20180507044253_add_creative_reject_reasons.sql
+// db/creativestatus_perm.sql
 // DO NOT EDIT!
 
 package migrations
@@ -256,6 +257,26 @@ func db20180507044253_add_creative_reject_reasonsSql() (*asset, error) {
 	return a, nil
 }
 
+var _dbCreativestatus_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x90\x4f\x6b\x83\x30\x18\x87\xef\x7e\x8a\x1f\x5e\x54\x66\x4f\xed\xad\xf4\x50\x30\x63\x82\xb3\xcc\x3f\xdb\xd1\xa6\xf1\x45\xc3\x52\x13\x4c\xba\xee\xe3\x0f\xed\x3a\xd8\x60\x50\xe8\x31\x0f\x6f\x78\x9f\xf7\xf1\x16\x0b\x3c\x1c\x65\x37\x72\x47\xa8\xcd\xf4\x2c\x5f\x32\xc8\x01\x96\x84\x93\x7a\x40\x50\x9b\x00\xd2\x82\x3e\x49\x9c\x1c\xb5\x38\xf7\x34\xc0\xf5\xd2\xe2\xf2\x6f\x1a\x92\x16\xdc\x18\x25\xa9\xf5\xd2\xbc\x64\x45\x85\x34\xaf\x76\x18\xb5\xa2\xc6\xd0\x78\x94\xd6\x4e\x63\xe1\x0c\x64\x1b\x63\x82\x31\xac\xd0\x86\x22\xbc\x6e\xb3\x9a\x95\x08\x97\xb1\x2f\x7a\x3e\x74\xd4\x88\x91\xb8\x93\x1f\x64\x1b\xeb\xb8\x3b\x59\x3f\xf6\x3b\xa5\x0f\x5c\xf9\xd1\xfa\x9e\x0d\xab\xdb\x36\xfc\xaa\x92\xe8\xf3\x70\xed\xf2\x13\x65\x82\x37\x65\x19\xb5\x52\xd4\xe2\xc0\xc5\xbb\x97\xb0\x8c\x55\x0c\x78\x2c\x76\xcf\xd8\xff\x51\xdf\xe3\xed\x89\x15\x6c\xf6\xde\x04\xff\x58\x06\xd8\xe6\xc9\xe5\xa8\xcd\xd5\x77\x46\xdf\x67\x23\xcd\xc3\x65\xbc\x8a\xd6\xde\x57\x00\x00\x00\xff\xff\x52\x93\xfd\x47\xd9\x01\x00\x00"
+
+func dbCreativestatus_permSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_dbCreativestatus_permSql,
+		"db/creativestatus_perm.sql",
+	)
+}
+
+func dbCreativestatus_permSql() (*asset, error) {
+	bytes, err := dbCreativestatus_permSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/creativestatus_perm.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -317,6 +338,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20180423124500_fixcreative.sql":                 db20180423124500_fixcreativeSql,
 	"db/20180502070808_creatvie_detail.sql":             db20180502070808_creatvie_detailSql,
 	"db/20180507044253_add_creative_reject_reasons.sql": db20180507044253_add_creative_reject_reasonsSql,
+	"db/creativestatus_perm.sql":                        dbCreativestatus_permSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -370,6 +392,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20180423124500_fixcreative.sql":                 &bintree{db20180423124500_fixcreativeSql, map[string]*bintree{}},
 		"20180502070808_creatvie_detail.sql":             &bintree{db20180502070808_creatvie_detailSql, map[string]*bintree{}},
 		"20180507044253_add_creative_reject_reasons.sql": &bintree{db20180507044253_add_creative_reject_reasonsSql, map[string]*bintree{}},
+		"creativestatus_perm.sql":                        &bintree{dbCreativestatus_permSql, map[string]*bintree{}},
 	}},
 }}
 

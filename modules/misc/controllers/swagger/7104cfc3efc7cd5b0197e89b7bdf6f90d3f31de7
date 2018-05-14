@@ -1,0 +1,22 @@
+{
+	"properties": {
+		"creatives_status": {
+			"items": {
+				"properties": {
+					"creative_id": {
+						"type": "integer"
+					},
+					"reject_reason_id": {
+						"type": "integer"
+					},
+					"status": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		}
+	},
+	"type": "object"
+}
