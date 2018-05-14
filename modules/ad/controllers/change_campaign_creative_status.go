@@ -70,7 +70,7 @@ func (c Controller) changeCampaignCreativeStatus(ctx context.Context, r *http.Re
 		return nil, errors.AccessDenied
 	}
 	db := orm.NewOrmManager()
-	rowEffectedCount, err := db.SetCreativesStatus(p.currentCampaign.ID, p.Status)
+	rowEffectedCount, err := db.SetCampaignCreativesStatus(p.currentCampaign.ID, p.Status)
 	if err != nil {
 		xlog.GetWithError(ctx, err).Errorf("campaign creatives status update error from db: campaignId:%d, status:%s", p.currentCampaign.ID, p.Status)
 		return nil, errors.UpdateStatusDbErr

@@ -47,6 +47,9 @@ var (
 
 	// UpdateStatusDbErr error in update creative status
 	UpdateStatusDbErr = t9e.G("an database error occurred when we try to update creative status ")
+
+	// InvalidNotifyUser error in approve, reject creatives if Notify user value is invalid
+	InvalidNotifyUser = t9e.G("notify user value is invalid, you can select yes or no")
 )
 
 // AdNotFound maker
