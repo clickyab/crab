@@ -10,30 +10,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
-				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": " search the domain field",
 				"in": "query",
 				"name": "domain",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
 				"required": false,
 				"type": "string"
 			},
@@ -48,6 +27,13 @@
 				"description": " search the name field",
 				"in": "query",
 				"name": "name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
@@ -76,6 +62,20 @@
 				"description": " search the supplier field",
 				"in": "query",
 				"name": "supplier",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},

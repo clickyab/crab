@@ -59,6 +59,12 @@
 				"legal_register": {
 					"type": "string"
 				},
+				"perms": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
 				"postal_code": {
 					"type": "string"
 				},

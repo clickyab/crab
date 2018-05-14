@@ -17,9 +17,16 @@
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "from",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},
@@ -31,16 +38,16 @@
 				"type": "int"
 			},
 			{
-				"description": " parameter for search",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "q",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the name field",
 				"in": "query",
-				"name": "to",
+				"name": "name",
 				"required": false,
 				"type": "string"
 			},
@@ -59,9 +66,16 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " count per page",
 				"in": "query",
-				"name": "kind",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -71,20 +85,6 @@
 				"name": "status",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " search the name field",
-				"in": "query",
-				"name": "name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",
