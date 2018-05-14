@@ -423,22 +423,20 @@ func (m *Manager) FindUserByIDDomain(id, domainID int64) (*User, error) {
 	var res User
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf(`SELECT %s FROM %s WHERE id=? 
-			INNER JOIN %s AS du ON (du.users_id=users.id AND du.domain_id=? AND du.status=?) 
-			LIMIT 1`,
-			getSelectFields(UserTableFull, ""),
+		fmt.Sprintf(`SELECT %s FROM %s AS u
+			INNER JOIN %s AS du ON (du.user_id=u.id AND du.domain_id=? AND du.status=?)
+			WHERE u.id=?`,
+			getSelectFields(UserTableFull, "u"),
 			UserTableFull,
 			domainOrm.DomainUserTableFull,
 		),
-		id,
 		domainID,
 		domainOrm.EnableDomainStatus,
+		id,
 	)
-
 	if err != nil {
 		return nil, err
 	}
-
 	return &res, nil
 }
 
