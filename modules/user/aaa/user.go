@@ -386,7 +386,7 @@ func (m *Manager) FindUserWithParentsByID(id, d int64) (*User, error) {
 // CheckPermOn has perm on wrapper to use inside controllers
 func CheckPermOn(owner *User, currentUser *User, perm permission.Token, domainID int64, scopes ...permission.UserScope) (permission.UserScope, bool) {
 	if currentUser.ID == owner.ID { //user is the owner
-		return owner.HasOn(perm, owner.ID, owner.parents, domainID, permission.ScopeSelf)
+		return owner.HasOn(perm, owner.ID, owner.parents, domainID, scopes...)
 	}
 	// user is not owner (check parent or global)
 	ownerResources := owner.resource
