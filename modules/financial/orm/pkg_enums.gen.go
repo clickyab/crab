@@ -198,44 +198,6 @@ func (e ChangeCashReasons) Value() (driver.Value, error) {
 }
 
 // IsValid try to validate enum value on ths type
-func (e ManualCashChangeStatus) IsValid() bool {
-	return array.StringInArray(
-		string(e),
-		string(WaitToCheckCashChange),
-		string(VerifiedCashChange),
-		string(RejectedCashChange),
-	)
-}
-
-// Scan convert the json array ino string slice
-func (e *ManualCashChangeStatus) Scan(src interface{}) error {
-	var b []byte
-	switch src.(type) {
-	case []byte:
-		b = src.([]byte)
-	case string:
-		b = []byte(src.(string))
-	case nil:
-		b = make([]byte, 0)
-	default:
-		return t9e.G("unsupported type")
-	}
-	if !ManualCashChangeStatus(b).IsValid() {
-		return t9e.G("invalid value")
-	}
-	*e = ManualCashChangeStatus(b)
-	return nil
-}
-
-// Value try to get the string slice representation in database
-func (e ManualCashChangeStatus) Value() (driver.Value, error) {
-	if !e.IsValid() {
-		return nil, t9e.G("invalid status")
-	}
-	return string(e), nil
-}
-
-// IsValid try to validate enum value on ths type
 func (e OnlinePaymentStatus) IsValid() bool {
 	return array.StringInArray(
 		string(e),

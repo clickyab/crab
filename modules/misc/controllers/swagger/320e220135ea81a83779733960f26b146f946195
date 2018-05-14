@@ -3,18 +3,11 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " page number",
+				"description": " count per page",
 				"in": "query",
-				"name": "p",
+				"name": "c",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": "",
@@ -31,16 +24,16 @@
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": " page number",
 				"in": "query",
-				"name": "c",
+				"name": "p",
 				"required": false,
 				"type": "int"
 			},
 			{
-				"description": "",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "kind",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -66,6 +59,20 @@
 				"type": "string"
 			},
 			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the title field",
 				"in": "query",
 				"name": "title",
@@ -76,13 +83,6 @@
 				"description": " search the owner_email field",
 				"in": "query",
 				"name": "owner_email",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
 				"required": false,
 				"type": "string"
 			},

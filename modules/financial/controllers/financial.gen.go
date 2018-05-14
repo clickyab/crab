@@ -245,6 +245,33 @@ func (c *Controller) Routes(r framework.Mux) {
 		group.GET("controllers-Controller-getPaymentTransactionGet", "/payment/:id", framework.Mix(c.getPaymentTransactionGet, m8...))
 		// End route with key 8
 
+		/* Route {
+			"Route": "/manual-change-cash",
+			"Method": "PUT",
+			"Function": "Controller.manualChangeCashPut",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "changeCashStatus",
+			"Resource": "manual_change_cash",
+			"Scope": "global"
+		} with key 9 */
+		m9 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("manual_change_cash", "manual_change_cash")
+		m9 = append(m9, authz.AuthorizeGenerator("manual_change_cash", "global"))
+
+		// Make sure payload is the last middleware
+		m9 = append(m9, middleware.PayloadUnMarshallerGenerator(changeCashStatus{}))
+		group.PUT("controllers-Controller-manualChangeCashPut", "/manual-change-cash", framework.Mix(c.manualChangeCashPut, m9...))
+		// End route with key 9
+
 		initializer.DoInitialize(c)
 	})
 }
