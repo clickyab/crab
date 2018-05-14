@@ -95,7 +95,7 @@ func (c *Controller) edit(ctx context.Context, r *http.Request, p *userPayload) 
 
 	return &ResponseLoginOK{
 		Token:   authz.MustGetToken(ctx),
-		Account: c.createUserResponse(cu),
+		Account: c.createUserResponse(cu, nil),
 	}, nil
 }
 

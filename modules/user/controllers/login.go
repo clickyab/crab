@@ -45,7 +45,6 @@ func (c *Controller) login(ctx context.Context, r *http.Request, p *loginPayload
 	token := aaa.GetNewToken(currentUser)
 	return &ResponseLoginOK{
 		Token:   token,
-		Account: c.createUserResponse(currentUser),
-		Perms:   userPerms,
+		Account: c.createUserResponse(currentUser, userPerms),
 	}, nil
 }

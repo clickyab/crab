@@ -113,7 +113,7 @@ func (c *Controller) adminEdit(ctx context.Context, r *http.Request, p *editUser
 	}
 
 	return &editAdminResp{
-		Account:  c.createUserResponse(p.owner),
+		Account:  c.createUserResponse(p.owner, nil),
 		Managers: advisors,
 	}, nil
 }
