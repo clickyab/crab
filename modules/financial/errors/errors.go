@@ -39,6 +39,12 @@ var (
 	MerchantMismatchErr error = t9e.G("merchant id mismatch")
 	// AccessDenied error
 	AccessDenied error = t9e.G("access denied! you don't have access for this action")
+	// InvalidReasonErr invalid reason
+	InvalidReasonErr error = t9e.G("invalid reason, you can select gift, manual_change or refund")
+	//NotEnoughBalance not enough balance
+	NotEnoughBalance error = t9e.G("you have not enough balance")
+	// UserBalanceLowErr user balance is low
+	UserBalanceLowErr error = t9e.G("user balance is lower that sent value")
 )
 
 // NotFoundError maker
