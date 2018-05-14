@@ -23,7 +23,6 @@ func (c *Controller) ping(ctx context.Context, r *http.Request) (*ResponseLoginO
 	}
 	return &ResponseLoginOK{
 		Token:   authz.MustGetToken(ctx),
-		Account: c.createUserResponse(user),
-		Perms:   userPerms,
+		Account: c.createUserResponse(user, userPerms),
 	}, nil
 }

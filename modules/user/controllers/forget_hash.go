@@ -25,6 +25,6 @@ func (c *Controller) checkForgetHash(ctx context.Context, r *http.Request) (*Res
 	assert.Nil(e)
 	return &ResponseLoginOK{
 		Token:   s,
-		Account: c.createUserResponse(u),
+		Account: c.createUserResponse(u, nil),
 	}, nil
 }
