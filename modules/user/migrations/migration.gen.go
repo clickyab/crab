@@ -11,6 +11,7 @@
 // db/20180506133103_fullname_virtual.sql
 // db/20180507054057_user_list_perm.sql
 // db/20180507070211_adminperm.sql
+// db/adminperm_seed.sql
 // DO NOT EDIT!
 
 package migrations
@@ -298,6 +299,26 @@ func db20180507070211_adminpermSql() (*asset, error) {
 	return a, nil
 }
 
+var _dbAdminperm_seedSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x90\xcd\x4a\xc3\x40\x14\x85\xf7\x79\x8a\x43\x36\x6d\x30\x5d\xd9\x5d\x71\x51\xc8\x88\x81\x98\x62\x7e\x74\x19\xa6\xc9\x25\x19\x9c\x66\x86\xb9\x13\xea\xe3\xcb\xd4\x1f\x10\x05\x05\x97\x73\x38\x73\xf8\xee\x17\x6d\x36\xb8\x3a\xa9\xd1\x49\x4f\x68\x6d\x78\xd6\x0f\x05\xd4\x0c\xa6\xde\x2b\x33\x63\xd5\xda\x15\x14\x83\x5e\xa8\x5f\x3c\x0d\x38\x4f\x34\xc3\x4f\x8a\xf1\xf6\x2f\x94\x14\x43\x5a\xab\x15\x0d\x51\x5e\xd6\xa2\x6a\x90\x97\xcd\x01\xce\x68\xea\x2c\xb9\x93\x62\x0e\xb5\xf5\x25\x50\x43\x8a\x10\xa6\xe0\xde\x58\x4a\xf0\xb8\x2f\x5a\x51\x63\x7d\x9d\xc6\xfd\x24\xe7\x91\xba\x85\xc9\x75\xec\xa5\x5f\x38\x4e\xe3\x51\x9b\xa3\xd4\x71\xb2\xfb\xcf\xf8\xf6\xd7\xf1\x2f\x2e\x32\x73\x9e\x3f\x6c\x7c\xaa\x08\xe1\x9f\x64\x38\xa3\x35\x0d\x38\xca\xfe\x39\xca\x44\x21\x1a\x81\xdb\xea\x70\xff\x8d\xf9\xe9\x4e\x54\xe2\xc2\x7b\xf3\x13\x1d\xf6\x65\x86\xf7\xb3\x90\x97\xc1\xd0\x36\xd9\xbd\x06\x00\x00\xff\xff\xe1\x79\x82\x3f\xb4\x01\x00\x00"
+
+func dbAdminperm_seedSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_dbAdminperm_seedSql,
+		"db/adminperm_seed.sql",
+	)
+}
+
+func dbAdminperm_seedSql() (*asset, error) {
+	bytes, err := dbAdminperm_seedSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/adminperm_seed.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -361,6 +382,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20180506133103_fullname_virtual.sql":            db20180506133103_fullname_virtualSql,
 	"db/20180507054057_user_list_perm.sql":              db20180507054057_user_list_permSql,
 	"db/20180507070211_adminperm.sql":                   db20180507070211_adminpermSql,
+	"db/adminperm_seed.sql":                             dbAdminperm_seedSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -416,6 +438,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20180506133103_fullname_virtual.sql":            &bintree{db20180506133103_fullname_virtualSql, map[string]*bintree{}},
 		"20180507054057_user_list_perm.sql":              &bintree{db20180507054057_user_list_permSql, map[string]*bintree{}},
 		"20180507070211_adminperm.sql":                   &bintree{db20180507070211_adminpermSql, map[string]*bintree{}},
+		"adminperm_seed.sql":                             &bintree{dbAdminperm_seedSql, map[string]*bintree{}},
 	}},
 }}
 

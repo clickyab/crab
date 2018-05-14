@@ -3,6 +3,48 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": " search the domain field",
+				"in": "query",
+				"name": "domain",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the name field",
+				"in": "query",
+				"name": "name",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
@@ -10,9 +52,9 @@
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "from",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
@@ -26,35 +68,7 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the name field",
-				"in": "query",
-				"name": "name",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
@@ -64,20 +78,6 @@
 				"name": "p",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": "the security token, get it from login route",

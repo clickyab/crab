@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"new_status": {
+			"type": "string"
+		},
+		"user_id": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}
