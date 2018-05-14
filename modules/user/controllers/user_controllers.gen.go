@@ -111,6 +111,28 @@ func (c *Controller) changePasswordPut(ctx context.Context, w http.ResponseWrite
 	framework.Write(w, res, http.StatusOK)
 }
 
+// changeUserStatus to user
+// @Route {
+// 		url = /change-user-status/:id
+//		method = patch
+//		payload = changeUserStatus
+//		middleware = authz.Authenticate
+//		resource = change_user_status:global
+//		200 = ChangeUserStatusResult
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) changeUserStatusPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*changeUserStatus)
+	res, err := c.changeUserStatus(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // checkMail check mail in system
 // @Route {
 // 		url = /mail/check
