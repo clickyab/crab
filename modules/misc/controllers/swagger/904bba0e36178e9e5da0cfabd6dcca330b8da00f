@@ -1,0 +1,17 @@
+{
+	"properties": {
+		"amount": {
+			"type": "integer"
+		},
+		"description": {
+			"type": "string"
+		},
+		"reason": {
+			"type": "string"
+		},
+		"user_id": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

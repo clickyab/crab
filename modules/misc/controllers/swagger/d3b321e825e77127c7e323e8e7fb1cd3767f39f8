@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"amount": {
+			"type": "integer"
+		},
+		"target_user_id": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

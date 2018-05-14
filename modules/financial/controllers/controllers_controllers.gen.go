@@ -113,3 +113,25 @@ func (c *Controller) getPaymentTransactionGet(ctx context.Context, w http.Respon
 	}
 	framework.Write(w, res, http.StatusOK)
 }
+
+// manualChangeCash to financial
+// @Route {
+// 		url = /manual-change-cash
+//		method = put
+//		payload = changeCashStatus
+//		middleware = authz.Authenticate
+//		resource = manual_change_cash:global
+//		200 = ChangeCashResult
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) manualChangeCashPut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*changeCashStatus)
+	res, err := c.manualChangeCash(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}

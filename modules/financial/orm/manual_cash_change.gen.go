@@ -9,6 +9,7 @@ import (
 
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/initializer"
+	"github.com/clickyab/services/mysql"
 )
 
 // AUTO GENERATED CODE. DO NOT EDIT!
@@ -17,7 +18,7 @@ import (
 func (m *Manager) CreateManualCashChange(mcc *ManualCashChange) error {
 	now := time.Now()
 	mcc.CreatedAt = now
-	mcc.UpdatedAt = now
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -30,7 +31,7 @@ func (m *Manager) CreateManualCashChange(mcc *ManualCashChange) error {
 // UpdateManualCashChange try to update ManualCashChange in database
 func (m *Manager) UpdateManualCashChange(mcc *ManualCashChange) error {
 
-	mcc.UpdatedAt = time.Now()
+	mcc.UpdatedAt = mysql.NullTime{Valid: true, Time: time.Now()}
 
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
