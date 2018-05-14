@@ -59,6 +59,10 @@ var (
 	EmptyManagerErr = t9e.G("manager is empty error")
 	// ManagerMismatchErr manager not found
 	ManagerMismatchErr = t9e.G("manager not found")
+	//UpdateUserStatusErr error in updating user status
+	UpdateUserStatusErr error = t9e.G("error in updating user status.")
+	//InvalidUserStatusErr error in updating user status
+	InvalidUserStatusErr error = t9e.G("invalid user status.")
 )
 
 // NotFoundError maker
