@@ -240,12 +240,10 @@ func (m *Manager) ChargeUser(payment *OnlinePayment, domainID, chargeAmount int6
 		return err
 	}
 
-	billQ := fmt.Sprintf("SELECT COALESCE(SUM(amount),0) AS balance FROM %s WHERE user_id=?", BillingTableFull)
-	oldBalance, err := m.GetRDbMap().SelectInt(billQ, payment.UserID)
+	oldBalance, err := m.GetUserDomainBalance(payment.UserID, payment.DomainID)
 	if err != nil {
 		return err
 	}
-
 	newBalance := oldBalance + chargeAmount
 
 	// create billing
