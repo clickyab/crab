@@ -83,7 +83,7 @@ func (m *Manager) FillCampaigns(
 	var where []string
 
 	for field, value := range filters {
-		where = append(where, fmt.Sprintf("%s=?", field))
+		where = append(where, fmt.Sprintf("c.%s=?", field))
 		params = append(params, value)
 		countParams = append(countParams, value)
 	}
