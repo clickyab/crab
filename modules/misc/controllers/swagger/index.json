@@ -157,6 +157,7 @@
 		"user_loginPayload": "file://a3152804bb2c7852c77d345a2186b7b647a941ee",
 		"user_registerPayload": "file://e58b6e35a3a18cfe0c6853307c71d4d79fc839be",
 		"user_searchUserPayload": "file://e6c92d18dbe50f7d32847c8f0ffe2f57b6f6d5a5",
+		"user_startImpersonatePayload": "file://3ddb4d33bfa315f48b22c6bc102694c8a7cd401f",
 		"user_storePayload": "file://192632ed3ad4757b14475d79f76b67567f41be35",
 		"user_userPayload": "file://32e49b32f8778691637df812d65329bb0ba5a7c9",
 		"user_userResponse": "file://08175acbc0f8050a4920ef9f6f457c815fed16c3",
@@ -258,6 +259,7 @@
 		"/user/register": "file://f8ecee7efdede6882e6b06b4d398a7c92528c5b1",
 		"/user/search/mail": "file://a697dae16959d690f6ccb4dbe7960a712f8db1b0",
 		"/user/search/managers/mail": "file://3beab9bdfc21d70ccd84676148ecc80e337a6d81",
+		"/user/start-impersonate": "file://ee92aed573557175be6fa088c621962283cee79b",
 		"/user/store": "file://81c617ef1932a06e426689a8caa90863f41c61d4",
 		"/user/update": "file://951d1a07ddde52ec17cf0844784bb4dbfbc9c164",
 		"/user/update/{id}": "file://fa0577cc27856365b0cb3df9410d43004fc6b766"

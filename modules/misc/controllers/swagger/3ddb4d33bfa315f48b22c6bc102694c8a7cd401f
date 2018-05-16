@@ -1,0 +1,8 @@
+{
+	"properties": {
+		"user_id": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

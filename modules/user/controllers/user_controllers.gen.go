@@ -357,6 +357,28 @@ func (c *Controller) searchMangerByMailPost(ctx context.Context, w http.Response
 	framework.Write(w, res, http.StatusOK)
 }
 
+// startImpersonate start impersonate for user
+// @Route {
+// 		url = /start-impersonate
+//		method = post
+//		payload = startImpersonatePayload
+//		middleware = authz.Authenticate
+//		resource = impersonate_user:global
+//		200 = ResponseLoginOK
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) startImpersonatePost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*startImpersonatePayload)
+	res, err := c.startImpersonate(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // register is for register user
 // @Route {
 // 		url = /store
