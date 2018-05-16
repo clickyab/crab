@@ -414,6 +414,38 @@ func (pl *registerPayload) Validate(ctx context.Context, w http.ResponseWriter, 
 	return nil
 }
 
+func (p *startImpersonatePayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	err := func(in interface{}) error {
+		if v, ok := in.(interface {
+			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
+		}); ok {
+			return v.ValidateExtra(ctx, w, r)
+		}
+		return nil
+	}(p)
+	if err != nil {
+		return err
+	}
+	errs := validator.New().Struct(p)
+	if errs == nil {
+		return nil
+	}
+	res := middleware.GroupError{}
+	for _, i := range errs.(validator.ValidationErrors) {
+		switch i.Field() {
+		case "TargetUserID":
+			res["user_id"] = trans.E("invalid value")
+
+		default:
+			logrus.Panicf("the field %s is not translated", i)
+		}
+	}
+	if len(res) > 0 {
+		return res
+	}
+	return nil
+}
+
 func (u *userPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	err := func(in interface{}) error {
 		if v, ok := in.(interface {

@@ -5,6 +5,34 @@
 			{
 				"description": "",
 				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " search the domain field",
+				"in": "query",
+				"name": "domain",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
 				"name": "kind",
 				"required": false,
 				"type": "string"
@@ -26,7 +54,7 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
@@ -38,18 +66,11 @@
 				"type": "string"
 			},
 			{
-				"description": " search the domain field",
+				"description": " search the supplier field",
 				"in": "query",
-				"name": "domain",
+				"name": "supplier",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": " page number",
@@ -57,27 +78,6 @@
 				"name": "p",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the supplier field",
-				"in": "query",
-				"name": "supplier",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": "the security token, get it from login route",
