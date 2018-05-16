@@ -24,16 +24,16 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the title field",
 				"in": "query",
-				"name": "kind",
+				"name": "title",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the title field",
+				"description": "",
 				"in": "query",
-				"name": "title",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
