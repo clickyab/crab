@@ -26,12 +26,12 @@ type CampaignGraph struct {
 	Title      string       `json:"title" db:"title" type:"string" search:"true" map:"cp.title"`
 
 	ID         int64   `json:"id" db:"id" type:"number"`
-	AvgCPC     float64 `json:"avg_cpc" db:"avg_cpc" graph:"avg_cpc,Avg. CPC,line,false,4"`
-	AvgCPM     float64 `json:"avg_cpm" db:"avg_cpm" graph:"avg_cpm,Avg. CPM,line,false,5"`
-	Ctr        float64 `json:"ctr" db:"ctr" graph:"ctr,CTR,line,false,3"`
-	TotalImp   int64   `json:"total_imp" db:"total_imp" graph:"imp,Total Impression,bar,true,2"`
-	TotalClick int64   `json:"total_click" db:"total_click" graph:"click,Click,line,true,1"`
-	TotalSpent int64   `json:"total_spent" db:"total_spent" graph:"total_spent,Total spent,line,false,6"`
+	AvgCPC     float64 `json:"avg_cpc" db:"avg_cpc" graph:"avg_cpc,Avg. CPC,line,true,4"`
+	AvgCPM     float64 `json:"avg_cpm" db:"avg_cpm" graph:"avg_cpm,Avg. CPM,line,true,5"`
+	Ctr        float64 `json:"ctr" db:"ctr" graph:"ctr,CTR,line,true,3"`
+	TotalImp   int64   `json:"total_imp" db:"total_imp" graph:"imp,Total Impression,bar,false,2"`
+	TotalClick int64   `json:"total_click" db:"total_click" graph:"click,Click,line,false,1"`
+	TotalSpent int64   `json:"total_spent" db:"total_spent" graph:"total_spent,Total spent,line,true,6"`
 }
 
 // FillCampaignGraph is the function to handle
