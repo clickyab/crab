@@ -3,6 +3,8 @@
 // db/20180325060449_domains.sql
 // db/20180325072416_seed.sql
 // db/20180407053606_fix.sql
+// db/createdomainperm_seed.sql
+// db/domain_unique_fix.sql
 // DO NOT EDIT!
 
 package migrations
@@ -130,6 +132,46 @@ func db20180407053606_fixSql() (*asset, error) {
 	return a, nil
 }
 
+var _dbCreatedomainperm_seedSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x90\x4d\x4b\xf4\x30\x14\x85\xf7\xfd\x15\x87\x6e\xa6\xe5\xed\xac\x5e\x77\xb3\x12\x26\x62\xa1\x76\xb0\x1f\xba\x2c\x99\xe6\x32\x73\x31\x4d\x42\x12\xa9\x3f\x5f\x32\xa2\x20\x0a\x0a\x2e\xef\xe1\xdc\xc3\xc3\x93\x6d\xb7\xf8\xb7\xf0\xc9\xcb\x48\x18\x5d\x3a\xfb\xfb\x06\x6c\x10\x68\x8e\x6c\x0d\x36\xa3\xdb\x80\x03\xe8\x85\xe6\xe7\x48\x0a\xeb\x99\x0c\xe2\x99\x03\xde\xfe\x52\x89\x03\xa4\x73\x9a\x49\x65\x59\xdd\xf6\xa2\x1b\x50\xb7\xc3\x01\xde\x6a\x9a\x1c\xf9\x85\x43\x48\xbd\xe2\x12\xb0\xaa\x90\xc2\x0a\x61\xb6\x8e\x4a\x3c\x5c\x37\xa3\xe8\x51\xfc\xaf\xf2\xd9\x93\x8c\x34\x19\x5a\x27\x65\x17\xc9\x26\xaf\xf2\x93\xb6\x47\xa9\xf3\x72\xf7\x97\xed\xab\x9f\xb6\x3f\xa9\xd8\xdb\xd5\xbc\xcb\xf8\x30\x91\xc2\x5f\xb9\xf0\x56\x6b\x52\x38\xca\xf9\x29\xdb\x8b\x46\x0c\x02\x37\xdd\xe1\xee\x0b\xf2\xe3\xad\xe8\xc4\x05\x17\x75\x8b\xe2\x1b\xc0\x72\xf7\x1a\x00\x00\xff\xff\x4a\xee\x52\xab\xa2\x01\x00\x00"
+
+func dbCreatedomainperm_seedSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_dbCreatedomainperm_seedSql,
+		"db/createdomainperm_seed.sql",
+	)
+}
+
+func dbCreatedomainperm_seedSql() (*asset, error) {
+	bytes, err := dbCreatedomainperm_seedSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/createdomainperm_seed.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _dbDomain_unique_fixSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xce\xb1\x0a\xc2\x30\x10\xc6\xf1\x3d\x4f\xf1\x6d\x55\xa4\x4f\xe0\x24\x36\x43\x41\x2a\x55\x03\x6e\x25\x36\x87\x3d\x6c\x93\xd0\xa4\xb4\x8f\x2f\x41\x2a\xb8\x39\xde\x9f\xfb\xe0\x27\xf2\x1c\xbb\x81\x9f\xa3\x8e\x04\xe5\xd3\x79\xad\x4f\x60\x8b\x40\x6d\x64\x67\x91\x29\x9f\x81\x03\x68\xa1\x76\x8a\x64\x30\x77\x64\x11\x3b\x0e\xf8\xec\xd2\x13\x07\x68\xef\x7b\x26\x23\x8e\x17\x79\xb8\x49\xa8\xaa\xac\x95\x44\x59\x15\xf2\x0e\xe3\x06\xcd\x36\x34\x56\x0f\xd4\x4c\x6c\x0d\x2d\x38\x57\x6b\xc6\x26\xf5\xed\xfe\xc7\x52\xb8\xd9\xae\x9a\x2f\x25\xc5\xbf\x30\xa3\xeb\x7b\x32\x78\xe8\xf6\x25\xc4\x3b\x00\x00\xff\xff\x85\xdd\xa5\xc2\xe4\x00\x00\x00"
+
+func dbDomain_unique_fixSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_dbDomain_unique_fixSql,
+		"db/domain_unique_fix.sql",
+	)
+}
+
+func dbDomain_unique_fixSql() (*asset, error) {
+	bytes, err := dbDomain_unique_fixSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/domain_unique_fix.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -185,6 +227,8 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20180325060449_domains.sql": db20180325060449_domainsSql,
 	"db/20180325072416_seed.sql":    db20180325072416_seedSql,
 	"db/20180407053606_fix.sql":     db20180407053606_fixSql,
+	"db/createdomainperm_seed.sql":  dbCreatedomainperm_seedSql,
+	"db/domain_unique_fix.sql":      dbDomain_unique_fixSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -232,6 +276,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20180325060449_domains.sql": &bintree{db20180325060449_domainsSql, map[string]*bintree{}},
 		"20180325072416_seed.sql":    &bintree{db20180325072416_seedSql, map[string]*bintree{}},
 		"20180407053606_fix.sql":     &bintree{db20180407053606_fixSql, map[string]*bintree{}},
+		"createdomainperm_seed.sql":  &bintree{dbCreatedomainperm_seedSql, map[string]*bintree{}},
+		"domain_unique_fix.sql":      &bintree{dbDomain_unique_fixSql, map[string]*bintree{}},
 	}},
 }}
 
