@@ -7,15 +7,7 @@
 			"type": "object"
 		},
 		"description": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"name": {
 			"type": "string"
