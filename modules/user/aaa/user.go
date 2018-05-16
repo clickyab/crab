@@ -230,6 +230,14 @@ func GetNewToken(user *User) string {
 	return t
 }
 
+// GetImpersonateToken generate and save token to impersonate
+func GetImpersonateToken(targetUser *User, userToken string) string {
+	targetToken := GetNewToken(targetUser)
+	currentUserToken := kv.NewEavStore(targetToken).SetSubKey("impersonator", userToken)
+	assert.Nil(currentUserToken.Save(ucfg.TokenTimeout.Duration()))
+	return targetToken
+}
+
 // FindUserDomainsByEmail find active user domain based on its email
 func (m *Manager) FindUserDomainsByEmail(e string) []domainOrm.Domain {
 	var res []domainOrm.Domain
