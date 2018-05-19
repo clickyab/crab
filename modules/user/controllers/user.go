@@ -22,9 +22,10 @@ type Controller struct {
 
 // ResponseLoginOK login or ping or other response
 type ResponseLoginOK struct {
-	Token   string       `json:"token"`
-	Account userResponse `json:"account"`
-	Perms   *[]string    `json:"perms,omitempty"`
+	Token             string       `json:"token"`
+	Account           userResponse `json:"account"`
+	Perms             *[]string    `json:"perms,omitempty"`
+	ImpersonatorToken string       `json:"impersonator_token,omitempty"`
 }
 
 var (
