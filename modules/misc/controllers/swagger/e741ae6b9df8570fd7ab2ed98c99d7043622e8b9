@@ -3,16 +3,9 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},
@@ -24,39 +17,11 @@
 				"type": "string"
 			},
 			{
-				"description": " search the ssn field",
+				"description": " count per page",
 				"in": "query",
-				"name": "ssn",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
+				"name": "c",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the full_name field",
-				"in": "query",
-				"name": "full_name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the land_line field",
-				"in": "query",
-				"name": "land_line",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
@@ -73,6 +38,20 @@
 				"type": "string"
 			},
 			{
+				"description": "",
+				"in": "query",
+				"name": "status",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the full_name field",
+				"in": "query",
+				"name": "full_name",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the email field",
 				"in": "query",
 				"name": "email",
@@ -80,11 +59,32 @@
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": " page number",
 				"in": "query",
-				"name": "c",
+				"name": "p",
 				"required": false,
 				"type": "int"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the land_line field",
+				"in": "query",
+				"name": "land_line",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the ssn field",
+				"in": "query",
+				"name": "ssn",
+				"required": false,
+				"type": "string"
 			},
 			{
 				"description": "the security token, get it from login route",
