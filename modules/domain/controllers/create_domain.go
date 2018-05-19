@@ -25,13 +25,6 @@ type createDomainPayload struct {
 	Status      orm.DomainStatus       `json:"status" validate:"required"`
 }
 
-// createDomainResult create domain result
-type createDomainResult struct {
-	DomainID int64            `json:"domain_id"`
-	Name     string           `json:"name"`
-	Status   orm.DomainStatus `json:"status"`
-}
-
 func (p *createDomainPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	if !p.Status.IsValid() {
 		return errors.InvalidDomainStatus
@@ -44,13 +37,13 @@ func (p *createDomainPayload) ValidateExtra(ctx context.Context, w http.Response
 // 		url = /create
 //		protected = true
 // 		method = post
-//		resource = create_new_domain:global
+//		resource = god:global
 // }
-func (c *Controller) createDomain(ctx context.Context, r *http.Request, p *createDomainPayload) (*createDomainResult, error) {
+func (c *Controller) createDomain(ctx context.Context, r *http.Request, p *createDomainPayload) (*orm.Domain, error) {
 	currentUser := authz.MustGetUser(ctx)
 	currentDomain := domain.MustGetDomain(ctx)
 	// check permission
-	_, ok := aaa.CheckPermOn(currentUser, currentUser, "create_new_domain", currentDomain.ID, permission.ScopeGlobal)
+	_, ok := aaa.CheckPermOn(currentUser, currentUser, "god", currentDomain.ID, permission.ScopeGlobal)
 	if !ok {
 		return nil, errors.AccessDeniedErr
 	}
@@ -74,10 +67,5 @@ func (c *Controller) createDomain(ctx context.Context, r *http.Request, p *creat
 			return nil, errors.AlreadyExistErr
 		}
 	}
-	res := &createDomainResult{
-		DomainID: newDomain.ID,
-		Name:     newDomain.Name,
-		Status:   newDomain.Status,
-	}
-	return res, nil
+	return newDomain, nil
 }
