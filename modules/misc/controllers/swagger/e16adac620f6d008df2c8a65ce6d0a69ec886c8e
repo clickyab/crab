@@ -17,6 +17,13 @@
 				"type": "string"
 			},
 			{
+				"description": " search the domain field",
+				"in": "query",
+				"name": "domain",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " page number",
 				"in": "query",
 				"name": "p",
@@ -24,16 +31,16 @@
 				"type": "int"
 			},
 			{
-				"description": " parameter for search",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "q",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "to",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
@@ -45,16 +52,9 @@
 				"type": "int"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},

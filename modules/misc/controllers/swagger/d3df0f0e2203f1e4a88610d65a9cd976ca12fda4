@@ -80,6 +80,9 @@
 			},
 			"type": "object"
 		},
+		"impersonator_token": {
+			"type": "string"
+		},
 		"perms": {
 			"items": {
 				"type": "string"
