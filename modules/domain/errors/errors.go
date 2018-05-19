@@ -13,6 +13,8 @@ var (
 	AccessDeniedErr error = t9e.G("you can't create new domain")
 	// AlreadyExistErr already exist error
 	AlreadyExistErr error = t9e.G("a domain with this name is already exist.")
+	// UpdateDomainErr error in updating domain
+	UpdateDomainErr error = t9e.G("update domain error.")
 )
 
 // NotFoundError maker
