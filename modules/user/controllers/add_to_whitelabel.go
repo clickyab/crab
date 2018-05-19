@@ -52,7 +52,7 @@ func (l *addUserToWhitelabelPayload) ValidateExtra(ctx context.Context, w http.R
 
 // register is for register user
 // @Rest {
-// 		url = /add-to/whitelabel
+// 		url = /whitelabel/add
 //		protected = true
 // 		method = post
 //		resource = add_to_whitelabel_user:global
