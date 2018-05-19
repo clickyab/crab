@@ -4,10 +4,10 @@ import (
 	"context"
 	"net/http"
 
+	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/random"
 )
@@ -18,8 +18,34 @@ import (
 //		protected = true
 // 		method = get
 // }
-func (c *Controller) closeSession(ctx context.Context, r *http.Request) (*controller.NormalResponse, error) {
+func (c *Controller) closeSession(ctx context.Context, r *http.Request) (*ResponseLoginOK, error) {
 	token := authz.MustGetToken(ctx)
+	// check if user is impersonated
+	impersonatorToken := aaa.ImpersonatorToken(token)
+	if impersonatorToken != "" {
+		// user is impersonated so drop user session
+		err := kv.NewEavStore(token).Drop()
+		assert.Nil(err)
+		// return impersonator user detail
+		impAccessToken := kv.NewEavStore(impersonatorToken).SubKey("token")
+		m := aaa.NewAaaManager()
+		user, err := m.FindUserByAccessToken(impAccessToken)
+		if err != nil {
+			return nil, err
+		}
+		// get impersonator permissions
+		currentDomain := domain.MustGetDomain(ctx)
+		userPerms, err := user.GetAllUserPerms(currentDomain.ID)
+		if err != nil {
+			return nil, err
+		}
+		assert.Nil(err)
+		res := &ResponseLoginOK{
+			Token:   impersonatorToken,
+			Account: c.createUserResponse(user, userPerms),
+		}
+		return res, nil
+	}
 	err := kv.NewEavStore(token).Drop()
 	assert.Nil(err)
 	return nil, nil
