@@ -10,25 +10,11 @@
 				"type": "string"
 			},
 			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": " page number",
 				"in": "query",
 				"name": "p",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": "",
@@ -43,6 +29,20 @@
 				"name": "type",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": " search the name field",
+				"in": "query",
+				"name": "name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": " parameter for search",
@@ -66,9 +66,9 @@
 				"type": "string"
 			},
 			{
-				"description": " search the name field",
+				"description": "",
 				"in": "query",
-				"name": "name",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
