@@ -1,0 +1,11 @@
+{
+	"properties": {
+		"name": {
+			"type": "string"
+		},
+		"status": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

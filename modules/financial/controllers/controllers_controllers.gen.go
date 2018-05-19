@@ -9,6 +9,28 @@ import (
 	"github.com/clickyab/services/framework"
 )
 
+// addGateway to financial
+// @Route {
+// 		url = /gateways
+//		method = post
+//		payload = addGatewayPayload
+//		middleware = authz.Authenticate
+//		resource = add_gateway:global
+//		200 = orm.Gateway
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) addGatewayPost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*addGatewayPayload)
+	res, err := c.addGateway(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // getPaymentData get payment data
 // @Route {
 // 		url = /payment/init
@@ -74,6 +96,28 @@ func (c *Controller) billingListGet(ctx context.Context, w http.ResponseWriter, 
 	framework.Write(w, res, http.StatusOK)
 }
 
+// editGateway to financial
+// @Route {
+// 		url = /gateways/:id
+//		method = put
+//		payload = editGatewayPayload
+//		middleware = authz.Authenticate
+//		resource = edit_gateway:global
+//		200 = orm.Gateway
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) editGatewayPut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*editGatewayPayload)
+	res, err := c.editGateway(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // getGateways get payment data
 // @Route {
 // 		url = /gateways
@@ -129,6 +173,27 @@ func (c *Controller) getPaymentTransactionGet(ctx context.Context, w http.Respon
 func (c *Controller) manualChangeCashPut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := c.MustGetPayload(ctx).(*changeCashStatus)
 	res, err := c.manualChangeCash(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
+// setGatewayDefault to financial, to set a gateway to default
+// @Route {
+// 		url = /gateways/:id
+//		method = patch
+//		middleware = authz.Authenticate
+//		resource = set_default_gateway:global
+//		200 = orm.Gateway
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) setGatewayDefaultPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.setGatewayDefault(ctx, r)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return

@@ -12,6 +12,10 @@
 // db/20180420101000_gatewayseed.sql
 // db/20180426085156_fixonline.sql
 // db/20180503080650_perm.sql
+// db/20180515115051_add_gateway_perm.sql
+// db/20180515115125_edit_gateway_perm.sql
+// db/20180515120920_gateway_unique_fix.sql
+// db/20180516121606_default_gateway_perm.sql
 // db/changemanualcash_perm.sql
 // DO NOT EDIT!
 
@@ -320,6 +324,86 @@ func db20180503080650_permSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180515115051_add_gateway_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x90\x4f\x4b\xc3\x40\x10\x47\xef\xf9\x14\x3f\x72\x69\x8b\xe9\xc9\xde\xa4\x87\x42\x56\x0c\xc4\x14\xf3\x47\x8f\x65\x9b\x1d\xd2\xc1\x6d\x76\xc9\xae\x44\xbf\xbd\x6c\x6a\x85\x20\x82\xe0\x71\x1f\xb3\xc3\x7b\x13\xad\xd7\xb8\x39\x73\x37\x48\x4f\x68\x6c\x78\x56\x4f\x39\xb8\x87\xa3\xd6\xb3\xe9\xb1\x68\xec\x02\xec\x40\xef\xd4\xbe\x79\x52\x18\x4f\xd4\xc3\x9f\xd8\xe1\xf2\x2f\x0c\xb1\x83\xb4\x56\x33\xa9\x28\x2b\x2a\x51\xd6\xc8\x8a\x7a\x8f\xc1\x68\x3a\x58\x1a\xce\xec\x5c\x18\x5b\x4e\x80\x55\x82\x00\x13\xb8\xd6\x58\x5a\xe1\x79\x97\x37\xa2\xc2\xf2\x36\x89\xa5\x52\x87\x4e\x7a\x1a\xe5\x47\x9c\xc4\x9d\x36\x47\xa9\xe3\xd5\xdd\x7f\xb6\x6e\x7e\xdf\x3a\xab\x4f\xcd\xd8\x5f\xfb\xbf\xe3\x03\xfc\x53\xfe\x60\xb4\x26\x85\xa3\x6c\x5f\xa3\x54\xe4\xa2\x16\xb8\x2f\xf7\x8f\x3f\x64\x5f\x1e\x44\x29\x26\xd1\xed\x4c\x0b\xbb\x22\xbd\x98\x6f\xaf\x82\x13\xfa\x6a\x43\x56\x84\xfb\x6c\x82\xf4\x67\x00\x00\x00\xff\xff\xfa\x66\x9d\x27\xb4\x01\x00\x00"
+
+func db20180515115051_add_gateway_permSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180515115051_add_gateway_permSql,
+		"db/20180515115051_add_gateway_perm.sql",
+	)
+}
+
+func db20180515115051_add_gateway_permSql() (*asset, error) {
+	bytes, err := db20180515115051_add_gateway_permSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180515115051_add_gateway_perm.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _db20180515115125_edit_gateway_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x90\xcd\x4a\xc3\x40\x14\x85\xf7\x79\x8a\x43\x36\x6d\x31\x5d\xd9\x9d\x74\x51\xc8\x88\x81\x98\x62\x7e\x74\x59\xa6\x99\x4b\x7a\x71\x9a\x19\x32\x23\xd1\xb7\x97\x49\xad\x10\x04\x11\x5c\xce\xc7\x9d\xc3\x77\x4e\xb4\x5e\xe3\xe6\xcc\xdd\x20\x3d\xa1\xb1\xe1\x59\x3d\xe5\xe0\x1e\x8e\x5a\xcf\xa6\xc7\xa2\xb1\x0b\xb0\x03\xbd\x53\xfb\xe6\x49\x61\x3c\x51\x0f\x7f\x62\x87\xcb\xbf\x70\xc4\x0e\xd2\x5a\xcd\xa4\xa2\xac\xa8\x44\x59\x23\x2b\xea\x3d\x06\xa3\xe9\x60\x69\x38\xb3\x73\xe1\x6c\x39\x01\x56\x09\x02\x4c\xe0\x5a\x63\x69\x85\xe7\x5d\xde\x88\x0a\xcb\xdb\x24\x26\xc5\xfe\xd0\x49\x4f\xa3\xfc\x88\x93\xb8\xd3\xe6\x28\x75\xbc\xba\xfb\x4f\xec\xe6\x97\xd8\x59\xff\xd4\x8c\xfd\x75\x81\xef\xfa\x01\xfe\x69\x80\xc1\x68\x4d\x0a\x47\xd9\xbe\x46\xa9\xc8\x45\x2d\x70\x5f\xee\x1f\x7f\xd8\xbe\x3c\x88\x52\x4c\xa6\xdb\xb9\x17\x76\x45\x7a\x71\xdf\x5e\x0d\x27\xf4\xd5\x0e\x59\x11\x26\xda\x04\xeb\xcf\x00\x00\x00\xff\xff\xb5\xd7\x95\xdb\xb7\x01\x00\x00"
+
+func db20180515115125_edit_gateway_permSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180515115125_edit_gateway_permSql,
+		"db/20180515115125_edit_gateway_perm.sql",
+	)
+}
+
+func db20180515115125_edit_gateway_permSql() (*asset, error) {
+	bytes, err := db20180515115125_edit_gateway_permSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180515115125_edit_gateway_perm.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _db20180515120920_gateway_unique_fixSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\x8f\x41\x4b\xc3\x40\x10\x85\xef\xfb\x2b\xde\xad\x2d\x52\xf0\xe2\xa9\xa7\x68\x56\x08\xac\x1b\x5a\xb3\xa0\xa7\x32\x26\x43\x33\x98\x6e\xc2\xee\xd6\xd4\x7f\x2f\x8b\x44\xf1\xe6\x71\xe6\xbd\xef\xc1\xa7\xb6\x5b\xdc\x9c\xe5\x14\x28\x31\xdc\x94\xcf\xe7\xbd\x81\x78\x44\x6e\x93\x8c\x1e\x2b\x37\xad\x20\x11\x7c\xe5\xf6\x92\xb8\xc3\xdc\xb3\x47\xea\x25\xe2\x9b\xcb\x25\x89\xa0\x69\x1a\x84\x3b\x55\x98\x46\x1f\xd0\x14\xf7\x46\xe3\x44\x89\x67\xfa\x8c\x78\xaa\xcb\xea\xf1\x15\x9e\xce\x8c\x0f\x0a\x6d\x4f\x61\x7d\x77\xbb\x81\xad\x1b\x58\x67\xcc\x4e\x3d\x1c\x74\xd1\x68\x38\x5b\xed\x9d\x46\x65\x4b\xfd\xb2\xe0\xc7\x8c\x1d\x2f\xe2\x3b\xbe\xa2\xb6\xbf\xab\xeb\x1c\x6c\x76\xea\x8f\x44\x39\xce\x7e\xd1\xf8\x71\xc8\xcf\x7f\x59\x84\x71\x18\xb8\xc3\x1b\xb5\xef\xea\x2b\x00\x00\xff\xff\x0e\x79\x11\x93\x1c\x01\x00\x00"
+
+func db20180515120920_gateway_unique_fixSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180515120920_gateway_unique_fixSql,
+		"db/20180515120920_gateway_unique_fix.sql",
+	)
+}
+
+func db20180515120920_gateway_unique_fixSql() (*asset, error) {
+	bytes, err := db20180515120920_gateway_unique_fixSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180515120920_gateway_unique_fix.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var _db20180516121606_default_gateway_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x90\x4f\x4b\xc3\x40\x10\x47\xef\xfd\x14\x3f\x72\x69\x8b\xe9\xc9\xde\xa4\x87\x42\x56\x0c\xc4\x14\xf3\x47\x8f\x61\x9b\x1d\xd3\xc1\x6d\x76\xc9\x6e\x89\x7e\x7b\xd9\xd4\x0a\xa2\xa0\xe0\x71\x1f\xb3\xc3\x9b\x37\x5b\xad\x70\x75\xe4\x6e\x90\x9e\x50\xdb\xf0\x2c\x1f\x32\x70\x0f\x47\xad\x67\xd3\x63\x5e\xdb\x39\xd8\x81\x5e\xa9\x3d\x79\x52\x18\x0f\xd4\xc3\x1f\xd8\xe1\xfc\x2f\x0c\xb1\x83\xb4\x56\x33\xa9\x59\x9a\x97\xa2\xa8\x90\xe6\xd5\x0e\x83\xd1\xd4\x58\x1a\x8e\xec\x5c\x18\x5b\x4c\x80\x55\x8c\x00\x63\xb8\xd6\x58\x5a\xe2\x71\x9b\xd5\xa2\xc4\xe2\x3a\x8e\x1c\xf9\x46\xd1\xb3\x3c\x69\xdf\x74\xd2\xd3\x28\xdf\xa2\x38\xea\xb4\xd9\x4b\x1d\x2d\x6f\xfe\xb3\x7d\xfd\xfb\xf6\x2f\x35\x12\x33\xf6\x97\x1e\x9f\x31\x02\xfc\x53\x8e\xc1\x68\x4d\x0a\x7b\xd9\xbe\xcc\x12\x91\x89\x4a\xe0\xb6\xd8\xdd\x7f\x93\x7e\xba\x13\x85\x98\x84\x37\x3f\xea\x61\x9b\x27\xe7\x4b\x36\x17\xd1\x09\x7d\xdc\x8a\x34\x0f\xdd\xd6\x41\xfe\x3d\x00\x00\xff\xff\x29\x9c\xc2\xad\xcc\x01\x00\x00"
+
+func db20180516121606_default_gateway_permSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180516121606_default_gateway_permSql,
+		"db/20180516121606_default_gateway_perm.sql",
+	)
+}
+
+func db20180516121606_default_gateway_permSql() (*asset, error) {
+	bytes, err := db20180516121606_default_gateway_permSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180516121606_default_gateway_perm.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 var _dbChangemanualcash_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x90\x4f\x4b\xc3\x40\x10\xc5\xef\xf9\x14\x8f\x5c\xda\x62\x7a\xd2\x5b\xf1\x20\x74\xc5\x42\x6c\x31\x7f\xf4\x18\xb6\x9b\x21\x19\xdc\xec\x2e\x99\x94\xfa\xf1\x65\x23\x8a\xa0\xa0\xd0\xe3\x3c\xde\x3c\x7e\xfc\x92\xf5\x1a\x57\x03\x77\xa3\x9e\x08\x75\x88\x67\xf9\x94\x83\x1d\x84\xcc\xc4\xde\x61\x51\x87\x05\x58\x40\x6f\x64\x4e\x13\xb5\x38\xf7\xe4\x30\xf5\x2c\xf8\xf8\x8b\x25\x16\xe8\x10\x2c\x53\x9b\xec\xf6\xa5\x2a\x2a\xec\xf6\xd5\x01\xa3\xb7\xd4\x04\x1a\x07\x16\x89\xb5\xe5\x1c\x70\x9b\x21\x86\x19\xc4\xf8\x40\x2b\x3c\xdf\xe5\xb5\x2a\xb1\xbc\xce\xd2\x41\xbb\x93\xb6\x8d\xe9\xb5\xeb\xa8\x31\x5a\xfa\x34\x4b\x3b\xeb\x8f\xda\xa6\xab\xcd\x25\xe3\x37\x7f\x8e\x7f\x57\xb1\xf5\x67\xf7\x29\xe3\xcb\x44\x0c\xff\xe5\x62\xf4\xd6\x52\x8b\xa3\x36\xaf\xc9\x56\xe5\xaa\x52\xb8\x2f\x0e\x8f\x3f\x90\x5f\x1e\x54\xa1\x66\xdc\xdb\xdf\xe0\x36\xef\x01\x00\x00\xff\xff\x8a\xac\xb6\xa2\x9e\x01\x00\x00"
 
 func dbChangemanualcash_permSqlBytes() ([]byte, error) {
@@ -392,19 +476,23 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"db/20180414204345_billings.sql":            db20180414204345_billingsSql,
-	"db/20180414204720_gateways.sql":            db20180414204720_gatewaysSql,
-	"db/20180414204927_online_payments.sql":     db20180414204927_online_paymentsSql,
-	"db/20180414205035_bank_snaps.sql":          db20180414205035_bank_snapsSql,
-	"db/20180414210204_manual_cash_changes.sql": db20180414210204_manual_cash_changesSql,
-	"db/20180414210631_foregn_keys.sql":         db20180414210631_foregn_keysSql,
-	"db/20180416105636_perm.sql":                db20180416105636_permSql,
-	"db/20180420092108_perm.sql":                db20180420092108_permSql,
-	"db/20180420100308_fixpayment.sql":          db20180420100308_fixpaymentSql,
-	"db/20180420101000_gatewayseed.sql":         db20180420101000_gatewayseedSql,
-	"db/20180426085156_fixonline.sql":           db20180426085156_fixonlineSql,
-	"db/20180503080650_perm.sql":                db20180503080650_permSql,
-	"db/changemanualcash_perm.sql":              dbChangemanualcash_permSql,
+	"db/20180414204345_billings.sql":             db20180414204345_billingsSql,
+	"db/20180414204720_gateways.sql":             db20180414204720_gatewaysSql,
+	"db/20180414204927_online_payments.sql":      db20180414204927_online_paymentsSql,
+	"db/20180414205035_bank_snaps.sql":           db20180414205035_bank_snapsSql,
+	"db/20180414210204_manual_cash_changes.sql":  db20180414210204_manual_cash_changesSql,
+	"db/20180414210631_foregn_keys.sql":          db20180414210631_foregn_keysSql,
+	"db/20180416105636_perm.sql":                 db20180416105636_permSql,
+	"db/20180420092108_perm.sql":                 db20180420092108_permSql,
+	"db/20180420100308_fixpayment.sql":           db20180420100308_fixpaymentSql,
+	"db/20180420101000_gatewayseed.sql":          db20180420101000_gatewayseedSql,
+	"db/20180426085156_fixonline.sql":            db20180426085156_fixonlineSql,
+	"db/20180503080650_perm.sql":                 db20180503080650_permSql,
+	"db/20180515115051_add_gateway_perm.sql":     db20180515115051_add_gateway_permSql,
+	"db/20180515115125_edit_gateway_perm.sql":    db20180515115125_edit_gateway_permSql,
+	"db/20180515120920_gateway_unique_fix.sql":   db20180515120920_gateway_unique_fixSql,
+	"db/20180516121606_default_gateway_perm.sql": db20180516121606_default_gateway_permSql,
+	"db/changemanualcash_perm.sql":               dbChangemanualcash_permSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -449,19 +537,23 @@ type bintree struct {
 
 var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
-		"20180414204345_billings.sql":            &bintree{db20180414204345_billingsSql, map[string]*bintree{}},
-		"20180414204720_gateways.sql":            &bintree{db20180414204720_gatewaysSql, map[string]*bintree{}},
-		"20180414204927_online_payments.sql":     &bintree{db20180414204927_online_paymentsSql, map[string]*bintree{}},
-		"20180414205035_bank_snaps.sql":          &bintree{db20180414205035_bank_snapsSql, map[string]*bintree{}},
-		"20180414210204_manual_cash_changes.sql": &bintree{db20180414210204_manual_cash_changesSql, map[string]*bintree{}},
-		"20180414210631_foregn_keys.sql":         &bintree{db20180414210631_foregn_keysSql, map[string]*bintree{}},
-		"20180416105636_perm.sql":                &bintree{db20180416105636_permSql, map[string]*bintree{}},
-		"20180420092108_perm.sql":                &bintree{db20180420092108_permSql, map[string]*bintree{}},
-		"20180420100308_fixpayment.sql":          &bintree{db20180420100308_fixpaymentSql, map[string]*bintree{}},
-		"20180420101000_gatewayseed.sql":         &bintree{db20180420101000_gatewayseedSql, map[string]*bintree{}},
-		"20180426085156_fixonline.sql":           &bintree{db20180426085156_fixonlineSql, map[string]*bintree{}},
-		"20180503080650_perm.sql":                &bintree{db20180503080650_permSql, map[string]*bintree{}},
-		"changemanualcash_perm.sql":              &bintree{dbChangemanualcash_permSql, map[string]*bintree{}},
+		"20180414204345_billings.sql":             &bintree{db20180414204345_billingsSql, map[string]*bintree{}},
+		"20180414204720_gateways.sql":             &bintree{db20180414204720_gatewaysSql, map[string]*bintree{}},
+		"20180414204927_online_payments.sql":      &bintree{db20180414204927_online_paymentsSql, map[string]*bintree{}},
+		"20180414205035_bank_snaps.sql":           &bintree{db20180414205035_bank_snapsSql, map[string]*bintree{}},
+		"20180414210204_manual_cash_changes.sql":  &bintree{db20180414210204_manual_cash_changesSql, map[string]*bintree{}},
+		"20180414210631_foregn_keys.sql":          &bintree{db20180414210631_foregn_keysSql, map[string]*bintree{}},
+		"20180416105636_perm.sql":                 &bintree{db20180416105636_permSql, map[string]*bintree{}},
+		"20180420092108_perm.sql":                 &bintree{db20180420092108_permSql, map[string]*bintree{}},
+		"20180420100308_fixpayment.sql":           &bintree{db20180420100308_fixpaymentSql, map[string]*bintree{}},
+		"20180420101000_gatewayseed.sql":          &bintree{db20180420101000_gatewayseedSql, map[string]*bintree{}},
+		"20180426085156_fixonline.sql":            &bintree{db20180426085156_fixonlineSql, map[string]*bintree{}},
+		"20180503080650_perm.sql":                 &bintree{db20180503080650_permSql, map[string]*bintree{}},
+		"20180515115051_add_gateway_perm.sql":     &bintree{db20180515115051_add_gateway_permSql, map[string]*bintree{}},
+		"20180515115125_edit_gateway_perm.sql":    &bintree{db20180515115125_edit_gateway_permSql, map[string]*bintree{}},
+		"20180515120920_gateway_unique_fix.sql":   &bintree{db20180515120920_gateway_unique_fixSql, map[string]*bintree{}},
+		"20180516121606_default_gateway_perm.sql": &bintree{db20180516121606_default_gateway_permSql, map[string]*bintree{}},
+		"changemanualcash_perm.sql":               &bintree{dbChangemanualcash_permSql, map[string]*bintree{}},
 	}},
 }}
 
