@@ -42,21 +42,23 @@ func (p *startImpersonatePayload) ValidateExtra(ctx context.Context, w http.Resp
 // }
 func (c *Controller) startImpersonate(ctx context.Context, r *http.Request, p *startImpersonatePayload) (*ResponseLoginOK, error) {
 	currentUser := authz.MustGetUser(ctx)
+	userToken := authz.MustGetToken(ctx)
 	//check permission
 	_, ok := aaa.CheckPermOn(p.targetUser, currentUser, "impersonate_user", p.currentDomain.ID, permission.ScopeGlobal)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
 	//generate impersonate token for target user
-	targetToken := aaa.GetImpersonateToken(p.targetUser, currentUser.AccessToken)
+	targetToken := aaa.GetImpersonateToken(p.targetUser, userToken)
 
 	userPerms, err := p.targetUser.GetAllUserPerms(p.currentDomain.ID)
 	if err != nil {
 		return nil, err
 	}
 	result := &ResponseLoginOK{
-		Token:   targetToken,
-		Account: c.createUserResponse(p.targetUser, userPerms),
+		Token:             targetToken,
+		Account:           c.createUserResponse(p.targetUser, userPerms),
+		ImpersonatorToken: userToken,
 	}
 	return result, nil
 }

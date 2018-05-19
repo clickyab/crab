@@ -238,6 +238,12 @@ func GetImpersonateToken(targetUser *User, userToken string) string {
 	return targetToken
 }
 
+// ImpersonatorToken check if user is impersonated and return impersonator token
+func ImpersonatorToken(targetToken string) string {
+	val := kv.NewEavStore(targetToken).SubKey("impersonator")
+	return val
+}
+
 // FindUserDomainsByEmail find active user domain based on its email
 func (m *Manager) FindUserDomainsByEmail(e string) []domainOrm.Domain {
 	var res []domainOrm.Domain
