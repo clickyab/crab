@@ -242,7 +242,6 @@
 		"/location/provinces/{country_id}": "file://c4f9fb325bdaadf4712501f6f37d4ff1b941a029",
 		"/upload/module/{module}": "file://f28ba3fd2922b932d66b187d5aea952c2f85f4f9",
 		"/upload/video/{id}": "file://bd0dbbb247e86944ec1493ffe2ac574489e72935",
-		"/user/add-to/whitelabel": "file://585e4559fbdc5dfd18bc3f89c4de6e5be7a1ebcc",
 		"/user/admin/password/change/{id}": "file://0c806b62a63e941eacb06f3585cde49efa93585e",
 		"/user/avatar": "file://08af3c96906f5536f0305bc5a3190858b603615d",
 		"/user/change-user-status/{id}": "file://ea291e3f02b960539fc6f38ea9712207a3741c74",
@@ -267,7 +266,8 @@
 		"/user/start-impersonate": "file://ee92aed573557175be6fa088c621962283cee79b",
 		"/user/store": "file://81c617ef1932a06e426689a8caa90863f41c61d4",
 		"/user/update": "file://951d1a07ddde52ec17cf0844784bb4dbfbc9c164",
-		"/user/update/{id}": "file://fa0577cc27856365b0cb3df9410d43004fc6b766"
+		"/user/update/{id}": "file://fa0577cc27856365b0cb3df9410d43004fc6b766",
+		"/user/whitelabel/add": "file://37327c6dc3213667195f9b67347ac3743e86149e"
 	},
 	"produces": [
 		"application/json"
