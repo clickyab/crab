@@ -9,6 +9,7 @@ import (
 
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/initializer"
+	"github.com/clickyab/services/mysql"
 )
 
 // AUTO GENERATED CODE. DO NOT EDIT!
@@ -17,7 +18,7 @@ import (
 func (m *Manager) CreateGateway(g *Gateway) error {
 	now := time.Now()
 	g.CreatedAt = now
-	g.UpdatedAt = now
+
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
 			ii.Initialize()
@@ -30,7 +31,7 @@ func (m *Manager) CreateGateway(g *Gateway) error {
 // UpdateGateway try to update Gateway in database
 func (m *Manager) UpdateGateway(g *Gateway) error {
 
-	g.UpdatedAt = time.Now()
+	g.UpdatedAt = mysql.NullTime{Valid: true, Time: time.Now()}
 
 	func(in interface{}) {
 		if ii, ok := in.(initializer.Simple); ok {
