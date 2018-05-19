@@ -11,7 +11,7 @@ import (
 
 // register is for register user
 // @Route {
-// 		url = /add-to/whitelabel
+// 		url = /whitelabel/add
 //		method = post
 //		payload = addUserToWhitelabelPayload
 //		middleware = authz.Authenticate

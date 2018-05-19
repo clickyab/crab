@@ -77,7 +77,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		// End route with key 1
 
 		/* Route {
-			"Route": "/add-to/whitelabel",
+			"Route": "/whitelabel/add",
 			"Method": "POST",
 			"Function": "Controller.registerToWhitelabelPost",
 			"RoutePkg": "user",
@@ -100,7 +100,7 @@ func (c *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m2 = append(m2, middleware.PayloadUnMarshallerGenerator(addUserToWhitelabelPayload{}))
-		group.POST("user-Controller-registerToWhitelabelPost", "/add-to/whitelabel", framework.Mix(c.registerToWhitelabelPost, m2...))
+		group.POST("user-Controller-registerToWhitelabelPost", "/whitelabel/add", framework.Mix(c.registerToWhitelabelPost, m2...))
 		// End route with key 2
 
 		/* Route {
