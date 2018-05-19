@@ -24,6 +24,8 @@ import (
 //		controller = clickyab.com/crab/modules/user/controllers
 //		fill = FillUsers
 //		_edit = edit_user:global
+//		_impersonate = impersonate_user:global
+//		_change_pass = edit_user:global
 // }
 type UserList struct {
 	ID          int64            `json:"id" db:"id" visible:"true" type:"number"`
