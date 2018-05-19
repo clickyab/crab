@@ -328,6 +328,33 @@ func (c *Controller) Routes(r framework.Mux) {
 		// End route with key 12
 
 		/* Route {
+			"Route": "/admin/password/change/:id",
+			"Method": "PATCH",
+			"Function": "Controller.changeAdminPasswordPatch",
+			"RoutePkg": "user",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "changePass",
+			"Resource": "edit_user",
+			"Scope": "global"
+		} with key 13 */
+		m13 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("edit_user", "edit_user")
+		m13 = append(m13, authz.AuthorizeGenerator("edit_user", "global"))
+
+		// Make sure payload is the last middleware
+		m13 = append(m13, middleware.PayloadUnMarshallerGenerator(changePass{}))
+		group.PATCH("user-Controller-changeAdminPasswordPatch", "/admin/password/change/:id", framework.Mix(c.changeAdminPasswordPatch, m13...))
+		// End route with key 13
+
+		/* Route {
 			"Route": "/login",
 			"Method": "POST",
 			"Function": "Controller.loginPost",
@@ -339,13 +366,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "loginPayload",
 			"Resource": "",
 			"Scope": ""
-		} with key 13 */
-		m13 := append(groupMiddleware, []framework.Middleware{}...)
+		} with key 14 */
+		m14 := append(groupMiddleware, []framework.Middleware{}...)
 
 		// Make sure payload is the last middleware
-		m13 = append(m13, middleware.PayloadUnMarshallerGenerator(loginPayload{}))
-		group.POST("user-Controller-loginPost", "/login", framework.Mix(c.loginPost, m13...))
-		// End route with key 13
+		m14 = append(m14, middleware.PayloadUnMarshallerGenerator(loginPayload{}))
+		group.POST("user-Controller-loginPost", "/login", framework.Mix(c.loginPost, m14...))
+		// End route with key 14
 
 		/* Route {
 			"Route": "/logout",
@@ -361,13 +388,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "",
 			"Scope": ""
-		} with key 14 */
-		m14 := append(groupMiddleware, []framework.Middleware{
+		} with key 15 */
+		m15 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		group.GET("user-Controller-closeSessionGet", "/logout", framework.Mix(c.closeSessionGet, m14...))
-		// End route with key 14
+		group.GET("user-Controller-closeSessionGet", "/logout", framework.Mix(c.closeSessionGet, m15...))
+		// End route with key 15
 
 		/* Route {
 			"Route": "/logout/closeother",
@@ -383,13 +410,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "",
 			"Scope": ""
-		} with key 15 */
-		m15 := append(groupMiddleware, []framework.Middleware{
+		} with key 16 */
+		m16 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		group.GET("user-Controller-closeAllOtherSessionGet", "/logout/closeother", framework.Mix(c.closeAllOtherSessionGet, m15...))
-		// End route with key 15
+		group.GET("user-Controller-closeAllOtherSessionGet", "/logout/closeother", framework.Mix(c.closeAllOtherSessionGet, m16...))
+		// End route with key 16
 
 		/* Route {
 			"Route": "/ping",
@@ -405,13 +432,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "",
 			"Scope": ""
-		} with key 16 */
-		m16 := append(groupMiddleware, []framework.Middleware{
+		} with key 17 */
+		m17 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		group.GET("user-Controller-pingGet", "/ping", framework.Mix(c.pingGet, m16...))
-		// End route with key 16
+		group.GET("user-Controller-pingGet", "/ping", framework.Mix(c.pingGet, m17...))
+		// End route with key 17
 
 		/* Route {
 			"Route": "/register",
@@ -425,42 +452,18 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "registerPayload",
 			"Resource": "",
 			"Scope": ""
-		} with key 17 */
-		m17 := append(groupMiddleware, []framework.Middleware{}...)
+		} with key 18 */
+		m18 := append(groupMiddleware, []framework.Middleware{}...)
 
 		// Make sure payload is the last middleware
-		m17 = append(m17, middleware.PayloadUnMarshallerGenerator(registerPayload{}))
-		group.POST("user-Controller-registerPost", "/register", framework.Mix(c.registerPost, m17...))
-		// End route with key 17
+		m18 = append(m18, middleware.PayloadUnMarshallerGenerator(registerPayload{}))
+		group.POST("user-Controller-registerPost", "/register", framework.Mix(c.registerPost, m18...))
+		// End route with key 18
 
 		/* Route {
 			"Route": "/search/mail",
 			"Method": "POST",
 			"Function": "Controller.searchByMailPost",
-			"RoutePkg": "user",
-			"RouteMiddleware": [
-				"authz.Authenticate"
-			],
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "c",
-			"Payload": "searchUserPayload",
-			"Resource": "",
-			"Scope": ""
-		} with key 18 */
-		m18 := append(groupMiddleware, []framework.Middleware{
-			authz.Authenticate,
-		}...)
-
-		// Make sure payload is the last middleware
-		m18 = append(m18, middleware.PayloadUnMarshallerGenerator(searchUserPayload{}))
-		group.POST("user-Controller-searchByMailPost", "/search/mail", framework.Mix(c.searchByMailPost, m18...))
-		// End route with key 18
-
-		/* Route {
-			"Route": "/search/managers/mail",
-			"Method": "POST",
-			"Function": "Controller.searchMangerByMailPost",
 			"RoutePkg": "user",
 			"RouteMiddleware": [
 				"authz.Authenticate"
@@ -478,8 +481,32 @@ func (c *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m19 = append(m19, middleware.PayloadUnMarshallerGenerator(searchUserPayload{}))
-		group.POST("user-Controller-searchMangerByMailPost", "/search/managers/mail", framework.Mix(c.searchMangerByMailPost, m19...))
+		group.POST("user-Controller-searchByMailPost", "/search/mail", framework.Mix(c.searchByMailPost, m19...))
 		// End route with key 19
+
+		/* Route {
+			"Route": "/search/managers/mail",
+			"Method": "POST",
+			"Function": "Controller.searchMangerByMailPost",
+			"RoutePkg": "user",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "searchUserPayload",
+			"Resource": "",
+			"Scope": ""
+		} with key 20 */
+		m20 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		// Make sure payload is the last middleware
+		m20 = append(m20, middleware.PayloadUnMarshallerGenerator(searchUserPayload{}))
+		group.POST("user-Controller-searchMangerByMailPost", "/search/managers/mail", framework.Mix(c.searchMangerByMailPost, m20...))
+		// End route with key 20
 
 		/* Route {
 			"Route": "/start-impersonate",
@@ -495,18 +522,18 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "startImpersonatePayload",
 			"Resource": "impersonate_user",
 			"Scope": "global"
-		} with key 20 */
-		m20 := append(groupMiddleware, []framework.Middleware{
+		} with key 21 */
+		m21 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("impersonate_user", "impersonate_user")
-		m20 = append(m20, authz.AuthorizeGenerator("impersonate_user", "global"))
+		m21 = append(m21, authz.AuthorizeGenerator("impersonate_user", "global"))
 
 		// Make sure payload is the last middleware
-		m20 = append(m20, middleware.PayloadUnMarshallerGenerator(startImpersonatePayload{}))
-		group.POST("user-Controller-startImpersonatePost", "/start-impersonate", framework.Mix(c.startImpersonatePost, m20...))
-		// End route with key 20
+		m21 = append(m21, middleware.PayloadUnMarshallerGenerator(startImpersonatePayload{}))
+		group.POST("user-Controller-startImpersonatePost", "/start-impersonate", framework.Mix(c.startImpersonatePost, m21...))
+		// End route with key 21
 
 		/* Route {
 			"Route": "/store",
@@ -522,15 +549,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "storePayload",
 			"Resource": "",
 			"Scope": ""
-		} with key 21 */
-		m21 := append(groupMiddleware, []framework.Middleware{
+		} with key 22 */
+		m22 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		// Make sure payload is the last middleware
-		m21 = append(m21, middleware.PayloadUnMarshallerGenerator(storePayload{}))
-		group.POST("user-Controller-storePost", "/store", framework.Mix(c.storePost, m21...))
-		// End route with key 21
+		m22 = append(m22, middleware.PayloadUnMarshallerGenerator(storePayload{}))
+		group.POST("user-Controller-storePost", "/store", framework.Mix(c.storePost, m22...))
+		// End route with key 22
 
 		/* Route {
 			"Route": "/email/verify/:token",
@@ -544,11 +571,11 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "",
 			"Scope": ""
-		} with key 22 */
-		m22 := append(groupMiddleware, []framework.Middleware{}...)
+		} with key 23 */
+		m23 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("user-Controller-verifyEmailGet", "/email/verify/:token", framework.Mix(c.verifyEmailGet, m22...))
-		// End route with key 22
+		group.GET("user-Controller-verifyEmailGet", "/email/verify/:token", framework.Mix(c.verifyEmailGet, m23...))
+		// End route with key 23
 
 		/* Route {
 			"Route": "/email/verify",
@@ -562,13 +589,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "verifyEmailCodePayload",
 			"Resource": "",
 			"Scope": ""
-		} with key 23 */
-		m23 := append(groupMiddleware, []framework.Middleware{}...)
+		} with key 24 */
+		m24 := append(groupMiddleware, []framework.Middleware{}...)
 
 		// Make sure payload is the last middleware
-		m23 = append(m23, middleware.PayloadUnMarshallerGenerator(verifyEmailCodePayload{}))
-		group.POST("user-Controller-verifyEmailCodePost", "/email/verify", framework.Mix(c.verifyEmailCodePost, m23...))
-		// End route with key 23
+		m24 = append(m24, middleware.PayloadUnMarshallerGenerator(verifyEmailCodePayload{}))
+		group.POST("user-Controller-verifyEmailCodePost", "/email/verify", framework.Mix(c.verifyEmailCodePost, m24...))
+		// End route with key 24
 
 		/* Route {
 			"Route": "/email/verify/resend",
@@ -582,13 +609,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "verifyResendPayload",
 			"Resource": "",
 			"Scope": ""
-		} with key 24 */
-		m24 := append(groupMiddleware, []framework.Middleware{}...)
+		} with key 25 */
+		m25 := append(groupMiddleware, []framework.Middleware{}...)
 
 		// Make sure payload is the last middleware
-		m24 = append(m24, middleware.PayloadUnMarshallerGenerator(verifyResendPayload{}))
-		group.POST("user-Controller-verifyResendPost", "/email/verify/resend", framework.Mix(c.verifyResendPost, m24...))
-		// End route with key 24
+		m25 = append(m25, middleware.PayloadUnMarshallerGenerator(verifyResendPayload{}))
+		group.POST("user-Controller-verifyResendPost", "/email/verify/resend", framework.Mix(c.verifyResendPost, m25...))
+		// End route with key 25
 
 		initializer.DoInitialize(c)
 	})

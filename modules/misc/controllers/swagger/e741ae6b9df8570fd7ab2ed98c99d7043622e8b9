@@ -3,20 +3,6 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
@@ -24,44 +10,23 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "sort",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the email field",
+				"description": " search the full_name field",
 				"in": "query",
-				"name": "email",
+				"name": "full_name",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": " search the cellphone field",
 				"in": "query",
 				"name": "cellphone",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the land_line field",
-				"in": "query",
-				"name": "land_line",
 				"required": false,
 				"type": "string"
 			},
@@ -80,9 +45,44 @@
 				"type": "string"
 			},
 			{
-				"description": " search the full_name field",
+				"description": " count per page",
 				"in": "query",
-				"name": "full_name",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " search the email field",
+				"in": "query",
+				"name": "email",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the land_line field",
+				"in": "query",
+				"name": "land_line",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},

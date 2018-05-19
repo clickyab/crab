@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 
+	"strconv"
+
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
@@ -12,22 +14,26 @@ import (
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/permission"
+	"github.com/rs/xmux"
 )
 
 // @Validate {
 // }
 type changePass struct {
 	Password      string      `json:"password" validate:"gt=5"`
-	UserID        int64       `json:"user_id" validate:"required"`
 	targetUser    *aaa.User   `json:"-"`
 	currentDomain *orm.Domain `json:"-"`
 }
 
 func (p *changePass) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	id, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
+	if err != nil {
+		return errors.InvalidIDErr
+	}
 	currentDomain := domain.MustGetDomain(ctx)
 	p.currentDomain = currentDomain
 	// find target user
-	targetUser, err := aaa.NewAaaManager().FindUserWithParentsByID(p.UserID, currentDomain.ID)
+	targetUser, err := aaa.NewAaaManager().FindUserWithParentsByID(id, currentDomain.ID)
 	if err != nil {
 		return errors.InvalidIDErr
 	}
@@ -37,8 +43,8 @@ func (p *changePass) ValidateExtra(ctx context.Context, w http.ResponseWriter, r
 
 // changeAdminPassword change password (Admin)
 // @Rest {
-// 		url = /admin/password/change
-// 		method = put
+// 		url = /admin/password/change/:id
+// 		method = patch
 //		protected = true
 //		resource = edit_user:global
 // }
