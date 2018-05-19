@@ -45,6 +45,16 @@ var (
 	NotEnoughBalance error = t9e.G("you have not enough balance")
 	// UserBalanceLowErr user balance is low
 	UserBalanceLowErr error = t9e.G("user balance is lower that sent value")
+	// InvalidGatewayStatusErr invalid gateway status
+	InvalidGatewayStatusErr error = t9e.G("invalid status, you can select disable or enable")
+	// InvalidGatewayDefaultErr invalid default value for gateway
+	InvalidGatewayDefaultErr error = t9e.G("invalid value for is_default, you can select yes or no")
+	//GatewayAlreadyExistErr gateway already exist
+	GatewayAlreadyExistErr error = t9e.G("a gateway with provided name is already exist.")
+	// CreateGatewayErr error in create a new gateway
+	CreateGatewayErr error = t9e.G("an error occurred when creating gateway")
+	// EditGatewayErr error in editing a gateway
+	EditGatewayErr error = t9e.G("an error occurred when editing gateway")
 )
 
 // NotFoundError maker
