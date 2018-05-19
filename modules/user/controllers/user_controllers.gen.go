@@ -224,6 +224,28 @@ func (c *Controller) forgetPasswordPost(ctx context.Context, w http.ResponseWrit
 	framework.Write(w, res, http.StatusOK)
 }
 
+// changeAdminPassword change password (Admin)
+// @Route {
+// 		url = /admin/password/change/:id
+//		method = patch
+//		payload = changePass
+//		middleware = authz.Authenticate
+//		resource = edit_user:global
+//		200 = controller.NormalResponse
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) changeAdminPasswordPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*changePass)
+	res, err := c.changeAdminPassword(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // login userPayload in system
 // @Route {
 // 		url = /login

@@ -1,0 +1,8 @@
+{
+	"properties": {
+		"password": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
