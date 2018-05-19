@@ -1,0 +1,17 @@
+{
+	"properties": {
+		"attributes": {
+			"additionalProperties": {
+				"type": "string"
+			},
+			"type": "object"
+		},
+		"description": {
+			"type": "string"
+		},
+		"status": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

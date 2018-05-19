@@ -17,23 +17,9 @@
 				"type": "int"
 			},
 			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -45,9 +31,23 @@
 				"type": "string"
 			},
 			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
 				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},

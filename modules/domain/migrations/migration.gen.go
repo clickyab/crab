@@ -3,7 +3,7 @@
 // db/20180325060449_domains.sql
 // db/20180325072416_seed.sql
 // db/20180407053606_fix.sql
-// db/createdomainperm_seed.sql
+// db/20180519133040_remove_create_domain_perm.sql
 // db/domain_unique_fix.sql
 // DO NOT EDIT!
 
@@ -132,22 +132,22 @@ func db20180407053606_fixSql() (*asset, error) {
 	return a, nil
 }
 
-var _dbCreatedomainperm_seedSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xa4\x90\x4d\x4b\xf4\x30\x14\x85\xf7\xfd\x15\x87\x6e\xa6\xe5\xed\xac\x5e\x77\xb3\x12\x26\x62\xa1\x76\xb0\x1f\xba\x2c\x99\xe6\x32\x73\x31\x4d\x42\x12\xa9\x3f\x5f\x32\xa2\x20\x0a\x0a\x2e\xef\xe1\xdc\xc3\xc3\x93\x6d\xb7\xf8\xb7\xf0\xc9\xcb\x48\x18\x5d\x3a\xfb\xfb\x06\x6c\x10\x68\x8e\x6c\x0d\x36\xa3\xdb\x80\x03\xe8\x85\xe6\xe7\x48\x0a\xeb\x99\x0c\xe2\x99\x03\xde\xfe\x52\x89\x03\xa4\x73\x9a\x49\x65\x59\xdd\xf6\xa2\x1b\x50\xb7\xc3\x01\xde\x6a\x9a\x1c\xf9\x85\x43\x48\xbd\xe2\x12\xb0\xaa\x90\xc2\x0a\x61\xb6\x8e\x4a\x3c\x5c\x37\xa3\xe8\x51\xfc\xaf\xf2\xd9\x93\x8c\x34\x19\x5a\x27\x65\x17\xc9\x26\xaf\xf2\x93\xb6\x47\xa9\xf3\x72\xf7\x97\xed\xab\x9f\xb6\x3f\xa9\xd8\xdb\xd5\xbc\xcb\xf8\x30\x91\xc2\x5f\xb9\xf0\x56\x6b\x52\x38\xca\xf9\x29\xdb\x8b\x46\x0c\x02\x37\xdd\xe1\xee\x0b\xf2\xe3\xad\xe8\xc4\x05\x17\x75\x8b\xe2\x1b\xc0\x72\xf7\x1a\x00\x00\xff\xff\x4a\xee\x52\xab\xa2\x01\x00\x00"
+var _db20180519133040_remove_create_domain_permSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xce\xc1\x4a\xc4\x30\x18\x04\xe0\x7b\x9e\x62\xe8\xa5\x8a\xf6\xa4\x37\xf1\x20\x34\xa2\x50\x2b\x56\x8b\xc7\x12\x93\x1f\xfb\xb3\x69\x12\x92\x2c\xdd\xc7\x5f\x42\xd9\x85\xbd\xed\x71\x86\x19\xf8\x44\xd3\xe0\x6e\xe1\xff\xa8\x32\x61\x0c\x25\x7e\x7f\x75\x60\x87\x44\x3a\xb3\x77\xa8\xc7\x50\x83\x13\xe8\x40\x7a\x9f\xc9\x60\x9d\xc9\x21\xcf\x9c\xb0\xfd\xca\x88\x13\x54\x08\x96\xc9\x88\x56\x76\xf2\x47\xe2\x75\xf8\xfc\x40\xf4\x96\xa6\x40\x71\xe1\x94\xca\xec\xf7\x4d\x0e\x12\xa5\xc0\x73\xa5\x23\xa9\x4c\x93\xa3\x75\x32\x7e\x51\xec\x2a\xbc\xf4\xed\xf6\x61\x83\xf7\x1e\x37\x0f\xf7\x8f\xb7\x4f\xe2\xc2\xd8\xfa\xd5\x9d\x94\x67\x62\x29\xaf\x42\x46\x6f\x2d\x19\xfc\x29\xbd\x13\x42\x1c\x03\x00\x00\xff\xff\xa5\xde\x88\xb8\xfd\x00\x00\x00"
 
-func dbCreatedomainperm_seedSqlBytes() ([]byte, error) {
+func db20180519133040_remove_create_domain_permSqlBytes() ([]byte, error) {
 	return bindataRead(
-		_dbCreatedomainperm_seedSql,
-		"db/createdomainperm_seed.sql",
+		_db20180519133040_remove_create_domain_permSql,
+		"db/20180519133040_remove_create_domain_perm.sql",
 	)
 }
 
-func dbCreatedomainperm_seedSql() (*asset, error) {
-	bytes, err := dbCreatedomainperm_seedSqlBytes()
+func db20180519133040_remove_create_domain_permSql() (*asset, error) {
+	bytes, err := db20180519133040_remove_create_domain_permSqlBytes()
 	if err != nil {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "db/createdomainperm_seed.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	info := bindataFileInfo{name: "db/20180519133040_remove_create_domain_perm.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -224,11 +224,11 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"db/20180325060449_domains.sql": db20180325060449_domainsSql,
-	"db/20180325072416_seed.sql":    db20180325072416_seedSql,
-	"db/20180407053606_fix.sql":     db20180407053606_fixSql,
-	"db/createdomainperm_seed.sql":  dbCreatedomainperm_seedSql,
-	"db/domain_unique_fix.sql":      dbDomain_unique_fixSql,
+	"db/20180325060449_domains.sql":                   db20180325060449_domainsSql,
+	"db/20180325072416_seed.sql":                      db20180325072416_seedSql,
+	"db/20180407053606_fix.sql":                       db20180407053606_fixSql,
+	"db/20180519133040_remove_create_domain_perm.sql": db20180519133040_remove_create_domain_permSql,
+	"db/domain_unique_fix.sql":                        dbDomain_unique_fixSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -273,11 +273,11 @@ type bintree struct {
 
 var _bintree = &bintree{nil, map[string]*bintree{
 	"db": &bintree{nil, map[string]*bintree{
-		"20180325060449_domains.sql": &bintree{db20180325060449_domainsSql, map[string]*bintree{}},
-		"20180325072416_seed.sql":    &bintree{db20180325072416_seedSql, map[string]*bintree{}},
-		"20180407053606_fix.sql":     &bintree{db20180407053606_fixSql, map[string]*bintree{}},
-		"createdomainperm_seed.sql":  &bintree{dbCreatedomainperm_seedSql, map[string]*bintree{}},
-		"domain_unique_fix.sql":      &bintree{dbDomain_unique_fixSql, map[string]*bintree{}},
+		"20180325060449_domains.sql":                   &bintree{db20180325060449_domainsSql, map[string]*bintree{}},
+		"20180325072416_seed.sql":                      &bintree{db20180325072416_seedSql, map[string]*bintree{}},
+		"20180407053606_fix.sql":                       &bintree{db20180407053606_fixSql, map[string]*bintree{}},
+		"20180519133040_remove_create_domain_perm.sql": &bintree{db20180519133040_remove_create_domain_permSql, map[string]*bintree{}},
+		"domain_unique_fix.sql":                        &bintree{dbDomain_unique_fixSql, map[string]*bintree{}},
 	}},
 }}
 
