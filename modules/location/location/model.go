@@ -63,7 +63,7 @@ func (m *Manager) FindAllByCityID(id int64) CityInfo {
 			c.name 			AS city_name,
 			c.id 			AS city_id,
 			p.name 			AS province_name,
-			p.id 			AS province,
+			p.code 			AS province,
 			cu.id 			AS country_id,
 			cu.name 		AS country_name
 
