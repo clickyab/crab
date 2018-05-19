@@ -14,7 +14,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controller_NormalResponse"
+					"$ref": "#/definitions/user_ResponseLoginOK"
 				}
 			},
 			"400": {
