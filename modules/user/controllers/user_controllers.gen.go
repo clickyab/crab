@@ -269,7 +269,7 @@ func (c *Controller) loginPost(ctx context.Context, w http.ResponseWriter, r *ht
 // 		url = /logout
 //		method = get
 //		middleware = authz.Authenticate
-//		200 = controller.NormalResponse
+//		200 = ResponseLoginOK
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
 // }
