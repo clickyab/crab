@@ -51,7 +51,15 @@ func (ul UserList) Filter(u permission.Interface) UserList {
 	res.Actions = ul.Actions
 
 	if _, ok := u.HasOn("edit_user", ul.OwnerID, ul.ParentIDs, ul.DomainID, permission.ScopeGlobal); ok {
+		action = append(action, "change_pass")
+	}
+
+	if _, ok := u.HasOn("edit_user", ul.OwnerID, ul.ParentIDs, ul.DomainID, permission.ScopeGlobal); ok {
 		action = append(action, "edit")
+	}
+
+	if _, ok := u.HasOn("impersonate_user", ul.OwnerID, ul.ParentIDs, ul.DomainID, permission.ScopeGlobal); ok {
+		action = append(action, "impersonate")
 	}
 
 	res.Actions = strings.Join(action, ",")
@@ -61,5 +69,9 @@ func (ul UserList) Filter(u permission.Interface) UserList {
 func init() {
 
 	permission.Register("edit_user", "edit_user")
+
+	permission.Register("edit_user", "edit_user")
+
+	permission.Register("impersonate_user", "impersonate_user")
 
 }
