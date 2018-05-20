@@ -224,6 +224,27 @@ func (c *Controller) forgetPasswordPost(ctx context.Context, w http.ResponseWrit
 	framework.Write(w, res, http.StatusOK)
 }
 
+// getUserDetail get user detail  by id
+// @Route {
+// 		url = /detail/:id
+//		method = get
+//		middleware = authz.Authenticate
+//		resource = get_detail_user:global
+//		200 = userResponse
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) getUserDetailGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getUserDetail(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // changeAdminPassword change password (Admin)
 // @Route {
 // 		url = /admin/password/change/:id

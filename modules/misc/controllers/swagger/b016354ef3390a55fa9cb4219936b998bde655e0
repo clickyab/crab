@@ -10,9 +10,23 @@
 				"type": "string"
 			},
 			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
 				"required": false,
 				"type": "int"
 			},
@@ -22,20 +36,6 @@
 				"name": "q",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
