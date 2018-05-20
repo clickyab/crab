@@ -8,6 +8,7 @@ import (
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/xlog"
 	"github.com/fatih/structs"
@@ -84,14 +85,14 @@ type updateResult struct {
 // }
 func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaignBase) (*updateResult, error) {
 	db := orm.NewOrmManager()
-
+	token := authz.MustGetToken(ctx)
 	// check access
 	uScope, ok := aaa.CheckPermOn(p.baseData.owner, p.baseData.currentUser, "edit_campaign", p.baseData.domain.ID)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
 
-	err := p.baseData.campaign.SetAuditUserData(p.baseData.currentUser.ID, false, 0, "edit_campaign", uScope)
+	err := p.baseData.campaign.SetAuditUserData(p.baseData.currentUser.ID, token, p.baseData.domain.ID, "edit_campaign", uScope)
 	if err != nil {
 		return nil, err
 	}

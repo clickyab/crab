@@ -11,6 +11,7 @@ import (
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/fatih/structs"
 )
 
@@ -22,6 +23,7 @@ import (
 //		resource = copy_campaign:self
 // }
 func (c Controller) copyCampaign(ctx context.Context, r *http.Request) (*orm.Campaign, error) {
+	token := authz.MustGetToken(ctx)
 	baseData, err := CheckUserCamapignDomain(ctx)
 	if err != nil {
 		return nil, err
@@ -31,7 +33,7 @@ func (c Controller) copyCampaign(ctx context.Context, r *http.Request) (*orm.Cam
 		return nil, errors.AccessDenied
 	}
 
-	err = baseData.campaign.SetAuditUserData(baseData.currentUser.ID, false, 0, "copy_campaign", uScope)
+	err = baseData.campaign.SetAuditUserData(baseData.currentUser.ID, token, baseData.campaign.DomainID, "copy_campaign", uScope)
 	if err != nil {
 		return nil, err
 	}

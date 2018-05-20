@@ -11,6 +11,7 @@ import (
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/location/location"
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/array"
 	"github.com/clickyab/services/mysql"
 	"github.com/fatih/structs"
@@ -99,14 +100,14 @@ type attributesResult struct {
 // }
 func (c *Controller) attributes(ctx context.Context, r *http.Request, p *attributesPayload) (*attributesResult, error) {
 	db := orm.NewOrmManager()
-
+	token := authz.MustGetToken(ctx)
 	// check access
 	uScope, ok := aaa.CheckPermOn(p.baseData.owner, p.baseData.currentUser, "edit_attributes", p.baseData.domain.ID)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
 
-	err := p.baseData.campaign.SetAuditUserData(p.baseData.currentUser.ID, false, 0, "edit_attributes", uScope)
+	err := p.baseData.campaign.SetAuditUserData(p.baseData.currentUser.ID, token, p.baseData.domain.ID, "edit_attributes", uScope)
 	if err != nil {
 		return nil, err
 	}

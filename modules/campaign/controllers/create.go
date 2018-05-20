@@ -116,6 +116,7 @@ type baseResult struct {
 // }
 func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCampaignPayload) (*baseResult, error) {
 	d := domain.MustGetDomain(ctx)
+	token := authz.MustGetToken(ctx)
 	currentUser := authz.MustGetUser(ctx)
 	uScope, ok := aaa.CheckPermOn(currentUser, currentUser, "edit_campaign", d.ID)
 	if !ok {
@@ -213,7 +214,7 @@ func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCa
 		return nil, err
 	}
 
-	err = ca.SetAuditUserData(currentUser.ID, false, 0, "edit_campaign", uScope)
+	err = ca.SetAuditUserData(currentUser.ID, token, d.ID, "edit_campaign", uScope)
 	if err != nil {
 		return nil, err
 	}

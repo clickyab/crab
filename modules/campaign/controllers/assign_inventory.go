@@ -8,6 +8,7 @@ import (
 	"clickyab.com/crab/modules/campaign/orm"
 	inv "clickyab.com/crab/modules/inventory/orm"
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/mysql"
 	"github.com/fatih/structs"
 )
@@ -57,13 +58,14 @@ func (pl *assignInventoryPayload) ValidateExtra(ctx context.Context, w http.Resp
 //		resource = edit_campaign:self
 // }
 func (c Controller) assignInventory(ctx context.Context, r *http.Request, p *assignInventoryPayload) (*orm.Campaign, error) {
+	token := authz.MustGetToken(ctx)
 	// check perm for campaign entity
 	uScope, ok := aaa.CheckPermOn(p.baseData.owner, p.baseData.currentUser, "edit_campaign", p.baseData.domain.ID)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
 
-	err := p.baseData.campaign.SetAuditUserData(p.baseData.currentUser.ID, false, 0, "edit_campaign", uScope)
+	err := p.baseData.campaign.SetAuditUserData(p.baseData.currentUser.ID, token, p.baseData.domain.ID, "edit_campaign", uScope)
 	if err != nil {
 		return nil, err
 	}

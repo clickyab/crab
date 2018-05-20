@@ -10,6 +10,7 @@ import (
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	userError "clickyab.com/crab/modules/user/errors"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/xlog"
 )
 
@@ -58,14 +59,14 @@ func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter
 // }
 func (c *Controller) budget(ctx context.Context, r *http.Request, p *budgetPayload) (*orm.Campaign, error) {
 	db := orm.NewOrmManager()
-
+	token := authz.MustGetToken(ctx)
 	// check access
 	uScope, ok := aaa.CheckPermOn(p.baseData.owner, p.baseData.currentUser, "edit_budget", p.baseData.domain.ID)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
 
-	err := p.baseData.campaign.SetAuditUserData(p.baseData.currentUser.ID, false, 0, "edit_campaign", uScope)
+	err := p.baseData.campaign.SetAuditUserData(p.baseData.currentUser.ID, token, p.baseData.domain.ID, "edit_campaign", uScope)
 	if err != nil {
 		return nil, err
 	}
