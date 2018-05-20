@@ -407,3 +407,10 @@ func (ns NullString) UnmarshalJSON(b []byte) error {
 	ns.Valid = true
 	return nil
 }
+
+func (n NullTime) String() string {
+	if !n.Valid {
+		return nullString
+	}
+	return n.Time.String()
+}
