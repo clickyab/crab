@@ -16,7 +16,6 @@ import (
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/safe"
 	"github.com/clickyab/services/xlog"
-	"github.com/fatih/structs"
 )
 
 var campaignSeed = config.RegisterBoolean("crab.modules.campaign.seed", true, "insert detail after campaign created")
@@ -220,12 +219,6 @@ func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCa
 	}
 
 	err = ca.SetAuditOwnerID(currentUser.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	data := structs.Map(ca)
-	err = ca.SetAuditDescribe(data, "create new campaign")
 	if err != nil {
 		return nil, err
 	}
