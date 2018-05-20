@@ -10,6 +10,7 @@ import (
 	domainOrm "clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/assert"
+	"github.com/fatih/structs"
 )
 
 const (
@@ -42,6 +43,12 @@ func (m *Manager) AddCampaign(ca *Campaign, c CampaignBase, u *aaa.User, d *doma
 		}
 		assert.Nil(m.Rollback())
 	}()
+
+	data := structs.Map(ca)
+	err = ca.SetAuditDescribe(data, "create new campaign")
+	if err != nil {
+		return s, err
+	}
 
 	if err = m.CreateCampaign(ca); err != nil {
 		return s, err

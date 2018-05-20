@@ -11,7 +11,7 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
-	gorp "gopkg.in/gorp.v2"
+	"gopkg.in/gorp.v2"
 )
 
 // CampaignKind is kind of campaign <web,app>
@@ -156,35 +156,35 @@ const (
 //		list = yes
 // }
 type Campaign struct {
-	ID               int64                 `json:"id" db:"id"`
-	UserID           int64                 `json:"user_id" db:"user_id"`
-	DomainID         int64                 `json:"domain_id" db:"domain_id"`
-	Title            string                `json:"title" db:"title"`
-	Kind             CampaignKind          `json:"kind" db:"kind"`
-	Status           Status                `json:"status" db:"status"`
-	Progress         Progress              `json:"progress" db:"progress"`
-	StartAt          time.Time             `json:"start_at" db:"start_at"`
-	EndAt            mysql.NullTime        `json:"end_at" db:"end_at"`
-	TotalBudget      int64                 `json:"total_budget" db:"total_budget"`
-	DailyBudget      int64                 `json:"daily_budget" db:"daily_budget"`
-	Strategy         Strategy              `json:"strategy" db:"strategy"`
-	MaxBid           int64                 `json:"max_bid" db:"max_bid"`
-	Exchange         ExchangeType          `json:"exchange" db:"exchange"`
-	InventoryID      mysql.NullInt64       `json:"inventory_id" db:"inventory_id"`
-	InventoryType    NullInventoryState    `json:"inventory_type" db:"inventory_type"` // InventoryType black_list or white_list
+	ID               int64                 `json:"id" db:"id" structs:"id"`
+	UserID           int64                 `json:"user_id" db:"user_id" structs:"user_id"`
+	DomainID         int64                 `json:"domain_id" db:"domain_id" structs:"domain_id"`
+	Title            string                `json:"title" db:"title" structs:"title"`
+	Kind             CampaignKind          `json:"kind" db:"kind" structs:"kind"`
+	Status           Status                `json:"status" db:"status" structs:"status"`
+	Progress         Progress              `json:"progress" db:"progress" structs:"progress"`
+	StartAt          time.Time             `json:"start_at" db:"start_at" structs:"start_at"`
+	EndAt            mysql.NullTime        `json:"end_at" db:"end_at" structs:"end_at,string"`
+	TotalBudget      int64                 `json:"total_budget" db:"total_budget" structs:"total_budget"`
+	DailyBudget      int64                 `json:"daily_budget" db:"daily_budget" structs:"daily_budget"`
+	Strategy         Strategy              `json:"strategy" db:"strategy" structs:"strategy"`
+	MaxBid           int64                 `json:"max_bid" db:"max_bid" structs:"max_bid"`
+	Exchange         ExchangeType          `json:"exchange" db:"exchange" structs:"exchange"`
+	InventoryID      mysql.NullInt64       `json:"inventory_id" db:"inventory_id" structs:"inventory_id,string"`
+	InventoryType    NullInventoryState    `json:"inventory_type" db:"inventory_type" structs:"inventory_type"` // InventoryType black_list or white_list
 	InventoryDomains mysql.StringJSONArray `json:"-" db:"inventory_domains"`
-	TLD              string                `json:"tld" db:"tld"`
-	TodaySpend       int64                 `json:"today_spend" db:"today_spend"`
-	TotalSpend       int64                 `json:"total_spend" db:"total_spend"`
-	CreatedAt        time.Time             `json:"created_at" db:"created_at"`
-	UpdatedAt        time.Time             `json:"updated_at" db:"updated_at"`
-	ArchivedAt       mysql.NullTime        `json:"archived_at" db:"archived_at"`
+	TLD              string                `json:"tld" db:"tld" structs:"tld"`
+	TodaySpend       int64                 `json:"today_spend" db:"today_spend" structs:"today_spend"`
+	TotalSpend       int64                 `json:"total_spend" db:"total_spend" structs:"total_spend"`
+	CreatedAt        time.Time             `json:"created_at" db:"created_at" structs:"created_at"`
+	UpdatedAt        time.Time             `json:"updated_at" db:"updated_at" structs:"updated_at"`
+	ArchivedAt       mysql.NullTime        `json:"archived_at" db:"archived_at" structs:"archived_at,string"`
 	aaa.AuditExtraData
 }
 
 // PostInsert to set campaign id in audit
 func (ca *Campaign) PostInsert(s gorp.SqlExecutor) error {
-	err := ca.SetAuditEntity("camapgin", ca.ID)
+	err := ca.SetAuditEntity("campaign", ca.ID)
 	if err != nil {
 		return err
 	}
