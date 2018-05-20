@@ -71,10 +71,7 @@ func (m *Manager) FillCampaignLog(
 		return nil, 0, errors.New("")
 	}
 
-	where = append(where, "a.target_id=?")
 	params = append(params, intVal)
-
-	where = append(where, "a.target_model=?")
 	params = append(params, "campaign")
 
 	for field, value := range filters {
@@ -135,7 +132,13 @@ func (m *Manager) FillCampaignLog(
 	}
 	conds += strings.Join(where, " AND ")
 
-	countQuery := fmt.Sprintf(`SELECT COUNT(a.id) FROM %s AS a INNER JOIN %s AS c ON c.id=a.target_id %s`, aaa.AuditLogTableFull, CampaignTableFull, conds)
+	countQuery := fmt.Sprintf(`SELECT 
+	COUNT(a.id) FROM %s AS a 
+	INNER JOIN %s AS c ON (c.id=a.target_id AND a.target_id=? AND a.target_model=?) %s`,
+		aaa.AuditLogTableFull,
+		CampaignTableFull,
+		conds,
+	)
 	query := fmt.Sprintf(`SELECT
 	a.created_at AS created_at,
 	al.data AS data,
@@ -144,12 +147,18 @@ func (m *Manager) FillCampaignLog(
 	manipulator.email AS manipulator_email,
 	impersonator.email AS impersonator_email FROM %s AS a
 	INNER JOIN %s AS al ON al.audit_log_id=a.id
-	INNER JOIN %s AS c ON c.id=a.target_id
+	INNER JOIN %s AS c ON (c.id=a.target_id AND a.target_id=? AND a.target_model=?)
 	INNER JOIN %s AS owner ON owner.id=c.user_id
 	LEFT JOIN %s AS impersonator ON impersonator.id=a.impersonator_id
 	JOIN %s AS manipulator ON manipulator.id=a.user_id %s
 	
-`, aaa.AuditLogTableFull, aaa.AuditLogDetailTableFull, CampaignTableFull, aaa.UserTableFull, aaa.UserTableFull, aaa.UserTableFull, conds)
+`, aaa.AuditLogTableFull,
+		aaa.AuditLogDetailTableFull,
+		CampaignTableFull,
+		aaa.UserTableFull,
+		aaa.UserTableFull,
+		aaa.UserTableFull,
+		conds)
 
 	limit := c
 	offset := (p - 1) * c
@@ -164,12 +173,12 @@ func (m *Manager) FillCampaignLog(
 	_, err = m.GetRDbMap().Select(&res, query, params...)
 	assert.Nil(err)
 
-	fillCampaignLogDat(res)
+	fillCampaignLogData(res)
 
 	return res, count, nil
 }
 
-func fillCampaignLogDat(res CampaignLogArray) {
+func fillCampaignLogData(res CampaignLogArray) CampaignLogArray {
 	for i := range res {
 		strategy, ok := res[i].Data["strategy"]
 		if ok {
@@ -211,4 +220,5 @@ func fillCampaignLogDat(res CampaignLogArray) {
 		}
 
 	}
+	return res
 }

@@ -1,0 +1,75 @@
+{
+	"properties": {
+		"action": {
+			"type": "string"
+		},
+		"campaign_name": {
+			"type": "string"
+		},
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"daily_budget": {
+			"type": "number"
+		},
+		"data": {
+			"additionalProperties": {
+				"type": "string"
+			},
+			"type": "object"
+		},
+		"end_at": {
+			"type": "string"
+		},
+		"impersonator_email": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"kind": {
+			"type": "string"
+		},
+		"manipulator_email": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"max_bid": {
+			"type": "number"
+		},
+		"owner_email": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"start_at": {
+			"type": "string"
+		},
+		"strategy": {
+			"type": "string"
+		},
+		"total_budget": {
+			"type": "number"
+		}
+	},
+	"type": "object"
+}
