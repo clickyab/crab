@@ -6,6 +6,8 @@ import (
 
 	"strings"
 
+	"strconv"
+
 	domainOrm "clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
@@ -242,6 +244,13 @@ func GetImpersonateToken(targetUser *User, userToken string) string {
 func ImpersonatorToken(targetToken string) string {
 	val := kv.NewEavStore(targetToken).SubKey("impersonator")
 	return val
+}
+
+// ExtractUserID extract user id from token
+func ExtractUserID(token string) (int64, error) {
+	u := strings.Split(token, ":")[0]
+	id, err := strconv.ParseInt(u, 10, 0)
+	return id, err
 }
 
 // FindUserDomainsByEmail find active user domain based on its email
