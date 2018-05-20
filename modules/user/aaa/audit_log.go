@@ -6,7 +6,7 @@ import (
 	"clickyab.com/crab/modules/user/errors"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
-	gorp "gopkg.in/gorp.v2"
+	"gopkg.in/gorp.v2"
 )
 
 // AuditActionType is audit action type
@@ -49,16 +49,17 @@ type AuditLog struct {
 
 // AuditExtraData to embed in models and set all needed data
 type AuditExtraData struct {
-	domainID    int64                  `json:"-" db:"-"`
-	userPerm    string                 `json:"-" db:"-"`
-	permScope   permission.UserScope   `json:"-" db:"-"`
-	userID      int64                  `json:"-" db:"-"`
-	targetModel string                 `json:"-" db:"-"`
-	targetID    int64                  `json:"-" db:"-"`
-	ownerID     int64                  `json:"-" db:"-"`
-	impersonate bool                   `json:"-" db:"-"`
-	description string                 `json:"-" db:"-"`
-	data        map[string]interface{} `json:"-" db:"-"`
+	domainID       int64                  `json:"-" db:"-"`
+	userPerm       string                 `json:"-" db:"-"`
+	permScope      permission.UserScope   `json:"-" db:"-"`
+	userID         int64                  `json:"-" db:"-"`
+	targetModel    string                 `json:"-" db:"-"`
+	targetID       int64                  `json:"-" db:"-"`
+	ownerID        int64                  `json:"-" db:"-"`
+	impersonate    bool                   `json:"-" db:"-"`
+	impersonatorID int64                  `json:"-" db:"-"`
+	description    string                 `json:"-" db:"-"`
+	data           map[string]interface{} `json:"-" db:"-"`
 }
 
 // ValidateAuditData validate data
@@ -143,8 +144,8 @@ func (data *AuditExtraData) SetAuditDomainID(dID int64) error {
 }
 
 // SetAuditUserData to set user data that are edit/insert/delete entity
-func (data *AuditExtraData) SetAuditUserData(uID int64, imprs bool, impersonatorID int64, uPerm string, uScope permission.UserScope) error {
-	if uID < 1 {
+func (data *AuditExtraData) SetAuditUserData(userID int64, token string, domainID int64, uPerm string, uScope permission.UserScope) error {
+	if userID < 1 {
 		return errors.InalidAuditUserID
 	}
 	if uPerm == "" {
@@ -154,17 +155,24 @@ func (data *AuditExtraData) SetAuditUserData(uID int64, imprs bool, impersonator
 		return errors.InalidAuditPermScope
 	}
 
-	impersonator := mysql.NullInt64{Int64: 0, Valid: false}
-	if impersonatorID > 0 {
-		impersonator.Int64 = impersonatorID
-		impersonator.Valid = true
+	impersonated := false
+	var impersonatorID int64
+	impersonatorToken := ImpersonatorToken(token)
+
+	if impersonatorToken != "" {
+		impersonated = true
+		id, err := ExtractUserID(impersonatorToken)
+		if err != nil {
+			return err
+		}
+		impersonatorID = id
 	}
 
-	data.userID = uID
-	data.impersonate = imprs
+	data.userID = userID
+	data.impersonate = impersonated
+	data.impersonatorID = impersonatorID
 	data.userPerm = uPerm
 	data.permScope = uScope
-
 	return nil
 }
 
@@ -220,17 +228,24 @@ func AddAuditLog(data *AuditExtraData, action string) error {
 		return errors.InalidAuditAction
 	}
 
+	impersonatorID := mysql.NullInt64{Int64: 0, Valid: false}
+	if data.impersonatorID > 0 {
+		impersonatorID.Int64 = data.impersonatorID
+		impersonatorID.Valid = true
+	}
+
 	audit := AuditLog{
-		DomainID:    data.domainID,
-		UserID:      data.userID,
-		UserPerm:    data.userPerm,
-		PermScope:   data.permScope,
-		Action:      actionType,
-		TargetModel: data.targetModel,
-		TargetID:    data.targetID,
-		OwnerID:     data.ownerID,
-		Impersonate: data.impersonate,
-		Description: mysql.NullString{String: data.description, Valid: true},
+		DomainID:       data.domainID,
+		UserID:         data.userID,
+		UserPerm:       data.userPerm,
+		PermScope:      data.permScope,
+		Action:         actionType,
+		TargetModel:    data.targetModel,
+		TargetID:       data.targetID,
+		OwnerID:        data.ownerID,
+		Impersonate:    data.impersonate,
+		ImpersonatorID: impersonatorID,
+		Description:    mysql.NullString{String: data.description, Valid: true},
 	}
 
 	db := NewAaaManager()
