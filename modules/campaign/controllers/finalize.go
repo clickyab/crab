@@ -9,6 +9,7 @@ import (
 	"clickyab.com/crab/modules/campaign/orm"
 	inventoryOrm "clickyab.com/crab/modules/inventory/orm"
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/fatih/structs"
 )
 
@@ -25,6 +26,7 @@ type finalizeResult struct {
 //		resource = edit_campaign:self
 // }
 func (c *Controller) finalize(ctx context.Context, r *http.Request) (*finalizeResult, error) {
+	token := authz.MustGetToken(ctx)
 	baseData, err := CheckUserCamapignDomain(ctx)
 	if err != nil {
 		return nil, err
@@ -37,7 +39,7 @@ func (c *Controller) finalize(ctx context.Context, r *http.Request) (*finalizeRe
 		return nil, errors.AccessDenied
 	}
 
-	err = baseData.campaign.SetAuditUserData(baseData.currentUser.ID, false, 0, "edit_campaign", uScope)
+	err = baseData.campaign.SetAuditUserData(baseData.currentUser.ID, token, baseData.domain.ID, "edit_campaign", uScope)
 	if err != nil {
 		return nil, err
 	}

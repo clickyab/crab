@@ -8,6 +8,7 @@ import (
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/mysql"
 	"github.com/fatih/structs"
@@ -22,6 +23,7 @@ import (
 // }
 func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.NormalResponse, error) {
 	baseData, err := CheckUserCamapignDomain(ctx)
+	token := authz.MustGetToken(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +33,7 @@ func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.
 		return nil, errors.AccessDenied
 	}
 
-	err = baseData.campaign.SetAuditUserData(baseData.currentUser.ID, false, 0, "archive_campaign", uScope)
+	err = baseData.campaign.SetAuditUserData(baseData.currentUser.ID, token, baseData.campaign.DomainID, "archive_campaign", uScope)
 	if err != nil {
 		return nil, err
 	}
