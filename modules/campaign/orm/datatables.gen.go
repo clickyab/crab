@@ -11,6 +11,8 @@ import (
 type (
 	CampaignDetailsArray []CampaignDetails
 
+	CampaignLogArray []CampaignLog
+
 	PublisherDetailsArray []PublisherDetails
 
 	CampaignDailyArray []CampaignDaily
@@ -113,6 +115,56 @@ func init() {
 	permission.Register("get_campaign", "get_campaign")
 
 	permission.Register("edit_campaign", "edit_campaign")
+
+}
+
+func (cla CampaignLogArray) Filter(u permission.Interface) CampaignLogArray {
+	res := make(CampaignLogArray, len(cla))
+	for i := range cla {
+		res[i] = cla[i].Filter(u)
+	}
+
+	return res
+}
+
+// Filter is for filtering base on permission
+func (cl CampaignLog) Filter(u permission.Interface) CampaignLog {
+	action := []string{}
+	res := CampaignLog{}
+
+	res.CreatedAt = cl.CreatedAt
+
+	res.Action = cl.Action
+
+	res.ImpersonatorEmail = cl.ImpersonatorEmail
+
+	res.ManipulatorEmail = cl.ManipulatorEmail
+
+	res.OwnerEmail = cl.OwnerEmail
+
+	res.Data = cl.Data
+
+	res.CampaignName = cl.CampaignName
+
+	res.Kind = cl.Kind
+
+	res.Strategy = cl.Strategy
+
+	res.StartAt = cl.StartAt
+
+	res.EndAt = cl.EndAt
+
+	res.TotalBudget = cl.TotalBudget
+
+	res.DailyBudget = cl.DailyBudget
+
+	res.MaxBid = cl.MaxBid
+
+	res.Actions = strings.Join(action, ",")
+	return res
+}
+
+func init() {
 
 }
 
