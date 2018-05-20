@@ -3,25 +3,11 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " parameter for search",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "q",
+				"name": "from",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " search the cellphone field",
-				"in": "query",
-				"name": "cellphone",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
@@ -45,18 +31,32 @@
 				"type": "string"
 			},
 			{
-				"description": " search the full_name field",
-				"in": "query",
-				"name": "full_name",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": " search the email field",
 				"in": "query",
 				"name": "email",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the cellphone field",
+				"in": "query",
+				"name": "cellphone",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": " page number",
@@ -66,9 +66,9 @@
 				"type": "int"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the full_name field",
 				"in": "query",
-				"name": "from",
+				"name": "full_name",
 				"required": false,
 				"type": "string"
 			},
