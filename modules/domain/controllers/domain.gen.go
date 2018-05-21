@@ -80,6 +80,31 @@ func (c *Controller) Routes(r framework.Mux) {
 		group.PUT("controllers-Controller-editDomainPut", "/edit/:id", framework.Mix(c.editDomainPut, m1...))
 		// End route with key 1
 
+		/* Route {
+			"Route": "/:id",
+			"Method": "GET",
+			"Function": "Controller.getDomainDetailGet",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "get_detail_domain",
+			"Scope": "global"
+		} with key 2 */
+		m2 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("get_detail_domain", "get_detail_domain")
+		m2 = append(m2, authz.AuthorizeGenerator("get_detail_domain", "global"))
+
+		group.GET("controllers-Controller-getDomainDetailGet", "/:id", framework.Mix(c.getDomainDetailGet, m2...))
+		// End route with key 2
+
 		initializer.DoInitialize(c)
 	})
 }

@@ -213,6 +213,7 @@
 		"/campaign/status/{id}": "file://223510949e2939ced2aec20ba515fea32dca136c",
 		"/domain/create": "file://9fbd4df22ae607c2b1e17a03562847fe49a1e8a2",
 		"/domain/edit/{id}": "file://8e527e975ff410a03790814d45234f70b4c556e2",
+		"/domain/{id}": "file://80cbf114303ddc6e581ee1e43e0eafb0f31e5ac5",
 		"/financial/": "file://91b69905c1d0c3ec891f07e5ac21cab364a2f1fd",
 		"/financial/add": "file://a7fb70e0dbfa56ec0417d95a2de17c781f2da6bf",
 		"/financial/billing": "file://aa46e64fb96b4585b78aea21331a16e830f2ecee",
