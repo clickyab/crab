@@ -10,6 +10,7 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/permission"
 	"github.com/rs/xmux"
 )
 
@@ -58,6 +59,9 @@ func (p *editUserPayload) ValidateExtra(ctx context.Context, w http.ResponseWrit
 			return errors.GenderInvalid
 		}
 	} else {
+		if p.LegalName == "" {
+			return errors.LegalEmptyErr
+		}
 		p.corporation = cc
 	}
 
@@ -73,7 +77,7 @@ func (p *editUserPayload) ValidateExtra(ctx context.Context, w http.ResponseWrit
 // }
 func (c *Controller) adminEdit(ctx context.Context, r *http.Request, p *editUserPayload) (*editAdminResp, error) {
 	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(p.owner, currentUser, "edit_user", p.currentDomain.ID)
+	_, ok := aaa.CheckPermOn(p.owner, currentUser, "edit_user", p.currentDomain.ID, permission.ScopeGlobal)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

@@ -53,6 +53,8 @@ var (
 	UserUpdateErr = t9e.G("cant update user")
 	// GenderInvalid invalid gender
 	GenderInvalid = t9e.G("invalid gender")
+	// LegalEmptyErr legal name is empty
+	LegalEmptyErr = t9e.G("legal name is empty")
 	// AssignManagersErr error while assigning managers
 	AssignManagersErr = t9e.G("error while assigning managers")
 	// EmptyManagerErr manager is empty error
