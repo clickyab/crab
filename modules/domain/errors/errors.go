@@ -3,6 +3,8 @@ package errors
 import "github.com/clickyab/services/gettext/t9e"
 
 var (
+	// AccessDenied have not access error
+	AccessDenied = t9e.G("access Denied!you have not access to do this on domains")
 	// InvalidIDErr invalid id, error
 	InvalidIDErr error = t9e.G("invalid id, please check your request data.")
 	// InvalidDomainStatus domain status error
@@ -29,8 +31,8 @@ var (
 	CreateAdminRoleERR error = t9e.G("error while creating admin role")
 )
 
-// NotFoundError maker
-func NotFoundError(id int64) error {
+// DomainNotFoundError maker
+func DomainNotFoundError(id int64) error {
 	if id > 0 {
 		return t9e.G("domain with identifier %s not found, please check your request data.", id)
 	}
