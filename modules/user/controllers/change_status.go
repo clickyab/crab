@@ -48,7 +48,7 @@ func (p *changeUserStatus) ValidateExtra(ctx context.Context, w http.ResponseWri
 	return nil
 }
 
-// changeUserStatus to user
+// changeUserStatus to user, status can be: registered, blocked or active
 // @Rest {
 // 		url = /change-user-status/:id
 //		protected = true
