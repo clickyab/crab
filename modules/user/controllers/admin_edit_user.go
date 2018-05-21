@@ -20,14 +20,12 @@ type editUserPayload struct {
 	Managers      []int64 `json:"managers" validate:"required"`
 	owner         *aaa.User
 	currentDomain *orm.Domain
+	corporation   *aaa.Corporation
 }
 
 func (p *editUserPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	dm := domain.MustGetDomain(ctx)
 	p.currentDomain = dm
-	if !p.Gender.IsValid() || p.Gender == aaa.NotSpecifiedGender {
-		return errors.GenderInvalid
-	}
 
 	id := xmux.Param(ctx, "id")
 	userID, err := strconv.ParseInt(id, 10, 64)
@@ -54,6 +52,14 @@ func (p *editUserPayload) ValidateExtra(ctx context.Context, w http.ResponseWrit
 		return errors.InvalidIDErr
 	}
 	p.owner = owner
+	cc, err := m.FindCorporationByUserID(p.owner.ID)
+	if err != nil {
+		if !p.Gender.IsValid() || p.Gender == aaa.NotSpecifiedGender {
+			return errors.GenderInvalid
+		}
+	} else {
+		p.corporation = cc
+	}
 
 	return nil
 }
@@ -79,7 +85,9 @@ func (c *Controller) adminEdit(ctx context.Context, r *http.Request, p *editUser
 	p.owner.FirstName = p.FirstName
 	p.owner.LastName = p.LastName
 	p.owner.Address = stringToNullString(p.Address)
-	p.owner.Gender = p.Gender
+	if p.corporation == nil {
+		p.owner.Gender = p.Gender
+	}
 	p.owner.SSN = stringToNullString(p.SSN)
 
 	err := m.UpdateUser(p.owner)
@@ -87,20 +95,12 @@ func (c *Controller) adminEdit(ctx context.Context, r *http.Request, p *editUser
 		return nil, errors.UserUpdateErr
 	}
 
-	var cc *aaa.Corporation
-	if p.LegalName != "" {
-		cc, err = m.FindCorporationByUserID(p.owner.ID)
-		if err != nil {
-			return nil, errors.PersonalNotAllowedCorporation
-		}
-	}
+	if p.corporation != nil {
+		p.corporation.LegalName = p.LegalName
+		p.corporation.EconomicCode = stringToNullString(p.EconomicCode)
+		p.corporation.LegalRegister = stringToNullString(p.LegalRegister)
 
-	if p.LegalName != "" {
-		cc.LegalName = p.LegalName
-		cc.EconomicCode = stringToNullString(p.LegalName)
-		cc.LegalRegister = stringToNullString(p.LegalName)
-
-		err = m.UpdateCorporation(cc)
+		err = m.UpdateCorporation(p.corporation)
 		if err != nil {
 			return nil, errors.CorporationUpdateErr
 		}
