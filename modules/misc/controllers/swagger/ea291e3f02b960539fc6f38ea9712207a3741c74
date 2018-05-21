@@ -1,6 +1,6 @@
 {
 	"patch": {
-		"description": "changeUserStatus to user",
+		"description": "changeUserStatus to user, status can be: registered, blocked or active",
 		"parameters": [
 			{
 				"description": "",

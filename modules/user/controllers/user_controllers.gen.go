@@ -111,7 +111,7 @@ func (c *Controller) changePasswordPut(ctx context.Context, w http.ResponseWrite
 	framework.Write(w, res, http.StatusOK)
 }
 
-// changeUserStatus to user
+// changeUserStatus to user, status can be: registered, blocked or active
 // @Route {
 // 		url = /change-user-status/:id
 //		method = patch
