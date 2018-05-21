@@ -52,3 +52,24 @@ func (c *Controller) editDomainPut(ctx context.Context, w http.ResponseWriter, r
 	}
 	framework.Write(w, res, http.StatusOK)
 }
+
+// getDomainDetail get domain detail by domain id
+// @Route {
+// 		url = /:id
+//		method = get
+//		middleware = authz.Authenticate
+//		resource = get_detail_domain:global
+//		200 = orm.Domain
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) getDomainDetailGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getDomainDetail(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
