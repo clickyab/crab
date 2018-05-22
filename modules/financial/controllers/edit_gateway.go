@@ -70,6 +70,8 @@ func (c *Controller) editGateway(ctx context.Context, r *http.Request, p *editGa
 		if mysqlError.Number == 1062 {
 			return nil, errors.GatewayAlreadyExistErr
 		}
+		xlog.GetWithError(ctx, err).Debug("can't edit gateway")
+		return nil, errors.EditGatewayErr
 	}
 	return p.targetGateway, nil
 }

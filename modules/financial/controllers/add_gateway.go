@@ -59,6 +59,8 @@ func (c *Controller) addGateway(ctx context.Context, r *http.Request, p *addGate
 		if mysqlError.Number == 1062 {
 			return nil, errors.GatewayAlreadyExistErr
 		}
+		xlog.GetWithError(ctx, err).Debug("can't insert new gateway")
+		return nil, errors.CreateGatewayErr
 	}
 	return gatewayObj, nil
 }

@@ -7,6 +7,8 @@ import (
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/errors"
+	"github.com/clickyab/services/gettext/t9e"
+	"github.com/clickyab/services/xlog"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -39,7 +41,8 @@ func (c *Controller) login(ctx context.Context, r *http.Request, p *loginPayload
 
 	userPerms, err := currentUser.GetAllUserPerms(uDomain.ID)
 	if err != nil {
-		return nil, err
+		xlog.Get(ctx).Error("get user permissions error:", err)
+		return nil, t9e.G("get user permissions error")
 	}
 
 	token := aaa.GetNewToken(currentUser)

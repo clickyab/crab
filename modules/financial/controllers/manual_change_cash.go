@@ -12,6 +12,7 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/permission"
+	"github.com/clickyab/services/xlog"
 )
 
 // @Validate{
@@ -89,7 +90,8 @@ func (c *Controller) manualChangeCash(ctx context.Context, r *http.Request, p *c
 	err := m.ApplyManualCash(p.operatorUser, p.targetUser, manualCash)
 
 	if err != nil {
-		return nil, err
+		xlog.GetWithError(ctx, err).Debug("database error when applying manual cash:", err)
+		return nil, errors.ApplyManualCashDbErr
 	}
 
 	result := &ChangeCashResult{

@@ -55,6 +55,8 @@ var (
 	CreateGatewayErr error = t9e.G("an error occurred when creating gateway")
 	// EditGatewayErr error in editing a gateway
 	EditGatewayErr error = t9e.G("an error occurred when editing gateway")
+	// ApplyManualCashDbErr error in applying manual cash
+	ApplyManualCashDbErr error = t9e.G("database error occurred when applying manual cash")
 )
 
 // NotFoundError maker

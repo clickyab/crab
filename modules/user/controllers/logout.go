@@ -6,10 +6,12 @@ import (
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/random"
+	"github.com/clickyab/services/xlog"
 )
 
 // closeSession closes current session
@@ -31,13 +33,15 @@ func (c *Controller) closeSession(ctx context.Context, r *http.Request) (*Respon
 		m := aaa.NewAaaManager()
 		user, err := m.FindUserByAccessToken(impAccessToken)
 		if err != nil {
-			return nil, err
+			xlog.Get(ctx).Error("find user by access token error:", err)
+			return nil, errors.InvalidTokenErr
 		}
 		// get impersonator permissions
 		currentDomain := domain.MustGetDomain(ctx)
 		userPerms, err := user.GetAllUserPerms(currentDomain.ID)
 		if err != nil {
-			return nil, err
+			xlog.GetWithError(ctx, err).Debug("database error when get user permissions:", err)
+			return nil, errors.GetUserPermsDbErr
 		}
 		assert.Nil(err)
 		res := &ResponseLoginOK{

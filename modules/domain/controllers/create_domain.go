@@ -66,6 +66,8 @@ func (c *Controller) createDomain(ctx context.Context, r *http.Request, p *creat
 		if mysqlError.Number == 1062 {
 			return nil, errors.AlreadyExistErr
 		}
+		xlog.GetWithError(ctx, err).Debug("can't insert new domain")
+		return nil, errors.CreateDomainErr
 	}
 	return newDomain, nil
 }

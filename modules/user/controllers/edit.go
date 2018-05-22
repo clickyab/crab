@@ -12,6 +12,7 @@ import (
 	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
+	"github.com/clickyab/services/xlog"
 )
 
 func (u *userPayload) ValidateExtra(ctx context.Context) error {
@@ -79,7 +80,8 @@ func (c *Controller) edit(ctx context.Context, r *http.Request, p *userPayload) 
 
 	e = m.UpdateUser(cu)
 	if e != nil {
-		return nil, e
+		xlog.Get(ctx).Error("error message when updating user:", e)
+		return nil, t9e.G("error when updating user detail")
 	}
 
 	if p.LegalName != "" {
@@ -89,7 +91,8 @@ func (c *Controller) edit(ctx context.Context, r *http.Request, p *userPayload) 
 
 		e = m.UpdateCorporation(cc)
 		if e != nil {
-			return nil, e
+			xlog.Get(ctx).Error("update user corporation: ", e)
+			return nil, t9e.G("error when updating user detail")
 		}
 	}
 

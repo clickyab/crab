@@ -50,6 +50,12 @@ var (
 
 	// InvalidNotifyUser error in approve, reject creatives if Notify user value is invalid
 	InvalidNotifyUser = t9e.G("notify user value is invalid, you can select yes or no")
+
+	// AssetsPermErr permission error assets
+	AssetsPermErr = t9e.G("Access denied! you don't have permission to read assets")
+
+	//SendNotifyEmailErr error when notify user for creative status change
+	SendNotifyEmailErr = t9e.G("error in sending notify email")
 )
 
 // AdNotFound maker

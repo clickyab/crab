@@ -20,6 +20,7 @@ import (
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/safe"
+	"github.com/clickyab/services/xlog"
 )
 
 var creativeSeed = config.RegisterBoolean("crab.modules.creative.seed", true, "insert detail after creative created")
@@ -168,7 +169,7 @@ func isValidSize(width, height int, kind string) bool {
 // 		resource = add_creative:self
 // }
 func (c Controller) addNativeCreative(ctx context.Context, r *http.Request, p *createNativePayload) (*orm.CreativeSaveResult, error) {
-	err := checkCreatePerm(p)
+	err := checkCreatePerm(ctx, p)
 	if err != nil {
 		return nil, err
 	}
@@ -200,7 +201,7 @@ func (c Controller) addNativeCreative(ctx context.Context, r *http.Request, p *c
 	return res, nil
 }
 
-func checkCreatePerm(p *createNativePayload) error {
+func checkCreatePerm(ctx context.Context, p *createNativePayload) error {
 	// check campaign perm
 	_, ok := aaa.CheckPermOn(p.CampaignOwner, p.CurrentUser, "edit_campaign", p.CurrentDomain.ID)
 	if !ok {
@@ -214,7 +215,7 @@ func checkCreatePerm(p *createNativePayload) error {
 		if err != nil {
 			return err
 		}
-		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
+		if err := fileOwnerCheckPerm(ctx, img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
 			return err
 		}
 		img.Label = p.Assets.Images[i].Label
@@ -231,7 +232,7 @@ func checkCreatePerm(p *createNativePayload) error {
 		if err != nil {
 			return err
 		}
-		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
+		if err := fileOwnerCheckPerm(ctx, img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
 			return err
 		}
 		img.Label = p.Assets.Images[i].Label
@@ -248,7 +249,7 @@ func checkCreatePerm(p *createNativePayload) error {
 		if err != nil {
 			return err
 		}
-		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
+		if err := fileOwnerCheckPerm(ctx, img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
 			return err
 		}
 		img.Label = p.Assets.Logos[i].Label
@@ -265,7 +266,7 @@ func checkCreatePerm(p *createNativePayload) error {
 		if err != nil {
 			return err
 		}
-		if err := fileOwnerCheckPerm(video, p.CurrentDomain.ID, p.CurrentUser); err != nil {
+		if err := fileOwnerCheckPerm(ctx, video, p.CurrentDomain.ID, p.CurrentUser); err != nil {
 			return err
 		}
 		video.Label = p.Assets.Videos[i].Label
@@ -354,10 +355,11 @@ func emptyFloatNotAllowed(data []orm.NativeFloat) error {
 }
 
 // fileOwnerCheckPerm owner check
-func fileOwnerCheckPerm(image *uploadOrm.Upload, d int64, currentUser *aaa.User) error {
+func fileOwnerCheckPerm(ctx context.Context, image *uploadOrm.Upload, d int64, currentUser *aaa.User) error {
 	targetFileOwner, err := aaa.NewAaaManager().FindUserWithParentsByID(image.UserID, d)
 	if err != nil {
-		return err
+		xlog.GetWithError(ctx, err).Debug("database error on FindUserWithParentsByID")
+		return errors.AssetsPermErr
 	}
 	// check campaign perm
 	_, ok := aaa.CheckPermOn(targetFileOwner, currentUser, "edit_creative", d)

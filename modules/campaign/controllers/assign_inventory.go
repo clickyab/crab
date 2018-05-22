@@ -9,7 +9,9 @@ import (
 	inv "clickyab.com/crab/modules/inventory/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
+	"github.com/clickyab/services/xlog"
 	"github.com/fatih/structs"
 )
 
@@ -91,7 +93,8 @@ func (c Controller) assignInventory(ctx context.Context, r *http.Request, p *ass
 	userManager := aaa.NewAaaManager()
 	invOwner, err := userManager.FindUserWithParentsByID(p.targetInventory.UserID, p.baseData.domain.ID)
 	if err != nil {
-		return nil, err
+		xlog.Get(ctx).Error("find user with parents by id error :", err)
+		return nil, t9e.G("user not found")
 	}
 
 	//check perm for inventory entity
