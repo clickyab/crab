@@ -17,6 +17,7 @@ import (
 	"clickyab.com/crab/modules/user/mailer"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/permission"
+	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 )
 
@@ -68,7 +69,7 @@ func (p *changeStatusPayload) ValidateExtra(ctx context.Context, w http.Response
 	return nil
 }
 
-func sendChaneStatusMessage(sq []orm.ChangeStatusReq, campaignID int64) error {
+func sendChangeStatusMessage(sq []orm.ChangeStatusReq, campaignID int64) error {
 	var ids []int64
 	for _, r := range sq {
 		ids = append(ids, r.CreativeID)
@@ -76,7 +77,7 @@ func sendChaneStatusMessage(sq []orm.ChangeStatusReq, campaignID int64) error {
 	m := orm.NewOrmManager()
 	creatives, err := m.GetCreativeWithIDRange(ids, campaignID)
 	if err != nil {
-		return nil
+		return err
 	}
 	var msg string
 	var userMessage string
@@ -118,15 +119,17 @@ func (c *Controller) changeCreativesStatus(ctx context.Context, r *http.Request,
 	// apply approve or reject
 	prob := m.ChangeCreativesStatus(p.CreativesStatus, p.currentCampaign.ID)
 	if prob != nil {
-		return nil, prob
+		xlog.GetWithError(ctx, prob).Debug("database error when change creatives status")
+		return nil, errors.UpdateStatusDbErr
 	}
 	result := ChangeStatusResult{
 		CreativesStatus: p.CreativesStatus,
 	}
 	if p.NotifyUser == DoNotifyUser {
-		err := sendChaneStatusMessage(p.CreativesStatus, p.currentCampaign.ID)
+		err := sendChangeStatusMessage(p.CreativesStatus, p.currentCampaign.ID)
 		if err != nil {
-			return nil, err
+			xlog.GetWithError(ctx, err).Debug("send notify email for creative status change failed")
+			return nil, errors.SendNotifyEmailErr
 		}
 	}
 	return &result, nil

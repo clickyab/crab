@@ -12,6 +12,7 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/permission"
+	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 )
 
@@ -43,7 +44,8 @@ func (c *Controller) setGatewayDefault(ctx context.Context, r *http.Request) (*o
 	// set gateway status to default and all others to not default
 	err = m.JustDefault(targetGateway)
 	if err != nil {
-		return nil, err
+		xlog.GetWithError(ctx, err).Debug("change gateway is_default error")
+		return nil, errors.EditGatewayErr
 	}
 	return targetGateway, nil
 }

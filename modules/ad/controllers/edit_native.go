@@ -104,7 +104,7 @@ func (p *editNativePayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 // 		resource = edit_creative:self
 // }
 func (c Controller) editNativeCreative(ctx context.Context, r *http.Request, p *editNativePayload) (*orm.CreativeSaveResult, error) {
-	err := checkEditPerm(p)
+	err := checkEditPerm(ctx, p)
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +125,7 @@ func (c Controller) editNativeCreative(ctx context.Context, r *http.Request, p *
 	return res, nil
 }
 
-func checkEditPerm(p *editNativePayload) error {
+func checkEditPerm(ctx context.Context, p *editNativePayload) error {
 	// check creative perm
 	_, ok := aaa.CheckPermOn(p.CreativeOwner, p.CurrentUser, "edit_creative", p.CurrentDomain.ID)
 	if !ok {
@@ -137,10 +137,10 @@ func checkEditPerm(p *editNativePayload) error {
 		return errors.AccessDenied
 	}
 
-	return checkFilePerm(p)
+	return checkFilePerm(ctx, p)
 }
 
-func checkFilePerm(p *editNativePayload) error {
+func checkFilePerm(ctx context.Context, p *editNativePayload) error {
 
 	var images = make([]*uploadOrm.Upload, 0)
 
@@ -149,8 +149,8 @@ func checkFilePerm(p *editNativePayload) error {
 		if err != nil {
 			return err
 		}
-		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
-			return err
+		if err := fileOwnerCheckPerm(ctx, img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
+			return errors.AssetsPermErr
 		}
 		img.Label = p.Assets.Images[i].Label
 
@@ -166,8 +166,8 @@ func checkFilePerm(p *editNativePayload) error {
 		if err != nil {
 			return err
 		}
-		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
-			return err
+		if err := fileOwnerCheckPerm(ctx, img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
+			return errors.AssetsPermErr
 		}
 		img.Label = p.Assets.Images[i].Label
 
@@ -183,8 +183,8 @@ func checkFilePerm(p *editNativePayload) error {
 		if err != nil {
 			return err
 		}
-		if err := fileOwnerCheckPerm(img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
-			return err
+		if err := fileOwnerCheckPerm(ctx, img, p.CurrentDomain.ID, p.CurrentUser); err != nil {
+			return errors.AssetsPermErr
 		}
 		img.Label = p.Assets.Logos[i].Label
 
@@ -200,8 +200,8 @@ func checkFilePerm(p *editNativePayload) error {
 		if err != nil {
 			return err
 		}
-		if err := fileOwnerCheckPerm(video, p.CurrentDomain.ID, p.CurrentUser); err != nil {
-			return err
+		if err := fileOwnerCheckPerm(ctx, video, p.CurrentDomain.ID, p.CurrentUser); err != nil {
+			return errors.AssetsPermErr
 		}
 		video.Label = p.Assets.Videos[i].Label
 

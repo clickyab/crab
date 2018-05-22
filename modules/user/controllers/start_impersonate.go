@@ -10,6 +10,7 @@ import (
 	"clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/permission"
+	"github.com/clickyab/services/xlog"
 )
 
 // @Validate {
@@ -53,7 +54,8 @@ func (c *Controller) startImpersonate(ctx context.Context, r *http.Request, p *s
 
 	userPerms, err := p.targetUser.GetAllUserPerms(p.currentDomain.ID)
 	if err != nil {
-		return nil, err
+		xlog.GetWithError(ctx, err).Debug("database error when get user permissions")
+		return nil, errors.GetUserPermsDbErr
 	}
 	result := &ResponseLoginOK{
 		Token:             targetToken,

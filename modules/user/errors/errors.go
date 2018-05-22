@@ -64,7 +64,11 @@ var (
 	//UpdateUserStatusErr error in updating user status
 	UpdateUserStatusErr error = t9e.G("error in updating user status.")
 	//InvalidUserStatusErr error in updating user status
-	InvalidUserStatusErr error = t9e.G("invalid user status.")
+	InvalidUserStatusErr error = t9e.G("invalid user status. you can select : registered, active or blocked")
+	//GetUserPermsDbErr get user permissions error
+	GetUserPermsDbErr error = t9e.G("database error on get user permissions")
+	// InvalidTokenErr invalid token error
+	InvalidTokenErr error = t9e.G("can't find user with related token")
 )
 
 // NotFoundError maker
