@@ -3,6 +3,9 @@
 -- SQL in section 'Up' is executed when this migration is applied
 CREATE TABLE IF NOT EXISTS `domains` (
 `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+`title` VARCHAR(127) NOT NULL DEFAULT 'clickyab',
+`logo` VARCHAR(191) NULL,
+`theme` VARCHAR(31) NULL DEFAULT 'red',
 `domain_base` VARCHAR(254) NOT NULL,
 `attributes` TEXT NULL DEFAULT NULL,
 `description` VARCHAR(254) NULL DEFAULT NULL,
@@ -12,6 +15,9 @@ CREATE TABLE IF NOT EXISTS `domains` (
 PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
+
+CREATE UNIQUE INDEX domains_domain_base_uindex ON domains (domain_base);
+
 
 CREATE TABLE IF NOT EXISTS `users_domains` (
 `domain_id` INT(10) UNSIGNED NOT NULL,
