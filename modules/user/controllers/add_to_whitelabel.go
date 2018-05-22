@@ -28,7 +28,7 @@ type addUserToWhitelabelPayload struct {
 	LastName        string          `json:"last_name" validate:"required" error:"last name is invalid"`
 	Mobile          string          `json:"mobile" validate:"required,lt=15"`
 	AccountType     aaa.AccountType `json:"account_type" validate:"required"`
-	NotifyUser      bool            `json:"notify_user" validate:"required"`
+	NotifyUser      bool            `json:"notify_user"`
 	CorporationInfo struct {
 		LegalName     string `json:"legal_name" validate:"omitempty"`
 		LegalRegister string `json:"legal_register" validate:"omitempty"`

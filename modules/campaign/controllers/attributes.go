@@ -40,7 +40,7 @@ func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 
 	queryGen := func(t string, s []string) string {
 		m := len(s)
-		return fmt.Sprintf(`select count(name) as total from %s where name in (%s)`, t, strings.Repeat("?,", m)[:2*m-1])
+		return fmt.Sprintf(`select count(name) as total from %s where domain_base in (%s)`, t, strings.Repeat("?,", m)[:2*m-1])
 	}
 
 	o := asset.NewOrmManager()

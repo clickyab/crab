@@ -49,7 +49,7 @@ func (c *Controller) get(ctx context.Context, r *http.Request) (*campaignGetResp
 
 	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(campaign.UserID, userDomain.ID)
 	if err != nil {
-		return nil, userErrors.NotFoundWithDomainError(userDomain.Name)
+		return nil, userErrors.NotFoundWithDomainError(userDomain.DomainBase)
 	}
 
 	// check access
