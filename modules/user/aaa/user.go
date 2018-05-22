@@ -120,12 +120,9 @@ type Corporation struct {
 	EconomicCode  mysql.NullString `json:"economic_code" db:"economic_code"`
 }
 
-// RegisterUser try to register user
-func (m *Manager) RegisterUser(user *User, corp *Corporation, domainID, roleID int64) error {
-	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	assert.Nil(err)
-
-	err = m.Begin()
+// RegisterUserWrapper register new user
+func (m *Manager) RegisterUserWrapper(user *User, corp *Corporation, domainID, roleID int64) error {
+	err := m.Begin()
 	assert.Nil(err)
 	defer func() {
 		if err != nil {
@@ -134,7 +131,15 @@ func (m *Manager) RegisterUser(user *User, corp *Corporation, domainID, roleID i
 			assert.Nil(m.Commit())
 		}
 	}()
+	err = m.RegisterUser(user, corp, domainID, roleID)
+	return err
+}
 
+// RegisterUser try to register user
+func (m *Manager) RegisterUser(user *User, corp *Corporation, domainID, roleID int64) error {
+	assert.True(m.InTransaction())
+	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	assert.Nil(err)
 	user.AccessToken = <-random.ID
 	user.Password = string(password)
 
@@ -256,10 +261,10 @@ func ExtractUserID(token string) (int64, error) {
 // FindUserDomainsByEmail find active user domain based on its email
 func (m *Manager) FindUserDomainsByEmail(e string) []domainOrm.Domain {
 	var res []domainOrm.Domain
-	q := fmt.Sprintf("SELECT d.* FROM %s AS d "+
+	q := fmt.Sprintf("SELECT %s FROM %s AS d "+
 		"INNER JOIN %s AS dm ON dm.domain_id=d.id "+
 		"INNER JOIN %s AS u ON u.id=dm.user_id "+
-		"WHERE u.email=? AND d.status=?", domainOrm.DomainTableFull, domainOrm.DomainUserTableFull, UserTableFull)
+		"WHERE u.email=? AND d.status=?", getSelectFields(domainOrm.DomainTableFull, "d"), domainOrm.DomainTableFull, domainOrm.DomainUserTableFull, UserTableFull)
 	_, err := m.GetRDbMap().Select(&res, q, e, domainOrm.EnableDomainStatus)
 	assert.Nil(err)
 	return res
@@ -563,4 +568,18 @@ func (m *Manager) assignManagers(managerIDs []int64, d, userID int64) ([]*Adviso
 		res = append(res, advisor)
 	}
 	return res, nil
+}
+
+// FindRolePermByName fnd role permission by role name without domain
+func (m *Manager) FindRolePermByName(name string, domain string) ([]RolePermission, error) {
+	var res []RolePermission
+	q := fmt.Sprintf(`SELECT %s FROM %s AS r 
+	INNER JOIN %s AS rp ON rp.role_id=r.id  INNER JOIN %s AS d ON d.id=r.domain_id
+	WHERE r.name=? AND d.domain_base=?`,
+		getSelectFields(RolePermissionTableFull, "rp"),
+		RoleTableFull,
+		RolePermissionTableFull,
+		domainOrm.DomainTableFull)
+	_, err := m.GetRDbMap().Select(&res, q, name, domain)
+	return res, err
 }

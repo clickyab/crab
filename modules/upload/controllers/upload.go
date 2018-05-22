@@ -371,6 +371,13 @@ func getDimension(mime model.Mime, dimensionHandler io.Reader, bannerType string
 				Height: imgConf.Height,
 			},
 		}
+	case "domain":
+		a = model.FileAttr{
+			Avatar: &model.AvatarAttr{
+				Width:  imgConf.Width,
+				Height: imgConf.Height,
+			},
+		}
 	}
 
 	return &a, nil

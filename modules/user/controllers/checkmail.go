@@ -32,7 +32,7 @@ func (c *Controller) checkMail(ctx context.Context, r *http.Request, p *checkMai
 	domains := m.FindUserDomainsByEmail(p.Email)
 	var currentDomainFound bool
 	for i := range domains {
-		if domains[i].Name == currentDomain.Name {
+		if domains[i].DomainBase == currentDomain.DomainBase {
 			currentDomainFound = true
 			break
 		}

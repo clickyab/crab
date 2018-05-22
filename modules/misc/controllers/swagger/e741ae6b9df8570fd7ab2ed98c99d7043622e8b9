@@ -10,34 +10,6 @@
 				"type": "string"
 			},
 			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the full_name field",
-				"in": "query",
-				"name": "full_name",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": " search the cellphone field",
 				"in": "query",
 				"name": "cellphone",
@@ -52,11 +24,11 @@
 				"type": "int"
 			},
 			{
-				"description": " page number",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "p",
+				"name": "q",
 				"required": false,
-				"type": "int"
+				"type": "string"
 			},
 			{
 				"description": "",
@@ -73,6 +45,13 @@
 				"type": "string"
 			},
 			{
+				"description": " search the full_name field",
+				"in": "query",
+				"name": "full_name",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the land_line field",
 				"in": "query",
 				"name": "land_line",
@@ -83,6 +62,27 @@
 				"description": " search the ssn field",
 				"in": "query",
 				"name": "ssn",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
