@@ -5,6 +5,7 @@
 // db/20180407053606_fix.sql
 // db/20180519133040_remove_create_domain_perm.sql
 // db/20180521115648_fixdb.sql
+// db/domain_unique_fix.sql
 // DO NOT EDIT!
 
 package migrations
@@ -172,6 +173,26 @@ func db20180521115648_fixdbSql() (*asset, error) {
 	return a, nil
 }
 
+var _dbDomain_unique_fixSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xce\xb1\x0a\xc2\x30\x10\xc6\xf1\x3d\x4f\xf1\x6d\x55\xa4\x4f\xe0\x24\x36\x43\x41\x2a\x55\x03\x6e\x25\x36\x87\x3d\x6c\x93\xd0\xa4\xb4\x8f\x2f\x41\x2a\xb8\x39\xde\x9f\xfb\xe0\x27\xf2\x1c\xbb\x81\x9f\xa3\x8e\x04\xe5\xd3\x79\xad\x4f\x60\x8b\x40\x6d\x64\x67\x91\x29\x9f\x81\x03\x68\xa1\x76\x8a\x64\x30\x77\x64\x11\x3b\x0e\xf8\xec\xd2\x13\x07\x68\xef\x7b\x26\x23\x8e\x17\x79\xb8\x49\xa8\xaa\xac\x95\x44\x59\x15\xf2\x0e\xe3\x06\xcd\x36\x34\x56\x0f\xd4\x4c\x6c\x0d\x2d\x38\x57\x6b\xc6\x26\xf5\xed\xfe\xc7\x52\xb8\xd9\xae\x9a\x2f\x25\xc5\xbf\x30\xa3\xeb\x7b\x32\x78\xe8\xf6\x25\xc4\x3b\x00\x00\xff\xff\x85\xdd\xa5\xc2\xe4\x00\x00\x00"
+
+func dbDomain_unique_fixSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_dbDomain_unique_fixSql,
+		"db/domain_unique_fix.sql",
+	)
+}
+
+func dbDomain_unique_fixSql() (*asset, error) {
+	bytes, err := dbDomain_unique_fixSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/domain_unique_fix.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -229,6 +250,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20180407053606_fix.sql":                       db20180407053606_fixSql,
 	"db/20180519133040_remove_create_domain_perm.sql": db20180519133040_remove_create_domain_permSql,
 	"db/20180521115648_fixdb.sql":                     db20180521115648_fixdbSql,
+	"db/domain_unique_fix.sql":                        dbDomain_unique_fixSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -278,6 +300,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20180407053606_fix.sql":                       &bintree{db20180407053606_fixSql, map[string]*bintree{}},
 		"20180519133040_remove_create_domain_perm.sql": &bintree{db20180519133040_remove_create_domain_permSql, map[string]*bintree{}},
 		"20180521115648_fixdb.sql":                     &bintree{db20180521115648_fixdbSql, map[string]*bintree{}},
+		"domain_unique_fix.sql":                        &bintree{dbDomain_unique_fixSql, map[string]*bintree{}},
 	}},
 }}
 
