@@ -137,6 +137,27 @@ func (c *Controller) getGatewaysGet(ctx context.Context, w http.ResponseWriter, 
 	framework.Write(w, res, http.StatusOK)
 }
 
+// getGateway gets a gateway by id
+// @Route {
+// 		url = /gateways/:id
+//		method = get
+//		middleware = authz.Authenticate
+//		resource = god:global
+//		200 = orm.Gateway
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) getGatewayGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getGateway(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // getPaymentTransaction get single payment transaction
 // @Route {
 // 		url = /payment/:id

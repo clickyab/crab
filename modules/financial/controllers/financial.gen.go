@@ -275,6 +275,31 @@ func (c *Controller) Routes(r framework.Mux) {
 		// End route with key 9
 
 		/* Route {
+			"Route": "/gateways/:id",
+			"Method": "GET",
+			"Function": "Controller.getGatewayGet",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "god",
+			"Scope": "global"
+		} with key 10 */
+		m10 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("god", "god")
+		m10 = append(m10, authz.AuthorizeGenerator("god", "global"))
+
+		group.GET("controllers-Controller-getGatewayGet", "/gateways/:id", framework.Mix(c.getGatewayGet, m10...))
+		// End route with key 10
+
+		/* Route {
 			"Route": "/payment/:id",
 			"Method": "GET",
 			"Function": "Controller.getPaymentTransactionGet",
@@ -288,16 +313,16 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "make_payment",
 			"Scope": "self"
-		} with key 10 */
-		m10 := append(groupMiddleware, []framework.Middleware{
+		} with key 11 */
+		m11 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("make_payment", "make_payment")
-		m10 = append(m10, authz.AuthorizeGenerator("make_payment", "self"))
+		m11 = append(m11, authz.AuthorizeGenerator("make_payment", "self"))
 
-		group.GET("controllers-Controller-getPaymentTransactionGet", "/payment/:id", framework.Mix(c.getPaymentTransactionGet, m10...))
-		// End route with key 10
+		group.GET("controllers-Controller-getPaymentTransactionGet", "/payment/:id", framework.Mix(c.getPaymentTransactionGet, m11...))
+		// End route with key 11
 
 		/* Route {
 			"Route": "/manual-change-cash",
@@ -313,18 +338,18 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "changeCashStatus",
 			"Resource": "manual_change_cash",
 			"Scope": "global"
-		} with key 11 */
-		m11 := append(groupMiddleware, []framework.Middleware{
+		} with key 12 */
+		m12 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("manual_change_cash", "manual_change_cash")
-		m11 = append(m11, authz.AuthorizeGenerator("manual_change_cash", "global"))
+		m12 = append(m12, authz.AuthorizeGenerator("manual_change_cash", "global"))
 
 		// Make sure payload is the last middleware
-		m11 = append(m11, middleware.PayloadUnMarshallerGenerator(changeCashStatus{}))
-		group.PUT("controllers-Controller-manualChangeCashPut", "/manual-change-cash", framework.Mix(c.manualChangeCashPut, m11...))
-		// End route with key 11
+		m12 = append(m12, middleware.PayloadUnMarshallerGenerator(changeCashStatus{}))
+		group.PUT("controllers-Controller-manualChangeCashPut", "/manual-change-cash", framework.Mix(c.manualChangeCashPut, m12...))
+		// End route with key 12
 
 		/* Route {
 			"Route": "/gateways/:id",
@@ -340,16 +365,16 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "set_default_gateway",
 			"Scope": "global"
-		} with key 12 */
-		m12 := append(groupMiddleware, []framework.Middleware{
+		} with key 13 */
+		m13 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("set_default_gateway", "set_default_gateway")
-		m12 = append(m12, authz.AuthorizeGenerator("set_default_gateway", "global"))
+		m13 = append(m13, authz.AuthorizeGenerator("set_default_gateway", "global"))
 
-		group.PATCH("controllers-Controller-setGatewayDefaultPatch", "/gateways/:id", framework.Mix(c.setGatewayDefaultPatch, m12...))
-		// End route with key 12
+		group.PATCH("controllers-Controller-setGatewayDefaultPatch", "/gateways/:id", framework.Mix(c.setGatewayDefaultPatch, m13...))
+		// End route with key 13
 
 		initializer.DoInitialize(c)
 	})
