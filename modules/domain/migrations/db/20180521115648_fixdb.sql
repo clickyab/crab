@@ -1,7 +1,6 @@
 
 -- +migrate Up
 -- SQL in section 'Up' is executed when this migration is applied
-ALTER TABLE domains CHANGE `name` `domain_base` varchar(254) NOT NULL;
 CREATE UNIQUE INDEX domains_domain_base_uindex ON domains (domain_base);
 ALTER TABLE domains ADD title varchar(127) NULL;
 ALTER TABLE domains ADD logo varchar(127) NULL;

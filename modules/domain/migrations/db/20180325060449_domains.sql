@@ -3,7 +3,7 @@
 -- SQL in section 'Up' is executed when this migration is applied
 CREATE TABLE IF NOT EXISTS `domains` (
 `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-`name` VARCHAR(254) NOT NULL,
+`domain_base` VARCHAR(254) NOT NULL,
 `attributes` TEXT NULL DEFAULT NULL,
 `description` VARCHAR(254) NULL DEFAULT NULL,
 `status` ENUM('disable', 'enable') NOT NULL DEFAULT 'enable',
