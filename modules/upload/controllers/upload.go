@@ -215,8 +215,6 @@ func imageUploadHandler(fileMime, fileType, chunkPathDir, file string, fileObj, 
 	var err error
 	if fileMime == string(model.JPGMime) || fileMime == string(model.PNGMime) || fileMime == string(model.GifMime) || fileMime == string(model.PJPGMime) {
 		attr, err = getDimension(model.Mime(fileMime), fileObj, fileType)
-		logrus.Warn(attr)
-		logrus.Warn(err)
 		if err != nil {
 			return attr, err
 		}

@@ -19,5 +19,8 @@ FOREIGN KEY (logo) REFERENCES uploads (id);
 
 -- +migrate Down
 -- SQL section 'Down' is executed when this migration is rolled back
-
+ALTER TABLE domains CHANGE domain_base name varchar(254) NOT NULL;
+ALTER TABLE domains DROP title;
+ALTER TABLE domains DROP logo;
+ALTER TABLE domains DROP theme;
 

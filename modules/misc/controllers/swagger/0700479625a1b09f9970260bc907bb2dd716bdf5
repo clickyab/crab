@@ -21,13 +21,30 @@
 			},
 			"type": "object"
 		},
+		"domain_base": {
+			"type": "string"
+		},
 		"id": {
 			"type": "integer"
 		},
-		"name": {
-			"type": "string"
+		"logo": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
 		},
 		"status": {
+			"type": "string"
+		},
+		"theme": {
+			"type": "string"
+		},
+		"title": {
 			"type": "string"
 		},
 		"updated_at": {

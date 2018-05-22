@@ -19,16 +19,16 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "status",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "c",
+				"name": "from",
 				"required": false,
-				"type": "int"
+				"type": "string"
 			},
 			{
 				"description": " page number",
@@ -45,16 +45,9 @@
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
@@ -71,6 +64,13 @@
 				"name": "name",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",

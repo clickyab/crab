@@ -11,8 +11,10 @@ var (
 	CreateDomainErr error = t9e.G("create white label error")
 	// AccessDeniedErr create domain access error
 	AccessDeniedErr error = t9e.G("you can't create new domain")
-	// AlreadyExistErr already exist error
-	AlreadyExistErr error = t9e.G("a domain with this name is already exist.")
+	// AlreadyExistDomainErr already domain exist error
+	AlreadyExistDomainErr error = t9e.G("a domain with this name is already exist.")
+	// AlreadyExistUserErr already exist user error
+	AlreadyExistUserErr error = t9e.G("a user already exist.")
 	// UpdateDomainErr error in updating domain
 	UpdateDomainErr error = t9e.G("update domain error.")
 	// LogoNotFound logo not found

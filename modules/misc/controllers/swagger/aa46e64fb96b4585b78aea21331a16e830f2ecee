@@ -3,13 +3,6 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
 				"name": "to",
@@ -24,9 +17,16 @@
 				"type": "string"
 			},
 			{
-				"description": " parameter for search",
+				"description": " page number",
 				"in": "query",
-				"name": "q",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " search the user_id field",
+				"in": "query",
+				"name": "user_id",
 				"required": false,
 				"type": "string"
 			},
@@ -38,16 +38,16 @@
 				"type": "string"
 			},
 			{
-				"description": " search the email field",
+				"description": " search the last_name field",
 				"in": "query",
-				"name": "email",
+				"name": "last_name",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": " count per page",
 				"in": "query",
-				"name": "p",
+				"name": "c",
 				"required": false,
 				"type": "int"
 			},
@@ -59,23 +59,23 @@
 				"type": "string"
 			},
 			{
-				"description": " search the user_id field",
-				"in": "query",
-				"name": "user_id",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the last_name field",
-				"in": "query",
-				"name": "last_name",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
 				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the email field",
+				"in": "query",
+				"name": "email",
 				"required": false,
 				"type": "string"
 			},
