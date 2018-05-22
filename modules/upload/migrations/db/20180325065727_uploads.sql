@@ -24,6 +24,10 @@ ALTER TABLE users
   ADD CONSTRAINT users_uploads_id_fk
 FOREIGN KEY (avatar) REFERENCES uploads (id);
 
+ALTER TABLE domains
+  ADD CONSTRAINT domains_uploads_id_fk
+FOREIGN KEY (logo) REFERENCES uploads (id);
+
 -- +migrate Down
 -- SQL section 'Down' is executed when this migration is rolled back
 DROP TABLE uploads;
