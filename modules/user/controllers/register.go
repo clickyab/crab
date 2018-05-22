@@ -54,7 +54,7 @@ func (c *Controller) register(ctx context.Context, r *http.Request, p *registerP
 		return nil, errors.NotFoundRoleOfDomain(ucfg.DefaultRole.String(), d.ID)
 	}
 
-	err = m.RegisterUser(&user, &corp, d.ID, role.ID)
+	err = m.RegisterUserWrapper(&user, &corp, d.ID, role.ID)
 	if err != nil {
 		mysqlError, ok := err.(*gom.MySQLError)
 		if !ok {

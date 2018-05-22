@@ -37,7 +37,7 @@ func (c *Controller) getUserDetail(ctx context.Context, r *http.Request) (*userR
 	// find user
 	userObj, err := aaa.NewAaaManager().FindUserByIDDomain(userID, userDomain.ID)
 	if err != nil {
-		return nil, errors.NotFoundWithDomainError(userDomain.Name)
+		return nil, errors.NotFoundWithDomainError(userDomain.DomainBase)
 	}
 	res := c.createUserResponse(userObj, nil)
 	return &res, nil

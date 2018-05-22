@@ -36,7 +36,7 @@ func (c Controller) getCampaignProgress(ctx context.Context, r *http.Request) (*
 
 	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(campaign.UserID, dm.ID)
 	if err != nil {
-		return nil, userErrors.NotFoundWithDomainError(dm.Name)
+		return nil, userErrors.NotFoundWithDomainError(dm.DomainBase)
 	}
 
 	// check access
