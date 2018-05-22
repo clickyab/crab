@@ -128,13 +128,13 @@ func (m *Manager) FindDomainByID(id int64) (*Domain, error) {
 	return &res, nil
 }
 
-// FindDomainByName return the Domain base on its name
-func (m *Manager) FindDomainByName(n string) (*Domain, error) {
+// FindDomainByDomainBase return the Domain base on its domain_base
+func (m *Manager) FindDomainByDomainBase(db string) (*Domain, error) {
 	var res Domain
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(DomainTableFull, ""), DomainTableFull),
-		n,
+		fmt.Sprintf("SELECT %s FROM %s WHERE domain_base=?", getSelectFields(DomainTableFull, ""), DomainTableFull),
+		db,
 	)
 
 	if err != nil {

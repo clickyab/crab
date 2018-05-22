@@ -32,8 +32,26 @@ func (p *createDomainPayload) Validate(ctx context.Context, w http.ResponseWrite
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
-		case "Name":
-			res["name"] = trans.E("invalid value")
+		case "DomainBase":
+			res["domain_base"] = trans.E("invalid value")
+
+		case "Title":
+			res["title"] = trans.E("invalid value")
+
+		case "Email":
+			res["email"] = trans.E("invalid value")
+
+		case "Password":
+			res["password"] = trans.E("invalid value")
+
+		case "Company":
+			res["company"] = trans.E("invalid value")
+
+		case "Theme":
+			res["theme"] = trans.E("invalid value")
+
+		case "Logo":
+			res["logo"] = trans.E("invalid value")
 
 		case "Description":
 			res["description"] = trans.E("invalid value")

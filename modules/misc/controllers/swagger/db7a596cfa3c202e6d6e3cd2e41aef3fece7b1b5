@@ -6,13 +6,40 @@
 			},
 			"type": "object"
 		},
+		"company": {
+			"type": "string"
+		},
 		"description": {
 			"type": "string"
 		},
-		"name": {
+		"domain_base": {
 			"type": "string"
 		},
+		"email": {
+			"type": "string"
+		},
+		"first_name": {
+			"type": "string"
+		},
+		"last_name": {
+			"type": "string"
+		},
+		"logo": {
+			"type": "string"
+		},
+		"password": {
+			"type": "string"
+		},
+		"send": {
+			"type": "boolean"
+		},
 		"status": {
+			"type": "string"
+		},
+		"theme": {
+			"type": "string"
+		},
+		"title": {
 			"type": "string"
 		}
 	},
