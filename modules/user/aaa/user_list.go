@@ -104,7 +104,12 @@ func (m *Manager) FillUsers(
 
 	}
 
-	conds := strings.Join(where, " AND ")
+	var conds string
+	if len(where) > 0 {
+		conds += " WHERE "
+	}
+
+	conds += strings.Join(where, " AND ")
 
 	q := fmt.Sprintf(`
 		SELECT
