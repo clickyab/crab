@@ -53,9 +53,6 @@ func (l *addUserToWhitelabelPayload) Validate(ctx context.Context, w http.Respon
 		case "AccountType":
 			res["account_type"] = trans.E("invalid value")
 
-		case "NotifyUser":
-			res["notify_user"] = trans.E("invalid value")
-
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}

@@ -17,7 +17,6 @@ import (
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/random"
-	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -153,7 +152,6 @@ func (m *Manager) RegisterUser(user *User, corp *Corporation, domainID, roleID i
 	}
 
 	err = m.CreateUser(user)
-	logrus.Warn(err)
 	if err != nil {
 		return err
 	}
