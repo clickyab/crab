@@ -104,7 +104,8 @@ func (m *Manager) GetDomainPublishers(ids []int64) []Inventory {
 	gg := strings.TrimRight(g, ",")
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT * FROM %s WHERE id IN (%s)",
+		fmt.Sprintf("SELECT %s FROM %s WHERE id IN (%s)",
+			getSelectFields(InventoryTableFull, ""),
 			InventoryTableFull,
 			gg,
 		),

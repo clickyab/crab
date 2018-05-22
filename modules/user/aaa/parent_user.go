@@ -23,7 +23,7 @@ type Advisor struct {
 // GetUserParentsIDDomain get user parent by id and domain
 func (m *Manager) GetUserParentsIDDomain(id, d int64) []Advisor {
 	var res []Advisor
-	q := fmt.Sprintf("SELECT * FROM %s AS pu WHERE user_id=? AND domain_id=?", AdvisorTableFull)
+	q := fmt.Sprintf("SELECT %s FROM %s AS pu WHERE user_id=? AND domain_id=?", getSelectFields(AdvisorTableFull, ""), AdvisorTableFull)
 	_, err := m.GetRDbMap().Select(&res, q, id, d)
 	assert.Nil(err)
 	return res

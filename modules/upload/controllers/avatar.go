@@ -26,6 +26,8 @@ func init() {
 	Register("vast-image", int64(512*kb), 15, model.JPGMime, model.PJPGMime, model.PNGMime)
 	Register("vast-video", int64(16*512*kb), 15, model.VideoMime)
 
+	Register("domain-image", int64(512*kb), 15, model.JPGMime, model.PJPGMime, model.PNGMime, model.GifMime)
+
 	// register mp4 mime
 	assert.Nil(mime.AddExtensionType(".mp4", "video/mp4"))
 	assert.Nil(mime.AddExtensionType(".jpeg", "image/jpeg"))

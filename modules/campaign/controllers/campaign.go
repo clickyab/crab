@@ -52,7 +52,7 @@ func CheckUserCamapignDomain(ctx context.Context) (*BaseData, error) {
 	userManager := aaa.NewAaaManager()
 	owner, err := userManager.FindUserWithParentsByID(ca.UserID, d.ID)
 	if err != nil {
-		return nil, userError.NotFoundWithDomainError(d.Name)
+		return nil, userError.NotFoundWithDomainError(d.DomainBase)
 	}
 
 	err = ca.SetAuditDomainID(d.ID)

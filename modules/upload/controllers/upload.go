@@ -215,6 +215,8 @@ func imageUploadHandler(fileMime, fileType, chunkPathDir, file string, fileObj, 
 	var err error
 	if fileMime == string(model.JPGMime) || fileMime == string(model.PNGMime) || fileMime == string(model.GifMime) || fileMime == string(model.PJPGMime) {
 		attr, err = getDimension(model.Mime(fileMime), fileObj, fileType)
+		logrus.Warn(attr)
+		logrus.Warn(err)
 		if err != nil {
 			return attr, err
 		}
@@ -365,6 +367,13 @@ func getDimension(mime model.Mime, dimensionHandler io.Reader, bannerType string
 			},
 		}
 	case "user":
+		a = model.FileAttr{
+			Avatar: &model.AvatarAttr{
+				Width:  imgConf.Width,
+				Height: imgConf.Height,
+			},
+		}
+	case "domain":
 		a = model.FileAttr{
 			Avatar: &model.AvatarAttr{
 				Width:  imgConf.Width,
