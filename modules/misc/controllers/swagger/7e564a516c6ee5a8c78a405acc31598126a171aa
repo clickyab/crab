@@ -12,9 +12,6 @@
 			"name": {
 				"type": "string"
 			},
-			"status": {
-				"type": "string"
-			},
 			"updated_at": {
 				"format": "dateTime",
 				"type": "string"
