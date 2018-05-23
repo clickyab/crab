@@ -258,18 +258,6 @@ func ExtractUserID(token string) (int64, error) {
 	return id, err
 }
 
-// FindUserDomainsByEmail find active user domain based on its email
-func (m *Manager) FindUserDomainsByEmail(e string) []domainOrm.Domain {
-	var res []domainOrm.Domain
-	q := fmt.Sprintf("SELECT %s FROM %s AS d "+
-		"INNER JOIN %s AS dm ON dm.domain_id=d.id "+
-		"INNER JOIN %s AS u ON u.id=dm.user_id "+
-		"WHERE u.email=? AND d.status=?", getSelectFields(domainOrm.DomainTableFull, "d"), domainOrm.DomainTableFull, domainOrm.DomainUserTableFull, UserTableFull)
-	_, err := m.GetRDbMap().Select(&res, q, e, domainOrm.EnableDomainStatus)
-	assert.Nil(err)
-	return res
-}
-
 // FindUserByAccessTokenDomain return the User base on its access_token and domain
 func (m *Manager) FindUserByAccessTokenDomain(at string, domainID int64) (*User, error) {
 	var res User

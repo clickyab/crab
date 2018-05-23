@@ -6,7 +6,6 @@ import (
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	domainOrm "clickyab.com/crab/modules/domain/orm"
-	"clickyab.com/crab/modules/user/aaa"
 )
 
 // @Validate {
@@ -27,7 +26,7 @@ type checkMailResponse struct {
 // }
 func (c *Controller) checkMail(ctx context.Context, r *http.Request, p *checkMailPayload) (*checkMailResponse, error) {
 	currentDomain := domain.MustGetDomain(ctx)
-	m := aaa.NewAaaManager()
+	m := domainOrm.NewOrmManager()
 	// find userPayload domains
 	domains := m.FindUserDomainsByEmail(p.Email)
 	var currentDomainFound bool

@@ -5,6 +5,7 @@ import (
 
 	"fmt"
 
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
 )
 
@@ -64,4 +65,16 @@ func (m *Manager) FindActiveDomainByName(name string) (*Domain, error) {
 	}
 	return &res, nil
 
+}
+
+// FindUserDomainsByEmail find active user domain based on its email
+func (m *Manager) FindUserDomainsByEmail(e string) []Domain {
+	var res []Domain
+	q := fmt.Sprintf("SELECT %s FROM %s AS d "+
+		"INNER JOIN %s AS dm ON dm.domain_id=d.id "+
+		"INNER JOIN %s AS u ON u.id=dm.user_id "+
+		"WHERE u.email=? AND d.status=?", getSelectFields(DomainTableFull, "d"), DomainTableFull, DomainUserTableFull, "users")
+	_, err := m.GetRDbMap().Select(&res, q, e, EnableDomainStatus)
+	assert.Nil(err)
+	return res
 }
