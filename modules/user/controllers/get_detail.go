@@ -15,7 +15,7 @@ import (
 
 // getUserDetail get user detail  by id
 // @Rest {
-// 		url = /detail/:id
+// 		url = /get/:id
 //		protected = true
 // 		method = get
 //		resource = get_detail_user:global
@@ -29,8 +29,7 @@ func (c *Controller) getUserDetail(ctx context.Context, r *http.Request) (*userR
 		return nil, errors.AccessDenied
 	}
 	// get user id from url params
-	id := xmux.Param(ctx, "id")
-	userID, err := strconv.ParseInt(id, 10, 64)
+	userID, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if err != nil {
 		return nil, errors.InvalidIDErr
 	}
@@ -39,6 +38,8 @@ func (c *Controller) getUserDetail(ctx context.Context, r *http.Request) (*userR
 	if err != nil {
 		return nil, errors.NotFoundWithDomainError(userDomain.DomainBase)
 	}
-	res := c.createUserResponse(userObj, nil)
-	return &res, nil
+	// load user roles into its model for current domain
+	userObj.SetUserRoles(userDomain.ID)
+	userRes := c.createUserResponse(userObj, nil)
+	return &userRes, nil
 }

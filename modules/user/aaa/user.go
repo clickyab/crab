@@ -2,11 +2,11 @@ package aaa
 
 import (
 	"fmt"
-	"time"
-
 	"strings"
 
 	"strconv"
+
+	"time"
 
 	domainOrm "clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/ucfg"
@@ -79,32 +79,33 @@ const (
 //		list = yes
 // }
 type User struct {
-	ID          int64                                    `json:"id" db:"id"`
-	Email       string                                   `json:"email" db:"email"`
-	Password    string                                   `json:"password" db:"password"`
-	AccessToken string                                   `json:"-" db:"access_token"`
-	Avatar      mysql.NullString                         `json:"avatar" db:"avatar"`
-	Status      UserValidStatus                          `json:"status" db:"status"`
-	OldPassword mysql.StringJSONArray                    `json:"-"  db:"old_password"`
-	CityID      mysql.NullInt64                          `json:"city_id" db:"city_id"`
-	LandLine    mysql.NullString                         `json:"land_line" db:"land_line"`
-	Cellphone   mysql.NullString                         `json:"cellphone" db:"cellphone"`
-	PostalCode  mysql.NullString                         `json:"postal_code" db:"postal_code"`
-	FirstName   string                                   `json:"first_name" db:"first_name"`
-	LastName    string                                   `json:"last_name" db:"last_name"`
-	Address     mysql.NullString                         `json:"address" db:"address"`
-	Gender      GenderType                               `json:"gender" db:"gender"`
-	SSN         mysql.NullString                         `json:"ssn" db:"ssn"`
-	Balance     int64                                    `json:"balance" db:"balance"`
-	Attributes  mysql.GenericJSONField                   `json:"attributes" db:"attributes"`
-	Advantage   int                                      `json:"advantage" db:"advantage"`
-	Corporation *Corporation                             `json:"corporation, omitempty" db:"-"`
-	parents     []int64                                  `json:"-" db:"-"`
-	childes     []int64                                  `json:"-" db:"-"`
-	roles       []Role                                   `db:"-"`
-	resource    map[permission.UserScope]map[string]bool `db:"-"`
-	CreatedAt   time.Time                                `json:"created_at" db:"created_at"`
-	UpdatedAt   time.Time                                `json:"updated_at" db:"updated_at"`
+	ID            int64                                    `json:"id" db:"id"`
+	Email         string                                   `json:"email" db:"email"`
+	Password      string                                   `json:"password" db:"password"`
+	AccessToken   string                                   `json:"-" db:"access_token"`
+	Avatar        mysql.NullString                         `json:"avatar" db:"avatar"`
+	Status        UserValidStatus                          `json:"status" db:"status"`
+	OldPassword   mysql.StringJSONArray                    `json:"-"  db:"old_password"`
+	CityID        mysql.NullInt64                          `json:"city_id" db:"city_id"`
+	LandLine      mysql.NullString                         `json:"land_line" db:"land_line"`
+	Cellphone     mysql.NullString                         `json:"cellphone" db:"cellphone"`
+	PostalCode    mysql.NullString                         `json:"postal_code" db:"postal_code"`
+	FirstName     string                                   `json:"first_name" db:"first_name"`
+	LastName      string                                   `json:"last_name" db:"last_name"`
+	Address       mysql.NullString                         `json:"address" db:"address"`
+	Gender        GenderType                               `json:"gender" db:"gender"`
+	SSN           mysql.NullString                         `json:"ssn" db:"ssn"`
+	Balance       int64                                    `json:"balance" db:"balance"`
+	Attributes    mysql.GenericJSONField                   `json:"attributes" db:"attributes"`
+	FinancialCode mysql.NullInt64                          `json:"financial_code" db:"financial_code"`
+	Advantage     int                                      `json:"advantage" db:"advantage"`
+	Corporation   *Corporation                             `json:"corporation, omitempty" db:"-"`
+	parents       []int64                                  `json:"-" db:"-"`
+	childes       []int64                                  `json:"-" db:"-"`
+	Roles         []*Role                                  `db:"-"`
+	resource      map[permission.UserScope]map[string]bool `db:"-"`
+	CreatedAt     time.Time                                `json:"created_at" db:"created_at"`
+	UpdatedAt     time.Time                                `json:"updated_at" db:"updated_at"`
 }
 
 // Corporation user corporation model

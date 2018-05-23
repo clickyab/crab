@@ -90,8 +90,8 @@ func (u *User) HasOn(perm permission.Token, ownerID int64, parentIDs []int64, Do
 	return permission.ScopeSelf, false
 }
 
-func (u *User) getUserRoles(DomainID int64) []Role {
-	var roles []Role
+func (u *User) getUserRoles(DomainID int64) []*Role {
+	var roles []*Role
 	query := fmt.Sprintf("SELECT roles.* FROM %[1]s INNER JOIN %[2]s ON %[2]s.role_id=roles.id WHERE %[2]s.user_id=? AND %[1]s.domain_id=?", RoleTableFull, RoleUserTableFull)
 
 	_, err := NewAaaManager().GetRDbMap().Select(&roles, query, u.ID, DomainID)
@@ -99,9 +99,10 @@ func (u *User) getUserRoles(DomainID int64) []Role {
 	return roles
 }
 
-func (u *User) setUserRoles(DomainID int64) {
-	if len(u.roles) == 0 {
-		u.roles = u.getUserRoles(DomainID)
+// SetUserRoles set user roles
+func (u *User) SetUserRoles(DomainID int64) {
+	if len(u.Roles) == 0 {
+		u.Roles = u.getUserRoles(DomainID)
 	}
 }
 
@@ -112,10 +113,10 @@ func (u *User) getUserPermissions(DomainID int64) map[permission.UserScope]map[s
 	resp[permission.ScopeGlobal] = make(map[string]bool)
 	resp[permission.ScopeSelf] = make(map[string]bool)
 
-	if len(u.roles) == 0 {
-		u.setUserRoles(DomainID)
+	if len(u.Roles) == 0 {
+		u.SetUserRoles(DomainID)
 	}
-	roles := u.roles
+	roles := u.Roles
 
 	for i := range roles {
 		roleIDs = append(roleIDs, fmt.Sprintf("%d", roles[i].ID))
