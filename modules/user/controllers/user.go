@@ -63,6 +63,7 @@ type userResponse struct {
 	EconomicCode  string                 `json:"economic_code,omitempty"`
 	Balance       int64                  `json:"balance"`
 	Attributes    mysql.GenericJSONField `json:"attributes,omitempty"`
+	Roles         []*aaa.Role            `json:"roles,omitempty"`
 }
 
 func (u Controller) createUserResponse(user *aaa.User, perms *[]string) userResponse {
@@ -79,11 +80,11 @@ func (u Controller) createUserResponse(user *aaa.User, perms *[]string) userResp
 	us.Address = user.Address.String
 	us.Balance = user.Balance
 	us.Perms = perms
+	us.Roles = user.Roles
 	if user.Gender != aaa.NotSpecifiedGender {
 		us.Gender = user.Gender
 	}
 	us.SSN = user.SSN.String
-
 	if c, e := aaa.NewAaaManager().FindCorporationByUserID(us.ID); e == nil {
 		us.LegalName = c.LegalName
 		us.LegalRegister = c.LegalRegister.String
