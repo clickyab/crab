@@ -9,8 +9,10 @@ import (
 	"github.com/clickyab/services/framework"
 )
 
-// frontRouteRedirect frontend route after payment is done (success,fail)
-var frontRouteRedirect = config.RegisterString("crab.modules.financial.payment.front.url", "user/financial-verify", "saman bank name")
+var (
+	// frontRouteRedirect frontend route after payment is done (success,fail)
+	frontRouteRedirect = config.RegisterString("crab.modules.financial.payment.front.url", "user/financial-verify", "saman bank name")
+)
 
 // InitPaymentResp init payment response
 type InitPaymentResp struct {
@@ -30,10 +32,11 @@ type RedirectParams struct {
 
 // CommonPay for similar actions across payment gates
 type CommonPay struct {
-	FAmount int64
-	FResNum string
-	FUserID int64
-	BankObj Payable
+	FAmount    int64
+	FPayAmount int64
+	FResNum    string
+	FUserID    int64
+	BankObj    Payable
 }
 
 // FrontRedirect redirect to front route
@@ -63,6 +66,7 @@ type Payable interface {
 	UserID() int64
 	RedirectURL(r *http.Request) string
 	Amount() int64
+	PayAmount() int64
 	ResNum() string
 	VerifyURL() string
 	BankName() string
