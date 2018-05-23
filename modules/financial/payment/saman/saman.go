@@ -22,11 +22,12 @@ import (
 )
 
 var (
-	paymentMethod = config.RegisterString("crab.modules.financial.saman.method", "POST", "saman payment method")
-	merchantID    = config.RegisterInt64("crab.modules.financial.saman.merchant", 10903000, "saman merchant id")
-	bankURL       = config.RegisterString("crab.modules.financial.saman.url", "https://sep.shaparak.ir/payment.aspx", "saman bank url")
-	verifyURL     = config.RegisterString("crab.modules.financial.saman.verify", "https://sep.shaparak.ir/payments/referencepayment.asmx", "saman bank verify url")
-	bankName      = config.RegisterString("crab.modules.financial.saman.name", "saman", "saman bank name")
+	paymentMethod        = config.RegisterString("crab.modules.financial.saman.method", "POST", "saman payment method")
+	merchantID           = config.RegisterInt64("crab.modules.financial.saman.merchant", 10903000, "saman merchant id")
+	bankURL              = config.RegisterString("crab.modules.financial.saman.url", "https://sep.shaparak.ir/payment.aspx", "saman bank url")
+	verifyURL            = config.RegisterString("crab.modules.financial.saman.verify", "https://sep.shaparak.ir/payments/referencepayment.asmx", "saman bank verify url")
+	bankName             = config.RegisterString("crab.modules.financial.saman.name", "saman", "saman bank name")
+	currencyTransferRate = config.RegisterInt("crab.modules.financial.saman.currency.rate", 10, "payment currency rate")
 
 	verifyMethodErrors = map[int64]error{
 		-1:  orm.VERIFYRequestData,
@@ -134,7 +135,7 @@ func (s *Saman) VerifyTransaction(resNum, refNum string) error {
 		return s.VerifyErr(paid)
 	}
 
-	if s.Amount() != paid {
+	if s.PayAmount() != paid {
 		return orm.PriceMismatchErr
 	}
 	return nil
@@ -186,7 +187,7 @@ func (s *Saman) InitPayment(r *http.Request) *payment.InitPaymentResp {
 			"MID":         merchantID.Int64(),
 			"ResNum":      s.FResNum,
 			"RedirectURL": s.RedirectURL(r),
-			"Amount":      s.FAmount,
+			"Amount":      s.PayAmount(),
 		},
 		Method:  paymentMethod.String(),
 		BankURL: bankURL.String(),
@@ -201,7 +202,7 @@ func (s *Saman) MID() int64 {
 
 // RedirectURL return RedirectURL
 func (s *Saman) RedirectURL(r *http.Request) string {
-	key := simplehash.SHA1(fmt.Sprintf("%d-%s-%d-%s", s.UserID(), s.BankName(), s.Amount(), s.ResNum()))
+	key := simplehash.SHA1(fmt.Sprintf("%d-%s-%d-%s", s.UserID(), s.BankName(), s.PayAmount(), s.ResNum()))
 	res := &url.URL{
 		Host:   r.Host,
 		Scheme: framework.Scheme(r),
@@ -267,4 +268,9 @@ func (s *Saman) SetUserID(userID int64) {
 // SetResNum set res num
 func (s *Saman) SetResNum(res string) {
 	s.FResNum = res
+}
+
+// PayAmount return bank pay amount
+func (s *Saman) PayAmount() int64 {
+	return s.Amount() * currencyTransferRate.Int64()
 }

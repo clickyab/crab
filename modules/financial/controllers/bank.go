@@ -24,7 +24,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var minChargeAmount = config.RegisterInt64("crab.modules.financial.min.real", 1000, "min charge amount")
+var minChargeAmount = config.RegisterInt64("crab.modules.financial.min.real", 100, "min charge amount")
 
 // @Validate{
 //}
@@ -72,10 +72,10 @@ func (c *Controller) getPaymentData(ctx context.Context, r *http.Request, p *ini
 	}
 
 	var pay = payment.CommonPay{
-		p.payAmount,
-		<-random.ID,
-		currentUser.ID,
-		nil,
+		FAmount: p.payAmount,
+		FResNum: <-random.ID,
+		FUserID: currentUser.ID,
+		BankObj: nil,
 	}
 
 	// TODO : implement other gateways later
@@ -154,7 +154,7 @@ func (c *Controller) backFromBank(ctx context.Context, w http.ResponseWriter, r 
 	l.BankObj.SetUserID(transaction.UserID)
 	l.BankObj.SetResNum(transaction.ResNum)
 
-	err = l.BankObj.HashVerification(l.BankObj.Amount(), payHash, redirectParams.ResNum)
+	err = l.BankObj.HashVerification(l.BankObj.PayAmount(), payHash, redirectParams.ResNum)
 	if err != nil {
 		// Failed payment update transaction and redirect to failed page
 		transaction.Status = orm.BackToSite
