@@ -3,6 +3,13 @@
 		"description": "",
 		"parameters": [
 			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " count per page",
 				"in": "query",
 				"name": "c",
@@ -52,13 +59,6 @@
 				"type": "string"
 			},
 			{
-				"description": " search the full_name field",
-				"in": "query",
-				"name": "full_name",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": " search the ssn field",
 				"in": "query",
 				"name": "ssn",
@@ -66,9 +66,9 @@
 				"type": "string"
 			},
 			{
-				"description": " parameter for search",
+				"description": " search the email field",
 				"in": "query",
-				"name": "q",
+				"name": "email",
 				"required": false,
 				"type": "string"
 			},
@@ -80,9 +80,9 @@
 				"type": "string"
 			},
 			{
-				"description": " search the email field",
+				"description": " search the full_name field",
 				"in": "query",
-				"name": "email",
+				"name": "full_name",
 				"required": false,
 				"type": "string"
 			},

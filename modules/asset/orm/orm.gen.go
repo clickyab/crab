@@ -38,7 +38,7 @@ func getSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case BrowserTableFull:
-		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sdeleted_at,%[1]sstatus,%[1]sname`, alias)
+		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sdeleted_at,%[1]sname`, alias)
 
 	case CategoryTableFull:
 		return fmt.Sprintf(`%[1]sname,%[1]sdescription,%[1]sdeleted_at`, alias)
