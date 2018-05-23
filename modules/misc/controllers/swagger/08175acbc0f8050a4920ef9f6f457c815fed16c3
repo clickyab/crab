@@ -72,6 +72,12 @@
 		"province_name": {
 			"type": "string"
 		},
+		"roles": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
 		"ssn": {
 			"type": "string"
 		}

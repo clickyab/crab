@@ -328,7 +328,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		// End route with key 12
 
 		/* Route {
-			"Route": "/detail/:id",
+			"Route": "/get/:id",
 			"Method": "GET",
 			"Function": "Controller.getUserDetailGet",
 			"RoutePkg": "user",
@@ -349,7 +349,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		permission.Register("get_detail_user", "get_detail_user")
 		m13 = append(m13, authz.AuthorizeGenerator("get_detail_user", "global"))
 
-		group.GET("user-Controller-getUserDetailGet", "/detail/:id", framework.Mix(c.getUserDetailGet, m13...))
+		group.GET("user-Controller-getUserDetailGet", "/get/:id", framework.Mix(c.getUserDetailGet, m13...))
 		// End route with key 13
 
 		/* Route {

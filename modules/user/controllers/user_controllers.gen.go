@@ -226,7 +226,7 @@ func (c *Controller) forgetPasswordPost(ctx context.Context, w http.ResponseWrit
 
 // getUserDetail get user detail  by id
 // @Route {
-// 		url = /detail/:id
+// 		url = /get/:id
 //		method = get
 //		middleware = authz.Authenticate
 //		resource = get_detail_user:global
