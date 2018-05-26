@@ -173,12 +173,12 @@ type Campaign struct {
 	InventoryID      mysql.NullInt64       `json:"inventory_id" db:"inventory_id" structs:"inventory_id,string"`
 	InventoryType    NullInventoryState    `json:"inventory_type" db:"inventory_type" structs:"inventory_type"` // InventoryType black_list or white_list
 	InventoryDomains mysql.StringJSONArray `json:"-" db:"inventory_domains"`
-	TLD              string                `json:"tld" db:"tld" structs:"tld"`
-	TodaySpend       int64                 `json:"today_spend" db:"today_spend" structs:"today_spend"`
-	TotalSpend       int64                 `json:"total_spend" db:"total_spend" structs:"total_spend"`
-	CreatedAt        time.Time             `json:"created_at" db:"created_at" structs:"created_at"`
-	UpdatedAt        time.Time             `json:"updated_at" db:"updated_at" structs:"updated_at"`
-	ArchivedAt       mysql.NullTime        `json:"archived_at" db:"archived_at" structs:"archived_at,string"`
+	TLD              mysql.NullString      `json:"tld" db:"tld"`
+	TodaySpend       int64                 `json:"today_spend" db:"today_spend"`
+	TotalSpend       int64                 `json:"total_spend" db:"total_spend"`
+	CreatedAt        time.Time             `json:"created_at" db:"created_at"`
+	UpdatedAt        time.Time             `json:"updated_at" db:"updated_at"`
+	ArchivedAt       mysql.NullTime        `json:"archived_at" db:"archived_at"`
 	aaa.AuditExtraData
 }
 
@@ -194,12 +194,12 @@ func (ca *Campaign) PostInsert(s gorp.SqlExecutor) error {
 
 // CampaignBase is minimum data for creating campaign (stage one)
 type CampaignBase struct { // stage one create
-	Status   Status         `json:"status" db:"status"`
-	Progress Progress       `json:"progress" db:"progress"`
-	StartAt  time.Time      `json:"start_at" db:"start_at"`
-	EndAt    mysql.NullTime `json:"end_at" db:"end_at"`
-	Title    string         `json:"title" db:"title"`
-	Kind     CampaignKind   `json:"kind" db:"kind"`
-	TLD      string         `json:"tld" db:"tld"`
-	Schedule ScheduleSheet  `json:"schedule" db:"-"`
+	Status   Status           `json:"status" db:"status"`
+	Progress Progress         `json:"progress" db:"progress"`
+	StartAt  time.Time        `json:"start_at" db:"start_at"`
+	EndAt    mysql.NullTime   `json:"end_at" db:"end_at"`
+	Title    string           `json:"title" db:"title"`
+	Kind     CampaignKind     `json:"kind" db:"kind"`
+	TLD      mysql.NullString `json:"tld" db:"tld"`
+	Schedule ScheduleSheet    `json:"schedule" db:"-"`
 }

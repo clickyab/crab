@@ -21,7 +21,7 @@ type campaignBase struct {
 	StartAt  time.Time      `json:"start_at"`
 	EndAt    mysql.NullTime `json:"end_at"`
 	Title    string         `json:"title"  validate:"required,gt=5"`
-	TLD      string         `json:"tld"`
+	TLD      string         `json:"tld" validate:"omitempty"`
 	Schedule struct {
 		H00 string `json:"h00" hour:""`
 		H01 string `json:"h01" hour:""`
@@ -99,7 +99,7 @@ func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaign
 
 	baseData := orm.CampaignBase{
 		Title:   p.Title,
-		TLD:     p.TLD,
+		TLD:     mysql.NullString{String: p.TLD, Valid: p.TLD != ""},
 		Status:  p.Status,
 		StartAt: p.StartAt,
 		EndAt:   p.EndAt,
