@@ -19,7 +19,7 @@ import (
 	"github.com/clickyab/services/config"
 )
 
-var defaultAdminRole = config.RegisterString("crab.modules.domain.default.admin.role", "Admin", "default domain role name")
+var defaultOwnerRole = config.RegisterString("crab.modules.domain.default.owner.role", "Owner", "default domain role name")
 var defaultAdminDomain = config.RegisterString("crab.modules.domain.default.admin.domain", "staging.crab.clickyab.ae", "default admin domain name")
 
 // @Validate{
@@ -98,7 +98,7 @@ func (c *Controller) createDomain(ctx context.Context, r *http.Request, p *creat
 	corp.LegalName = p.Company
 
 	role := &aaa.Role{
-		Name:     "admin",
+		Name:     defaultOwnerRole.String(),
 		DomainID: newDomain.ID,
 	}
 
@@ -151,7 +151,7 @@ func createWhiteLabel(user *aaa.User, corp *aaa.Corporation, domain *orm.Domain,
 
 	//create role perms, first get perm of admin
 	//then insert the perm in role perm table
-	perms, err := aManger.FindRolePermByName(defaultAdminRole.String(), defaultAdminDomain.String())
+	perms, err := aManger.FindRolePermByName(defaultOwnerRole.String(), defaultAdminDomain.String())
 	if err != nil {
 		return errors.FindAdminPermErr
 	}
