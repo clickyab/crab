@@ -28,7 +28,7 @@ type createCampaignPayload struct {
 	StartAt  time.Time        `json:"start_at" validate:"required"`
 	EndAt    mysql.NullTime   `json:"end_at" validate:"omitempty"`
 	Title    string           `json:"title" validate:"required,gt=5"`
-	TLD      string           `json:"tld" validate:"required"`
+	TLD      string           `json:"tld" validate:"omitempty"`
 	Schedule struct {
 		H00 string `json:"h00" hour:""`
 		H01 string `json:"h01" hour:""`
@@ -124,7 +124,7 @@ func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCa
 
 	baseCampaign := orm.CampaignBase{
 		Kind:    p.Kind,
-		TLD:     p.TLD,
+		TLD:     mysql.NullString{Valid: p.TLD != "", String: p.TLD},
 		Title:   p.Title,
 		Status:  p.Status,
 		StartAt: p.StartAt,
