@@ -167,6 +167,9 @@ func (l *campaignBase) Validate(ctx context.Context, w http.ResponseWriter, r *h
 		case "Title":
 			res["title"] = trans.E("invalid value")
 
+		case "TLD":
+			res["tld"] = trans.E("invalid value")
+
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}
