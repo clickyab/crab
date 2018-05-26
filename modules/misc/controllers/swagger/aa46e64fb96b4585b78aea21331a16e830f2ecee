@@ -3,16 +3,23 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " page number",
 				"in": "query",
-				"name": "to",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " search the user_id field",
+				"in": "query",
+				"name": "user_id",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the first_name field",
 				"in": "query",
-				"name": "sort",
+				"name": "first_name",
 				"required": false,
 				"type": "string"
 			},
@@ -24,9 +31,9 @@
 				"type": "string"
 			},
 			{
-				"description": " search the user_id field",
+				"description": " search the email field",
 				"in": "query",
-				"name": "user_id",
+				"name": "email",
 				"required": false,
 				"type": "string"
 			},
@@ -38,27 +45,6 @@
 				"type": "int"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the email field",
-				"in": "query",
-				"name": "email",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
@@ -66,9 +52,23 @@
 				"type": "string"
 			},
 			{
-				"description": " search the first_name field",
+				"description": "",
 				"in": "query",
-				"name": "first_name",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
