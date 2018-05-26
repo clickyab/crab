@@ -340,7 +340,15 @@
 			"type": "string"
 		},
 		"tld": {
-			"type": "string"
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
 		},
 		"today_spend": {
 			"type": "integer"
