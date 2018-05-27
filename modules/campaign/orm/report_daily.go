@@ -128,10 +128,10 @@ func (m *Manager) FillDaily(
 	}
 	conds += strings.Join(where, " AND ")
 
-	countQuery := fmt.Sprintf(`SELECT COUNT(da.basis) FROM %s AS c
+	countQuery := fmt.Sprintf(`SELECT COUNT(DISTINCT(cd.daily_id)) FROM %s AS c
 		INNER JOIN %s AS owner ON owner.id=c.user_id
 		LEFT JOIN %s AS cd ON cd.campaign_id=c.id
-		JOIN %s AS da ON da.id= cd.daily_id %s GROUP BY da.basis`,
+		JOIN %s AS da ON da.id= cd.daily_id %s`,
 
 		CampaignTableFull,
 		aaa.UserTableFull,
