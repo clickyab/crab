@@ -41,6 +41,28 @@ type createDomainPayload struct {
 	Attributes  map[string]interface{} `json:"attributes" validate:"omitempty"`
 	Status      orm.DomainStatus       `json:"status" validate:"required"`
 
+	TotalBudget  int64 `json:"total_budget" validate:"required"`
+	DailyBudget  int64 `json:"daily_budget" validate:"required"`
+	WebNativeCPC int64 `json:"web_native_cpc" validate:"required"`
+	WebBannerCPC int64 `json:"web_banner_cpc" validate:"required"`
+	WebVastCPC   int64 `json:"web_vast_cpc" validate:"required"`
+	AppNativeCPC int64 `json:"app_native_cpc" validate:"required"`
+	AppBannerCPC int64 `json:"app_banner_cpc" validate:"required"`
+	AppVastCPC   int64 `json:"app_vast_cpc" validate:"required"`
+	WebCPC       int64 `json:"web_cpc" validate:"required"`
+	AppCPC       int64 `json:"app_cpc" validate:"required"`
+
+	WebNativeCPM int64 `json:"web_native_cpm" validate:"required"`
+	WebBannerCPM int64 `json:"web_banner_cpm" validate:"required"`
+	WebVastCPM   int64 `json:"web_vast_cpm" validate:"required"`
+	AppNativeCPM int64 `json:"app_native_cpm" validate:"required"`
+	AppBannerCPM int64 `json:"app_banner_cpm" validate:"required"`
+	AppVastCPM   int64 `json:"app_vast_cpm" validate:"required"`
+	WebCPM       int64 `json:"web_cpm" validate:"required"`
+	AppCPM       int64 `json:"app_cpm" validate:"required"`
+
+	Advantage int `json:"advantage" validate:"max=99,min=0"`
+
 	logo *model.Upload
 }
 
@@ -77,13 +99,32 @@ func (c *Controller) createDomain(ctx context.Context, r *http.Request, p *creat
 
 	// create domain object
 	newDomain := &orm.Domain{
-		Title:       p.Title,
-		DomainBase:  p.DomainBase,
-		Theme:       p.Theme,
-		Logo:        mysql.NullString{Valid: p.logo.ID != "", String: p.logo.ID},
-		Description: mysql.NullString{Valid: p.Description != "", String: p.Description},
-		Attributes:  p.Attributes,
-		Status:      p.Status,
+		Title:        p.Title,
+		DomainBase:   p.DomainBase,
+		Theme:        p.Theme,
+		Logo:         mysql.NullString{Valid: p.logo.ID != "", String: p.logo.ID},
+		Description:  mysql.NullString{Valid: p.Description != "", String: p.Description},
+		Attributes:   p.Attributes,
+		Status:       p.Status,
+		Advantage:    p.Advantage,
+		AppBannerCPC: p.AppBannerCPC,
+		AppNativeCPC: p.AppNativeCPC,
+		AppVastCPC:   p.AppVastCPC,
+		WebBannerCPC: p.WebBannerCPC,
+		WebNativeCPC: p.WebNativeCPC,
+		WebVastCPC:   p.WebVastCPC,
+		AppBannerCPM: p.AppBannerCPM,
+		AppNativeCPM: p.AppNativeCPM,
+		AppVastCPM:   p.AppVastCPM,
+		WebBannerCPM: p.WebBannerCPM,
+		WebNativeCPM: p.WebNativeCPM,
+		WebVastCPM:   p.WebVastCPM,
+		WebCPC:       p.WebCPC,
+		WebCPM:       p.WebCPM,
+		AppCPM:       p.AppCPM,
+		AppCPC:       p.AppCPC,
+		TotalBudget:  p.TotalBudget,
+		DailyBudget:  p.DailyBudget,
 	}
 
 	user := &aaa.User{
