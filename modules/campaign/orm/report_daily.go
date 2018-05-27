@@ -154,7 +154,7 @@ func (m *Manager) FillDaily(
 		FROM %s AS c
 		INNER JOIN %s AS owner ON owner.id=c.user_id
 		LEFT JOIN %s AS cd ON cd.campaign_id=c.id 
-		JOIN %s AS da ON da.id= cd.daily_id  %s GROUP BY da.basis`,
+		JOIN %s AS da ON da.id= cd.daily_id  %s GROUP BY cd.daily_id`,
 		CampaignTableFull,
 		aaa.UserTableFull,
 		CampaignDetailTableFull,
