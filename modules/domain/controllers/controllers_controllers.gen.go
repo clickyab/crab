@@ -9,6 +9,28 @@ import (
 	"github.com/clickyab/services/framework"
 )
 
+// changeDomainStatus change domain status by id, status can be enable or disable
+// @Route {
+// 		url = /change-domain-status/:id
+//		method = put
+//		payload = changeDomainStatusPayload
+//		middleware = authz.Authenticate
+//		resource = god:global
+//		200 = orm.Domain
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) changeDomainStatusPut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*changeDomainStatusPayload)
+	res, err := c.changeDomainStatus(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // createDomain to domain
 // @Route {
 // 		url = /create

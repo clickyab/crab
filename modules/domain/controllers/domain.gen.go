@@ -27,6 +27,33 @@ func (c *Controller) Routes(r framework.Mux) {
 		group := r.NewGroup("/domain")
 
 		/* Route {
+			"Route": "/change-domain-status/:id",
+			"Method": "PUT",
+			"Function": "Controller.changeDomainStatusPut",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "changeDomainStatusPayload",
+			"Resource": "god",
+			"Scope": "global"
+		} with key 0 */
+		m0 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("god", "god")
+		m0 = append(m0, authz.AuthorizeGenerator("god", "global"))
+
+		// Make sure payload is the last middleware
+		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(changeDomainStatusPayload{}))
+		group.PUT("controllers-Controller-changeDomainStatusPut", "/change-domain-status/:id", framework.Mix(c.changeDomainStatusPut, m0...))
+		// End route with key 0
+
+		/* Route {
 			"Route": "/create",
 			"Method": "POST",
 			"Function": "Controller.createDomainPost",
@@ -40,18 +67,18 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "createDomainPayload",
 			"Resource": "god",
 			"Scope": "global"
-		} with key 0 */
-		m0 := append(groupMiddleware, []framework.Middleware{
+		} with key 1 */
+		m1 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("god", "god")
-		m0 = append(m0, authz.AuthorizeGenerator("god", "global"))
+		m1 = append(m1, authz.AuthorizeGenerator("god", "global"))
 
 		// Make sure payload is the last middleware
-		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(createDomainPayload{}))
-		group.POST("controllers-Controller-createDomainPost", "/create", framework.Mix(c.createDomainPost, m0...))
-		// End route with key 0
+		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(createDomainPayload{}))
+		group.POST("controllers-Controller-createDomainPost", "/create", framework.Mix(c.createDomainPost, m1...))
+		// End route with key 1
 
 		/* Route {
 			"Route": "/edit/:id",
@@ -67,18 +94,18 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "editDomainPayload",
 			"Resource": "god",
 			"Scope": "global"
-		} with key 1 */
-		m1 := append(groupMiddleware, []framework.Middleware{
+		} with key 2 */
+		m2 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("god", "god")
-		m1 = append(m1, authz.AuthorizeGenerator("god", "global"))
+		m2 = append(m2, authz.AuthorizeGenerator("god", "global"))
 
 		// Make sure payload is the last middleware
-		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(editDomainPayload{}))
-		group.PUT("controllers-Controller-editDomainPut", "/edit/:id", framework.Mix(c.editDomainPut, m1...))
-		// End route with key 1
+		m2 = append(m2, middleware.PayloadUnMarshallerGenerator(editDomainPayload{}))
+		group.PUT("controllers-Controller-editDomainPut", "/edit/:id", framework.Mix(c.editDomainPut, m2...))
+		// End route with key 2
 
 		/* Route {
 			"Route": "/:id",
@@ -94,16 +121,16 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "get_detail_domain",
 			"Scope": "global"
-		} with key 2 */
-		m2 := append(groupMiddleware, []framework.Middleware{
+		} with key 3 */
+		m3 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("get_detail_domain", "get_detail_domain")
-		m2 = append(m2, authz.AuthorizeGenerator("get_detail_domain", "global"))
+		m3 = append(m3, authz.AuthorizeGenerator("get_detail_domain", "global"))
 
-		group.GET("controllers-Controller-getDomainDetailGet", "/:id", framework.Mix(c.getDomainDetailGet, m2...))
-		// End route with key 2
+		group.GET("controllers-Controller-getDomainDetailGet", "/:id", framework.Mix(c.getDomainDetailGet, m3...))
+		// End route with key 3
 
 		initializer.DoInitialize(c)
 	})
