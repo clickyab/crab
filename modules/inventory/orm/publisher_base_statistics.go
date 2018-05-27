@@ -59,7 +59,7 @@ func (m *Manager) FillPublishersBaseStatistics(
 		COALESCE((SUM(cd.imp)/(COUNT(1)/30)),0) AS avg_imp,
 		COALESCE(COUNT(DISTINCT(pub.supplier)),0) AS exchange_count
 		FROM %s AS pub
-		INNER JOIN %s AS cd ON cd.publisher_id=pub.id
+		LEFT JOIN %s AS cd ON cd.publisher_id=pub.id
 		`,
 		PublisherTableFull,
 		caOrm.CampaignDetailTableFull,
