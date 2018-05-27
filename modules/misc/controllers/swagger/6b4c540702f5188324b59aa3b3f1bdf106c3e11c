@@ -1,0 +1,8 @@
+{
+	"properties": {
+		"domain_status": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
