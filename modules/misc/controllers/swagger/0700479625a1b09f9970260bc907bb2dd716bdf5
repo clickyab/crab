@@ -1,5 +1,8 @@
 {
 	"properties": {
+		"advantage": {
+			"type": "integer"
+		},
 		"attributes": {
 			"additionalProperties": {
 				"type": "string"
@@ -37,6 +40,60 @@
 				}
 			},
 			"type": "object"
+		},
+		"min_app_banner_cpc": {
+			"type": "integer"
+		},
+		"min_app_banner_cpm": {
+			"type": "integer"
+		},
+		"min_app_cpc": {
+			"type": "integer"
+		},
+		"min_app_cpm": {
+			"type": "integer"
+		},
+		"min_app_native_cpc": {
+			"type": "integer"
+		},
+		"min_app_native_cpm": {
+			"type": "integer"
+		},
+		"min_app_vast_cpc": {
+			"type": "integer"
+		},
+		"min_app_vast_cpm": {
+			"type": "integer"
+		},
+		"min_daily_budget": {
+			"type": "integer"
+		},
+		"min_total_budget": {
+			"type": "integer"
+		},
+		"min_web_banner_cpc": {
+			"type": "integer"
+		},
+		"min_web_banner_cpm": {
+			"type": "integer"
+		},
+		"min_web_cpc": {
+			"type": "integer"
+		},
+		"min_web_cpm": {
+			"type": "integer"
+		},
+		"min_web_native_cpc": {
+			"type": "integer"
+		},
+		"min_web_native_cpm": {
+			"type": "integer"
+		},
+		"min_web_vast_cpc": {
+			"type": "integer"
+		},
+		"min_web_vast_cpm": {
+			"type": "integer"
 		},
 		"status": {
 			"type": "string"
