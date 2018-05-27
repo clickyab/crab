@@ -29,12 +29,14 @@ var (
 	RegisterUserErr error = t9e.G("error while registering user")
 	// CreateAdminRoleERR error while creating admin role
 	CreateAdminRoleERR error = t9e.G("error while creating admin role")
+	// UpdateStatusDbErr error in update domain status
+	UpdateStatusDbErr = t9e.G("an database error occurred when we try to update domain status ")
 )
 
 // DomainNotFoundError maker
 func DomainNotFoundError(id int64) error {
 	if id > 0 {
-		return t9e.G("domain with identifier %s not found, please check your request data.", id)
+		return t9e.G("domain with identifier %d not found, please check your request data.", id)
 	}
 
 	return t9e.G("domain not found, please check your request data.")
