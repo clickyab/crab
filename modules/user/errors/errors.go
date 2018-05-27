@@ -69,6 +69,10 @@ var (
 	GetUserPermsDbErr error = t9e.G("database error on get user permissions")
 	// InvalidTokenErr invalid token error
 	InvalidTokenErr error = t9e.G("can't find user with related token")
+	// UpdateCorporationErr error while updating user corporation
+	UpdateCorporationErr error = t9e.G("error while updating user corporation")
+	// UpdateUserErr error while updating user
+	UpdateUserErr error = t9e.G("error while updating user")
 )
 
 // NotFoundError maker

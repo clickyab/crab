@@ -6,10 +6,12 @@ import (
 
 	"time"
 
+	"database/sql"
+
 	"clickyab.com/crab/modules/user/aaa"
+	"clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework/middleware"
-	"github.com/clickyab/services/gettext/t9e"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/trans"
 	"github.com/clickyab/services/xlog"
@@ -42,6 +44,8 @@ type userPayload struct {
 	LegalName     string         `json:"legal_name" validate:"omitempty"`
 	LegalRegister string         `json:"legal_register" validate:"omitempty"`
 	EconomicCode  string         `json:"economic_code" validate:"omitempty"`
+
+	corporation *aaa.Corporation
 }
 
 // edit route for edit personal profile
@@ -51,19 +55,34 @@ type userPayload struct {
 //		method = put
 // }
 func (c *Controller) edit(ctx context.Context, r *http.Request, p *userPayload) (*ResponseLoginOK, error) {
-	if !p.Gender.IsValid() || p.Gender == aaa.NotSpecifiedGender {
-		return nil, t9e.G("invalid user gender")
-	}
-
 	cu := c.MustGetUser(ctx)
 	m := aaa.NewAaaManager()
 
-	var cc *aaa.Corporation
-	var e error
-	if p.LegalName != "" {
-		cc, e = m.FindCorporationByUserID(cu.ID)
+	cc, e := m.FindCorporationByUserID(cu.ID)
+
+	if e != nil {
+		if e != sql.ErrNoRows {
+			xlog.GetWithError(ctx, errors.DBError)
+			return nil, errors.DBError
+		}
+		// corporation not found user is personal
+		if !p.Gender.IsValid() || p.Gender == aaa.NotSpecifiedGender {
+			return nil, errors.GenderInvalid
+		}
+		cu.Gender = p.Gender
+	} else { // user is corporation
+		if p.LegalName == "" {
+			return nil, errors.LegalEmptyErr
+		}
+		p.corporation = cc
+		p.corporation.LegalName = p.LegalName
+		p.corporation.EconomicCode = stringToNullString(p.EconomicCode)
+		p.corporation.LegalRegister = stringToNullString(p.LegalRegister)
+
+		e = m.UpdateCorporation(p.corporation)
 		if e != nil {
-			return nil, t9e.G("personal userPayload not allowed to update corporate account")
+			xlog.Get(ctx).Error("update user corporation: ", e)
+			return nil, errors.UpdateCorporationErr
 		}
 	}
 
@@ -74,28 +93,14 @@ func (c *Controller) edit(ctx context.Context, r *http.Request, p *userPayload) 
 	cu.FirstName = p.FirstName
 	cu.LastName = p.LastName
 	cu.Address = stringToNullString(p.Address)
-	cu.Gender = p.Gender
 	cu.SSN = stringToNullString(p.SSN)
 	cu.UpdatedAt = time.Now()
 
 	e = m.UpdateUser(cu)
 	if e != nil {
 		xlog.Get(ctx).Error("error message when updating user:", e)
-		return nil, t9e.G("error when updating user detail")
+		return nil, errors.UpdateUserErr
 	}
-
-	if p.LegalName != "" {
-		cc.LegalName = p.LegalName
-		cc.EconomicCode = stringToNullString(p.LegalName)
-		cc.LegalRegister = stringToNullString(p.LegalName)
-
-		e = m.UpdateCorporation(cc)
-		if e != nil {
-			xlog.Get(ctx).Error("update user corporation: ", e)
-			return nil, t9e.G("error when updating user detail")
-		}
-	}
-
 	return &ResponseLoginOK{
 		Token:   authz.MustGetToken(ctx),
 		Account: c.createUserResponse(cu, nil),
