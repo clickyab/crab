@@ -3,48 +3,6 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "strategy",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the title field",
-				"in": "query",
-				"name": "title",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the owner_email field",
-				"in": "query",
-				"name": "owner_email",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": " page number",
 				"in": "query",
 				"name": "p",
@@ -54,9 +12,23 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "kind",
+				"name": "status",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "exchange",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": " parameter for search",
@@ -82,7 +54,35 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "exchange",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the title field",
+				"in": "query",
+				"name": "title",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the owner_email field",
+				"in": "query",
+				"name": "owner_email",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "strategy",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
