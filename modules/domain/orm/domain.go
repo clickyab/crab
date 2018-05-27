@@ -41,24 +41,24 @@ type Domain struct {
 	Attributes  mysql.GenericJSONField `json:"attributes" db:"attributes"`
 	Status      DomainStatus           `json:"status" db:"status"`
 
-	TotalBudget  int64 `json:"total_budget" db:"total_budget"`
-	DailyBudget  int64 `json:"daily_budget" db:"daily_budget"`
-	WebNativeCPC int64 `json:"web_native_cpc" db:"web_native_cpc"`
-	WebBannerCPC int64 `json:"web_banner_cpc" db:"web_banner_cpc"`
-	WebVastCPC   int64 `json:"web_vast_cpc" db:"web_vast_cpc"`
-	AppNativeCPC int64 `json:"app_native_cpc" db:"app_native_cpc"`
-	AppBannerCPC int64 `json:"app_banner_cpc" db:"app_banner_cpc"`
-	AppVastCPC   int64 `json:"app_vast_cpc" db:"app_vast_cpc"`
-	WebCPC       int64 `json:"web_cpc" db:"web_cpc"`
-	AppCPC       int64 `json:"app_cpc" db:"app_cpc"`
-	WebNativeCPM int64 `json:"web_native_cpm" db:"web_native_cpm"`
-	WebBannerCPM int64 `json:"web_banner_cpm" db:"web_banner_cpm"`
-	WebVastCPM   int64 `json:"web_vast_cpm" db:"web_vast_cpm"`
-	AppNativeCPM int64 `json:"app_native_cpm" db:"app_native_cpm"`
-	AppBannerCPM int64 `json:"app_banner_cpm" db:"app_banner_cpm"`
-	AppVastCPM   int64 `json:"app_vast_cpm" db:"app_vast_cpm"`
-	WebCPM       int64 `json:"web_cpm" db:"web_cpm"`
-	AppCPM       int64 `json:"app_cpm" db:"app_cpm"`
+	MinTotalBudget  int64 `json:"min_total_budget" db:"min_total_budget"`
+	MinDailyBudget  int64 `json:"min_daily_budget" db:"min_daily_budget"`
+	MinWebNativeCPC int64 `json:"min_web_native_cpc" db:"min_web_native_cpc"`
+	MinWebBannerCPC int64 `json:"min_web_banner_cpc" db:"min_web_banner_cpc"`
+	MinWebVastCPC   int64 `json:"min_web_vast_cpc" db:"min_web_vast_cpc"`
+	MinAppNativeCPC int64 `json:"min_app_native_cpc" db:"min_app_native_cpc"`
+	MinAppBannerCPC int64 `json:"min_app_banner_cpc" db:"min_app_banner_cpc"`
+	MinAppVastCPC   int64 `json:"min_app_vast_cpc" db:"min_app_vast_cpc"`
+	MinWebCPC       int64 `json:"min_web_cpc" db:"min_web_cpc"`
+	MinAppCPC       int64 `json:"min_app_cpc" db:"min_app_cpc"`
+	MinWebNativeCPM int64 `json:"min_web_native_cpm" db:"min_web_native_cpm"`
+	MinWebBannerCPM int64 `json:"min_web_banner_cpm" db:"min_web_banner_cpm"`
+	MinWebVastCPM   int64 `json:"min_web_vast_cpm" db:"min_web_vast_cpm"`
+	MinAppNativeCPM int64 `json:"min_app_native_cpm" db:"min_app_native_cpm"`
+	MinAppBannerCPM int64 `json:"min_app_banner_cpm" db:"min_app_banner_cpm"`
+	MinAppVastCPM   int64 `json:"min_app_vast_cpm" db:"min_app_vast_cpm"`
+	MinWebCPM       int64 `json:"min_web_cpm" db:"min_web_cpm"`
+	MinAppCPM       int64 `json:"min_app_cpm" db:"min_app_cpm"`
 
 	Advantage int `json:"advantage" db:"advantage"`
 

@@ -62,6 +62,63 @@ func (p *createDomainPayload) Validate(ctx context.Context, w http.ResponseWrite
 		case "Status":
 			res["status"] = trans.E("invalid value")
 
+		case "MinTotalBudget":
+			res["min_total_budget"] = trans.E("invalid value")
+
+		case "MinDailyBudget":
+			res["min_daily_budget"] = trans.E("invalid value")
+
+		case "MinWebNativeCPC":
+			res["min_web_native_cpc"] = trans.E("invalid value")
+
+		case "MinWebBannerCPC":
+			res["min_web_banner_cpc"] = trans.E("invalid value")
+
+		case "MinWebVastCPC":
+			res["min_web_vast_cpc"] = trans.E("invalid value")
+
+		case "MinAppNativeCPC":
+			res["min_app_native_cpc"] = trans.E("invalid value")
+
+		case "MinAppBannerCPC":
+			res["min_app_banner_cpc"] = trans.E("invalid value")
+
+		case "MinAppVastCPC":
+			res["min_app_vast_cpc"] = trans.E("invalid value")
+
+		case "MinWebCPC":
+			res["min_web_cpc"] = trans.E("invalid value")
+
+		case "MinAppCPC":
+			res["min_app_cpc"] = trans.E("invalid value")
+
+		case "MinWebNativeCPM":
+			res["min_web_native_cpm"] = trans.E("invalid value")
+
+		case "MinWebBannerCPM":
+			res["min_web_banner_cpm"] = trans.E("invalid value")
+
+		case "MinWebVastCPM":
+			res["min_web_vast_cpm"] = trans.E("invalid value")
+
+		case "MinAppNativeCPM":
+			res["min_app_native_cpm"] = trans.E("invalid value")
+
+		case "MinAppBannerCPM":
+			res["min_app_banner_cpm"] = trans.E("invalid value")
+
+		case "MinAppVastCPM":
+			res["min_app_vast_cpm"] = trans.E("invalid value")
+
+		case "MinWebCPM":
+			res["min_web_cpm"] = trans.E("invalid value")
+
+		case "MinAppCPM":
+			res["min_app_cpm"] = trans.E("invalid value")
+
+		case "Advantage":
+			res["advantage"] = trans.E("invalid value")
+
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}
