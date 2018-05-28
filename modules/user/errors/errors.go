@@ -75,6 +75,14 @@ var (
 	UpdateUserErr error = t9e.G("error while updating user")
 	//GetUserManagerDbErr get user permissions error
 	GetUserManagerDbErr error = t9e.G("database error on get user managers")
+	// InvalidOrForbiddenRoleErr user select a role that is forbidden
+	InvalidOrForbiddenRoleErr error = t9e.G("Role not found or forbidden error, you can't assign this roles.")
+	// DbAddUserRoleErr error in add role to user
+	DbAddUserRoleErr error = t9e.G("database error in adding role for user")
+	// RegisterUserErr error in registering user
+	RegisterUserErr error = t9e.G("register user error")
+	// DuplicateEmailErr duplicate email
+	DuplicateEmailErr error = t9e.G("Duplicate email error")
 )
 
 // NotFoundError maker
