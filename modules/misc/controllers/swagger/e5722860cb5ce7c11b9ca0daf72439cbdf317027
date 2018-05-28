@@ -1,0 +1,17 @@
+{
+	"properties": {
+		"domain_status": {
+			"type": "string"
+		},
+		"logo": {
+			"type": "string"
+		},
+		"theme": {
+			"type": "string"
+		},
+		"title": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
