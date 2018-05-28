@@ -220,7 +220,7 @@
 		"/campaign/publisher-details/{id}/definition": "file://1bde1d09fe73a0231834cae00deee653c4a8e7fe",
 		"/campaign/status/{id}": "file://223510949e2939ced2aec20ba515fea32dca136c",
 		"/domain/change-domain-status/{id}": "file://448952a42c8b6d8e47c5195f9b76a7389b2ee013",
-		"/domain/config/{id}": "file://7a83c8ead2ec0ea23f7ce47552c2a6b4a71f5ec9",
+		"/domain/config/{name}": "file://ac639ea7e02f200eefdb68cd282223b0c6dbc628",
 		"/domain/create": "file://9fbd4df22ae607c2b1e17a03562847fe49a1e8a2",
 		"/domain/edit/{id}": "file://8e527e975ff410a03790814d45234f70b4c556e2",
 		"/domain/get/{id}": "file://01dcdc4f7ea82dc6eb00ef8c53c2d027c1c8545a",

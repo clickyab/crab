@@ -133,7 +133,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		// End route with key 3
 
 		/* Route {
-			"Route": "/config/:id",
+			"Route": "/config/:name",
 			"Method": "GET",
 			"Function": "Controller.getDomainConfigGet",
 			"RoutePkg": "controllers",
@@ -147,7 +147,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		} with key 4 */
 		m4 := append(groupMiddleware, []framework.Middleware{}...)
 
-		group.GET("controllers-Controller-getDomainConfigGet", "/config/:id", framework.Mix(c.getDomainConfigGet, m4...))
+		group.GET("controllers-Controller-getDomainConfigGet", "/config/:name", framework.Mix(c.getDomainConfigGet, m4...))
 		// End route with key 4
 
 		initializer.DoInitialize(c)
