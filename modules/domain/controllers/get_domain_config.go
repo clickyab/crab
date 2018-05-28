@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"net/http"
-	"strconv"
 
 	"clickyab.com/crab/modules/domain/errors"
 	"clickyab.com/crab/modules/domain/orm"
@@ -17,22 +16,19 @@ type domainConfig struct {
 	Title        string           `json:"title"`
 }
 
-// getDomainConfig get domain config by domain id
+// getDomainConfig get domain config by domain name
 // @Rest {
-// 		url = /config/:id
+// 		url = /config/:name
 // 		method = get
 // }
 func (c *Controller) getDomainConfig(ctx context.Context, r *http.Request) (*domainConfig, error) {
 	// get domain id from url params
-	domainID, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
-	if err != nil {
-		return nil, errors.InvalidIDErr
-	}
+	domainName := xmux.Param(ctx, "name")
 	// find domain
 	m := orm.NewOrmManager()
-	domainObj, err := m.FindDomainByID(domainID)
+	domainObj, err := m.FindDomainByDomainBase(domainName)
 	if err != nil {
-		return nil, errors.DomainNotFoundError(domainID)
+		return nil, errors.DomainNotFoundErrorByName(domainName)
 	}
 	res := &domainConfig{
 		Title:        domainObj.Title,

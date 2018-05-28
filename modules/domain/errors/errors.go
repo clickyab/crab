@@ -41,3 +41,12 @@ func DomainNotFoundError(id int64) error {
 
 	return t9e.G("domain not found, please check your request data.")
 }
+
+// DomainNotFoundErrorByName maker
+func DomainNotFoundErrorByName(domainBase string) error {
+	if len(domainBase) > 0 {
+		return t9e.G("domain with name %s not found, please check your request data.", domainBase)
+	}
+
+	return t9e.G("domain not found, please check your request data.")
+}
