@@ -3,6 +3,9 @@
 		"address": {
 			"type": "string"
 		},
+		"advantage": {
+			"type": "integer"
+		},
 		"attributes": {
 			"additionalProperties": {
 				"type": "string"
