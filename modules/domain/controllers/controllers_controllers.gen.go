@@ -77,7 +77,7 @@ func (c *Controller) editDomainPut(ctx context.Context, w http.ResponseWriter, r
 
 // getDomainDetail get domain detail by domain id
 // @Route {
-// 		url = /:id
+// 		url = /get/:id
 //		method = get
 //		middleware = authz.Authenticate
 //		resource = get_detail_domain:global
@@ -89,6 +89,23 @@ func (c *Controller) editDomainPut(ctx context.Context, w http.ResponseWriter, r
 func (c *Controller) getDomainDetailGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	res, err := c.getDomainDetail(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
+// getDomainConfig get domain config by domain id
+// @Route {
+// 		url = /config/:id
+//		method = get
+//		200 = domainConfig
+//		400 = controller.ErrorResponseSimple
+// }
+func (c *Controller) getDomainConfigGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getDomainConfig(ctx, r)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return
