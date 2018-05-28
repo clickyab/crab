@@ -16,7 +16,7 @@ import (
 
 // getDomainDetail get domain detail by domain id
 // @Rest {
-// 		url = /:id
+// 		url = /get/:id
 //		protected = true
 // 		method = get
 //		resource = get_detail_domain:global
