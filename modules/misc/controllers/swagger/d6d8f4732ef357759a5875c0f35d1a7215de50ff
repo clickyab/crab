@@ -3,6 +3,9 @@
 		"account_type": {
 			"type": "string"
 		},
+		"advantage": {
+			"type": "integer"
+		},
 		"corporation_info": {
 			"properties": {
 				"economic_code": {
@@ -35,8 +38,11 @@
 		"password": {
 			"type": "string"
 		},
-		"role_id": {
-			"type": "integer"
+		"roles_id": {
+			"items": {
+				"type": "integer"
+			},
+			"type": "array"
 		}
 	},
 	"type": "object"

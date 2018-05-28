@@ -1,6 +1,6 @@
 {
 	"post": {
-		"description": "register is for register user",
+		"description": "register is for register user, account_type can be : personal or corporation",
 		"parameters": [
 			{
 				"description": "the security token, get it from login route",

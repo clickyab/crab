@@ -1,0 +1,14 @@
+{
+	"properties": {
+		"economic_code": {
+			"type": "string"
+		},
+		"legal_name": {
+			"type": "string"
+		},
+		"legal_register": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

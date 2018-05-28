@@ -9,7 +9,7 @@ import (
 	"github.com/clickyab/services/framework"
 )
 
-// register is for register user
+// register is for register user, account_type can be : personal or corporation
 // @Route {
 // 		url = /whitelabel/add
 //		method = post
