@@ -96,9 +96,9 @@ func (c *Controller) getDomainDetailGet(ctx context.Context, w http.ResponseWrit
 	framework.Write(w, res, http.StatusOK)
 }
 
-// getDomainConfig get domain config by domain id
+// getDomainConfig get domain config by domain name
 // @Route {
-// 		url = /config/:id
+// 		url = /config/:name
 //		method = get
 //		200 = domainConfig
 //		400 = controller.ErrorResponseSimple

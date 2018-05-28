@@ -1,11 +1,11 @@
 {
 	"get": {
-		"description": "getDomainConfig get domain config by domain id",
+		"description": "getDomainConfig get domain config by domain name",
 		"parameters": [
 			{
 				"description": "",
 				"in": "path",
-				"name": "id",
+				"name": "name",
 				"required": true,
 				"type": "string"
 			}
