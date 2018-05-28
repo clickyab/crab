@@ -60,6 +60,12 @@
 		"legal_register": {
 			"type": "string"
 		},
+		"managers": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
 		"perms": {
 			"items": {
 				"type": "string"

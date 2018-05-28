@@ -10,6 +10,20 @@
 				"type": "string"
 			},
 			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
 				"name": "to",
@@ -24,25 +38,11 @@
 				"type": "int"
 			},
 			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
 				"name": "from",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",
