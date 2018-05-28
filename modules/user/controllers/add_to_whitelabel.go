@@ -2,38 +2,39 @@ package user
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
-
-	"github.com/clickyab/services/xlog"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/mailer"
+	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/mysql"
-	"github.com/clickyab/services/trans"
-	gom "github.com/go-sql-driver/mysql"
+	"github.com/clickyab/services/permission"
 )
 
 // @Validate {
 // }
 type addUserToWhitelabelPayload struct {
-	Email           string          `json:"email" validate:"email" error:"email is invalid"`
-	Password        string          `json:"password" validate:"gt=5" error:"password is too short"`
-	RoleID          int64           `json:"role_id" validate:"required" error:"role id is required"`
-	FirstName       string          `json:"first_name" validate:"required" error:"first name is invalid"`
-	LastName        string          `json:"last_name" validate:"required" error:"last name is invalid"`
-	Mobile          string          `json:"mobile" validate:"required,lt=15"`
-	AccountType     aaa.AccountType `json:"account_type" validate:"required"`
-	NotifyUser      bool            `json:"notify_user"`
-	CorporationInfo struct {
-		LegalName     string `json:"legal_name" validate:"omitempty"`
-		LegalRegister string `json:"legal_register" validate:"omitempty"`
-		EconomicCode  string `json:"economic_code" validate:"omitempty"`
-	} `json:"corporation_info" validate:"omitempty`
+	Email           string               `json:"email" validate:"email" error:"email is invalid"`
+	Password        string               `json:"password" validate:"gt=5" error:"password is too short"`
+	RolesID         []int64              `json:"roles_id" validate:"required" error:"roles id is required"`
+	FirstName       string               `json:"first_name" validate:"required" error:"first name is invalid"`
+	LastName        string               `json:"last_name" validate:"required" error:"last name is invalid"`
+	Mobile          string               `json:"mobile" validate:"required,lt=15"`
+	AccountType     aaa.AccountType      `json:"account_type" validate:"required"`
+	NotifyUser      bool                 `json:"notify_user"`
+	Advantage       int                  `json:"advantage" validate:"max=99,min=0" error:"should be in 0-99"`
+	CorporationInfo *CorporationInfoType `json:"corporation_info" validate:"omitempty"`
+}
+
+// CorporationInfoType corporation info type
+type CorporationInfoType struct {
+	LegalName     string `json:"legal_name"`
+	LegalRegister string `json:"legal_register"`
+	EconomicCode  string `json:"economic_code"`
 }
 
 func (l *addUserToWhitelabelPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
@@ -46,11 +47,10 @@ func (l *addUserToWhitelabelPayload) ValidateExtra(ctx context.Context, w http.R
 			return errors.InvalidCorporationLegalName
 		}
 	}
-
 	return nil
 }
 
-// register is for register user
+// register is for register user, account_type can be : personal or corporation
 // @Rest {
 // 		url = /whitelabel/add
 //		protected = true
@@ -60,12 +60,19 @@ func (l *addUserToWhitelabelPayload) ValidateExtra(ctx context.Context, w http.R
 func (c *Controller) registerToWhitelabel(ctx context.Context, r *http.Request, p *addUserToWhitelabelPayload) (*controller.NormalResponse, error) {
 	m := aaa.NewAaaManager()
 	d := domain.MustGetDomain(ctx)
+	currentUser := authz.MustGetUser(ctx)
+
+	_, ok := aaa.CheckPermOn(currentUser, currentUser, "add_to_whitelabel_user", d.ID, permission.ScopeGlobal)
+	if !ok {
+		return nil, errors.AccessDenied
+	}
 
 	user := aaa.User{
 		Email:     p.Email,
 		Password:  p.Password,
 		FirstName: p.FirstName,
 		LastName:  p.LastName,
+		Advantage: p.Advantage,
 		Status:    aaa.ActiveUserStatus,
 		Cellphone: mysql.NullString{String: p.Mobile, Valid: true},
 	}
@@ -77,34 +84,15 @@ func (c *Controller) registerToWhitelabel(ctx context.Context, r *http.Request, 
 		corp.EconomicCode = mysql.NullString{String: p.CorporationInfo.EconomicCode, Valid: (p.CorporationInfo.EconomicCode != "")}
 	}
 
-	_, err := m.FindRoleByIDAndDomain(p.RoleID, d.ID)
+	err := m.WhiteLabelAddUserRoles(ctx, &user, &corp, d.ID, p.RolesID)
 	if err != nil {
-		if err != sql.ErrNoRows {
-			xlog.GetWithError(ctx, err).Debug("can't find role id in add user to whitelabel route")
-		}
-		return nil, errors.InvalidRoleIDErr
+		return nil, err
 	}
-
-	err = m.RegisterUser(&user, &corp, d.ID, p.RoleID)
-	if err != nil {
-		mysqlError, ok := err.(*gom.MySQLError)
-		if !ok {
-			return nil, trans.E("error registering user")
-		}
-		if mysqlError.Number == 1062 {
-			return nil, trans.E("duplicate email %s", p.Email)
-		}
-
-		xlog.GetWithError(ctx, err).Debug("error in add new user to whitelabel route")
-		return nil, errors.DBError
-	}
-
 	if p.NotifyUser {
 		go func() {
 			err = mailer.LoginInfoEmail(&user, p.Password, r)
 			assert.Nil(err)
 		}()
 	}
-
 	return nil, nil
 }

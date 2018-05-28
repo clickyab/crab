@@ -6,9 +6,11 @@ import (
 
 	"strconv"
 
+	"database/sql"
 	"time"
 
 	domainOrm "clickyab.com/crab/modules/domain/orm"
+	"clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
@@ -17,7 +19,16 @@ import (
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/random"
+	"github.com/clickyab/services/xlog"
+	gom "github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
+
+	"context"
+)
+
+var forbiddenUserRoles = config.RegisterString("crab.modules.user.forbidden.roles",
+	"Admin,SuperAdmin,Owner",
+	"forbidden roles",
 )
 
 const manageablePerm = "can_manage"
@@ -592,4 +603,81 @@ func (m *Manager) FindUserManagers(userID int64, domainID int64) ([]*ManagerUser
 	)
 	_, err := m.GetRDbMap().Select(&res, q, userID, domainID)
 	return res, err
+}
+
+func getForbiddenRoles() []string {
+	return strings.Split(forbiddenUserRoles.String(), ",")
+}
+
+// FindRolesByDomainExclude find roles with id and domain exclude by name
+func (m *Manager) FindRolesByDomainExclude(roleIDs []int64, domainID int64, excludes ...string) ([]*Role, error) {
+	var res []*Role
+	var params []interface{}
+
+	for i := range roleIDs {
+		params = append(params, roleIDs[i])
+	}
+	params = append(params, domainID)
+	for i := range excludes {
+		params = append(params, excludes[i])
+	}
+	q := fmt.Sprintf(
+		"select %s from %s where id in (%s) and domain_id=? and name not in (%s)",
+		getSelectFields(RoleTableFull, ""),
+		RoleTableFull,
+		strings.TrimRight(strings.Repeat("?,", len(roleIDs)), ","),
+		strings.TrimRight(strings.Repeat("?,", len(excludes)), ","),
+	)
+	_, err := m.GetRDbMap().Select(&res, q, params...)
+	return res, err
+}
+
+// WhiteLabelAddUserRoles register user to whitelabel in a transaction
+func (m *Manager) WhiteLabelAddUserRoles(ctx context.Context, user *User, corp *Corporation, domainID int64, r []int64) error {
+	err := m.Begin()
+	assert.Nil(err)
+	defer func() {
+		if err != nil {
+			assert.Nil(m.Rollback())
+		} else {
+			assert.Nil(m.Commit())
+		}
+	}()
+	var roles []*Role
+	forbiddenRoles := getForbiddenRoles()
+	// validate if role ids is valid and not in forbidden keys
+	roles, err = m.FindRolesByDomainExclude(r, domainID, forbiddenRoles...)
+	if err != nil {
+		xlog.GetWithError(ctx, err).Debug("database error, can't find role id, or role is forbidden")
+		return errors.InvalidOrForbiddenRoleErr
+	}
+	// register user with first role item
+	registerRole := roles[0] // added to make code readable
+	err = m.RegisterUser(user, corp, domainID, registerRole.ID)
+	if err != nil {
+		mysqlError, ok := err.(*gom.MySQLError)
+		if !ok {
+			return errors.RegisterUserErr
+		}
+		if mysqlError.Number == 1062 {
+			return errors.DuplicateEmailErr
+		}
+		xlog.GetWithError(ctx, err).Debug("error in add new user to whitelabel route")
+		return errors.DBError
+	}
+	for i := 1; i < len(roles); i++ {
+		if err != nil {
+			if err != sql.ErrNoRows {
+				xlog.GetWithError(ctx, err).Debug("can't find role id in add user to whitelabel route")
+			}
+			return errors.InvalidRoleIDErr
+		}
+		ur := &RoleUser{RoleID: roles[i].ID, UserID: user.ID}
+		err = m.CreateRoleUser(ur)
+		if err != nil {
+			xlog.GetWithError(ctx, err).Debug("database error when add role to user")
+			return errors.DbAddUserRoleErr
+		}
+	}
+	return nil
 }
