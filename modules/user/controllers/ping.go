@@ -29,7 +29,7 @@ func (c *Controller) ping(ctx context.Context, r *http.Request) (*ResponseLoginO
 	}
 	res := &ResponseLoginOK{
 		Token:   authz.MustGetToken(ctx),
-		Account: c.createUserResponse(user, userPerms),
+		Account: c.createUserResponse(user, userPerms, nil),
 	}
 	if impersonatorToken != "" {
 		res.ImpersonatorToken = impersonatorToken

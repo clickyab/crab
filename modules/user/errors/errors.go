@@ -73,6 +73,8 @@ var (
 	UpdateCorporationErr error = t9e.G("error while updating user corporation")
 	// UpdateUserErr error while updating user
 	UpdateUserErr error = t9e.G("error while updating user")
+	//GetUserManagerDbErr get user permissions error
+	GetUserManagerDbErr error = t9e.G("database error on get user managers")
 )
 
 // NotFoundError maker

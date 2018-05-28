@@ -64,9 +64,11 @@ type userResponse struct {
 	Balance       int64                  `json:"balance"`
 	Attributes    mysql.GenericJSONField `json:"attributes,omitempty"`
 	Roles         []*aaa.Role            `json:"roles,omitempty"`
+	Managers      []*aaa.ManagerUser     `json:"managers,omitempty"`
+	Advantage     int                    `json:"advantage,omitempty"`
 }
 
-func (u Controller) createUserResponse(user *aaa.User, perms *[]string) userResponse {
+func (u Controller) createUserResponse(user *aaa.User, perms *[]string, managers []*aaa.ManagerUser) userResponse {
 	us := userResponse{}
 	us.ID = user.ID
 	us.Email = user.Email
@@ -81,6 +83,8 @@ func (u Controller) createUserResponse(user *aaa.User, perms *[]string) userResp
 	us.Balance = user.Balance
 	us.Perms = perms
 	us.Roles = user.Roles
+	us.Managers = managers
+	us.Advantage = user.Advantage
 	if user.Gender != aaa.NotSpecifiedGender {
 		us.Gender = user.Gender
 	}
@@ -109,6 +113,6 @@ func (u Controller) createLoginResponse(user *aaa.User) *ResponseLoginOK {
 	token := aaa.GetNewToken(user)
 	return &ResponseLoginOK{
 		Token:   token,
-		Account: u.createUserResponse(user, nil),
+		Account: u.createUserResponse(user, nil, nil),
 	}
 }

@@ -120,6 +120,14 @@ type Corporation struct {
 	EconomicCode  mysql.NullString `json:"economic_code" db:"economic_code"`
 }
 
+// ManagerUser user managers model in user response
+type ManagerUser struct {
+	ID        int64  `json:"id" db:"id"`
+	FirstName string `json:"first_name" db:"first_name"`
+	LastName  string `json:"last_name" db:"last_name"`
+	Email     string `json:"email" db:"email"`
+}
+
 // RegisterUserWrapper register new user
 func (m *Manager) RegisterUserWrapper(user *User, corp *Corporation, domainID, roleID int64) error {
 	err := m.Begin()
@@ -569,5 +577,19 @@ func (m *Manager) FindRolePermByName(name string, domain string) ([]RolePermissi
 		RolePermissionTableFull,
 		domainOrm.DomainTableFull)
 	_, err := m.GetRDbMap().Select(&res, q, name, domain)
+	return res, err
+}
+
+// FindUserManagers find managers of a user with user id and domain
+func (m *Manager) FindUserManagers(userID int64, domainID int64) ([]*ManagerUser, error) {
+	var res []*ManagerUser
+	q := fmt.Sprintf(`
+	select u.email, u.first_name, u.last_name, u.id from %s as u
+	inner join %s a on u.id = a.advisor_id
+	where a.user_id = ? and a.domain_id=?`,
+		UserTableFull,
+		AdvisorTableFull,
+	)
+	_, err := m.GetRDbMap().Select(&res, q, userID, domainID)
 	return res, err
 }

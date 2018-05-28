@@ -32,6 +32,6 @@ func (c *Controller) checkForgetCode(ctx context.Context, r *http.Request, p *fo
 	assert.Nil(e)
 	return &ResponseLoginOK{
 		Token:   s,
-		Account: c.createUserResponse(u, nil),
+		Account: c.createUserResponse(u, nil, nil),
 	}, nil
 }
