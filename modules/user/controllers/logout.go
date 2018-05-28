@@ -46,7 +46,7 @@ func (c *Controller) closeSession(ctx context.Context, r *http.Request) (*Respon
 		assert.Nil(err)
 		res := &ResponseLoginOK{
 			Token:   impersonatorToken,
-			Account: c.createUserResponse(user, userPerms),
+			Account: c.createUserResponse(user, userPerms, nil),
 		}
 		return res, nil
 	}

@@ -33,13 +33,19 @@ func (c *Controller) getUserDetail(ctx context.Context, r *http.Request) (*userR
 	if err != nil {
 		return nil, errors.InvalidIDErr
 	}
+	m := aaa.NewAaaManager()
 	// find user
-	userObj, err := aaa.NewAaaManager().FindUserByIDDomain(userID, userDomain.ID)
+	userObj, err := m.FindUserByIDDomain(userID, userDomain.ID)
 	if err != nil {
 		return nil, errors.NotFoundWithDomainError(userDomain.DomainBase)
 	}
+	// find user managers
+	managers, err := m.FindUserManagers(userObj.ID, userDomain.ID)
+	if err != nil {
+		return nil, errors.GetUserManagerDbErr
+	}
 	// load user roles into its model for current domain
 	userObj.SetUserRoles(userDomain.ID)
-	userRes := c.createUserResponse(userObj, nil)
+	userRes := c.createUserResponse(userObj, nil, managers)
 	return &userRes, nil
 }

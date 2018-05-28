@@ -59,7 +59,7 @@ func (c *Controller) startImpersonate(ctx context.Context, r *http.Request, p *s
 	}
 	result := &ResponseLoginOK{
 		Token:             targetToken,
-		Account:           c.createUserResponse(p.targetUser, userPerms),
+		Account:           c.createUserResponse(p.targetUser, userPerms, nil),
 		ImpersonatorToken: userToken,
 	}
 	return result, nil
