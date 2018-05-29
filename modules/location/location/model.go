@@ -85,7 +85,7 @@ func (m *Manager) FindAllByCityID(id int64) CityInfo {
 func (m *Manager) GetProvinceCities(province string) []City {
 	var res []City
 	q := fmt.Sprintf("SELECT %s FROM %s AS c WHERE province=?",
-		getSelectFields(CityTableFull, "c"),
+		GetSelectFields(CityTableFull, "c"),
 		CityTableFull,
 	)
 	_, err := m.GetRDbMap().Select(&res, q, province)

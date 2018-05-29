@@ -10,8 +10,8 @@ import (
 	gom "github.com/go-sql-driver/mysql"
 )
 
-// WhiteLabelEditUserRoles edit user to whitelabel in a transaction
-func WhiteLabelEditUserRoles(ctx context.Context, user *aaa.User, corp *aaa.Corporation, domainID int64, roles []*aaa.Role, managers []int64) error {
+// WhiteLabelEditUser edit user to whitelabel in a transaction
+func WhiteLabelEditUser(ctx context.Context, user *aaa.User, corp *aaa.Corporation, domainID int64, managers []int64) error {
 	m := aaa.NewAaaManager()
 	err := m.Begin()
 	assert.Nil(err)
@@ -35,14 +35,6 @@ func WhiteLabelEditUserRoles(ctx context.Context, user *aaa.User, corp *aaa.Corp
 			return errors.CorporationUpdateErr
 		}
 	}
-
-	//assign roles
-	err = m.AssignRoles(user.ID, domainID, roles...)
-	if err != nil {
-		xlog.GetWithError(ctx, errors.AssignManagersErr)
-		return errors.DbAddUserRoleErr
-	}
-
 	//assign managers
 	_, err = m.AssignManagers(user.ID, domainID, managers)
 	if err != nil {
@@ -53,8 +45,8 @@ func WhiteLabelEditUserRoles(ctx context.Context, user *aaa.User, corp *aaa.Corp
 	return nil
 }
 
-// WhiteLabelAddUserRoles register user to whitelabel in a transaction
-func WhiteLabelAddUserRoles(ctx context.Context, user *aaa.User, corp *aaa.Corporation, domainID int64, roles []*aaa.Role) error {
+// WhiteLabelAddUser register user to whitelabel in a transaction
+func WhiteLabelAddUser(ctx context.Context, user *aaa.User, corp *aaa.Corporation, domainID int64, role *aaa.Role) error {
 	m := aaa.NewAaaManager()
 	err := m.Begin()
 	assert.Nil(err)
@@ -66,9 +58,7 @@ func WhiteLabelAddUserRoles(ctx context.Context, user *aaa.User, corp *aaa.Corpo
 		}
 	}()
 
-	// register user with first role item
-	registerRole := roles[0] // added to make code readable
-	err = m.RegisterUser(user, corp, domainID, registerRole.ID)
+	err = m.RegisterUser(user, corp, domainID, role.ID)
 	if err != nil {
 		mysqlError, ok := err.(*gom.MySQLError)
 		if !ok {
@@ -79,14 +69,6 @@ func WhiteLabelAddUserRoles(ctx context.Context, user *aaa.User, corp *aaa.Corpo
 		}
 		xlog.GetWithError(ctx, err).Debug("error in add new user to whitelabel route")
 		return errors.DBError
-	}
-	if len(roles) > 1 {
-		roles = roles[1:]
-		err = m.AddRolesToUser(user.ID, roles...)
-		if err != nil {
-			xlog.GetWithError(ctx, err).Debug("database error when add role to user")
-			return errors.DbAddUserRoleErr
-		}
 	}
 	return nil
 }

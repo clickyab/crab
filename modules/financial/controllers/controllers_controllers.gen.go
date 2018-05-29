@@ -15,7 +15,7 @@ import (
 //		method = post
 //		payload = addGatewayPayload
 //		middleware = authz.Authenticate
-//		resource = add_gateway:global
+//		resource = add_gateway:superGlobal
 //		200 = orm.Gateway
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
@@ -37,7 +37,7 @@ func (c *Controller) addGatewayPost(ctx context.Context, w http.ResponseWriter, 
 //		method = post
 //		payload = initPaymentPayload
 //		middleware = authz.Authenticate
-//		resource = make_payment:self
+//		resource = make_online_payment:self
 //		200 = payment.InitPaymentResp
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
@@ -102,7 +102,7 @@ func (c *Controller) billingListGet(ctx context.Context, w http.ResponseWriter, 
 //		method = put
 //		payload = editGatewayPayload
 //		middleware = authz.Authenticate
-//		resource = edit_gateway:global
+//		resource = edit_gateway:superGlobal
 //		200 = orm.Gateway
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
@@ -142,11 +142,9 @@ func (c *Controller) getGatewaysGet(ctx context.Context, w http.ResponseWriter, 
 // 		url = /gateways/:id
 //		method = get
 //		middleware = authz.Authenticate
-//		resource = god:global
 //		200 = orm.Gateway
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
-//		403 = controller.ErrorResponseSimple
 // }
 func (c *Controller) getGatewayGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
@@ -163,7 +161,7 @@ func (c *Controller) getGatewayGet(ctx context.Context, w http.ResponseWriter, r
 // 		url = /payment/:id
 //		method = get
 //		middleware = authz.Authenticate
-//		resource = make_payment:self
+//		resource = get_online_transaction:self
 //		200 = orm.OnlinePayment
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
@@ -206,7 +204,7 @@ func (c *Controller) manualChangeCashPut(ctx context.Context, w http.ResponseWri
 // 		url = /gateways/:id
 //		method = patch
 //		middleware = authz.Authenticate
-//		resource = set_default_gateway:global
+//		resource = set_default_gateway:superGlobal
 //		200 = orm.Gateway
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple

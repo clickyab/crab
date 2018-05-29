@@ -3,12 +3,10 @@ package aaa
 import (
 	"fmt"
 
-	"strings"
-
-	"strconv"
-
+	"clickyab.com/crab/modules/domain/orm"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/permission"
+	"github.com/sirupsen/logrus"
 )
 
 // Has check for pern
@@ -31,106 +29,145 @@ func (u *User) Has(scope permission.UserScope, p permission.Token, d int64) (per
 		}
 		fallthrough
 	case permission.ScopeGlobal:
-		if u.resource[permission.ScopeGlobal][perm] || u.resource[scope][string(permission.God)] {
+		if u.resource[permission.ScopeGlobal][perm] {
 			rScope = permission.ScopeGlobal
 			permGranted = true
 		}
+		fallthrough
+	case permission.ScopeSuperGlobal:
+		if u.resource[permission.ScopeSuperGlobal][perm] {
+			rScope = permission.ScopeSuperGlobal
+			permGranted = true
+		}
+
 	}
 
 	return rScope, permGranted
 }
 
 // HasOn check for entity perm
-func (u *User) HasOn(perm permission.Token, ownerID int64, parentIDs []int64, DomainID int64, scopes ...permission.UserScope) (permission.UserScope, bool) {
+func (u *User) HasOn(
+	perm permission.Token,
+	ownerID int64,
+	DomainID int64,
+	checkLevel bool,
+	preventSelf bool,
+	scopes ...permission.UserScope) (permission.UserScope, bool) {
+	if preventSelf && ownerID == u.ID {
+		return permission.ScopeSelf, false
+	}
 	permission.Registered(perm)
 	u.setUserPermissions(DomainID)
 	var (
-		self, global bool
+		self, global, superGlobal bool
 	)
 	if len(scopes) == 0 {
 		self = true
 		global = true
+		superGlobal = true
 	} else {
 		for i := range scopes {
 			if scopes[i] == permission.ScopeSelf {
 				self = true
 			} else if scopes[i] == permission.ScopeGlobal {
 				global = true
+			} else if scopes[i] == permission.ScopeSuperGlobal {
+				superGlobal = true
 			}
 		}
 	}
+	owner, err := NewAaaManager().FindUserByID(ownerID)
+	assert.Nil(err)
+	owner.setUserParents(DomainID)
+	owner.setUserPermissions(DomainID)
 	if self {
 		if ownerID == u.ID {
 			if u.resource[permission.ScopeSelf][string(perm)] {
 				return permission.ScopeSelf, true
 			}
-		} else { //check parents
-			for i := range parentIDs {
-				if parentIDs[i] == u.ID {
-					return permission.ScopeSelf, true
+		} else { //check Parents
+			for i := range owner.Parents {
+				if owner.Parents[i] == u.ID {
+					var l = true
+					if checkLevel {
+						l = u.Role.Level > owner.Role.Level
+					}
+					if owner.resource[permission.ScopeSelf][string(perm)] && l {
+						return permission.ScopeSelf, true
+					}
+
 				}
 			}
 		}
 	}
 
 	if global {
-		if u.resource[permission.ScopeGlobal][string(perm)] || u.resource[permission.ScopeGlobal]["god"] {
+		var l = true
+		if checkLevel {
+			l = u.Role.Level > owner.Role.Level
+		}
+		if u.resource[permission.ScopeGlobal][string(perm)] && NewAaaManager().CheckUserDomain(ownerID, DomainID) && l {
+
 			return permission.ScopeGlobal, true
+		}
+
+	}
+	if superGlobal {
+		if u.resource[permission.ScopeSuperGlobal][string(perm)] {
+			return permission.ScopeSuperGlobal, true
 		}
 	}
 	return permission.ScopeSelf, false
 }
 
-func (u *User) getUserRoles(DomainID int64) []*Role {
-	var roles []*Role
-	query := fmt.Sprintf("SELECT %[3]s FROM %[1]s INNER JOIN %[2]s ON %[2]s.role_id=roles.id WHERE %[2]s.user_id=? AND %[1]s.domain_id=?",
+func (u *User) getUserRole(DomainID int64) *Role {
+	logrus.Warn(DomainID)
+	var role *Role
+	var where = "WHERE domain_id IS NULL"
+	var params []interface{}
+	params = append(params, u.ID)
+	if !u.DomainLess {
+		where = "WHERE domain_id=?"
+		params = append(params, DomainID)
+	}
+	logrus.Warn(params)
+	query := fmt.Sprintf("SELECT %s FROM %s AS r INNER JOIN %s AS du ON (du.role_id=r.id AND du.user_id=?) %s",
+		GetSelectFields(RoleTableFull, "r"),
 		RoleTableFull,
-		RoleUserTableFull,
-		getSelectFields(RoleTableFull, "roles"),
+		orm.DomainUserTableFull,
+		where,
 	)
 
-	_, err := NewAaaManager().GetRDbMap().Select(&roles, query, u.ID, DomainID)
+	err := NewAaaManager().GetRDbMap().SelectOne(&role, query, params...)
 	assert.Nil(err)
-	return roles
+	return role
 }
 
-// SetUserRoles set user roles
-func (u *User) SetUserRoles(DomainID int64) {
-	if len(u.Roles) == 0 {
-		u.Roles = u.getUserRoles(DomainID)
+// SetUserRole set user roles
+func (u *User) SetUserRole(DomainID int64) {
+	if u.Role == nil {
+		u.Role = u.getUserRole(DomainID)
 	}
 }
 
 func (u *User) getUserPermissions(DomainID int64) map[permission.UserScope]map[string]bool {
-	var roleIDs []string
 	var rolePerm []RolePermission
 	var resp = make(map[permission.UserScope]map[string]bool)
 	resp[permission.ScopeGlobal] = make(map[string]bool)
 	resp[permission.ScopeSelf] = make(map[string]bool)
-
-	if len(u.Roles) == 0 {
-		u.SetUserRoles(DomainID)
+	resp[permission.ScopeSuperGlobal] = make(map[string]bool)
+	u.SetUserRole(DomainID)
+	var where = "AND rp.scope=?"
+	if !u.DomainLess {
+		where = "AND rp.scope!=?"
 	}
-	roles := u.Roles
-
-	for i := range roles {
-		roleIDs = append(roleIDs, fmt.Sprintf("%d", roles[i].ID))
-	}
-
-	var ids string
-	if len(roleIDs) > 1 {
-		ids = strings.Join(roleIDs, ",")
-	} else {
-		ids = strconv.FormatInt(roles[0].ID, 10)
-	}
-
 	query := fmt.Sprintf(
-		`SELECT %s from %s WHERE role_id IN (%s)`,
-		getSelectFields(RolePermissionTableFull, ""),
+		`SELECT %s from %s AS rp WHERE rp.role_id=? %s`,
+		GetSelectFields(RolePermissionTableFull, "rp"),
 		RolePermissionTableFull,
-		ids,
+		where,
 	)
-	_, err := NewAaaManager().GetRDbMap().Select(&rolePerm, query)
+	_, err := NewAaaManager().GetRDbMap().Select(&rolePerm, query, u.Role.ID, permission.ScopeSuperGlobal)
 	assert.Nil(err)
 	for i := range rolePerm {
 		resp[rolePerm[i].Scope][rolePerm[i].Perm] = true
@@ -147,30 +184,21 @@ func (u *User) setUserPermissions(DomainID int64) {
 // GetChildesPerm get user childes based on perm
 func (u *User) GetChildesPerm(scope permission.UserScope, perm string, DomainID int64) []int64 {
 	if u.childes == nil {
-		u.childes = NewAaaManager().getUserChildesIDDomainPerm(u.ID, DomainID, scope, perm)
+		u.childes = NewAaaManager().getUserChildesIDPerAdviser(u.ID, DomainID, scope, perm)
 	}
 	return u.childes
 }
 
 // GetAllUserPerms return a slice of user permissions with scope
 func (u *User) GetAllUserPerms(domainID int64) (*[]string, error) {
-	var perms []*RolePermission
-	q := fmt.Sprintf(
-		"select rp.* from %s rp "+
-			"JOIN %s ro on rp.role_id = ro.id "+
-			"JOIN %s ru on ro.id = ru.role_id "+
-			"WHERE ru.user_id=? and ro.domain_id=?",
-		RolePermissionTableFull,
-		RoleTableFull,
-		RoleUserTableFull,
-	)
-	_, err := NewAaaManager().GetRDbMap().Select(&perms, q, u.ID, domainID)
-	if err != nil {
-		return nil, err
-	}
+	userPerms := u.getUserPermissions(domainID)
 	var res []string
-	for _, perm := range perms {
-		res = append(res, fmt.Sprintf("%s:%s", perm.Perm, perm.Scope))
+	for scope, perm := range userPerms {
+		for permName := range perm {
+			if perm[permName] {
+				res = append(res, fmt.Sprintf("%s:%s", permName, scope))
+			}
+		}
 	}
 	return &res, nil
 }

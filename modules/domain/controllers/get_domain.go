@@ -8,7 +8,6 @@ import (
 	"clickyab.com/crab/modules/domain/errors"
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/domain/orm"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/permission"
 	"github.com/rs/xmux"
@@ -25,7 +24,7 @@ func (c *Controller) getDomainDetail(ctx context.Context, r *http.Request) (*orm
 	userDomain := domain.MustGetDomain(ctx)
 	currentUser := authz.MustGetUser(ctx)
 	// check access
-	_, ok := aaa.CheckPermOn(currentUser, currentUser, "get_detail_domain", userDomain.ID, permission.ScopeGlobal)
+	_, ok := currentUser.HasOn("get_detail_domain", currentUser.ID, userDomain.ID, true, false, permission.ScopeGlobal)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

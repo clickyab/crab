@@ -36,11 +36,12 @@ func (c *Controller) register(ctx context.Context, r *http.Request, p *registerP
 	d := domain.MustGetDomain(ctx)
 
 	user := aaa.User{
-		Email:     p.Email,
-		Password:  p.Password,
-		FirstName: p.FirstName,
-		LastName:  p.LastName,
-		Cellphone: mysql.NullString{String: p.Mobile, Valid: true},
+		Email:      p.Email,
+		Password:   p.Password,
+		FirstName:  p.FirstName,
+		LastName:   p.LastName,
+		DomainLess: false,
+		Cellphone:  mysql.NullString{String: p.Mobile, Valid: true},
 	}
 
 	corp := aaa.Corporation{}
@@ -49,7 +50,7 @@ func (c *Controller) register(ctx context.Context, r *http.Request, p *registerP
 	}
 
 	db := aaa.NewAaaManager()
-	role, err := db.FindRoleByNameDomain(ucfg.DefaultRole.String(), d.ID)
+	role, err := db.FindRoleByName(ucfg.DefaultRole.String())
 	if err != nil {
 		return nil, errors.NotFoundRoleOfDomain(ucfg.DefaultRole.String(), d.ID)
 	}

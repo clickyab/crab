@@ -37,15 +37,32 @@
 				}
 			},
 			"403": {
-				"description": "",
+				"description": "forbidden, you have no access here",
 				"schema": {
-					"$ref": "#/definitions/controller_ErrorResponseSimple"
+					"properties": {
+						"error": {
+							"properties": {
+								"params": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								},
+								"text": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						}
+					},
+					"title": "forbidden",
+					"type": "object"
 				}
 			}
 		},
 		"security": {
 			"protected": true,
-			"resource": "god:global"
+			"resource": ""
 		},
 		"tags": [
 			"controllers"
@@ -97,7 +114,7 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "set_default_gateway:global"
+			"resource": "set_default_gateway:superGlobal"
 		},
 		"tags": [
 			"controllers"
@@ -158,7 +175,7 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "edit_gateway:global"
+			"resource": "edit_gateway:superGlobal"
 		},
 		"tags": [
 			"controllers"

@@ -51,7 +51,7 @@ func (m *Manager) ListSchedulesWithFilter(filter string, params ...interface{}) 
 	var res []Schedule
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(ScheduleTableFull, ""), ScheduleTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(ScheduleTableFull, ""), ScheduleTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListSchedulesWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(ScheduleTableFull, ""), ScheduleTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(ScheduleTableFull, ""), ScheduleTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindScheduleByID(id int64) (*Schedule, error) {
 	var res Schedule
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(ScheduleTableFull, ""), ScheduleTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(ScheduleTableFull, ""), ScheduleTableFull),
 		id,
 	)
 
@@ -133,7 +133,7 @@ func (m *Manager) FindScheduleByCampaignID(ci int64) (*Schedule, error) {
 	var res Schedule
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE campaign_id=?", getSelectFields(ScheduleTableFull, ""), ScheduleTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE campaign_id=?", GetSelectFields(ScheduleTableFull, ""), ScheduleTableFull),
 		ci,
 	)
 

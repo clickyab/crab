@@ -40,7 +40,7 @@ func (c Controller) getCreative(ctx context.Context, r *http.Request) (*orm.Crea
 		return nil, errors.InvalidIDErr
 	}
 
-	_, ok := aaa.CheckPermOn(currentOwner, currentUser, "get_creative", dm.ID)
+	_, ok := currentUser.HasOn("get_creative", currentOwner.ID, dm.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
@@ -50,11 +50,11 @@ func (c Controller) getCreative(ctx context.Context, r *http.Request) (*orm.Crea
 	if err != nil {
 		return nil, cErr.NotFoundError(currentCreative.CampaignID)
 	}
-	campiagnOwner, err := aaa.NewAaaManager().FindUserWithParentsByID(currentCampaign.UserID, dm.ID)
+	campaignOwner, err := aaa.NewAaaManager().FindUserWithParentsByID(currentCampaign.UserID, dm.ID)
 	if err != nil {
 		return nil, cErr.NotFoundError(currentCreative.CampaignID)
 	}
-	_, ok = aaa.CheckPermOn(campiagnOwner, currentUser, "get_creative", dm.ID)
+	_, ok = currentUser.HasOn("get_creative", campaignOwner.ID, dm.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

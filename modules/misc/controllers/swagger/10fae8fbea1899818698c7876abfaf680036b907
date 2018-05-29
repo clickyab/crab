@@ -47,7 +47,7 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "edit_campaign:self"
+			"resource": "create_campaign:self"
 		},
 		"tags": [
 			"controllers"

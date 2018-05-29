@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
+	"clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/errors"
 	"github.com/clickyab/services/gettext/t9e"
@@ -26,8 +27,17 @@ type loginPayload struct {
 // }
 func (c *Controller) login(ctx context.Context, r *http.Request, p *loginPayload) (*ResponseLoginOK, error) {
 	uDomain := domain.MustGetDomain(ctx)
-	currentUser, err := aaa.NewAaaManager().FindUserByEmailDomain(p.Email, uDomain)
-	if err != nil || bcrypt.CompareHashAndPassword([]byte(currentUser.Password), []byte(p.Password)) != nil {
+	currentUser, err := aaa.NewAaaManager().FindUserByEmail(p.Email)
+	if err != nil {
+
+	}
+	if !currentUser.DomainLess {
+		_, err := orm.NewOrmManager().FindActiveUserDomainByUserDomain(currentUser.ID, uDomain.ID)
+		if err != nil {
+			return nil, errors.AccessDenied
+		}
+	}
+	if bcrypt.CompareHashAndPassword([]byte(currentUser.Password), []byte(p.Password)) != nil {
 		return nil, errors.InvalidEmailPassError
 	}
 

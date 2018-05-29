@@ -51,7 +51,7 @@ func (m *Manager) ListAssetsWithFilter(filter string, params ...interface{}) []A
 	var res []Asset
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(AssetTableFull, ""), AssetTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(AssetTableFull, ""), AssetTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListAssetsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(AssetTableFull, ""), AssetTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(AssetTableFull, ""), AssetTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindAssetByID(id int64) (*Asset, error) {
 	var res Asset
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(AssetTableFull, ""), AssetTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(AssetTableFull, ""), AssetTableFull),
 		id,
 	)
 
@@ -133,7 +133,7 @@ func (m *Manager) FindAssetByCreativeID(ci int64) (*Asset, error) {
 	var res Asset
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE creative_id=?", getSelectFields(AssetTableFull, ""), AssetTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE creative_id=?", GetSelectFields(AssetTableFull, ""), AssetTableFull),
 		ci,
 	)
 

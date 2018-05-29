@@ -31,6 +31,8 @@ type listBase_publisher_statisticsDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
+	CheckLevel  bool               `json:"checklevel"`
+	PreventSelf bool               `json:"preventself"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
 	Columns     permission.Columns `json:"columns"`
@@ -152,7 +154,7 @@ func (u *Controller) defBase_publisher_statistics(ctx context.Context, w http.Re
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listBase_publisher_statisticsDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "created_at", Hash: hash, Columns: listBase_publisher_statisticsDefinition},
+		listBase_publisher_statisticsDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, CheckLevel: false, PreventSelf: false, DateFilter: "created_at", Hash: hash, Columns: listBase_publisher_statisticsDefinition},
 	)
 }
 

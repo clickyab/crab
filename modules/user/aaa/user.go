@@ -99,10 +99,11 @@ type User struct {
 	Balance     int64                                    `json:"balance" db:"balance"`
 	Attributes  mysql.GenericJSONField                   `json:"attributes" db:"attributes"`
 	Advantage   int                                      `json:"advantage" db:"advantage"`
+	DomainLess  bool                                     `json:"domain_less" db:"domain_less"`
 	Corporation *Corporation                             `json:"corporation, omitempty" db:"-"`
-	parents     []int64                                  `json:"-" db:"-"`
+	Parents     []int64                                  `json:"-" db:"-"`
 	childes     []int64                                  `json:"-" db:"-"`
-	Roles       []*Role                                  `db:"-"`
+	Role        *Role                                    `db:"-"`
 	resource    map[permission.UserScope]map[string]bool `db:"-"`
 	CreatedAt   time.Time                                `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time                                `json:"updated_at" db:"updated_at"`
@@ -165,12 +166,6 @@ func (m *Manager) RegisterUser(user *User, corp *Corporation, domainID, roleID i
 		return err
 	}
 
-	ur := &RoleUser{RoleID: roleID, UserID: user.ID}
-	err = m.CreateRoleUser(ur)
-	if err != nil {
-		return err
-	}
-
 	if corp != nil && corp.LegalName != "" {
 		corp.UserID = user.ID
 		err = m.CreateCorporation(corp)
@@ -187,34 +182,14 @@ func (m *Manager) RegisterUser(user *User, corp *Corporation, domainID, roleID i
 	}
 	du := &domainOrm.DomainUser{
 		UserID:   user.ID,
-		DomainID: domainID,
+		DomainID: mysql.NullInt64{Valid: domainID != 0, Int64: domainID},
+		RoleID:   roleID,
 		Status:   domainOrm.EnableDomainStatus,
 	}
 
 	err = dManager.CreateDomainUser(du)
 
 	return err
-}
-
-// FindRoleByNameDomain return the Role base on its name and domain
-func (m *Manager) FindRoleByNameDomain(n string, domainID int64) (*Role, error) {
-	var res Role
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf(
-			"SELECT %s FROM %s WHERE name=? AND domain_id=?",
-			getSelectFields(RoleTableFull, ""),
-			RoleTableFull,
-		),
-		n,
-		domainID,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
 }
 
 // FindRoleByIDAndDomain return the Role base on its name and domain
@@ -224,7 +199,7 @@ func (m *Manager) FindRoleByIDAndDomain(rID, domainID int64) (*Role, error) {
 		&res,
 		fmt.Sprintf(
 			"SELECT %s FROM %s WHERE id=? AND domain_id=?",
-			getSelectFields(RoleTableFull, ""),
+			GetSelectFields(RoleTableFull, ""),
 			RoleTableFull,
 		),
 		rID,
@@ -265,54 +240,6 @@ func ExtractUserID(token string) (int64, error) {
 	u := strings.Split(token, ":")[0]
 	id, err := strconv.ParseInt(u, 10, 0)
 	return id, err
-}
-
-// FindUserByAccessTokenDomain return the User base on its access_token and domain
-func (m *Manager) FindUserByAccessTokenDomain(at string, domainID int64) (*User, error) {
-	var res User
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf(
-			`SELECT %s FROM %s AS u
-			INNER JOIN %s AS dm ON dm.user_id=u.id
-			WHERE u.access_token=? AND dm.domain_id=?`,
-			getSelectFields(UserTableFull, "u"),
-			UserTableFull,
-			domainOrm.DomainUserTableFull,
-		),
-		at,
-		domainID,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
-}
-
-// FindUserByEmailDomain return the User base on its email an domain
-func (m *Manager) FindUserByEmailDomain(email string, domain *domainOrm.Domain) (*User, error) {
-	var res User
-	err := m.GetRDbMap().SelectOne(
-		&res,
-		fmt.Sprintf(
-			`SELECT %s FROM %s AS u 
-			INNER JOIN %s AS dm ON dm.user_id=u.id
-			WHERE u.email=? AND dm.domain_id=?`,
-			getSelectFields(UserTableFull, "u"),
-			UserTableFull,
-			domainOrm.DomainUserTableFull,
-		),
-		email,
-		domain.ID,
-	)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &res, nil
 }
 
 var allowOldPassword = config.RegisterBoolean("crab.user.allow_old_pass", true,
@@ -375,8 +302,8 @@ func (u *User) isOldPassword(p string) bool {
 
 // setUserParents try to get user parent for the specified domain
 func (u *User) setUserParents(d int64) {
-	if len(u.parents) == 0 {
-		u.parents = u.getUserParents(d)
+	if len(u.Parents) == 0 {
+		u.Parents = u.getUserParents(d)
 	}
 }
 
@@ -396,30 +323,16 @@ func (m *Manager) FindUserWithParentsByID(id, d int64) (*User, error) {
 	var res User
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s AS u WHERE u.id=?", getSelectFields(UserTableFull, "u"), UserTableFull),
+		fmt.Sprintf("SELECT %s FROM %s AS u WHERE u.id=?", GetSelectFields(UserTableFull, "u"), UserTableFull),
 		id,
 	)
 
 	if err != nil {
 		return nil, err
 	}
-	//fetch parents
+	//fetch Parents
 	res.setUserParents(d)
 	return &res, nil
-}
-
-// CheckPermOn has perm on wrapper to use inside controllers
-func CheckPermOn(owner *User, currentUser *User, perm permission.Token, domainID int64, scopes ...permission.UserScope) (permission.UserScope, bool) {
-	if currentUser.ID == owner.ID { //user is the owner
-		return owner.HasOn(perm, owner.ID, owner.parents, domainID, scopes...)
-	}
-	// user is not owner (check parent or global)
-	ownerResources := owner.resource
-	s, ok := currentUser.HasOn(perm, owner.ID, owner.parents, domainID)
-	if s == permission.ScopeSelf && ok {
-		return s, ownerResources[permission.ScopeSelf][string(perm)]
-	}
-	return s, ok
 }
 
 // UserSearchResult search result
@@ -451,7 +364,7 @@ func (m *Manager) FindUserByIDDomain(id, domainID int64) (*User, error) {
 		fmt.Sprintf(`SELECT %s FROM %s AS u
 			INNER JOIN %s AS du ON (du.user_id=u.id AND du.domain_id=? AND du.status=?)
 			WHERE u.id=?`,
-			getSelectFields(UserTableFull, "u"),
+			GetSelectFields(UserTableFull, "u"),
 			UserTableFull,
 			domainOrm.DomainUserTableFull,
 		),
@@ -465,21 +378,19 @@ func (m *Manager) FindUserByIDDomain(id, domainID int64) (*User, error) {
 	return &res, nil
 }
 
-// SearchAdvisorsByMailDomain search advisors by mail and domain
-func (m *Manager) SearchAdvisorsByMailDomain(mail string, d int64) []UserSearchResult {
+// SearchAccountByMailDomain search account by mail and domain
+func (m *Manager) SearchAccountByMailDomain(mail string, d int64) []UserSearchResult {
 	var res []UserSearchResult
 	var params []interface{}
 	q := fmt.Sprintf(`SELECT u.id,u.email FROM %s AS u 
 	INNER JOIN %s AS du ON (du.user_id=u.id AND du.domain_id=? AND du.status=?)
-	INNER JOIN %s AS ru ON ru.user_id=u.id 
-	INNER JOIN %s AS rp ON rp.role_id=ru.role_id
-	WHERE u.email LIKE ? AND rp.perm=? GROUP BY u.id`,
+	INNER JOIN %s AS r ON r.id=du.role_id
+	WHERE u.email LIKE ? AND r.name=? GROUP BY u.id`,
 		UserTableFull,
 		domainOrm.DomainUserTableFull,
-		RoleUserTableFull,
-		RolePermissionTableFull,
+		RoleTableFull,
 	)
-	params = append(params, d, domainOrm.EnableDomainStatus, "%"+mail+"%", manageablePerm)
+	params = append(params, d, domainOrm.EnableDomainStatus, "%"+mail+"%", ucfg.DefaultAccountRole.String())
 
 	_, err := m.GetRDbMap().Select(&res, q, params...)
 	assert.Nil(err)
@@ -492,13 +403,11 @@ func (m *Manager) FindManagersByIDsDomain(ids []int64, d int64) []*ManagerUser {
 	var params []interface{}
 	q := fmt.Sprintf(`SELECT u.id,u.first_name,u.last_name,u.email FROM %s AS u 
 	INNER JOIN %s AS du ON (du.user_id=u.id AND du.domain_id=? AND du.status=?)
-	INNER JOIN %s AS ru ON ru.user_id=u.id 
-	INNER JOIN %s AS rp ON rp.role_id=ru.role_id
-	WHERE u.id IN (%s) AND rp.perm=? GROUP BY u.id`,
+	INNER JOIN %s AS r ON r.id=du.role_id
+	WHERE u.id IN (%s) AND r.name=? GROUP BY u.id`,
 		UserTableFull,
 		domainOrm.DomainUserTableFull,
-		RoleUserTableFull,
-		RolePermissionTableFull,
+		RoleTableFull,
 		func() string {
 			return strings.TrimRight(strings.Repeat("?,", len(ids)), ",")
 		}(),
@@ -507,15 +416,15 @@ func (m *Manager) FindManagersByIDsDomain(ids []int64, d int64) []*ManagerUser {
 	for i := range ids {
 		params = append(params, ids[i])
 	}
-	params = append(params, manageablePerm)
+	params = append(params, ucfg.DefaultAccountRole.String())
 
 	_, err := m.GetRDbMap().Select(&res, q, params...)
 	assert.Nil(err)
 	return res
 }
 
-// deleteAdvisorsByUserID delete advisor by user id
-func (m *Manager) deleteAdvisorsByUserID(id, d int64) error {
+// deleteAdvisersByUserID delete advisor by user id
+func (m *Manager) deleteAdvisersByUserID(id, d int64) error {
 	// delete old managers
 	var err error
 	q := fmt.Sprintf(`DELETE FROM %s WHERE user_id=? AND domain_id=?`, AdvisorTableFull)
@@ -525,7 +434,7 @@ func (m *Manager) deleteAdvisorsByUserID(id, d int64) error {
 
 // AssignManagers assign managers to user
 func (m *Manager) AssignManagers(userID, d int64, managerIDs []int64) ([]*Advisor, error) {
-	err := m.deleteAdvisorsByUserID(userID, d)
+	err := m.deleteAdvisersByUserID(userID, d)
 	if err != nil {
 		return nil, errors.AssignManagersErr
 	}
@@ -564,7 +473,7 @@ func (m *Manager) FindRolePermByName(name string, domain string) ([]RolePermissi
 	q := fmt.Sprintf(`SELECT %s FROM %s AS r 
 	INNER JOIN %s AS rp ON rp.role_id=r.id  INNER JOIN %s AS d ON d.id=r.domain_id
 	WHERE r.name=? AND d.domain_base=?`,
-		getSelectFields(RolePermissionTableFull, "rp"),
+		GetSelectFields(RolePermissionTableFull, "rp"),
 		RoleTableFull,
 		RolePermissionTableFull,
 		domainOrm.DomainTableFull)
@@ -586,60 +495,49 @@ func (m *Manager) FindUserManagers(userID int64, domainID int64) ([]*ManagerUser
 	return res, err
 }
 
-// FindRolesByDomainExclude find roles with id and domain exclude by name
-func (m *Manager) FindRolesByDomainExclude(roleIDs []int64, domainID int64, excludes ...string) ([]*Role, error) {
-	var res []*Role
-	var params []interface{}
+// CheckUserDomain CheckUserDomain
+func (m *Manager) CheckUserDomain(userID, domainID int64) bool {
+	q := fmt.Sprintf("SELECT COUNT(du.id) FROM %s AS du WHERE du.user_id=? AND du.domain_id=?", domainOrm.DomainUserTableFull)
+	count, err := m.GetRDbMap().SelectInt(q, userID, domainID)
+	assert.Nil(err)
+	return count == 1
+}
 
-	for i := range roleIDs {
-		params = append(params, roleIDs[i])
-	}
-	params = append(params, domainID)
-	for i := range excludes {
-		params = append(params, excludes[i])
-	}
-	q := fmt.Sprintf(
-		"select %s from %s where id in (%s) and domain_id=? and name not in (%s)",
-		getSelectFields(RoleTableFull, ""),
+// CheckUserDomain CheckUserDomain
+func (m *Manager) GetDomainLessRoles() []*Role {
+	var res []*Role
+	q := fmt.Sprintf(`SELECT %s FROM %s AS r INNER JOIN %s AS du ON r.id=du.role_id WHERE du.domain_id IS NULL`,
+		GetSelectFields(RoleTableFull, "r"),
 		RoleTableFull,
-		strings.TrimRight(strings.Repeat("?,", len(roleIDs)), ","),
-		strings.TrimRight(strings.Repeat("?,", len(excludes)), ","),
+		domainOrm.DomainUserTableFull,
 	)
-	_, err := m.GetRDbMap().Select(&res, q, params...)
+	_, err := m.GetRDbMap().Select(&res, q)
+	assert.Nil(err)
+	return res
+}
+
+// CheckUserDomain CheckUserDomain
+func (m *Manager) FindRoleByIDDomain(roleID, domainID int64) (*Role, error) {
+	var res *Role
+	q := fmt.Sprintf(`SELECT %s FROM %s AS r INNER JOIN %s AS du ON r.id=du.role_id WHERE du.domain_id IS NULL`,
+		GetSelectFields(RoleTableFull, "r"),
+		RoleTableFull,
+		domainOrm.DomainUserTableFull,
+	)
+	err := m.GetRDbMap().SelectOne(&res, q)
 	return res, err
 }
 
-// AddRolesToUser add role to user
-func (m *Manager) AddRolesToUser(userID int64, roles ...*Role) error {
-	var err error
-	for i := range roles {
-		ur := &RoleUser{RoleID: roles[i].ID, UserID: userID}
-		err = m.CreateRoleUser(ur)
-		if err != nil {
-			return errors.DbAddUserRoleErr
-		}
-	}
-	return err
-}
-
-// deleteRoleUser delete role for user in specific domain
-func (m *Manager) deleteRoleUser(userID, domainID int64) error {
-	q := fmt.Sprintf(`DELETE %[1]s FROM %[1]s INNER JOIN %[2]s ON (%[2]s.id=%[1]s.role_id AND %[1]s.user_id=? AND %[2]s.domain_id=?)`,
-		RoleUserTableFull,
-		RoleTableFull,
+// FindUserActiveDomains FindUserActiveDomains
+func (u *User) FindUserActiveDomains() []domainOrm.Domain {
+	var res []domainOrm.Domain
+	q := fmt.Sprintf(`SELECT %s FROM %s AS d 
+	INNER JOIN %s AS du ON (du.domain_id=d.id AND du.user_id=?) WHERE d.status=?`,
+		domainOrm.GetSelectFields(domainOrm.DomainTableFull, "d"),
+		domainOrm.DomainTableFull,
+		domainOrm.DomainUserTableFull,
 	)
-	_, err := m.GetWDbMap().Exec(q, userID, domainID)
-	return err
-}
-
-// AssignRoles assign role to user
-func (m *Manager) AssignRoles(userID, domainID int64, roles ...*Role) error {
-	assert.True(m.InTransaction())
-	err := m.deleteRoleUser(userID, domainID)
-	if err != nil {
-		return err
-	}
-	// assign roles
-	err = m.AddRolesToUser(userID, roles...)
-	return err
+	_, err := NewAaaManager().GetRDbMap().Select(&res, q, u.ID, domainOrm.EnableDomainStatus)
+	assert.Nil(err)
+	return res
 }

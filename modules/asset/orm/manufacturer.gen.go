@@ -51,7 +51,7 @@ func (m *Manager) ListManufacturersWithFilter(filter string, params ...interface
 	var res []Manufacturer
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(ManufacturerTableFull, ""), ManufacturerTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(ManufacturerTableFull, ""), ManufacturerTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListManufacturersWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(ManufacturerTableFull, ""), ManufacturerTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(ManufacturerTableFull, ""), ManufacturerTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindManufacturerByName(n string) (*Manufacturer, error) {
 	var res Manufacturer
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(ManufacturerTableFull, ""), ManufacturerTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", GetSelectFields(ManufacturerTableFull, ""), ManufacturerTableFull),
 		n,
 	)
 

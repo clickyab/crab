@@ -109,7 +109,7 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "add_gateway:global"
+			"resource": "add_gateway:superGlobal"
 		},
 		"tags": [
 			"controllers"

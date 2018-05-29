@@ -27,7 +27,7 @@ type budgetPayload struct {
 }
 
 func (l *budgetPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	res, err := CheckUserCamapignDomain(ctx)
+	res, err := CheckUserCampaignDomain(ctx)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (c *Controller) budget(ctx context.Context, r *http.Request, p *budgetPaylo
 	db := orm.NewOrmManager()
 	token := authz.MustGetToken(ctx)
 	// check access
-	uScope, ok := aaa.CheckPermOn(p.baseData.owner, p.baseData.currentUser, "edit_budget", p.baseData.domain.ID)
+	uScope, ok := p.baseData.currentUser.HasOn("edit_budget", p.baseData.owner.ID, p.baseData.domain.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

@@ -67,7 +67,7 @@ func (ctrl *Controller) addPreset(ctx context.Context, r *http.Request, pl *addI
 	invManager := orm.NewOrmManager()
 	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(pl.currentInventory.UserID, pl.currentDomain.ID)
 	assert.Nil(err)
-	_, ok := aaa.CheckPermOn(owner, currentUser, "edit_inventory", pl.currentDomain.ID)
+	_, ok := currentUser.HasOn("edit_inventory", owner.ID, pl.currentDomain.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDeniedErr
 	}

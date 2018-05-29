@@ -33,6 +33,8 @@ type listCreativecampaignreportDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
+	CheckLevel  bool               `json:"checklevel"`
+	PreventSelf bool               `json:"preventself"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
 	Columns     permission.Columns `json:"columns"`
@@ -156,7 +158,7 @@ func (u *Controller) defCreativecampaignreport(ctx context.Context, w http.Respo
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listCreativecampaignreportDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "daily_id", Hash: hash, Columns: listCreativecampaignreportDefinition},
+		listCreativecampaignreportDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, CheckLevel: false, PreventSelf: false, DateFilter: "daily_id", Hash: hash, Columns: listCreativecampaignreportDefinition},
 	)
 }
 

@@ -27,9 +27,6 @@ const (
 	// RolePermissionTableFull is the RolePermission table name
 	RolePermissionTableFull = "role_permission"
 
-	// RoleUserTableFull is the RoleUser table name
-	RoleUserTableFull = "role_user"
-
 	// RoleTableFull is the Role table name
 	RoleTableFull = "roles"
 
@@ -37,7 +34,7 @@ const (
 	UserTableFull = "users"
 )
 
-func getSelectFields(tb string, alias string) string {
+func GetSelectFields(tb string, alias string) string {
 	if alias != "" {
 		alias += "."
 	}
@@ -58,14 +55,11 @@ func getSelectFields(tb string, alias string) string {
 	case RolePermissionTableFull:
 		return fmt.Sprintf(`%[1]sid,%[1]srole_id,%[1]sscope,%[1]sperm,%[1]screated_at,%[1]supdated_at`, alias)
 
-	case RoleUserTableFull:
-		return fmt.Sprintf(`%[1]suser_id,%[1]srole_id,%[1]screated_at`, alias)
-
 	case RoleTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]sname,%[1]sdescription,%[1]sdomain_id,%[1]screated_at,%[1]supdated_at`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]sname,%[1]slevel,%[1]sdescription,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case UserTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]semail,%[1]spassword,%[1]saccess_token,%[1]savatar,%[1]sstatus,%[1]sold_password,%[1]scity_id,%[1]sland_line,%[1]scellphone,%[1]spostal_code,%[1]sfirst_name,%[1]slast_name,%[1]saddress,%[1]sgender,%[1]sssn,%[1]sbalance,%[1]sattributes,%[1]sadvantage,%[1]screated_at,%[1]supdated_at`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]semail,%[1]spassword,%[1]saccess_token,%[1]savatar,%[1]sstatus,%[1]sold_password,%[1]scity_id,%[1]sland_line,%[1]scellphone,%[1]spostal_code,%[1]sfirst_name,%[1]slast_name,%[1]saddress,%[1]sgender,%[1]sssn,%[1]sbalance,%[1]sattributes,%[1]sadvantage,%[1]sdomain_less,%[1]screated_at,%[1]supdated_at`, alias)
 
 	}
 	return ""
@@ -135,15 +129,6 @@ func (m *Manager) Initialize() {
 	).SetKeys(
 		true,
 		"ID",
-	)
-
-	m.AddTableWithName(
-		RoleUser{},
-		RoleUserTableFull,
-	).SetKeys(
-		false,
-		"UserID",
-		"RoleID",
 	)
 
 	m.AddTableWithName(

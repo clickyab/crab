@@ -88,15 +88,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "c",
 			"Payload": "createNativePayload",
-			"Resource": "add_creative",
+			"Resource": "create_creative",
 			"Scope": "self"
 		} with key 2 */
 		m2 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("add_creative", "add_creative")
-		m2 = append(m2, authz.AuthorizeGenerator("add_creative", "self"))
+		permission.Register("create_creative", "create_creative")
+		m2 = append(m2, authz.AuthorizeGenerator("create_creative", "self"))
 
 		// Make sure payload is the last middleware
 		m2 = append(m2, middleware.PayloadUnMarshallerGenerator(createNativePayload{}))
@@ -116,14 +116,14 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecName": "c",
 			"Payload": "changeStatus",
 			"Resource": "change_creative_status",
-			"Scope": "global"
+			"Scope": "superGlobal"
 		} with key 3 */
 		m3 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("change_creative_status", "change_creative_status")
-		m3 = append(m3, authz.AuthorizeGenerator("change_creative_status", "global"))
+		m3 = append(m3, authz.AuthorizeGenerator("change_creative_status", "superGlobal"))
 
 		// Make sure payload is the last middleware
 		m3 = append(m3, middleware.PayloadUnMarshallerGenerator(changeStatus{}))
@@ -143,14 +143,14 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecName": "c",
 			"Payload": "changeStatusPayload",
 			"Resource": "change_creatives_status",
-			"Scope": "global"
+			"Scope": "superGlobal"
 		} with key 4 */
 		m4 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("change_creatives_status", "change_creatives_status")
-		m4 = append(m4, authz.AuthorizeGenerator("change_creatives_status", "global"))
+		m4 = append(m4, authz.AuthorizeGenerator("change_creatives_status", "superGlobal"))
 
 		// Make sure payload is the last middleware
 		m4 = append(m4, middleware.PayloadUnMarshallerGenerator(changeStatusPayload{}))

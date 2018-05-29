@@ -10,10 +10,10 @@ import (
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/domain/middleware/domain"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
+	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/safe"
 	"github.com/clickyab/services/xlog"
 )
@@ -111,13 +111,13 @@ type baseResult struct {
 // 		url = /create
 //		protected = true
 // 		method = post
-//		resource = edit_campaign:self
+//		resource = create_campaign:self
 // }
 func (c Controller) createBase(ctx context.Context, r *http.Request, p *createCampaignPayload) (*baseResult, error) {
 	d := domain.MustGetDomain(ctx)
 	token := authz.MustGetToken(ctx)
 	currentUser := authz.MustGetUser(ctx)
-	uScope, ok := aaa.CheckPermOn(currentUser, currentUser, "edit_campaign", d.ID)
+	uScope, ok := currentUser.HasOn("create_campaign", currentUser.ID, d.ID, false, false, permission.ScopeSelf)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

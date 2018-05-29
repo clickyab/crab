@@ -10,7 +10,6 @@ import (
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/location/location"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/array"
 	"github.com/clickyab/services/mysql"
@@ -32,7 +31,7 @@ type attributesPayload struct {
 }
 
 func (l *attributesPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	res, err := CheckUserCamapignDomain(ctx)
+	res, err := CheckUserCampaignDomain(ctx)
 	if err != nil {
 		return err
 	}
@@ -102,7 +101,7 @@ func (c *Controller) attributes(ctx context.Context, r *http.Request, p *attribu
 	db := orm.NewOrmManager()
 	token := authz.MustGetToken(ctx)
 	// check access
-	uScope, ok := aaa.CheckPermOn(p.baseData.owner, p.baseData.currentUser, "edit_attributes", p.baseData.domain.ID)
+	uScope, ok := p.baseData.currentUser.HasOn("edit_attributes", p.baseData.owner.ID, p.baseData.domain.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

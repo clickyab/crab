@@ -51,7 +51,7 @@ func (m *Manager) ListBankSnapsWithFilter(filter string, params ...interface{}) 
 	var res []BankSnap
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(BankSnapTableFull, ""), BankSnapTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(BankSnapTableFull, ""), BankSnapTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListBankSnapsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(BankSnapTableFull, ""), BankSnapTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(BankSnapTableFull, ""), BankSnapTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindBankSnapByID(id int64) (*BankSnap, error) {
 	var res BankSnap
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(BankSnapTableFull, ""), BankSnapTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(BankSnapTableFull, ""), BankSnapTableFull),
 		id,
 	)
 

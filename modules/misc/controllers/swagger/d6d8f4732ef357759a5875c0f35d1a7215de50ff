@@ -38,11 +38,8 @@
 		"password": {
 			"type": "string"
 		},
-		"roles_id": {
-			"items": {
-				"type": "integer"
-			},
-			"type": "array"
+		"role_id": {
+			"type": "integer"
 		}
 	},
 	"type": "object"

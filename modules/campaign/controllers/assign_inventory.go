@@ -27,7 +27,7 @@ type assignInventoryPayload struct {
 }
 
 func (pl *assignInventoryPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	res, err := CheckUserCamapignDomain(ctx)
+	res, err := CheckUserCampaignDomain(ctx)
 	if err != nil {
 		return err
 	}
@@ -62,7 +62,7 @@ func (pl *assignInventoryPayload) ValidateExtra(ctx context.Context, w http.Resp
 func (c Controller) assignInventory(ctx context.Context, r *http.Request, p *assignInventoryPayload) (*orm.Campaign, error) {
 	token := authz.MustGetToken(ctx)
 	// check perm for campaign entity
-	uScope, ok := aaa.CheckPermOn(p.baseData.owner, p.baseData.currentUser, "edit_campaign", p.baseData.domain.ID)
+	uScope, ok := p.baseData.currentUser.HasOn("edit_campaign", p.baseData.owner.ID, p.baseData.domain.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
@@ -98,7 +98,7 @@ func (c Controller) assignInventory(ctx context.Context, r *http.Request, p *ass
 	}
 
 	//check perm for inventory entity
-	_, ok = aaa.CheckPermOn(invOwner, invOwner, "edit_inventory", p.baseData.domain.ID)
+	_, ok = p.baseData.currentUser.HasOn("edit_inventory", invOwner.ID, p.baseData.domain.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

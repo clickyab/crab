@@ -46,7 +46,7 @@ func (m *Manager) ListCampaignAttributesWithFilter(filter string, params ...inte
 	var res []CampaignAttributes
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CampaignAttributesTableFull, ""), CampaignAttributesTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(CampaignAttributesTableFull, ""), CampaignAttributesTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -94,7 +94,7 @@ func (m *Manager) ListCampaignAttributesWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CampaignAttributesTableFull, ""), CampaignAttributesTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(CampaignAttributesTableFull, ""), CampaignAttributesTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -112,7 +112,7 @@ func (m *Manager) FindCampaignAttributesByCampaignID(ci int64) (*CampaignAttribu
 	var res CampaignAttributes
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE campaign_id=?", getSelectFields(CampaignAttributesTableFull, ""), CampaignAttributesTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE campaign_id=?", GetSelectFields(CampaignAttributesTableFull, ""), CampaignAttributesTableFull),
 		ci,
 	)
 

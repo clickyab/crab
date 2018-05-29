@@ -188,15 +188,15 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "u",
 			"Payload": "",
-			"Resource": "publisher_list",
+			"Resource": "list_publisher",
 			"Scope": "self"
 		} with key 6 */
 		m6 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("publisher_list", "publisher_list")
-		m6 = append(m6, authz.AuthorizeGenerator("publisher_list", "self"))
+		permission.Register("list_publisher", "list_publisher")
+		m6 = append(m6, authz.AuthorizeGenerator("list_publisher", "self"))
 
 		group.GET("controllers-Controller-listPublisher", "/publisher/list", framework.Mix(ctrl.listPublisher, m6...))
 		// End route with key 6
@@ -213,15 +213,15 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "u",
 			"Payload": "",
-			"Resource": "publisher_list",
+			"Resource": "list_publisher",
 			"Scope": "self"
 		} with key 7 */
 		m7 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("publisher_list", "publisher_list")
-		m7 = append(m7, authz.AuthorizeGenerator("publisher_list", "self"))
+		permission.Register("list_publisher", "list_publisher")
+		m7 = append(m7, authz.AuthorizeGenerator("list_publisher", "self"))
 
 		group.GET("controllers-Controller-defPublisher", "/publisher/list/definition", framework.Mix(ctrl.defPublisher, m7...))
 		// End route with key 7
@@ -319,15 +319,15 @@ func (ctrl *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "ctrl",
 			"Payload": "createInventoryPayload",
-			"Resource": "add_inventory",
+			"Resource": "create_inventory",
 			"Scope": "self"
 		} with key 11 */
 		m11 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("add_inventory", "add_inventory")
-		m11 = append(m11, authz.AuthorizeGenerator("add_inventory", "self"))
+		permission.Register("create_inventory", "create_inventory")
+		m11 = append(m11, authz.AuthorizeGenerator("create_inventory", "self"))
 
 		// Make sure payload is the last middleware
 		m11 = append(m11, middleware.PayloadUnMarshallerGenerator(createInventoryPayload{}))

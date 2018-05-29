@@ -33,6 +33,8 @@ type listInvpublisherDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
+	CheckLevel  bool               `json:"checklevel"`
+	PreventSelf bool               `json:"preventself"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
 	Columns     permission.Columns `json:"columns"`
@@ -166,7 +168,7 @@ func (u *Controller) defInvpublisher(ctx context.Context, w http.ResponseWriter,
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listInvpublisherDefResponse{Checkable: true, SearchKey: "q", Multiselect: true, DateFilter: "created_at", Hash: hash, Columns: listInvpublisherDefinition},
+		listInvpublisherDefResponse{Checkable: true, SearchKey: "q", Multiselect: true, CheckLevel: false, PreventSelf: false, DateFilter: "created_at", Hash: hash, Columns: listInvpublisherDefinition},
 	)
 }
 

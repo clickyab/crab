@@ -9,7 +9,6 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
 )
 
@@ -39,13 +38,13 @@ func (p *startImpersonatePayload) ValidateExtra(ctx context.Context, w http.Resp
 // 		url = /start-impersonate
 //		protected = true
 // 		method = post
-// 		resource = impersonate_user:global
+// 		resource = impersonate_user:self
 // }
 func (c *Controller) startImpersonate(ctx context.Context, r *http.Request, p *startImpersonatePayload) (*ResponseLoginOK, error) {
 	currentUser := authz.MustGetUser(ctx)
 	userToken := authz.MustGetToken(ctx)
 	//check permission
-	_, ok := aaa.CheckPermOn(p.targetUser, currentUser, "impersonate_user", p.currentDomain.ID, permission.ScopeGlobal)
+	_, ok := currentUser.HasOn("impersonate_user", p.targetUser.ID, p.currentDomain.ID, true, true)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

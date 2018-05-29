@@ -1,0 +1,47 @@
+{
+	"get": {
+		"description": "getWhitelabelAssignRole get assign role for admin/owner",
+		"parameters": [
+			{
+				"description": "the security token, get it from login route",
+				"in": "header",
+				"name": "token",
+				"required": true,
+				"type": "string"
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/user_roleResp"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			},
+			"401": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			},
+			"403": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			}
+		},
+		"security": {
+			"protected": true,
+			"resource": "get_assign_admin_roles:global"
+		},
+		"tags": [
+			"user"
+		]
+	}
+}

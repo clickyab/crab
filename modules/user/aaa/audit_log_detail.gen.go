@@ -52,7 +52,7 @@ func (m *Manager) ListAuditLogDetailsWithFilter(filter string, params ...interfa
 	var res []AuditLogDetail
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(AuditLogDetailTableFull, ""), AuditLogDetailTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(AuditLogDetailTableFull, ""), AuditLogDetailTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -100,7 +100,7 @@ func (m *Manager) ListAuditLogDetailsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(AuditLogDetailTableFull, ""), AuditLogDetailTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(AuditLogDetailTableFull, ""), AuditLogDetailTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -118,7 +118,7 @@ func (m *Manager) FindAuditLogDetailByID(id int64) (*AuditLogDetail, error) {
 	var res AuditLogDetail
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(AuditLogDetailTableFull, ""), AuditLogDetailTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(AuditLogDetailTableFull, ""), AuditLogDetailTableFull),
 		id,
 	)
 

@@ -33,6 +33,8 @@ type listUsers_listDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
+	CheckLevel  bool               `json:"checklevel"`
+	PreventSelf bool               `json:"preventself"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
 	Columns     permission.Columns `json:"columns"`
@@ -51,7 +53,7 @@ var (
 //		_q_ = string , parameter for search
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
-//		resource = user_list:global
+//		resource = list_user:self
 //		_sort_ = string, the sort and order like id:asc or id:desc available column "balance","created_at"
 //		_status_ = string , filter the status field valid values are "registered","blocked","active"
 //		_full_name_ = string , search the full_name field
@@ -136,7 +138,7 @@ func (u *Controller) listUsers_list(ctx context.Context, w http.ResponseWriter, 
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
-	pc := permission.NewInterfaceComplete(usr, usr.ID, "user_list", "global", domain.ID)
+	pc := permission.NewInterfaceComplete(usr, usr.ID, "list_user", "self", domain.ID)
 	dt, cnt, err := m.FillUsers(pc, filter, from, to, search, params, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
@@ -162,7 +164,7 @@ func (u *Controller) listUsers_list(ctx context.Context, w http.ResponseWriter, 
 // @Route {
 // 		url = /list/definition
 //		method = get
-//		resource = user_list:global
+//		resource = list_user:self
 //		200 = listUsers_listDefResponse
 // }
 func (u *Controller) defUsers_list(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -171,7 +173,7 @@ func (u *Controller) defUsers_list(ctx context.Context, w http.ResponseWriter, r
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listUsers_listDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "created_at", Hash: hash, Columns: listUsers_listDefinition},
+		listUsers_listDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, CheckLevel: true, PreventSelf: true, DateFilter: "created_at", Hash: hash, Columns: listUsers_listDefinition},
 	)
 }
 

@@ -224,6 +224,27 @@ func (c *Controller) forgetPasswordPost(ctx context.Context, w http.ResponseWrit
 	framework.Write(w, res, http.StatusOK)
 }
 
+// getWhitelabelAssignRole get assign role for admin/owner
+// @Route {
+// 		url = /whitelabel/roles
+//		method = get
+//		middleware = authz.Authenticate
+//		resource = get_assign_admin_roles:global
+//		200 = roleResp
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) getWhitelabelAssignRoleGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getWhitelabelAssignRole(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // getUserDetail get user detail  by id
 // @Route {
 // 		url = /get/:id
@@ -406,7 +427,7 @@ func (c *Controller) searchMangerByMailPost(ctx context.Context, w http.Response
 //		method = post
 //		payload = startImpersonatePayload
 //		middleware = authz.Authenticate
-//		resource = impersonate_user:global
+//		resource = impersonate_user:self
 //		200 = ResponseLoginOK
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple

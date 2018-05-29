@@ -47,7 +47,7 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "impersonate_user:global"
+			"resource": "impersonate_user:self"
 		},
 		"tags": [
 			"user"

@@ -127,12 +127,12 @@ func (c Controller) editNativeCreative(ctx context.Context, r *http.Request, p *
 
 func checkEditPerm(ctx context.Context, p *editNativePayload) error {
 	// check creative perm
-	_, ok := aaa.CheckPermOn(p.CreativeOwner, p.CurrentUser, "edit_creative", p.CurrentDomain.ID)
+	_, ok := p.CurrentUser.HasOn("edit_creative", p.CreativeOwner.ID, p.CurrentDomain.ID, false, false)
 	if !ok {
 		return errors.AccessDenied
 	}
 	// check campaign perm
-	_, ok = aaa.CheckPermOn(p.CampaignOwner, p.CurrentUser, "edit_campaign", p.CurrentDomain.ID)
+	_, ok = p.CurrentUser.HasOn("edit_campaign", p.CampaignOwner.ID, p.CurrentDomain.ID, false, false)
 	if !ok {
 		return errors.AccessDenied
 	}

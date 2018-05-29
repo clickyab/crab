@@ -8,7 +8,6 @@ import (
 
 	"clickyab.com/crab/modules/domain/errors"
 	"clickyab.com/crab/modules/domain/orm"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
@@ -49,13 +48,18 @@ func (p *editDomainPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 // 		url = /edit/:id
 //		protected = true
 // 		method = put
-//		resource = god:global
+//		resource = edit_domain:superGlobal
 // }
 func (c *Controller) editDomain(ctx context.Context, r *http.Request, p *editDomainPayload) (*orm.Domain, error) {
 	currentUser := authz.MustGetUser(ctx)
 	currentDomain := domain.MustGetDomain(ctx)
 	// check permission
-	_, ok := aaa.CheckPermOn(currentUser, currentUser, "god", currentDomain.ID, permission.ScopeGlobal)
+	_, ok := currentUser.HasOn("edit_domain",
+		currentUser.ID,
+		currentDomain.ID,
+		false,
+		false,
+		permission.ScopeSuperGlobal)
 	if !ok {
 		return nil, errors.AccessDeniedErr
 	}

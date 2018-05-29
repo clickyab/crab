@@ -50,7 +50,7 @@ func (idt InventoryDataTable) Filter(u permission.Interface) InventoryDataTable 
 
 	res.Status = idt.Status
 
-	if _, ok := u.HasOn("edit_inventory", idt.OwnerID, idt.ParentIDs, idt.DomainID, permission.ScopeSelf, permission.ScopeGlobal); ok {
+	if _, ok := u.HasOn("edit_inventory", idt.OwnerID, idt.DomainID, false, false, permission.ScopeSelf, permission.ScopeGlobal); ok {
 		action = append(action, "edit")
 	}
 
