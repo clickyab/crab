@@ -16,7 +16,7 @@ import (
 //		payload = addUserToWhitelabelPayload
 //		middleware = authz.Authenticate
 //		resource = add_to_whitelabel_user:global
-//		200 = controller.NormalResponse
+//		200 = userResponse
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple
@@ -38,7 +38,7 @@ func (c *Controller) registerToWhitelabelPost(ctx context.Context, w http.Respon
 //		payload = editUserPayload
 //		middleware = authz.Authenticate
 //		resource = edit_user:global
-//		200 = editAdminResp
+//		200 = userResponse
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple

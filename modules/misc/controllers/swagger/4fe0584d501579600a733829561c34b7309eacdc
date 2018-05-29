@@ -39,6 +39,12 @@
 		"postal_code": {
 			"type": "string"
 		},
+		"roles_id": {
+			"items": {
+				"type": "integer"
+			},
+			"type": "array"
+		},
 		"ssn": {
 			"type": "string"
 		}

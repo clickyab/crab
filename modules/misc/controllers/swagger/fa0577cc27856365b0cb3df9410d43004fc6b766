@@ -30,7 +30,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/user_editAdminResp"
+					"$ref": "#/definitions/user_userResponse"
 				}
 			},
 			"400": {

@@ -12,6 +12,7 @@ import (
 	"clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/mailer"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"clickyab.com/crab/modules/user/services"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
@@ -69,9 +70,13 @@ func (p *addUserToWhitelabelPayload) ValidateExtra(ctx context.Context, w http.R
 	}
 	m := aaa.NewAaaManager()
 	// validate if role ids is valid and not in forbidden keys
-	roles, err := m.FindRolesByDomainExclude(p.RolesID, d.ID, getForbiddenRoles()...)
+	roles, err := m.FindRolesByDomainExclude(p.RolesID, d.ID, strings.Split(forbiddenUserRoles.String(), ",")...)
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug("database error, can't find role id, or role is forbidden")
+		return errors.InvalidOrForbiddenRoleErr
+	}
+
+	if len(roles) == 0 {
 		return errors.InvalidOrForbiddenRoleErr
 	}
 
@@ -87,8 +92,6 @@ func (p *addUserToWhitelabelPayload) ValidateExtra(ctx context.Context, w http.R
 //		resource = add_to_whitelabel_user:global
 // }
 func (c *Controller) registerToWhitelabel(ctx context.Context, r *http.Request, p *addUserToWhitelabelPayload) (*userResponse, error) {
-	m := aaa.NewAaaManager()
-
 	currentUser := authz.MustGetUser(ctx)
 
 	_, ok := aaa.CheckPermOn(currentUser, currentUser, "add_to_whitelabel_user", p.currentDomain.ID, permission.ScopeGlobal)
@@ -106,7 +109,7 @@ func (c *Controller) registerToWhitelabel(ctx context.Context, r *http.Request, 
 		Cellphone: mysql.NullString{String: p.Mobile, Valid: true},
 	}
 
-	err := m.WhiteLabelAddUserRoles(ctx, &user, p.corporation, p.currentDomain.ID, p.roles)
+	err := services.WhiteLabelAddUserRoles(ctx, &user, p.corporation, p.currentDomain.ID, p.roles)
 	if err != nil {
 		return nil, err
 	}
@@ -119,8 +122,4 @@ func (c *Controller) registerToWhitelabel(ctx context.Context, r *http.Request, 
 	user.Roles = p.roles
 	res := c.createUserResponse(&user, nil, nil)
 	return &res, nil
-}
-
-func getForbiddenRoles() []string {
-	return strings.Split(forbiddenUserRoles.String(), ",")
 }

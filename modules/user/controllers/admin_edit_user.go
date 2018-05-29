@@ -7,11 +7,14 @@ import (
 
 	"database/sql"
 
+	"strings"
+
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"clickyab.com/crab/modules/user/services"
 	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
@@ -48,7 +51,7 @@ func (p *editUserPayload) ValidateExtra(ctx context.Context, w http.ResponseWrit
 
 	// find roles
 	// validate if role ids is valid and not in forbidden keys
-	roles, err := m.FindRolesByDomainExclude(p.RolesID, dm.ID, getForbiddenRoles()...)
+	roles, err := m.FindRolesByDomainExclude(p.RolesID, dm.ID, strings.Split(forbiddenUserRoles.String(), ",")...)
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug("database error, can't find role id, or role is forbidden")
 		return errors.InvalidOrForbiddenRoleErr
@@ -99,7 +102,6 @@ func (c *Controller) adminEdit(ctx context.Context, r *http.Request, p *editUser
 	if !ok {
 		return nil, errors.AccessDenied
 	}
-	m := aaa.NewAaaManager()
 	p.owner.CityID = intToNullInt64(p.CityID)
 	p.owner.LandLine = stringToNullString(p.LandLine)
 	p.owner.Cellphone = stringToNullString(p.CellPhone)
@@ -114,7 +116,7 @@ func (c *Controller) adminEdit(ctx context.Context, r *http.Request, p *editUser
 		managerIDs = append(managerIDs, p.managers[i].ID)
 	}
 
-	err := m.WhiteLabelEditUserRoles(ctx, p.owner, p.userPayload.corporation, p.currentDomain.ID, p.roles, managerIDs)
+	err := services.WhiteLabelEditUserRoles(ctx, p.owner, p.userPayload.corporation, p.currentDomain.ID, p.roles, managerIDs)
 	if err != nil {
 		return nil, err
 	}

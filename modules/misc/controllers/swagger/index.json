@@ -157,7 +157,6 @@
 		"user_changeUserStatus": "file://85854eaa025a4d3647d9410715f73c46586ab8b5",
 		"user_checkMailPayload": "file://ed050dc843d3484b495ecf504aa772590c3f59aa",
 		"user_checkMailResponse": "file://0cb4bd529760dbb3183017eb0ef0cce6e42dfdbf",
-		"user_editAdminResp": "file://6430ddecfcf66c483d44a0f59a68aba41e47340b",
 		"user_editUserPayload": "file://4fe0584d501579600a733829561c34b7309eacdc",
 		"user_forgetCodePayload": "file://3b905536578d800158e388e8a6de04ad3dbdb45b",
 		"user_forgetPayload": "file://278252767381faac04ea52478750705a188ef3df",

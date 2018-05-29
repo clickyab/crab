@@ -13,7 +13,7 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
-func (l *addUserToWhitelabelPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+func (p *addUserToWhitelabelPayload) Validate(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	err := func(in interface{}) error {
 		if v, ok := in.(interface {
 			ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error
@@ -21,11 +21,11 @@ func (l *addUserToWhitelabelPayload) Validate(ctx context.Context, w http.Respon
 			return v.ValidateExtra(ctx, w, r)
 		}
 		return nil
-	}(l)
+	}(p)
 	if err != nil {
 		return err
 	}
-	errs := validator.New().Struct(l)
+	errs := validator.New().Struct(p)
 	if errs == nil {
 		return nil
 	}
@@ -289,6 +289,9 @@ func (p *editUserPayload) Validate(ctx context.Context, w http.ResponseWriter, r
 
 		case "Managers":
 			res["managers"] = trans.E("invalid value")
+
+		case "RolesID":
+			res["roles_id"] = trans.E("roles id is required")
 
 		default:
 			logrus.Panicf("the field %s is not translated", i)
