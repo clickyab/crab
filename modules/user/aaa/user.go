@@ -6,7 +6,6 @@ import (
 
 	"strconv"
 
-	"database/sql"
 	"time"
 
 	domainOrm "clickyab.com/crab/modules/domain/orm"
@@ -24,11 +23,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"context"
-)
-
-var forbiddenUserRoles = config.RegisterString("crab.modules.user.forbidden.roles",
-	"Admin,SuperAdmin,Owner",
-	"forbidden roles",
 )
 
 const manageablePerm = "can_manage"
@@ -497,10 +491,10 @@ func (m *Manager) SearchAdvisorsByMailDomain(mail string, d int64) []UserSearchR
 }
 
 // FindManagersByIDsDomain find managers by ids and domains
-func (m *Manager) FindManagersByIDsDomain(ids []int64, d int64) []int64 {
-	var res []int64
+func (m *Manager) FindManagersByIDsDomain(ids []int64, d int64) []*ManagerUser {
+	var res []*ManagerUser
 	var params []interface{}
-	q := fmt.Sprintf(`SELECT u.id FROM %s AS u 
+	q := fmt.Sprintf(`SELECT u.id,u.first_name,u.last_name,u.email FROM %s AS u 
 	INNER JOIN %s AS du ON (du.user_id=u.id AND du.domain_id=? AND du.status=?)
 	INNER JOIN %s AS ru ON ru.user_id=u.id 
 	INNER JOIN %s AS rp ON rp.role_id=ru.role_id
@@ -535,16 +529,7 @@ func (m *Manager) deleteAdvisorsByUserID(id, d int64) error {
 
 // AssignManagers assign managers to user
 func (m *Manager) AssignManagers(userID, d int64, managerIDs []int64) ([]*Advisor, error) {
-	err := m.Begin()
-	assert.Nil(err)
-	defer func() {
-		if err != nil {
-			assert.Nil(m.Rollback())
-		} else {
-			assert.Nil(m.Commit())
-		}
-	}()
-	err = m.deleteAdvisorsByUserID(userID, d)
+	err := m.deleteAdvisorsByUserID(userID, d)
 	if err != nil {
 		return nil, err
 	}
@@ -557,7 +542,7 @@ func (m *Manager) AssignManagers(userID, d int64, managerIDs []int64) ([]*Adviso
 	return res, nil
 }
 
-// assignManagers assign advisor to user
+// assignManagers assign advisers to user
 func (m *Manager) assignManagers(managerIDs []int64, d, userID int64) ([]*Advisor, error) {
 	var res []*Advisor
 	var err error
@@ -605,10 +590,6 @@ func (m *Manager) FindUserManagers(userID int64, domainID int64) ([]*ManagerUser
 	return res, err
 }
 
-func getForbiddenRoles() []string {
-	return strings.Split(forbiddenUserRoles.String(), ",")
-}
-
 // FindRolesByDomainExclude find roles with id and domain exclude by name
 func (m *Manager) FindRolesByDomainExclude(roleIDs []int64, domainID int64, excludes ...string) ([]*Role, error) {
 	var res []*Role
@@ -633,7 +614,7 @@ func (m *Manager) FindRolesByDomainExclude(roleIDs []int64, domainID int64, excl
 }
 
 // WhiteLabelAddUserRoles register user to whitelabel in a transaction
-func (m *Manager) WhiteLabelAddUserRoles(ctx context.Context, user *User, corp *Corporation, domainID int64, r []int64) error {
+func (m *Manager) WhiteLabelAddUserRoles(ctx context.Context, user *User, corp *Corporation, domainID int64, roles []*Role) error {
 	err := m.Begin()
 	assert.Nil(err)
 	defer func() {
@@ -643,14 +624,11 @@ func (m *Manager) WhiteLabelAddUserRoles(ctx context.Context, user *User, corp *
 			assert.Nil(m.Commit())
 		}
 	}()
-	var roles []*Role
-	forbiddenRoles := getForbiddenRoles()
-	// validate if role ids is valid and not in forbidden keys
-	roles, err = m.FindRolesByDomainExclude(r, domainID, forbiddenRoles...)
-	if err != nil {
-		xlog.GetWithError(ctx, err).Debug("database error, can't find role id, or role is forbidden")
+
+	if len(roles) == 0 {
 		return errors.InvalidOrForbiddenRoleErr
 	}
+
 	// register user with first role item
 	registerRole := roles[0] // added to make code readable
 	err = m.RegisterUser(user, corp, domainID, registerRole.ID)
@@ -665,19 +643,86 @@ func (m *Manager) WhiteLabelAddUserRoles(ctx context.Context, user *User, corp *
 		xlog.GetWithError(ctx, err).Debug("error in add new user to whitelabel route")
 		return errors.DBError
 	}
-	for i := 1; i < len(roles); i++ {
-		if err != nil {
-			if err != sql.ErrNoRows {
-				xlog.GetWithError(ctx, err).Debug("can't find role id in add user to whitelabel route")
-			}
-			return errors.InvalidRoleIDErr
-		}
-		ur := &RoleUser{RoleID: roles[i].ID, UserID: user.ID}
-		err = m.CreateRoleUser(ur)
+	if len(roles) > 1 {
+		roles = roles[1:]
+		err = m.addRolesToUser(user.ID, roles...)
 		if err != nil {
 			xlog.GetWithError(ctx, err).Debug("database error when add role to user")
 			return errors.DbAddUserRoleErr
 		}
 	}
 	return nil
+}
+
+func (m *Manager) addRolesToUser(userID int64, roles ...*Role) error {
+	var err error
+	for i := range roles {
+		ur := &RoleUser{RoleID: roles[i].ID, UserID: userID}
+		err = m.CreateRoleUser(ur)
+		if err != nil {
+			return err
+		}
+	}
+	return err
+}
+
+// WhiteLabelEditUserRoles edit user to whitelabel in a transaction
+func (m *Manager) WhiteLabelEditUserRoles(ctx context.Context, user *User, corp *Corporation, domainID int64, roles []*Role, managers []int64) error {
+	err := m.Begin()
+	assert.Nil(err)
+	defer func() {
+		if err != nil {
+			assert.Nil(m.Rollback())
+		} else {
+			assert.Nil(m.Commit())
+		}
+	}()
+
+	if len(roles) == 0 {
+		return errors.InvalidOrForbiddenRoleErr
+	}
+
+	err = m.UpdateUser(user)
+	if err != nil {
+		return errors.UserUpdateErr
+	}
+
+	//update corporation
+	if corp != nil {
+		err = m.UpdateCorporation(corp)
+		if err != nil {
+			return errors.CorporationUpdateErr
+		}
+	}
+
+	// delete role
+	err = m.DeleteRoleUser(user.ID, domainID)
+	if err != nil {
+		return errors.DbAddUserRoleErr
+	}
+
+	// assign roles
+	err = m.addRolesToUser(user.ID, roles...)
+	if err != nil {
+		xlog.GetWithError(ctx, err).Debug("database error when add role to user")
+		return errors.DbAddUserRoleErr
+	}
+
+	//assign managers
+	_, err = m.AssignManagers(user.ID, domainID, managers)
+	if err != nil {
+		return errors.AssignManagersErr
+	}
+
+	return nil
+}
+
+// DeleteRoleUser delete role for user in specific domain
+func (m *Manager) DeleteRoleUser(userID, domainID int64) error {
+	q := fmt.Sprintf(`DELETE %[1]s FROM %[1]s INNER JOIN %[2]s ON (%[2]s.id=%[1]s.role_id AND %[1]s.user_id=? AND %[2]s.domain_id=?)`,
+		RoleUserTableFull,
+		RoleTableFull,
+	)
+	_, err := m.GetWDbMap().Exec(q, userID, domainID)
+	return err
 }
