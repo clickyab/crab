@@ -9,7 +9,6 @@ import (
 
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/permission"
-	"github.com/sirupsen/logrus"
 )
 
 // Has check for pern
@@ -45,11 +44,6 @@ func (u *User) Has(scope permission.UserScope, p permission.Token, d int64) (per
 func (u *User) HasOn(perm permission.Token, ownerID int64, parentIDs []int64, DomainID int64, scopes ...permission.UserScope) (permission.UserScope, bool) {
 	permission.Registered(perm)
 	u.setUserPermissions(DomainID)
-
-	logrus.Debug(scopes)
-	logrus.Debug(u.resource)
-	logrus.Debug(perm)
-	logrus.Debug(DomainID)
 	var (
 		self, global bool
 	)
@@ -66,7 +60,6 @@ func (u *User) HasOn(perm permission.Token, ownerID int64, parentIDs []int64, Do
 		}
 	}
 	if self {
-		logrus.Debug("self")
 		if ownerID == u.ID {
 			if u.resource[permission.ScopeSelf][string(perm)] {
 				return permission.ScopeSelf, true
@@ -81,18 +74,20 @@ func (u *User) HasOn(perm permission.Token, ownerID int64, parentIDs []int64, Do
 	}
 
 	if global {
-		logrus.Debug("global")
 		if u.resource[permission.ScopeGlobal][string(perm)] || u.resource[permission.ScopeGlobal]["god"] {
 			return permission.ScopeGlobal, true
 		}
 	}
-	logrus.Debug("permission not valid")
 	return permission.ScopeSelf, false
 }
 
 func (u *User) getUserRoles(DomainID int64) []*Role {
 	var roles []*Role
-	query := fmt.Sprintf("SELECT roles.* FROM %[1]s INNER JOIN %[2]s ON %[2]s.role_id=roles.id WHERE %[2]s.user_id=? AND %[1]s.domain_id=?", RoleTableFull, RoleUserTableFull)
+	query := fmt.Sprintf("SELECT %[3]s FROM %[1]s INNER JOIN %[2]s ON %[2]s.role_id=roles.id WHERE %[2]s.user_id=? AND %[1]s.domain_id=?",
+		RoleTableFull,
+		RoleUserTableFull,
+		getSelectFields(RoleTableFull, "roles"),
+	)
 
 	_, err := NewAaaManager().GetRDbMap().Select(&roles, query, u.ID, DomainID)
 	assert.Nil(err)
