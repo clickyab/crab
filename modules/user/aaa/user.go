@@ -18,11 +18,7 @@ import (
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/random"
-	"github.com/clickyab/services/xlog"
-	gom "github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
-
-	"context"
 )
 
 const manageablePerm = "can_manage"
@@ -531,12 +527,12 @@ func (m *Manager) deleteAdvisorsByUserID(id, d int64) error {
 func (m *Manager) AssignManagers(userID, d int64, managerIDs []int64) ([]*Advisor, error) {
 	err := m.deleteAdvisorsByUserID(userID, d)
 	if err != nil {
-		return nil, err
+		return nil, errors.AssignManagersErr
 	}
 
 	res, err := m.assignManagers(managerIDs, d, userID)
 	if err != nil {
-		return nil, err
+		return nil, errors.AssignManagersErr
 	}
 
 	return res, nil
@@ -613,116 +609,37 @@ func (m *Manager) FindRolesByDomainExclude(roleIDs []int64, domainID int64, excl
 	return res, err
 }
 
-// WhiteLabelAddUserRoles register user to whitelabel in a transaction
-func (m *Manager) WhiteLabelAddUserRoles(ctx context.Context, user *User, corp *Corporation, domainID int64, roles []*Role) error {
-	err := m.Begin()
-	assert.Nil(err)
-	defer func() {
-		if err != nil {
-			assert.Nil(m.Rollback())
-		} else {
-			assert.Nil(m.Commit())
-		}
-	}()
-
-	if len(roles) == 0 {
-		return errors.InvalidOrForbiddenRoleErr
-	}
-
-	// register user with first role item
-	registerRole := roles[0] // added to make code readable
-	err = m.RegisterUser(user, corp, domainID, registerRole.ID)
-	if err != nil {
-		mysqlError, ok := err.(*gom.MySQLError)
-		if !ok {
-			return errors.RegisterUserErr
-		}
-		if mysqlError.Number == 1062 {
-			return errors.DuplicateEmailErr
-		}
-		xlog.GetWithError(ctx, err).Debug("error in add new user to whitelabel route")
-		return errors.DBError
-	}
-	if len(roles) > 1 {
-		roles = roles[1:]
-		err = m.addRolesToUser(user.ID, roles...)
-		if err != nil {
-			xlog.GetWithError(ctx, err).Debug("database error when add role to user")
-			return errors.DbAddUserRoleErr
-		}
-	}
-	return nil
-}
-
-func (m *Manager) addRolesToUser(userID int64, roles ...*Role) error {
+// AddRolesToUser add role to user
+func (m *Manager) AddRolesToUser(userID int64, roles ...*Role) error {
 	var err error
 	for i := range roles {
 		ur := &RoleUser{RoleID: roles[i].ID, UserID: userID}
 		err = m.CreateRoleUser(ur)
 		if err != nil {
-			return err
+			return errors.DbAddUserRoleErr
 		}
 	}
 	return err
 }
 
-// WhiteLabelEditUserRoles edit user to whitelabel in a transaction
-func (m *Manager) WhiteLabelEditUserRoles(ctx context.Context, user *User, corp *Corporation, domainID int64, roles []*Role, managers []int64) error {
-	err := m.Begin()
-	assert.Nil(err)
-	defer func() {
-		if err != nil {
-			assert.Nil(m.Rollback())
-		} else {
-			assert.Nil(m.Commit())
-		}
-	}()
-
-	if len(roles) == 0 {
-		return errors.InvalidOrForbiddenRoleErr
-	}
-
-	err = m.UpdateUser(user)
-	if err != nil {
-		return errors.UserUpdateErr
-	}
-
-	//update corporation
-	if corp != nil {
-		err = m.UpdateCorporation(corp)
-		if err != nil {
-			return errors.CorporationUpdateErr
-		}
-	}
-
-	// delete role
-	err = m.DeleteRoleUser(user.ID, domainID)
-	if err != nil {
-		return errors.DbAddUserRoleErr
-	}
-
-	// assign roles
-	err = m.addRolesToUser(user.ID, roles...)
-	if err != nil {
-		xlog.GetWithError(ctx, err).Debug("database error when add role to user")
-		return errors.DbAddUserRoleErr
-	}
-
-	//assign managers
-	_, err = m.AssignManagers(user.ID, domainID, managers)
-	if err != nil {
-		return errors.AssignManagersErr
-	}
-
-	return nil
-}
-
-// DeleteRoleUser delete role for user in specific domain
-func (m *Manager) DeleteRoleUser(userID, domainID int64) error {
+// deleteRoleUser delete role for user in specific domain
+func (m *Manager) deleteRoleUser(userID, domainID int64) error {
 	q := fmt.Sprintf(`DELETE %[1]s FROM %[1]s INNER JOIN %[2]s ON (%[2]s.id=%[1]s.role_id AND %[1]s.user_id=? AND %[2]s.domain_id=?)`,
 		RoleUserTableFull,
 		RoleTableFull,
 	)
 	_, err := m.GetWDbMap().Exec(q, userID, domainID)
+	return err
+}
+
+// AssignRoles assign role to user
+func (m *Manager) AssignRoles(userID, domainID int64, roles ...*Role) error {
+	assert.True(m.InTransaction())
+	err := m.deleteRoleUser(userID, domainID)
+	if err != nil {
+		return err
+	}
+	// assign roles
+	err = m.AddRolesToUser(userID, roles...)
 	return err
 }
