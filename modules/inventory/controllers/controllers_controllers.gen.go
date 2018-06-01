@@ -81,7 +81,7 @@ func (ctrl *Controller) inventoryChangeStatusPatch(ctx context.Context, w http.R
 //		method = post
 //		payload = createInventoryPayload
 //		middleware = authz.Authenticate
-//		resource = add_inventory:self
+//		resource = create_inventory:self
 //		200 = orm.Inventory
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple

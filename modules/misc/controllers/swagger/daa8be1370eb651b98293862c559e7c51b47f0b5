@@ -73,7 +73,7 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "campaign_daily:self"
+			"resource": "daily_campaign:self"
 		},
 		"tags": [
 			"controllers"

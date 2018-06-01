@@ -33,6 +33,8 @@ type listCampaignsDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
+	CheckLevel  bool               `json:"checklevel"`
+	PreventSelf bool               `json:"preventself"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
 	Columns     permission.Columns `json:"columns"`
@@ -51,7 +53,7 @@ var (
 //		_q_ = string , parameter for search
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
-//		resource = campaign_list:self
+//		resource = list_campaign:self
 //		_sort_ = string, the sort and order like id:asc or id:desc available column "title","status","kind","total_imp","total_click","ectr","ecpc","ecpm","total_spend","max_bid","conversion","total_budget","today_spend","created_at","start_at","end_at","today_ctr","today_imp","today_click","creative","owner_email","conversion_rate","cpa","strategy","exchange"
 //		_status_ = string , filter the status field valid values are "start","pause"
 //		_kind_ = string , filter the kind field valid values are "web","app"
@@ -136,7 +138,7 @@ func (u *Controller) listCampaigns(ctx context.Context, w http.ResponseWriter, r
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
-	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_list", "self", domain.ID)
+	pc := permission.NewInterfaceComplete(usr, usr.ID, "list_campaign", "self", domain.ID)
 	dt, cnt, err := m.FillCampaigns(pc, filter, from, to, search, params, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
@@ -162,7 +164,7 @@ func (u *Controller) listCampaigns(ctx context.Context, w http.ResponseWriter, r
 // @Route {
 // 		url = /list/definition
 //		method = get
-//		resource = campaign_list:self
+//		resource = list_campaign:self
 //		200 = listCampaignsDefResponse
 // }
 func (u *Controller) defCampaigns(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -171,7 +173,7 @@ func (u *Controller) defCampaigns(ctx context.Context, w http.ResponseWriter, r 
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listCampaignsDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "", Hash: hash, Columns: listCampaignsDefinition},
+		listCampaignsDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, CheckLevel: false, PreventSelf: false, DateFilter: "", Hash: hash, Columns: listCampaignsDefinition},
 	)
 }
 

@@ -52,7 +52,7 @@ func (m *Manager) ListCreativeRejectReasonsWithFilter(filter string, params ...i
 	var res []CreativeRejectReasons
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CreativeRejectReasonsTableFull, ""), CreativeRejectReasonsTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(CreativeRejectReasonsTableFull, ""), CreativeRejectReasonsTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -100,7 +100,7 @@ func (m *Manager) ListCreativeRejectReasonsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CreativeRejectReasonsTableFull, ""), CreativeRejectReasonsTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(CreativeRejectReasonsTableFull, ""), CreativeRejectReasonsTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -118,7 +118,7 @@ func (m *Manager) FindCreativeRejectReasonsByID(id int64) (*CreativeRejectReason
 	var res CreativeRejectReasons
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(CreativeRejectReasonsTableFull, ""), CreativeRejectReasonsTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(CreativeRejectReasonsTableFull, ""), CreativeRejectReasonsTableFull),
 		id,
 	)
 

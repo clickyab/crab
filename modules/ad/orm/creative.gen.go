@@ -51,7 +51,7 @@ func (m *Manager) ListCreativesWithFilter(filter string, params ...interface{}) 
 	var res []Creative
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CreativeTableFull, ""), CreativeTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(CreativeTableFull, ""), CreativeTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListCreativesWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CreativeTableFull, ""), CreativeTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(CreativeTableFull, ""), CreativeTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindCreativeByID(id int64) (*Creative, error) {
 	var res Creative
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(CreativeTableFull, ""), CreativeTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(CreativeTableFull, ""), CreativeTableFull),
 		id,
 	)
 
@@ -133,7 +133,7 @@ func (m *Manager) FindCreativeByCampaignID(ci int64) (*Creative, error) {
 	var res Creative
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE campaign_id=?", getSelectFields(CreativeTableFull, ""), CreativeTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE campaign_id=?", GetSelectFields(CreativeTableFull, ""), CreativeTableFull),
 		ci,
 	)
 

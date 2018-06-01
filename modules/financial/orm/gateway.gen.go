@@ -52,7 +52,7 @@ func (m *Manager) ListGatewaysWithFilter(filter string, params ...interface{}) [
 	var res []Gateway
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(GatewayTableFull, ""), GatewayTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(GatewayTableFull, ""), GatewayTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -100,7 +100,7 @@ func (m *Manager) ListGatewaysWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(GatewayTableFull, ""), GatewayTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(GatewayTableFull, ""), GatewayTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -118,7 +118,7 @@ func (m *Manager) FindGatewayByID(id int64) (*Gateway, error) {
 	var res Gateway
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(GatewayTableFull, ""), GatewayTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(GatewayTableFull, ""), GatewayTableFull),
 		id,
 	)
 

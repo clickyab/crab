@@ -22,7 +22,7 @@ const (
 	ProvinceTableFull = "provinces"
 )
 
-func getSelectFields(tb string, alias string) string {
+func GetSelectFields(tb string, alias string) string {
 	if alias != "" {
 		alias += "."
 	}

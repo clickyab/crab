@@ -19,7 +19,7 @@ const (
 	DomainUserTableFull = "users_domains"
 )
 
-func getSelectFields(tb string, alias string) string {
+func GetSelectFields(tb string, alias string) string {
 	if alias != "" {
 		alias += "."
 	}
@@ -29,7 +29,7 @@ func getSelectFields(tb string, alias string) string {
 		return fmt.Sprintf(`%[1]sid,%[1]sdomain_base,%[1]stitle,%[1]slogo,%[1]stheme,%[1]sdescription,%[1]sattributes,%[1]sstatus,%[1]smin_total_budget,%[1]smin_daily_budget,%[1]smin_web_native_cpc,%[1]smin_web_banner_cpc,%[1]smin_web_vast_cpc,%[1]smin_app_native_cpc,%[1]smin_app_banner_cpc,%[1]smin_app_vast_cpc,%[1]smin_web_cpc,%[1]smin_app_cpc,%[1]smin_web_native_cpm,%[1]smin_web_banner_cpm,%[1]smin_web_vast_cpm,%[1]smin_app_native_cpm,%[1]smin_app_banner_cpm,%[1]smin_app_vast_cpm,%[1]smin_web_cpm,%[1]smin_app_cpm,%[1]sadvantage,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case DomainUserTableFull:
-		return fmt.Sprintf(`%[1]sdomain_id,%[1]sstatus,%[1]suser_id`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]srole_id,%[1]sdomain_id,%[1]sstatus,%[1]suser_id`, alias)
 
 	}
 	return ""
@@ -71,9 +71,8 @@ func (m *Manager) Initialize() {
 		DomainUser{},
 		DomainUserTableFull,
 	).SetKeys(
-		false,
-		"UserID",
-		"DomainID",
+		true,
+		"ID",
 	)
 
 }

@@ -49,7 +49,7 @@ func (m *Manager) ListUploadsWithFilter(filter string, params ...interface{}) []
 	var res []Upload
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(UploadTableFull, ""), UploadTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(UploadTableFull, ""), UploadTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -97,7 +97,7 @@ func (m *Manager) ListUploadsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(UploadTableFull, ""), UploadTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(UploadTableFull, ""), UploadTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -115,7 +115,7 @@ func (m *Manager) FindUploadByID(id string) (*Upload, error) {
 	var res Upload
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(UploadTableFull, ""), UploadTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(UploadTableFull, ""), UploadTableFull),
 		id,
 	)
 

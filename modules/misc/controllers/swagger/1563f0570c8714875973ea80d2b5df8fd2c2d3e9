@@ -1,0 +1,33 @@
+{
+	"properties": {
+		"created_at": {
+			"format": "dateTime",
+			"type": "string"
+		},
+		"description": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"level": {
+			"type": "integer"
+		},
+		"name": {
+			"type": "string"
+		},
+		"updated_at": {
+			"format": "dateTime",
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

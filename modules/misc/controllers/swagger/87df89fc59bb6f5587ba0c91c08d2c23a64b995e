@@ -1,6 +1,6 @@
 {
-	"post": {
-		"description": "addNativeCreative to campaign",
+	"get": {
+		"description": "getWhitelabelAssignRole get assign role for admin/owner",
 		"parameters": [
 			{
 				"description": "the security token, get it from login route",
@@ -8,22 +8,13 @@
 				"name": "token",
 				"required": true,
 				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "body",
-				"name": "payload_data",
-				"required": false,
-				"schema": {
-					"$ref": "#/definitions/controllers_createNativePayload"
-				}
 			}
 		],
 		"responses": {
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/orm_CreativeSaveResult"
+					"$ref": "#/definitions/user_roleResp"
 				}
 			},
 			"400": {
@@ -47,10 +38,10 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "create_creative:self"
+			"resource": "get_assign_admin_roles:global"
 		},
 		"tags": [
-			"controllers"
+			"user"
 		]
 	}
 }

@@ -15,7 +15,7 @@ import (
 //		method = put
 //		payload = changeDomainStatusPayload
 //		middleware = authz.Authenticate
-//		resource = god:global
+//		resource = change_domain_status:superGlobal
 //		200 = orm.Domain
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
@@ -37,7 +37,7 @@ func (c *Controller) changeDomainStatusPut(ctx context.Context, w http.ResponseW
 //		method = post
 //		payload = createDomainPayload
 //		middleware = authz.Authenticate
-//		resource = god:global
+//		resource = create_domain:superGlobal
 //		200 = orm.Domain
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
@@ -59,7 +59,7 @@ func (c *Controller) createDomainPost(ctx context.Context, w http.ResponseWriter
 //		method = put
 //		payload = editDomainPayload
 //		middleware = authz.Authenticate
-//		resource = god:global
+//		resource = edit_domain:superGlobal
 //		200 = orm.Domain
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple

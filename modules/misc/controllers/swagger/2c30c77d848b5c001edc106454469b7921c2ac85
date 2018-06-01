@@ -45,7 +45,7 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "make_payment:self"
+			"resource": "get_online_transaction:self"
 		},
 		"tags": [
 			"controllers"

@@ -51,7 +51,7 @@ func (m *Manager) ListPlatformsWithFilter(filter string, params ...interface{}) 
 	var res []Platform
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(PlatformTableFull, ""), PlatformTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(PlatformTableFull, ""), PlatformTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListPlatformsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(PlatformTableFull, ""), PlatformTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(PlatformTableFull, ""), PlatformTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindPlatformByName(n string) (*Platform, error) {
 	var res Platform
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(PlatformTableFull, ""), PlatformTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", GetSelectFields(PlatformTableFull, ""), PlatformTableFull),
 		n,
 	)
 

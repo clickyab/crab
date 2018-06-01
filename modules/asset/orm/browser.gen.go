@@ -51,7 +51,7 @@ func (m *Manager) ListBrowsersWithFilter(filter string, params ...interface{}) [
 	var res []Browser
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(BrowserTableFull, ""), BrowserTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(BrowserTableFull, ""), BrowserTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListBrowsersWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(BrowserTableFull, ""), BrowserTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(BrowserTableFull, ""), BrowserTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindBrowserByName(n string) (*Browser, error) {
 	var res Browser
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(BrowserTableFull, ""), BrowserTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", GetSelectFields(BrowserTableFull, ""), BrowserTableFull),
 		n,
 	)
 

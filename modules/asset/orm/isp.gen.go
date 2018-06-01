@@ -51,7 +51,7 @@ func (m *Manager) ListISPSWithFilter(filter string, params ...interface{}) []ISP
 	var res []ISP
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(ISPTableFull, ""), ISPTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(ISPTableFull, ""), ISPTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListISPSWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(ISPTableFull, ""), ISPTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(ISPTableFull, ""), ISPTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindISPByName(n string) (*ISP, error) {
 	var res ISP
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(ISPTableFull, ""), ISPTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", GetSelectFields(ISPTableFull, ""), ISPTableFull),
 		n,
 	)
 
