@@ -7,7 +7,6 @@ import (
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/inventory/errors"
 	"clickyab.com/crab/modules/inventory/orm"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 )
@@ -85,11 +84,7 @@ func (ctrl *Controller) duplicate(ctx context.Context, r *http.Request, pl *dupl
 		return nil, errors.InvalidIDErr
 	}
 
-	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(a.ID, dm.ID)
-	if err != nil {
-		return nil, errors.InvalidIDErr
-	}
-	_, ok := currentUser.HasOn("duplicate_inventory", owner.ID, dm.ID, false, false)
+	_, ok := currentUser.HasOn("duplicate_inventory", a.UserID, dm.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDeniedErr
 	}

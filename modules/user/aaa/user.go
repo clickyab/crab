@@ -21,8 +21,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-const manageablePerm = "can_manage"
-
 // AccountType is the user account type
 type (
 	// AccountType is the user account type
@@ -501,31 +499,6 @@ func (m *Manager) CheckUserDomain(userID, domainID int64) bool {
 	count, err := m.GetRDbMap().SelectInt(q, userID, domainID)
 	assert.Nil(err)
 	return count == 1
-}
-
-// CheckUserDomain CheckUserDomain
-func (m *Manager) GetDomainLessRoles() []*Role {
-	var res []*Role
-	q := fmt.Sprintf(`SELECT %s FROM %s AS r INNER JOIN %s AS du ON r.id=du.role_id WHERE du.domain_id IS NULL`,
-		GetSelectFields(RoleTableFull, "r"),
-		RoleTableFull,
-		domainOrm.DomainUserTableFull,
-	)
-	_, err := m.GetRDbMap().Select(&res, q)
-	assert.Nil(err)
-	return res
-}
-
-// CheckUserDomain CheckUserDomain
-func (m *Manager) FindRoleByIDDomain(roleID, domainID int64) (*Role, error) {
-	var res *Role
-	q := fmt.Sprintf(`SELECT %s FROM %s AS r INNER JOIN %s AS du ON r.id=du.role_id WHERE du.domain_id IS NULL`,
-		GetSelectFields(RoleTableFull, "r"),
-		RoleTableFull,
-		domainOrm.DomainUserTableFull,
-	)
-	err := m.GetRDbMap().SelectOne(&res, q)
-	return res, err
 }
 
 // FindUserActiveDomains FindUserActiveDomains

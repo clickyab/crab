@@ -11,4 +11,6 @@ var TokenTimeout = config.RegisterDuration("crab.modules.user.token_timeout", ti
 
 // DefaultRole default role
 var DefaultRole = config.RegisterString("crab.modules.user.default_role", "Advertiser", "default role in system")
+
+// DefaultAccountRole default account role
 var DefaultAccountRole = config.RegisterString("crab.modules.user.account.default_role", "Account", "default account role in system")

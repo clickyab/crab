@@ -29,7 +29,7 @@ func (c *Controller) login(ctx context.Context, r *http.Request, p *loginPayload
 	uDomain := domain.MustGetDomain(ctx)
 	currentUser, err := aaa.NewAaaManager().FindUserByEmail(p.Email)
 	if err != nil {
-
+		return nil, errors.InvalidEmailPassError
 	}
 	if !currentUser.DomainLess {
 		_, err := orm.NewOrmManager().FindActiveUserDomainByUserDomain(currentUser.ID, uDomain.ID)

@@ -6,7 +6,6 @@ import (
 	"clickyab.com/crab/modules/domain/orm"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/permission"
-	"github.com/sirupsen/logrus"
 )
 
 // Has check for pern
@@ -76,52 +75,68 @@ func (u *User) HasOn(
 			}
 		}
 	}
-	owner, err := NewAaaManager().FindUserByID(ownerID)
+	owner, err := NewAaaManager().FindUserByIDSetParentPerm(ownerID, DomainID)
 	assert.Nil(err)
-	owner.setUserParents(DomainID)
-	owner.setUserPermissions(DomainID)
-	if self {
-		if ownerID == u.ID {
-			if u.resource[permission.ScopeSelf][string(perm)] {
-				return permission.ScopeSelf, true
-			}
-		} else { //check Parents
-			for i := range owner.Parents {
-				if owner.Parents[i] == u.ID {
-					var l = true
-					if checkLevel {
-						l = u.Role.Level > owner.Role.Level
-					}
-					if owner.resource[permission.ScopeSelf][string(perm)] && l {
-						return permission.ScopeSelf, true
-					}
 
-				}
-			}
+	if self {
+		if u.checkHasOnSelf(owner, perm, checkLevel) {
+			return permission.ScopeSelf, true
 		}
 	}
 
 	if global {
-		var l = true
-		if checkLevel {
-			l = u.Role.Level > owner.Role.Level
-		}
-		if u.resource[permission.ScopeGlobal][string(perm)] && NewAaaManager().CheckUserDomain(ownerID, DomainID) && l {
-
+		if u.checkHasOnGlobal(owner, perm, checkLevel, DomainID) {
 			return permission.ScopeGlobal, true
 		}
-
 	}
 	if superGlobal {
-		if u.resource[permission.ScopeSuperGlobal][string(perm)] {
+		if u.checkHasOnSuperGlobal(owner, perm) {
 			return permission.ScopeSuperGlobal, true
 		}
+
 	}
 	return permission.ScopeSelf, false
 }
 
+func (u *User) checkHasOnSelf(owner *User, perm permission.Token, checkLevel bool) bool {
+	if owner.ID == u.ID {
+		if u.resource[permission.ScopeSelf][string(perm)] {
+			return true
+		}
+	} else { //check Parents
+		for i := range owner.Parents {
+			if owner.Parents[i] == u.ID {
+				var l = true
+				if checkLevel {
+					l = u.Role.Level > owner.Role.Level
+				}
+				if owner.resource[permission.ScopeSelf][string(perm)] && l {
+					return true
+				}
+
+			}
+		}
+	}
+	return false
+}
+
+func (u *User) checkHasOnGlobal(owner *User, perm permission.Token, checkLevel bool, DomainID int64) bool {
+	var l = true
+	if checkLevel {
+		l = u.Role.Level > owner.Role.Level
+	}
+	if u.resource[permission.ScopeGlobal][string(perm)] && NewAaaManager().CheckUserDomain(owner.ID, DomainID) && l {
+
+		return true
+	}
+	return false
+}
+
+func (u *User) checkHasOnSuperGlobal(owner *User, perm permission.Token) bool {
+	return u.resource[permission.ScopeSuperGlobal][string(perm)]
+}
+
 func (u *User) getUserRole(DomainID int64) *Role {
-	logrus.Warn(DomainID)
 	var role *Role
 	var where = "WHERE domain_id IS NULL"
 	var params []interface{}
@@ -130,7 +145,6 @@ func (u *User) getUserRole(DomainID int64) *Role {
 		where = "WHERE domain_id=?"
 		params = append(params, DomainID)
 	}
-	logrus.Warn(params)
 	query := fmt.Sprintf("SELECT %s FROM %s AS r INNER JOIN %s AS du ON (du.role_id=r.id AND du.user_id=?) %s",
 		GetSelectFields(RoleTableFull, "r"),
 		RoleTableFull,
@@ -201,4 +215,15 @@ func (u *User) GetAllUserPerms(domainID int64) (*[]string, error) {
 		}
 	}
 	return &res, nil
+}
+
+// FindUserByIDSetParentPerm FindUserByIDSetParentPerm
+func (m *Manager) FindUserByIDSetParentPerm(userID int64, d int64) (*User, error) {
+	owner, err := NewAaaManager().FindUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	owner.setUserParents(d)
+	owner.setUserPermissions(d)
+	return owner, nil
 }

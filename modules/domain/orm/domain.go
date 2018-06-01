@@ -104,6 +104,7 @@ func (m *Manager) FindUserDomainsByEmail(e string) []Domain {
 	return res
 }
 
+// FindActiveUserDomainByUserDomain FindActiveUserDomainByUserDomain
 func (m *Manager) FindActiveUserDomainByUserDomain(userID, domainID int64) (*DomainUser, error) {
 	var res *DomainUser
 	q := fmt.Sprintf(`SELECT %s FROM %s AS du 

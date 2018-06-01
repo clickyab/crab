@@ -33,7 +33,7 @@ func Authenticate(next framework.Handler) framework.Handler {
 				assert.True(ok, "[BUG] no domain in context")
 				usr, err := aaa.NewAaaManager().FindUserByAccessToken(val)
 				if err == nil {
-					if usr.DomainLess == true {
+					if usr.DomainLess {
 						ctx = context.WithValue(ctx, dataKey, usr)
 						ctx = context.WithValue(ctx, tokenKey, token)
 						next(ctx, w, r)

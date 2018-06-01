@@ -37,7 +37,7 @@ func (c *Controller) checkMail(ctx context.Context, r *http.Request, p *checkMai
 		}, nil
 	}
 	// check if user is domain less
-	if currentUser.DomainLess == true {
+	if currentUser.DomainLess {
 		// find all active domains
 		allDomains := m.ListDomainsWithFilter("status=?", domainOrm.EnableDomainStatus)
 		return &checkMailResponse{
