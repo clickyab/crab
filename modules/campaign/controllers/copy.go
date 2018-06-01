@@ -10,7 +10,6 @@ import (
 	adOrm "clickyab.com/crab/modules/ad/orm"
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/fatih/structs"
 )
@@ -24,11 +23,11 @@ import (
 // }
 func (c Controller) copyCampaign(ctx context.Context, r *http.Request) (*orm.Campaign, error) {
 	token := authz.MustGetToken(ctx)
-	baseData, err := CheckUserCamapignDomain(ctx)
+	baseData, err := CheckUserCampaignDomain(ctx)
 	if err != nil {
 		return nil, err
 	}
-	uScope, ok := aaa.CheckPermOn(baseData.owner, baseData.currentUser, "copy_campaign", baseData.campaign.DomainID)
+	uScope, ok := baseData.currentUser.HasOn("copy_campaign", baseData.owner.ID, baseData.campaign.DomainID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

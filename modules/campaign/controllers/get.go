@@ -12,8 +12,6 @@ import (
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	inventoryOrm "clickyab.com/crab/modules/inventory/orm"
-	"clickyab.com/crab/modules/user/aaa"
-	userErrors "clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/rs/xmux"
 )
@@ -47,13 +45,8 @@ func (c *Controller) get(ctx context.Context, r *http.Request) (*campaignGetResp
 		return nil, errors.NotFoundError(campID)
 	}
 
-	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(campaign.UserID, userDomain.ID)
-	if err != nil {
-		return nil, userErrors.NotFoundWithDomainError(userDomain.DomainBase)
-	}
-
 	// check access
-	_, ok := aaa.CheckPermOn(owner, currentUser, "get_campaign", userDomain.ID)
+	_, ok := currentUser.HasOn("get_campaign", campaign.UserID, userDomain.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

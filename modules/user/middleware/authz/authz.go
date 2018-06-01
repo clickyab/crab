@@ -31,12 +31,21 @@ func Authenticate(next framework.Handler) framework.Handler {
 				// TODO : Write me
 				userDomain, ok := ctx.Value(domain.ContextDomain).(*domainOrm.Domain)
 				assert.True(ok, "[BUG] no domain in context")
-				usr, err := aaa.NewAaaManager().FindUserByAccessTokenDomain(val, userDomain.ID)
+				usr, err := aaa.NewAaaManager().FindUserByAccessToken(val)
 				if err == nil {
-					ctx = context.WithValue(ctx, dataKey, usr)
-					ctx = context.WithValue(ctx, tokenKey, token)
-					next(ctx, w, r)
-					return
+					if usr.DomainLess {
+						ctx = context.WithValue(ctx, dataKey, usr)
+						ctx = context.WithValue(ctx, tokenKey, token)
+						next(ctx, w, r)
+						return
+					}
+					_, err = domainOrm.NewOrmManager().FindActiveUserDomainByUserDomain(usr.ID, userDomain.ID)
+					if err == nil {
+						ctx = context.WithValue(ctx, dataKey, usr)
+						ctx = context.WithValue(ctx, tokenKey, token)
+						next(ctx, w, r)
+						return
+					}
 				}
 			}
 		}

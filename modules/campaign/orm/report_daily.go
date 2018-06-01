@@ -21,7 +21,7 @@ import (
 //		checkable = false
 //		datefilter = daily_id
 //		multiselect = false
-//		view = campaign_daily:self
+//		view = daily_campaign:self
 //		controller = clickyab.com/crab/modules/campaign/controllers
 //		fill = FillDaily
 // }
@@ -37,8 +37,8 @@ type CampaignDaily struct {
 	ConversionRate float64   `sort:"true" type:"number" visible:"false" json:"conversion_rate" db:"conversion_rate"`
 	CPA            int64     `sort:"true" type:"number" visible:"false" json:"cpa" db:"cpa"`
 
-	OwnerID   int64   `db:"-" json:"-" visible:"false"`
-	DomainID  int64   `db:"-" json:"-" `
+	OwnerID   int64   `db:"owner_id" json:"-" visible:"false"`
+	DomainID  int64   `db:"domain_id" json:"-" `
 	ParentIDs []int64 `db:"-" json:"-" visible:"false"`
 	Actions   string  `db:"-" json:"-" visible:"false"`
 }
@@ -98,7 +98,7 @@ func (m *Manager) FillDaily(
 	highestScope := pc.GetCurrentScope()
 	if highestScope == permission.ScopeSelf {
 		// find current user childes
-		childes := pc.GetChildesPerm(permission.ScopeSelf, "campaign_publisher", pc.GetDomainID())
+		childes := pc.GetChildesPerm(permission.ScopeSelf, "daily_campaign", pc.GetDomainID())
 		childes = append(childes, pc.GetID())
 		where = append(where, fmt.Sprintf("c.user_id IN (%s)",
 			func() string {

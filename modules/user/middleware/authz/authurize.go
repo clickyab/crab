@@ -25,11 +25,6 @@ func AuthorizeGenerator(resource permission.Token, scope permission.UserScope) f
 			currentDomain := domain.MustGetDomain(ctx)
 			grantedScope, ok := u.Has(scope, resource, currentDomain.ID)
 			if !ok {
-				grantedScope, ok = u.Has(permission.ScopeGlobal, permission.God, currentDomain.ID)
-				permGranted = permission.God
-			}
-
-			if !ok {
 				framework.JSON(w, http.StatusForbidden, struct {
 					Error error `json:"error"`
 				}{

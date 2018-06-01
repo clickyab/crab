@@ -7,8 +7,6 @@ import (
 
 	"database/sql"
 
-	"strings"
-
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
@@ -18,6 +16,7 @@ import (
 	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
+	"github.com/sirupsen/logrus"
 )
 
 // @Validate {
@@ -25,10 +24,8 @@ import (
 type editUserPayload struct {
 	userPayload
 	Managers      []int64 `json:"managers" validate:"omitempty"`
-	RolesID       []int64 `json:"roles_id" validate:"required" error:"roles id is required"`
 	owner         *aaa.User
 	currentDomain *orm.Domain
-	roles         []*aaa.Role
 	managers      []*aaa.ManagerUser
 }
 
@@ -43,28 +40,18 @@ func (p *editUserPayload) ValidateExtra(ctx context.Context, w http.ResponseWrit
 	}
 
 	m := aaa.NewAaaManager()
-
-	if len(p.Managers) > 0 {
-		managers := m.FindManagersByIDsDomain(p.Managers, dm.ID)
-		p.managers = managers
-	}
-
-	// find roles
-	// validate if role ids is valid and not in forbidden keys
-	roles, err := m.FindRolesByDomainExclude(p.RolesID, dm.ID, strings.Split(forbiddenUserRoles.String(), ",")...)
-	if err != nil {
-		xlog.GetWithError(ctx, err).Debug("database error, can't find role id, or role is forbidden")
-		return errors.InvalidOrForbiddenRoleErr
-	}
-	if len(roles) == 0 {
-		return errors.InvalidOrForbiddenRoleErr
-	}
-	p.roles = roles
 	owner, err := m.FindUserWithParentsByID(userID, dm.ID)
 	if err != nil {
 		return errors.InvalidIDErr
 	}
 	p.owner = owner
+	ownerScope, ok := owner.Has(permission.ScopeSelf, "can_have_account", dm.ID)
+	logrus.Warn(ok)
+	if len(p.Managers) > 0 && ok && ownerScope == permission.ScopeSelf {
+		managers := m.FindManagersByIDsDomain(p.Managers, dm.ID)
+		p.managers = managers
+	}
+
 	cc, err := m.FindCorporationByUserID(p.owner.ID)
 	if err != nil {
 		if err != sql.ErrNoRows {
@@ -98,7 +85,8 @@ func (p *editUserPayload) ValidateExtra(ctx context.Context, w http.ResponseWrit
 // }
 func (c *Controller) adminEdit(ctx context.Context, r *http.Request, p *editUserPayload) (*userResponse, error) {
 	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(p.owner, currentUser, "edit_user", p.currentDomain.ID, permission.ScopeGlobal)
+	// check perm
+	_, ok := currentUser.HasOn("edit_user", p.owner.ID, p.currentDomain.ID, true, true, permission.ScopeGlobal)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
@@ -116,12 +104,10 @@ func (c *Controller) adminEdit(ctx context.Context, r *http.Request, p *editUser
 		managerIDs = append(managerIDs, p.managers[i].ID)
 	}
 
-	err := services.WhiteLabelEditUserRoles(ctx, p.owner, p.userPayload.corporation, p.currentDomain.ID, p.roles, managerIDs)
+	err := services.WhiteLabelEditUser(ctx, p.owner, p.userPayload.corporation, p.currentDomain.ID, managerIDs)
 	if err != nil {
 		return nil, err
 	}
-
-	p.owner.Roles = p.roles
 
 	res := c.createUserResponse(p.owner, nil, p.managers)
 	return &res, nil

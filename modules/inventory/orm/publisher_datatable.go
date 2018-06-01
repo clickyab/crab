@@ -12,7 +12,7 @@ import (
 // @DataTable {
 //		url = /publisher/list
 //		entity = publisher
-//		view = publisher_list:self
+//		view = list_publisher:self
 //		searchkey = q
 //		checkable = true
 //		multiselect = true
@@ -46,7 +46,7 @@ func (m *Manager) FillPublisherDataTableArray(
 		PublisherTableFull,
 	)
 	query := fmt.Sprintf("SELECT %s FROM %s",
-		getSelectFields(PublisherTableFull, ""),
+		GetSelectFields(PublisherTableFull, ""),
 		PublisherTableFull,
 	)
 	for field, value := range filters {

@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"clickyab.com/crab/modules/domain/orm"
 	upload "clickyab.com/crab/modules/upload/model"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
@@ -16,15 +17,17 @@ import (
 //		url = /list
 //		entity = users_list
 //		checkable = false
+//		checklevel = true
+//		preventself = true
 //		searchkey = q
 //		multiselect = false
-//		view = user_list:global
+//		view = list_user:self
 //		datefilter = created_at
 //		map_prefix = users
 //		controller = clickyab.com/crab/modules/user/controllers
 //		fill = FillUsers
 //		_edit = edit_user:global
-//		_impersonate = impersonate_user:global
+//		_impersonate = impersonate_user:self
 //		_change_pass = edit_user:global
 // }
 type UserList struct {
@@ -85,12 +88,12 @@ func (m *Manager) FillUsers(
 
 	//check for perm
 	// find current user childes
-	childes := m.GetUserChildesIDDomain(pc.GetID(), pc.GetDomainID())
+	childes := pc.GetChildesPerm(permission.ScopeSelf, "list_user", pc.GetDomainID())
 	childes = append(childes, pc.GetID())
 	// self or parent
 	if pc.GetCurrentScope() == permission.ScopeSelf {
 		//check if parent or owner
-		where = append(where, fmt.Sprintf("c.user_id IN (%s)",
+		where = append(where, fmt.Sprintf("users.id IN (%s)",
 			func() string {
 				return strings.TrimRight(strings.Repeat("?,", len(childes)), ",")
 			}(),
@@ -114,6 +117,7 @@ func (m *Manager) FillUsers(
 	q := fmt.Sprintf(`
 		SELECT
 		users.id,
+		duser.domain_id AS domain_id,
 		full_name,
 		users.status,
 		balance,
@@ -129,17 +133,14 @@ func (m *Manager) FillUsers(
 		ssn,
 		file.id AS avatar,
 		users.created_at,
-		users.id AS owner_id,
-		roles.domain_id
+		users.id AS owner_id
 		FROM %s AS users
-		INNER JOIN %s AS ruser ON ruser.user_id = users.id
-		INNER JOIN %s AS roles ON ruser.role_id = roles.id and roles.domain_id = ?
+		INNER JOIN %s AS duser ON (duser.user_id = users.id AND duser.domain_id=?)
 		LEFT JOIN %s AS file ON file.user_id=users.id AND section='user-avatar'
 		%s`,
 		CorporationTableFull,
 		UserTableFull,
-		RoleUserTableFull,
-		RoleTableFull,
+		orm.DomainUserTableFull,
 		upload.UploadTableFull,
 		conds,
 	)
@@ -156,12 +157,10 @@ func (m *Manager) FillUsers(
 		`
 		SELECT COUNT(1)
 		FROM %s AS users
-		INNER JOIN %s AS ruser ON ruser.user_id = users.id
-		INNER JOIN %s AS roles ON ruser.role_id = roles.id AND roles.domain_id=?
+		INNER JOIN %s AS duser ON (duser.user_id = users.id AND duser.domain_id=?)
 		%s`,
 		UserTableFull,
-		RoleUserTableFull,
-		RoleTableFull,
+		orm.DomainUserTableFull,
 		conds,
 	)
 

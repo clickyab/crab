@@ -24,7 +24,7 @@ func LoginInfoEmail(u *aaa.User, pass string, r *http.Request) error {
 	// TODO: Change email template
 	template := fmt.Sprintf(
 		`Hi %s %s and welcome to clickyab <br />
-		You have new account to manage %s ads and can login with:<br /><br />
+		You have new account to manage ads and can login with:<br /><br />
 		user: %s<br />
 		pass: %s<br />
 		<br /><br />
@@ -32,7 +32,6 @@ func LoginInfoEmail(u *aaa.User, pass string, r *http.Request) error {
 		`,
 		u.FirstName,
 		u.LastName,
-		u.Corporation.LegalName,
 		u.Email,
 		pass,
 		ul.String(),

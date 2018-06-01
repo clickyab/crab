@@ -6,12 +6,8 @@ import (
 
 	"strconv"
 
-	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/financial/errors"
 	"clickyab.com/crab/modules/financial/orm"
-	"clickyab.com/crab/modules/user/aaa"
-	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
 	gom "github.com/go-sql-driver/mysql"
 	"github.com/rs/xmux"
@@ -47,16 +43,9 @@ func (p *editGatewayPayload) ValidateExtra(ctx context.Context, w http.ResponseW
 // 		url = /gateways/:id
 //		protected = true
 // 		method = put
-// 		resource = edit_gateway:global
+// 		resource = edit_gateway:superGlobal
 // }
 func (c *Controller) editGateway(ctx context.Context, r *http.Request, p *editGatewayPayload) (*orm.Gateway, error) {
-	currentDomain := domain.MustGetDomain(ctx)
-	currentUser := authz.MustGetUser(ctx)
-	// check permission
-	_, ok := aaa.CheckPermOn(currentUser, currentUser, "edit_gateway", currentDomain.ID, permission.ScopeGlobal)
-	if !ok {
-		return nil, errors.AccessDenied
-	}
 	p.targetGateway.Status = p.Status
 	p.targetGateway.Name = p.Name
 	m := orm.NewOrmManager()

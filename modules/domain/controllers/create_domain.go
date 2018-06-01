@@ -7,12 +7,9 @@ import (
 	"clickyab.com/crab/modules/domain/errors"
 	"clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
-	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/mysql"
-	"github.com/clickyab/services/permission"
 	gom "github.com/go-sql-driver/mysql"
 
-	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/mailer"
 	"github.com/clickyab/services/assert"
@@ -20,7 +17,6 @@ import (
 )
 
 var defaultOwnerRole = config.RegisterString("crab.modules.domain.default.owner.role", "Owner", "default domain role name")
-var defaultAdminDomain = config.RegisterString("crab.modules.domain.default.admin.domain", "staging.crab.clickyab.ae", "default admin domain name")
 
 // @Validate{
 //}
@@ -86,17 +82,9 @@ func (p *createDomainPayload) ValidateExtra(ctx context.Context, w http.Response
 // 		url = /create
 //		protected = true
 // 		method = post
-//		resource = god:global
+//		resource = create_domain:superGlobal
 // }
 func (c *Controller) createDomain(ctx context.Context, r *http.Request, p *createDomainPayload) (*orm.Domain, error) {
-	currentUser := authz.MustGetUser(ctx)
-	currentDomain := domain.MustGetDomain(ctx)
-	// check permission
-	_, ok := aaa.CheckPermOn(currentUser, currentUser, "god", currentDomain.ID, permission.ScopeGlobal)
-	if !ok {
-		return nil, errors.AccessDeniedErr
-	}
-
 	// create domain object
 	newDomain := &orm.Domain{
 		Title:           p.Title,
@@ -128,22 +116,23 @@ func (c *Controller) createDomain(ctx context.Context, r *http.Request, p *creat
 	}
 
 	user := &aaa.User{
-		Email:     p.Email,
-		Password:  p.Password,
-		FirstName: p.FirstName,
-		LastName:  p.LastName,
-		Status:    aaa.ActiveUserStatus,
+		Email:      p.Email,
+		Password:   p.Password,
+		FirstName:  p.FirstName,
+		LastName:   p.LastName,
+		DomainLess: false,
+		Status:     aaa.ActiveUserStatus,
 	}
 
 	corp := &aaa.Corporation{}
 	corp.LegalName = p.Company
 
-	role := &aaa.Role{
-		Name:     defaultOwnerRole.String(),
-		DomainID: newDomain.ID,
+	role, err := aaa.NewAaaManager().FindRoleByName(defaultOwnerRole.String())
+	if err != nil {
+		return nil, errors.OwnerRoleNotFound
 	}
 
-	err := createWhiteLabel(user, corp, newDomain, role)
+	err = createWhiteLabel(user, corp, newDomain, role)
 	if err != nil {
 		return nil, err
 	}
@@ -183,30 +172,6 @@ func createWhiteLabel(user *aaa.User, corp *aaa.Corporation, domain *orm.Domain,
 	aManger, err := aaa.NewAaaManagerFromTransaction(m.GetWDbMap())
 	if err != nil {
 		return err
-	}
-	role.DomainID = domain.ID
-	err = aManger.CreateRole(role)
-	if err != nil {
-		return errors.CreateAdminRoleERR
-	}
-
-	//create role perms, first get perm of admin
-	//then insert the perm in role perm table
-	perms, err := aManger.FindRolePermByName(defaultOwnerRole.String(), defaultAdminDomain.String())
-	if err != nil {
-		return errors.FindAdminPermErr
-	}
-
-	for i := range perms {
-		rolePerm := &aaa.RolePermission{
-			Perm:   perms[i].Perm,
-			RoleID: role.ID,
-			Scope:  perms[i].Scope,
-		}
-		err = aManger.CreateRolePermission(rolePerm)
-		if err != nil {
-			return errors.CreateRolePermErr
-		}
 	}
 
 	// register user

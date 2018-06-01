@@ -4,12 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/financial/errors"
 	"clickyab.com/crab/modules/financial/orm"
-	"clickyab.com/crab/modules/user/aaa"
-	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
 	gom "github.com/go-sql-driver/mysql"
 )
@@ -33,16 +29,9 @@ func (p *addGatewayPayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 // 		url = /gateways
 //		protected = true
 // 		method = post
-// 		resource = add_gateway:global
+// 		resource = add_gateway:superGlobal
 // }
 func (c *Controller) addGateway(ctx context.Context, r *http.Request, p *addGatewayPayload) (*orm.Gateway, error) {
-	currentDomain := domain.MustGetDomain(ctx)
-	currentUser := authz.MustGetUser(ctx)
-	// check permission
-	_, ok := aaa.CheckPermOn(currentUser, currentUser, "add_gateway", currentDomain.ID, permission.ScopeGlobal)
-	if !ok {
-		return nil, errors.AccessDenied
-	}
 	gatewayObj := &orm.Gateway{
 		Name:      p.Name,
 		Status:    p.Status,

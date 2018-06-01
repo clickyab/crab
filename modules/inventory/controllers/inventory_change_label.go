@@ -41,7 +41,7 @@ func (ctrl *Controller) changeLabel(ctx context.Context, r *http.Request, pl *ch
 	}
 	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(currentInventory.UserID, dm.ID)
 	assert.Nil(err)
-	_, ok := aaa.CheckPermOn(owner, currentUser, "edit_inventory", dm.ID)
+	_, ok := currentUser.HasOn("edit_inventory", owner.ID, dm.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDeniedErr
 	}

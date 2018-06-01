@@ -19,6 +19,7 @@ import (
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
+	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/safe"
 	"github.com/clickyab/services/xlog"
 )
@@ -166,7 +167,7 @@ func isValidSize(width, height int, kind string) bool {
 // 		url = /native
 //		protected = true
 // 		method = post
-// 		resource = add_creative:self
+// 		resource = create_creative:self
 // }
 func (c Controller) addNativeCreative(ctx context.Context, r *http.Request, p *createNativePayload) (*orm.CreativeSaveResult, error) {
 	err := checkCreatePerm(ctx, p)
@@ -203,7 +204,7 @@ func (c Controller) addNativeCreative(ctx context.Context, r *http.Request, p *c
 
 func checkCreatePerm(ctx context.Context, p *createNativePayload) error {
 	// check campaign perm
-	_, ok := aaa.CheckPermOn(p.CampaignOwner, p.CurrentUser, "edit_campaign", p.CurrentDomain.ID)
+	_, ok := p.CurrentUser.HasOn("edit_campaign", p.CampaignOwner.ID, p.CurrentDomain.ID, false, false, permission.ScopeSelf)
 	if !ok {
 		return errors.AccessDenied
 	}
@@ -362,7 +363,7 @@ func fileOwnerCheckPerm(ctx context.Context, image *uploadOrm.Upload, d int64, c
 		return errors.AssetsPermErr
 	}
 	// check campaign perm
-	_, ok := aaa.CheckPermOn(targetFileOwner, currentUser, "edit_creative", d)
+	_, ok := currentUser.HasOn("edit_creative", targetFileOwner.ID, d, false, false, permission.ScopeSelf)
 	if !ok {
 		return errors.AccessDenied
 	}

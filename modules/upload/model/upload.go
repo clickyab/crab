@@ -102,7 +102,7 @@ func (m *Manager) FindSectionUploadByID(id, section string) (*Upload, error) {
 	var res Upload
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=? AND section=?", getSelectFields(UploadTableFull, ""), UploadTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=? AND section=?", GetSelectFields(UploadTableFull, ""), UploadTableFull),
 		id,
 		section,
 	)
