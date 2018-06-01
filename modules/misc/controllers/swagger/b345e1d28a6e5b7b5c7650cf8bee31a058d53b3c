@@ -54,7 +54,7 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "change_creative_status:global"
+			"resource": "change_creative_status:superGlobal"
 		},
 		"tags": [
 			"controllers"

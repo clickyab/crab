@@ -3,6 +3,9 @@
 		"checkable": {
 			"type": "boolean"
 		},
+		"checklevel": {
+			"type": "boolean"
+		},
 		"columns": {
 			"items": {
 				"properties": {
@@ -51,6 +54,9 @@
 			"type": "string"
 		},
 		"multiselect": {
+			"type": "boolean"
+		},
+		"preventself": {
 			"type": "boolean"
 		},
 		"searchkey": {

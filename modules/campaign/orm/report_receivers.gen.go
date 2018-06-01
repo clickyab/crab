@@ -49,7 +49,7 @@ func (m *Manager) ListCampaignReportReceiversWithFilter(filter string, params ..
 	var res []CampaignReportReceivers
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CampaignReportReceiversTableFull, ""), CampaignReportReceiversTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(CampaignReportReceiversTableFull, ""), CampaignReportReceiversTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -97,7 +97,7 @@ func (m *Manager) ListCampaignReportReceiversWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CampaignReportReceiversTableFull, ""), CampaignReportReceiversTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(CampaignReportReceiversTableFull, ""), CampaignReportReceiversTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)

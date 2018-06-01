@@ -33,6 +33,8 @@ type listCampaigndailyDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
+	CheckLevel  bool               `json:"checklevel"`
+	PreventSelf bool               `json:"preventself"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
 	Columns     permission.Columns `json:"columns"`
@@ -51,7 +53,7 @@ var (
 //		_q_ = string , parameter for search
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
-//		resource = campaign_daily:self
+//		resource = daily_campaign:self
 //		_sort_ = string, the sort and order like id:asc or id:desc available column "date","impression","click","ectr","ecpc","ecpm","spend","conversion","conversion_rate","cpa"
 //		200 = listCampaigndailyResponse
 // }
@@ -106,7 +108,7 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
-	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_daily", "self", domain.ID)
+	pc := permission.NewInterfaceComplete(usr, usr.ID, "daily_campaign", "self", domain.ID)
 	dt, cnt, err := m.FillDaily(pc, filter, from, to, search, params, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
@@ -132,7 +134,7 @@ func (u *Controller) listCampaigndaily(ctx context.Context, w http.ResponseWrite
 // @Route {
 // 		url = /daily/:id/definition
 //		method = get
-//		resource = campaign_daily:self
+//		resource = daily_campaign:self
 //		200 = listCampaigndailyDefResponse
 // }
 func (u *Controller) defCampaigndaily(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -141,7 +143,7 @@ func (u *Controller) defCampaigndaily(ctx context.Context, w http.ResponseWriter
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listCampaigndailyDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "daily_id", Hash: hash, Columns: listCampaigndailyDefinition},
+		listCampaigndailyDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, CheckLevel: false, PreventSelf: false, DateFilter: "daily_id", Hash: hash, Columns: listCampaigndailyDefinition},
 	)
 }
 

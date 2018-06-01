@@ -49,7 +49,7 @@ func (m *Manager) ListBillingsWithFilter(filter string, params ...interface{}) [
 	var res []Billing
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(BillingTableFull, ""), BillingTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(BillingTableFull, ""), BillingTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -97,7 +97,7 @@ func (m *Manager) ListBillingsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(BillingTableFull, ""), BillingTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(BillingTableFull, ""), BillingTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -115,7 +115,7 @@ func (m *Manager) FindBillingByID(id int64) (*Billing, error) {
 	var res Billing
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(BillingTableFull, ""), BillingTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(BillingTableFull, ""), BillingTableFull),
 		id,
 	)
 

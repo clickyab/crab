@@ -167,7 +167,7 @@ func (c Controller) copyCampaignPatch(ctx context.Context, w http.ResponseWriter
 //		method = post
 //		payload = createCampaignPayload
 //		middleware = authz.Authenticate
-//		resource = edit_campaign:self
+//		resource = create_campaign:self
 //		200 = baseResult
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple

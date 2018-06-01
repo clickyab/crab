@@ -50,7 +50,7 @@ type graphChartallData struct {
 // @Route {
 //		url = /graph/all
 //		method = get
-//		resource = campaign_graph:self
+//		resource = graph_campaign:self
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		200 = graphChartallResponse
@@ -88,7 +88,7 @@ func (ctrl *Controller) graphChartall(ctx context.Context, w http.ResponseWriter
 	}
 	l, fn := dateRangeChartall(from, to)
 	tm := make(map[string]graphChartallData)
-	pc := permission.NewInterfaceComplete(usr, usr.ID, "campaign_graph", "self", domain.ID)
+	pc := permission.NewInterfaceComplete(usr, usr.ID, "graph_campaign", "self", domain.ID)
 
 	tm["avg_cpc"] = graphChartallData{
 		Name:      "avg_cpc",

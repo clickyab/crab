@@ -50,7 +50,7 @@ func (cdt CreativeDataTable) Filter(u permission.Interface) CreativeDataTable {
 
 	res.Actions = cdt.Actions
 
-	if _, ok := u.HasOn("edit_creative", cdt.OwnerID, cdt.ParentIDs, cdt.DomainID, permission.ScopeSelf, permission.ScopeGlobal); ok {
+	if _, ok := u.HasOn("edit_creative", cdt.OwnerID, cdt.DomainID, false, false, permission.ScopeSelf, permission.ScopeGlobal); ok {
 		action = append(action, "edit")
 	}
 

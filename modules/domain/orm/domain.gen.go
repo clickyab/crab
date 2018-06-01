@@ -51,7 +51,7 @@ func (m *Manager) ListDomainsWithFilter(filter string, params ...interface{}) []
 	var res []Domain
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(DomainTableFull, ""), DomainTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(DomainTableFull, ""), DomainTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListDomainsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(DomainTableFull, ""), DomainTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(DomainTableFull, ""), DomainTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindDomainByID(id int64) (*Domain, error) {
 	var res Domain
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(DomainTableFull, ""), DomainTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(DomainTableFull, ""), DomainTableFull),
 		id,
 	)
 
@@ -133,7 +133,7 @@ func (m *Manager) FindDomainByDomainBase(db string) (*Domain, error) {
 	var res Domain
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE domain_base=?", getSelectFields(DomainTableFull, ""), DomainTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE domain_base=?", GetSelectFields(DomainTableFull, ""), DomainTableFull),
 		db,
 	)
 
@@ -167,4 +167,74 @@ func (m *Manager) UpdateDomainUser(du *DomainUser) error {
 
 	_, err := m.GetWDbMap().Update(du)
 	return err
+}
+
+// ListDomainUsersWithFilter try to list all DomainUsers without pagination
+func (m *Manager) ListDomainUsersWithFilter(filter string, params ...interface{}) []DomainUser {
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
+	}
+	var res []DomainUser
+	_, err := m.GetRDbMap().Select(
+		&res,
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(DomainUserTableFull, ""), DomainUserTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
+
+	return res
+}
+
+// ListDomainUsers try to list all DomainUsers without pagination
+func (m *Manager) ListDomainUsers() []DomainUser {
+	return m.ListDomainUsersWithFilter("")
+}
+
+// CountDomainUsersWithFilter count entity in DomainUsers table with valid where filter
+func (m *Manager) CountDomainUsersWithFilter(filter string, params ...interface{}) int64 {
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
+	}
+	cnt, err := m.GetRDbMap().SelectInt(
+		fmt.Sprintf("SELECT COUNT(*) FROM %s %s", DomainUserTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
+
+	return cnt
+}
+
+// CountDomainUsers count entity in DomainUsers table
+func (m *Manager) CountDomainUsers() int64 {
+	return m.CountDomainUsersWithFilter("")
+}
+
+// ListDomainUsersWithPaginationFilter try to list all DomainUsers with pagination and filter
+func (m *Manager) ListDomainUsersWithPaginationFilter(
+	offset, perPage int, filter string, params ...interface{}) []DomainUser {
+	var res []DomainUser
+	filter = strings.Trim(filter, "\n\t ")
+	if filter != "" {
+		filter = "WHERE " + filter
+	}
+
+	filter += " LIMIT ?, ? "
+	params = append(params, offset, perPage)
+
+	// TODO : better pagination without offset and limit
+	_, err := m.GetRDbMap().Select(
+		&res,
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(DomainUserTableFull, ""), DomainUserTableFull, filter),
+		params...,
+	)
+	assert.Nil(err)
+
+	return res
+}
+
+// ListDomainUsersWithPagination try to list all DomainUsers with pagination
+func (m *Manager) ListDomainUsersWithPagination(offset, perPage int) []DomainUser {
+	return m.ListDomainUsersWithPaginationFilter(offset, perPage, "")
 }

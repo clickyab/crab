@@ -38,8 +38,8 @@ func (p *addUserToWhitelabelPayload) Validate(ctx context.Context, w http.Respon
 		case "Password":
 			res["password"] = trans.E("password is too short")
 
-		case "RolesID":
-			res["roles_id"] = trans.E("roles id is required")
+		case "RoleID":
+			res["role_id"] = trans.E("role id is required")
 
 		case "FirstName":
 			res["first_name"] = trans.E("first name is invalid")
@@ -289,9 +289,6 @@ func (p *editUserPayload) Validate(ctx context.Context, w http.ResponseWriter, r
 
 		case "Managers":
 			res["managers"] = trans.E("invalid value")
-
-		case "RolesID":
-			res["roles_id"] = trans.E("roles id is required")
 
 		default:
 			logrus.Panicf("the field %s is not translated", i)

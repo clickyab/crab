@@ -54,7 +54,7 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "god:global"
+			"resource": "change_domain_status:superGlobal"
 		},
 		"tags": [
 			"controllers"

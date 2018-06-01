@@ -5,6 +5,7 @@
 	],
 	"definitions": {
 		"aaa_AccountType": "file://eeb727dfd6e8bde57d041bf998fb7a81a26f6fd2",
+		"aaa_Role": "file://1563f0570c8714875973ea80d2b5df8fd2c2d3e9",
 		"aaa_UserList": "file://b8de6a5099d4aba4e391c31ffd5283d346bde785",
 		"aaa_UserSearchResult": "file://5e14b24877e04042f3421f158e2215909bbe8890",
 		"aaa_UserValidStatus": "file://faa533736a56bc53f8b52e4b68a1dc6b633c119e",
@@ -164,6 +165,7 @@
 		"user_listUsers_listResponse": "file://af78f230ae1159ccc587351101379c3d13648c65",
 		"user_loginPayload": "file://a3152804bb2c7852c77d345a2186b7b647a941ee",
 		"user_registerPayload": "file://e58b6e35a3a18cfe0c6853307c71d4d79fc839be",
+		"user_roleResp": "file://5fc96776101db8fd9d95fdef618d8dee17c72736",
 		"user_searchUserPayload": "file://e6c92d18dbe50f7d32847c8f0ffe2f57b6f6d5a5",
 		"user_startImpersonatePayload": "file://3ddb4d33bfa315f48b22c6bc102694c8a7cd401f",
 		"user_storePayload": "file://192632ed3ad4757b14475d79f76b67567f41be35",
@@ -279,7 +281,8 @@
 		"/user/store": "file://81c617ef1932a06e426689a8caa90863f41c61d4",
 		"/user/update": "file://951d1a07ddde52ec17cf0844784bb4dbfbc9c164",
 		"/user/update/{id}": "file://fa0577cc27856365b0cb3df9410d43004fc6b766",
-		"/user/whitelabel/add": "file://37327c6dc3213667195f9b67347ac3743e86149e"
+		"/user/whitelabel/add": "file://37327c6dc3213667195f9b67347ac3743e86149e",
+		"/user/whitelabel/roles": "file://87df89fc59bb6f5587ba0c91c08d2c23a64b995e"
 	},
 	"produces": [
 		"application/json"

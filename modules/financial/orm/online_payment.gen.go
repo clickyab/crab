@@ -51,7 +51,7 @@ func (m *Manager) ListOnlinePaymentsWithFilter(filter string, params ...interfac
 	var res []OnlinePayment
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(OnlinePaymentTableFull, ""), OnlinePaymentTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(OnlinePaymentTableFull, ""), OnlinePaymentTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListOnlinePaymentsWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(OnlinePaymentTableFull, ""), OnlinePaymentTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(OnlinePaymentTableFull, ""), OnlinePaymentTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindOnlinePaymentByID(id int64) (*OnlinePayment, error) {
 	var res OnlinePayment
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(OnlinePaymentTableFull, ""), OnlinePaymentTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(OnlinePaymentTableFull, ""), OnlinePaymentTableFull),
 		id,
 	)
 
