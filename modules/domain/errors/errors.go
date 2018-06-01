@@ -31,6 +31,8 @@ var (
 	CreateAdminRoleERR error = t9e.G("error while creating admin role")
 	// UpdateStatusDbErr error in update domain status
 	UpdateStatusDbErr = t9e.G("an database error occurred when we try to update domain status ")
+	// OwnerRoleNotFound OwnerRoleNotFound
+	OwnerRoleNotFound = t9e.G("owner role not found!")
 )
 
 // DomainNotFoundError maker

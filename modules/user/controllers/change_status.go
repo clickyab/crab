@@ -59,7 +59,7 @@ func (c *Controller) changeUserStatus(ctx context.Context, r *http.Request, p *c
 	currentUser := authz.MustGetUser(ctx)
 	userManager := aaa.NewAaaManager()
 	//check permission
-	_, ok := aaa.CheckPermOn(p.targetUser, currentUser, "change_user_status", p.currentDomain.ID, permission.ScopeGlobal)
+	_, ok := currentUser.HasOn("change_user_status", p.targetUser.ID, p.currentDomain.ID, true, true, permission.ScopeGlobal)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

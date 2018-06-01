@@ -10,6 +10,7 @@ import (
 	"clickyab.com/crab/modules/financial/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/permission"
 	"github.com/rs/xmux"
 )
 
@@ -18,7 +19,7 @@ import (
 // 		url = /payment/:id
 //		protected = true
 // 		method = get
-//		resource = make_payment:self
+//		resource = get_online_transaction:self
 // }
 func (c *Controller) getPaymentTransaction(ctx context.Context, r *http.Request) (*orm.OnlinePayment, error) {
 	tID, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
@@ -37,8 +38,7 @@ func (c *Controller) getPaymentTransaction(ctx context.Context, r *http.Request)
 	if err != nil {
 		return nil, errors.AccessDenied
 	}
-
-	_, ok := aaa.CheckPermOn(owner, currentUser, "make_payment", dm.ID)
+	_, ok := currentUser.HasOn("make_payment", owner.ID, dm.ID, false, false, permission.ScopeSelf)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

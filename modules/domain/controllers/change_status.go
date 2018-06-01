@@ -9,9 +9,6 @@ import (
 	"clickyab.com/crab/modules/domain/errors"
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/domain/orm"
-	"clickyab.com/crab/modules/user/aaa"
-	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 )
@@ -48,15 +45,9 @@ func (p *changeDomainStatusPayload) ValidateExtra(ctx context.Context, w http.Re
 // 		url = /change-domain-status/:id
 //		protected = true
 // 		method = put
-// 		resource = god:global
+// 		resource = change_domain_status:superGlobal
 // }
 func (c *Controller) changeDomainStatus(ctx context.Context, r *http.Request, p *changeDomainStatusPayload) (*orm.Domain, error) {
-	currentUser := authz.MustGetUser(ctx)
-	//check permission
-	_, ok := aaa.CheckPermOn(currentUser, currentUser, "god", p.currentDomain.ID, permission.ScopeGlobal)
-	if !ok {
-		return nil, errors.AccessDenied
-	}
 	m := orm.NewOrmManager()
 	// apply status
 	p.targetDomain.Status = p.DomainStatus

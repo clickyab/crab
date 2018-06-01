@@ -54,7 +54,7 @@ func (m *Manager) FillGraph(
 	highestScope := pc.GetCurrentScope()
 	if highestScope == permission.ScopeSelf {
 		// find current user childes
-		childes := pc.GetChildesPerm(permission.ScopeSelf, "campaign_publisher", pc.GetDomainID())
+		childes := pc.GetChildesPerm(permission.ScopeSelf, "get_billing", pc.GetDomainID())
 		childes = append(childes, pc.GetID())
 		where = append(where, fmt.Sprintf("cp.user_id IN (%s)",
 			func() string {

@@ -37,7 +37,7 @@ func (c *Controller) searchByMail(ctx context.Context, r *http.Request, p *searc
 // }
 func (c *Controller) searchMangerByMail(ctx context.Context, r *http.Request, p *searchUserPayload) (userSearchResp, error) {
 	dm := domain.MustGetDomain(ctx)
-	foundUsers := aaa.NewAaaManager().SearchAdvisorsByMailDomain(p.Email, dm.ID)
+	foundUsers := aaa.NewAaaManager().SearchAccountByMailDomain(p.Email, dm.ID)
 	if len(foundUsers) == 0 {
 		return userSearchResp{}, nil
 	}

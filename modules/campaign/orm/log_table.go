@@ -41,8 +41,8 @@ type CampaignLog struct {
 	DailyBudget  float64      `json:"daily_budget" visible:"true"`
 	MaxBid       float64      `json:"max_bid" visible:"true"`
 
-	OwnerID   int64   `db:"-" json:"-" visible:"false"`
-	DomainID  int64   `db:"-" json:"-" visible:"false"`
+	OwnerID   int64   `db:"owner_id" json:"-" visible:"false"`
+	DomainID  int64   `db:"domain_id" json:"-" visible:"false"`
 	ParentIDs []int64 `db:"-" json:"-" visible:"false"`
 	Actions   string  `db:"-" json:"-" visible:"false"`
 }
@@ -144,6 +144,8 @@ func (m *Manager) FillCampaignLog(
 	al.data AS data,
 	a.action AS action,
 	owner.email AS owner_email,
+	owner.id AS owner_id,
+	c.domain_id AS domain_id,
 	manipulator.email AS manipulator_email,
 	impersonator.email AS impersonator_email FROM %s AS a
 	INNER JOIN %s AS al ON al.audit_log_id=a.id

@@ -21,7 +21,7 @@ var creativeTableFull = "creatives"
 //		entity = campaigns
 //		checkable = false
 //		multiselect = false
-//		view = campaign_list:self
+//		view = list_campaign:self
 //		controller = clickyab.com/crab/modules/campaign/controllers
 //		fill = FillCampaigns
 //		_detail = get_campaign:self
@@ -101,8 +101,7 @@ func (m *Manager) FillCampaigns(
 
 	//check for perm
 	// find current user childes
-	userManager := aaa.NewAaaManager()
-	childes := userManager.GetUserChildesIDDomain(pc.GetID(), pc.GetDomainID())
+	childes := pc.GetChildesPerm(permission.ScopeSelf, "list_campaign", pc.GetDomainID())
 	childes = append(childes, pc.GetID())
 	// self or parent
 	if pc.GetCurrentScope() == permission.ScopeSelf {
@@ -126,6 +125,7 @@ func (m *Manager) FillCampaigns(
 	q := fmt.Sprintf(`
 		SELECT
 		c.user_id                                             AS owner_id,
+		c.domain_id                                             AS domain_id,
 		c.id                                             AS id,
 		c.title                                          AS title,
 		c.status                                         AS status,

@@ -72,7 +72,7 @@ func (p *changeCashStatus) ValidateExtra(ctx context.Context, w http.ResponseWri
 // }
 func (c *Controller) manualChangeCash(ctx context.Context, r *http.Request, p *changeCashStatus) (*ChangeCashResult, error) {
 	//check permission
-	_, ok := aaa.CheckPermOn(p.targetUser, p.operatorUser, "manual_change_cash", p.currentDomain.ID, permission.ScopeGlobal)
+	_, ok := p.operatorUser.HasOn("manual_change_cash", p.targetUser.ID, p.currentDomain.ID, false, false, permission.ScopeGlobal)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

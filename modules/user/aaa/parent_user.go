@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"clickyab.com/crab/modules/domain/orm"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/permission"
 )
@@ -23,41 +24,25 @@ type Advisor struct {
 // GetUserParentsIDDomain get user parent by id and domain
 func (m *Manager) GetUserParentsIDDomain(id, d int64) []Advisor {
 	var res []Advisor
-	q := fmt.Sprintf("SELECT %s FROM %s AS pu WHERE user_id=? AND domain_id=?", getSelectFields(AdvisorTableFull, ""), AdvisorTableFull)
+	q := fmt.Sprintf("SELECT %s FROM %s AS pu WHERE user_id=? AND domain_id=?", GetSelectFields(AdvisorTableFull, ""), AdvisorTableFull)
 	_, err := m.GetRDbMap().Select(&res, q, id, d)
 	assert.Nil(err)
 	return res
 }
 
-// GetUserChildesIDDomain get user child ids
-func (m *Manager) GetUserChildesIDDomain(id, d int64) []int64 {
+// getUserChildesIDPerAdviser get user child ids perm considered
+func (m *Manager) getUserChildesIDPerAdviser(id, d int64, scope permission.UserScope, perm string) []int64 {
 	var res []Advisor
 	var final []int64
-	q := fmt.Sprintf(`SELECT user_id FROM %s AS pu WHERE pu.advisor_id=? AND pu.domain_id=?`, AdvisorTableFull)
-	_, err := m.GetRDbMap().Select(&res, q, id, d)
-	assert.Nil(err)
-	for i := range res {
-		final = append(final, res[i].UserID)
-	}
-	return final
-}
-
-// getUserChildesIDDomainPerm get user child ids perm considered
-func (m *Manager) getUserChildesIDDomainPerm(id, d int64, scope permission.UserScope, perm string) []int64 {
-	var res []Advisor
-	var final []int64
-	q := fmt.Sprintf("SELECT %s FROM %s AS a "+
-		"INNER JOIN %s AS u ON u.id=a.user_id "+
-		"INNER JOIN %s AS ru ON ru.user_id=u.id "+
-		"INNER JOIN %s AS rp ON rp.role_id=ru.role_id "+
-		"WHERE a.advisor_id=? AND a.domain_id=? AND rp.perm=? AND rp.scope=? GROUP BY u.id",
-		getSelectFields(AdvisorTableFull, "a"),
+	q := fmt.Sprintf(`SELECT %s FROM %s AS a 
+		INNER JOIN %s AS du ON (du.user_id=a.user_id AND du.domain_id=?)
+		INNER JOIN %s AS rp ON (rp.role_id=du.role_id) WHERE a.advisor_id=? AND rp.perm=? AND rp.scope=?`,
+		GetSelectFields(AdvisorTableFull, "a"),
 		AdvisorTableFull,
-		UserTableFull,
-		RoleUserTableFull,
+		orm.DomainUserTableFull,
 		RolePermissionTableFull,
 	)
-	_, err := m.GetRDbMap().Select(&res, q, id, d, perm, scope)
+	_, err := m.GetRDbMap().Select(&res, q, d, id, perm, scope)
 	assert.Nil(err)
 	for i := range res {
 		final = append(final, res[i].UserID)

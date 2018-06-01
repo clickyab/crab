@@ -7,7 +7,6 @@ import (
 
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/clickyab/services/mysql"
@@ -22,13 +21,12 @@ import (
 //		resource = archive_campaign:self
 // }
 func (c *Controller) archive(ctx context.Context, r *http.Request) (*controller.NormalResponse, error) {
-	baseData, err := CheckUserCamapignDomain(ctx)
+	baseData, err := CheckUserCampaignDomain(ctx)
 	token := authz.MustGetToken(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	uScope, ok := aaa.CheckPermOn(baseData.owner, baseData.currentUser, "archive_campaign", baseData.campaign.DomainID)
+	uScope, ok := baseData.currentUser.HasOn("archive_campaign", baseData.owner.ID, baseData.campaign.DomainID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

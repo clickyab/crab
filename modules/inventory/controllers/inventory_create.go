@@ -7,7 +7,6 @@ import (
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/inventory/errors"
 	"clickyab.com/crab/modules/inventory/orm"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 )
@@ -43,15 +42,11 @@ func (pl *createInventoryPayload) ValidateExtra(ctx context.Context, w http.Resp
 // 		url = /create
 //		method = post
 //		protected = true
-//		resource = add_inventory:self
+//		resource = create_inventory:self
 // }
 func (ctrl *Controller) createPreset(ctx context.Context, r *http.Request, pl *createInventoryPayload) (*orm.Inventory, error) {
 	currentUser := authz.MustGetUser(ctx)
 	dm := domain.MustGetDomain(ctx)
-	_, ok := aaa.CheckPermOn(currentUser, currentUser, "add_inventory", dm.ID)
-	if !ok {
-		return nil, errors.AccessDeniedErr
-	}
 	invManager := orm.NewOrmManager()
 
 	var validPubIDs []int64
@@ -89,12 +84,7 @@ func (ctrl *Controller) duplicate(ctx context.Context, r *http.Request, pl *dupl
 		return nil, errors.InvalidIDErr
 	}
 
-	iu, err := aaa.NewAaaManager().FindUserWithParentsByID(a.ID, dm.ID)
-	if err != nil {
-		return nil, errors.InvalidIDErr
-	}
-
-	_, ok := aaa.CheckPermOn(iu, currentUser, "duplicate_inventory", dm.ID)
+	_, ok := currentUser.HasOn("duplicate_inventory", a.UserID, dm.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDeniedErr
 	}

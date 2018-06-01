@@ -57,7 +57,7 @@ func (pl *initPaymentPayload) ValidateExtra(ctx context.Context, w http.Response
 // 		url = /payment/init
 //		protected = true
 // 		method = post
-//		resource = make_payment:self
+//		resource = make_online_payment:self
 // }
 func (c *Controller) getPaymentData(ctx context.Context, r *http.Request, p *initPaymentPayload) (*payment.InitPaymentResp, error) {
 	currentUser := authz.MustGetUser(ctx)

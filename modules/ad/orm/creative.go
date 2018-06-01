@@ -218,7 +218,7 @@ func (m *Manager) FindCreativeByIDAndType(crID int64, cType CreativeTypes) (*Cre
 		&res,
 		fmt.Sprintf("SELECT %s FROM %s AS cr "+
 			"WHERE cr.id=? AND cr.type=?",
-			getSelectFields(CreativeTableFull, "cr"),
+			GetSelectFields(CreativeTableFull, "cr"),
 			CreativeTableFull,
 		),
 		crID,

@@ -212,7 +212,7 @@ func (m *Manager) FindInitPaymentByResNum(id string) (*OnlinePayment, error) {
 	var res OnlinePayment
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE res_num=? AND status=?", getSelectFields(OnlinePaymentTableFull, ""), OnlinePaymentTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE res_num=? AND status=?", GetSelectFields(OnlinePaymentTableFull, ""), OnlinePaymentTableFull),
 		id,
 		Init,
 	)

@@ -4,8 +4,6 @@ import (
 	"context"
 	"net/http"
 
-	"strings"
-
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	"clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
@@ -14,15 +12,8 @@ import (
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"clickyab.com/crab/modules/user/services"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
-	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
-)
-
-var forbiddenUserRoles = config.RegisterString("crab.modules.user.forbidden.roles",
-	"Admin,SuperAdmin,Owner",
-	"forbidden roles",
 )
 
 // @Validate {
@@ -30,7 +21,7 @@ var forbiddenUserRoles = config.RegisterString("crab.modules.user.forbidden.role
 type addUserToWhitelabelPayload struct {
 	Email           string               `json:"email" validate:"email" error:"email is invalid"`
 	Password        string               `json:"password" validate:"gt=5" error:"password is too short"`
-	RolesID         []int64              `json:"roles_id" validate:"required" error:"roles id is required"`
+	RoleID          int64                `json:"role_id" validate:"required" error:"role id is required"`
 	FirstName       string               `json:"first_name" validate:"required" error:"first name is invalid"`
 	LastName        string               `json:"last_name" validate:"required" error:"last name is invalid"`
 	Mobile          string               `json:"mobile" validate:"omitempty"`
@@ -39,7 +30,7 @@ type addUserToWhitelabelPayload struct {
 	Advantage       int                  `json:"advantage" validate:"max=99,min=0" error:"should be in 0-99"`
 	CorporationInfo *CorporationInfoType `json:"corporation_info" validate:"omitempty"`
 
-	roles         []*aaa.Role
+	role          *aaa.Role
 	currentDomain *orm.Domain
 	corporation   *aaa.Corporation
 }
@@ -53,6 +44,7 @@ type CorporationInfoType struct {
 
 func (p *addUserToWhitelabelPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	d := domain.MustGetDomain(ctx)
+	currentUser := authz.MustGetUser(ctx)
 	p.currentDomain = d
 	if !p.AccountType.IsValid() {
 		return errors.InvalidAccountType
@@ -70,17 +62,17 @@ func (p *addUserToWhitelabelPayload) ValidateExtra(ctx context.Context, w http.R
 	}
 	m := aaa.NewAaaManager()
 	// validate if role ids is valid and not in forbidden keys
-	roles, err := m.FindRolesByDomainExclude(p.RolesID, d.ID, strings.Split(forbiddenUserRoles.String(), ",")...)
+	role, err := m.FindRoleByID(p.RoleID)
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug("database error, can't find role id, or role is forbidden")
 		return errors.InvalidOrForbiddenRoleErr
 	}
 
-	if len(roles) == 0 {
+	currentUser.SetUserRole(d.ID)
+	if currentUser.Role.Level <= role.Level {
 		return errors.InvalidOrForbiddenRoleErr
 	}
-
-	p.roles = roles
+	p.role = role
 	return nil
 }
 
@@ -92,24 +84,18 @@ func (p *addUserToWhitelabelPayload) ValidateExtra(ctx context.Context, w http.R
 //		resource = add_to_whitelabel_user:global
 // }
 func (c *Controller) registerToWhitelabel(ctx context.Context, r *http.Request, p *addUserToWhitelabelPayload) (*userResponse, error) {
-	currentUser := authz.MustGetUser(ctx)
-
-	_, ok := aaa.CheckPermOn(currentUser, currentUser, "add_to_whitelabel_user", p.currentDomain.ID, permission.ScopeGlobal)
-	if !ok {
-		return nil, errors.AccessDenied
-	}
-
 	user := aaa.User{
-		Email:     p.Email,
-		Password:  p.Password,
-		FirstName: p.FirstName,
-		LastName:  p.LastName,
-		Advantage: p.Advantage,
-		Status:    aaa.ActiveUserStatus,
-		Cellphone: mysql.NullString{String: p.Mobile, Valid: true},
+		Email:      p.Email,
+		Password:   p.Password,
+		FirstName:  p.FirstName,
+		LastName:   p.LastName,
+		Advantage:  p.Advantage,
+		DomainLess: false,
+		Status:     aaa.ActiveUserStatus,
+		Cellphone:  mysql.NullString{String: p.Mobile, Valid: true},
 	}
 
-	err := services.WhiteLabelAddUserRoles(ctx, &user, p.corporation, p.currentDomain.ID, p.roles)
+	err := services.WhiteLabelAddUser(ctx, &user, p.corporation, p.currentDomain.ID, p.role)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +105,7 @@ func (c *Controller) registerToWhitelabel(ctx context.Context, r *http.Request, 
 			assert.Nil(err)
 		}()
 	}
-	user.Roles = p.roles
+	user.Role = p.role
 	res := c.createUserResponse(&user, nil, nil)
 	return &res, nil
 }
