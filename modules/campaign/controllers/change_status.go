@@ -8,7 +8,6 @@ import (
 
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/framework/controller"
 	"github.com/fatih/structs"
@@ -26,7 +25,7 @@ func (pl *changeCampaignStatus) ValidateExtra(ctx context.Context, w http.Respon
 		return errors.InvalidCampaignStatusError
 	}
 
-	res, err := CheckUserCamapignDomain(ctx)
+	res, err := CheckUserCampaignDomain(ctx)
 	if err != nil {
 		return err
 	}
@@ -44,7 +43,7 @@ func (pl *changeCampaignStatus) ValidateExtra(ctx context.Context, w http.Respon
 // }
 func (c *Controller) changeStatus(ctx context.Context, r *http.Request, pl *changeCampaignStatus) (*controller.NormalResponse, error) {
 	token := authz.MustGetToken(ctx)
-	uScope, ok := aaa.CheckPermOn(pl.baseData.owner, pl.baseData.currentUser, "change_campaign_status", pl.baseData.campaign.DomainID)
+	uScope, ok := pl.baseData.currentUser.HasOn("change_campaign_status", pl.baseData.owner.ID, pl.baseData.domain.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

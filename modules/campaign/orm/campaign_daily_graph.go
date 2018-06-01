@@ -16,7 +16,7 @@ import (
 // @Graph {
 //		url = /graph/daily/:id
 //		entity = chartdaily
-//		view = campaign_graph:self
+//		view = graph_daily_campaign:self
 //		key = ID
 //		controller = clickyab.com/crab/modules/campaign/controllers
 //		fill = FillCampaignGraphDaily
@@ -85,13 +85,11 @@ func (m *Manager) FillCampaignGraphDaily(
 		where = append(where, fmt.Sprintf("%s LIKE ?", column))
 		params = append(params, "%"+val+"%")
 	}
-	currentUserID := pc.GetID()
 	highestScope := pc.GetCurrentScope()
 
 	// find current user childes
-	userManager := aaa.NewAaaManager()
-	childes := userManager.GetUserChildesIDDomain(currentUserID, pc.GetDomainID())
-	childes = append(childes, currentUserID)
+	childes := pc.GetChildesPerm(permission.ScopeSelf, "graph_daily_campaign", pc.GetDomainID())
+	childes = append(childes, pc.GetID())
 	// self or parent
 	if highestScope == permission.ScopeSelf {
 		//check if parent or owner

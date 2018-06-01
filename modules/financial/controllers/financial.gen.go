@@ -132,14 +132,14 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecName": "c",
 			"Payload": "addGatewayPayload",
 			"Resource": "add_gateway",
-			"Scope": "global"
+			"Scope": "superGlobal"
 		} with key 4 */
 		m4 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("add_gateway", "add_gateway")
-		m4 = append(m4, authz.AuthorizeGenerator("add_gateway", "global"))
+		m4 = append(m4, authz.AuthorizeGenerator("add_gateway", "superGlobal"))
 
 		// Make sure payload is the last middleware
 		m4 = append(m4, middleware.PayloadUnMarshallerGenerator(addGatewayPayload{}))
@@ -158,15 +158,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "c",
 			"Payload": "initPaymentPayload",
-			"Resource": "make_payment",
+			"Resource": "make_online_payment",
 			"Scope": "self"
 		} with key 5 */
 		m5 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("make_payment", "make_payment")
-		m5 = append(m5, authz.AuthorizeGenerator("make_payment", "self"))
+		permission.Register("make_online_payment", "make_online_payment")
+		m5 = append(m5, authz.AuthorizeGenerator("make_online_payment", "self"))
 
 		// Make sure payload is the last middleware
 		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(initPaymentPayload{}))
@@ -238,14 +238,14 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecName": "c",
 			"Payload": "editGatewayPayload",
 			"Resource": "edit_gateway",
-			"Scope": "global"
+			"Scope": "superGlobal"
 		} with key 8 */
 		m8 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("edit_gateway", "edit_gateway")
-		m8 = append(m8, authz.AuthorizeGenerator("edit_gateway", "global"))
+		m8 = append(m8, authz.AuthorizeGenerator("edit_gateway", "superGlobal"))
 
 		// Make sure payload is the last middleware
 		m8 = append(m8, middleware.PayloadUnMarshallerGenerator(editGatewayPayload{}))
@@ -286,15 +286,12 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "c",
 			"Payload": "",
-			"Resource": "god",
-			"Scope": "global"
+			"Resource": "",
+			"Scope": ""
 		} with key 10 */
 		m10 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
-
-		permission.Register("god", "god")
-		m10 = append(m10, authz.AuthorizeGenerator("god", "global"))
 
 		group.GET("controllers-Controller-getGatewayGet", "/gateways/:id", framework.Mix(c.getGatewayGet, m10...))
 		// End route with key 10
@@ -311,15 +308,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "c",
 			"Payload": "",
-			"Resource": "make_payment",
+			"Resource": "get_online_transaction",
 			"Scope": "self"
 		} with key 11 */
 		m11 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("make_payment", "make_payment")
-		m11 = append(m11, authz.AuthorizeGenerator("make_payment", "self"))
+		permission.Register("get_online_transaction", "get_online_transaction")
+		m11 = append(m11, authz.AuthorizeGenerator("get_online_transaction", "self"))
 
 		group.GET("controllers-Controller-getPaymentTransactionGet", "/payment/:id", framework.Mix(c.getPaymentTransactionGet, m11...))
 		// End route with key 11
@@ -364,14 +361,14 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecName": "c",
 			"Payload": "",
 			"Resource": "set_default_gateway",
-			"Scope": "global"
+			"Scope": "superGlobal"
 		} with key 13 */
 		m13 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("set_default_gateway", "set_default_gateway")
-		m13 = append(m13, authz.AuthorizeGenerator("set_default_gateway", "global"))
+		m13 = append(m13, authz.AuthorizeGenerator("set_default_gateway", "superGlobal"))
 
 		group.PATCH("controllers-Controller-setGatewayDefaultPatch", "/gateways/:id", framework.Mix(c.setGatewayDefaultPatch, m13...))
 		// End route with key 13

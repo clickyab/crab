@@ -15,7 +15,7 @@ import (
 // @Graph {
 //		url = /graph/all
 //		entity = chartall
-//		view = campaign_graph:self
+//		view = graph_campaign:self
 //		key = ID
 //		controller = clickyab.com/crab/modules/campaign/controllers
 //		fill = FillCampaignGraph
@@ -76,16 +76,14 @@ func (m *Manager) FillCampaignGraph(
 		where = append(where, fmt.Sprintf("%s LIKE ?", column))
 		params = append(params, "%"+val+"%")
 	}
-	currentUserID := pc.GetID()
 	highestScope := pc.GetCurrentScope()
 
-	// find current user childes
-	userManager := aaa.NewAaaManager()
-	childes := userManager.GetUserChildesIDDomain(currentUserID, pc.GetDomainID())
-	childes = append(childes, currentUserID)
 	// self or parent
 	if highestScope == permission.ScopeSelf {
 		//check if parent or owner
+		// find current user childes
+		childes := pc.GetChildesPerm(permission.ScopeSelf, "campaign_graph", pc.GetDomainID())
+		childes = append(childes, pc.GetID())
 		where = append(where, fmt.Sprintf("cp.user_id IN (%s)",
 			func() string {
 				return strings.TrimRight(strings.Repeat("?,", len(childes)), ",")

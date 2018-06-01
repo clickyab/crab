@@ -42,7 +42,7 @@ func (m *Manager) FindCityByID(id int64) (*City, error) {
 	var res City
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(CityTableFull, ""), CityTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(CityTableFull, ""), CityTableFull),
 		id,
 	)
 
@@ -58,7 +58,7 @@ func (m *Manager) FindCityByName(n string) (*City, error) {
 	var res City
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(CityTableFull, ""), CityTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", GetSelectFields(CityTableFull, ""), CityTableFull),
 		n,
 	)
 
@@ -103,7 +103,7 @@ func (m *Manager) ListCountriesWithFilter(filter string, params ...interface{}) 
 	var res []Country
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CountryTableFull, ""), CountryTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(CountryTableFull, ""), CountryTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -151,7 +151,7 @@ func (m *Manager) ListCountriesWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(CountryTableFull, ""), CountryTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(CountryTableFull, ""), CountryTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -169,7 +169,7 @@ func (m *Manager) FindCountryByID(id int64) (*Country, error) {
 	var res Country
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(CountryTableFull, ""), CountryTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(CountryTableFull, ""), CountryTableFull),
 		id,
 	)
 
@@ -185,7 +185,7 @@ func (m *Manager) FindCountryByName(n string) (*Country, error) {
 	var res Country
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(CountryTableFull, ""), CountryTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", GetSelectFields(CountryTableFull, ""), CountryTableFull),
 		n,
 	)
 
@@ -226,7 +226,7 @@ func (m *Manager) FindProvinceByName(n string) (*Province, error) {
 	var res Province
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", getSelectFields(ProvinceTableFull, ""), ProvinceTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", GetSelectFields(ProvinceTableFull, ""), ProvinceTableFull),
 		n,
 	)
 
@@ -242,7 +242,7 @@ func (m *Manager) FindProvinceByCode(c string) (*Province, error) {
 	var res Province
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE code=?", getSelectFields(ProvinceTableFull, ""), ProvinceTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE code=?", GetSelectFields(ProvinceTableFull, ""), ProvinceTableFull),
 		c,
 	)
 
@@ -260,7 +260,7 @@ func (m *Manager) GetCountryProvinces(c *Country) []Province {
 		&res,
 		fmt.Sprintf(
 			"SELECT %s FROM %s WHERE country_id=?",
-			getSelectFields(ProvinceTableFull, ""),
+			GetSelectFields(ProvinceTableFull, ""),
 			ProvinceTableFull,
 		),
 		c.ID,

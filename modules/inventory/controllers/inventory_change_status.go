@@ -10,7 +10,6 @@ import (
 	dManager "clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/inventory/errors"
 	"clickyab.com/crab/modules/inventory/orm"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/rs/xmux"
@@ -22,7 +21,6 @@ type changeStatusPayload struct {
 	Status           orm.InventoryStatus `json:"status" validate:"required"`
 	currentInventory *orm.Inventory      `json:"-"`
 	currentDomain    *dManager.Domain    `json:"-"`
-	owner            *aaa.User           `json:"-"`
 }
 
 func (pl *changeStatusPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
@@ -39,11 +37,6 @@ func (pl *changeStatusPayload) ValidateExtra(ctx context.Context, w http.Respons
 	if err != nil {
 		return errors.NotFoundError(id)
 	}
-	owner, err := aaa.NewAaaManager().FindUserWithParentsByID(inventory.UserID, currentDomain.ID)
-	if err != nil {
-		return errors.NotFoundError(id)
-	}
-	pl.owner = owner
 	pl.currentInventory = inventory
 	// get all start status campaign related to this inventory
 	campaigns := cManager.NewOrmManager().ListCampaignsWithFilter("inventory_id=? AND status=? AND domain_id=?", inventory.ID, cManager.StartStatus, currentDomain.ID)
@@ -62,7 +55,7 @@ func (pl *changeStatusPayload) ValidateExtra(ctx context.Context, w http.Respons
 // }
 func (ctrl *Controller) inventoryChangeStatus(ctx context.Context, r *http.Request, pl *changeStatusPayload) (*orm.Inventory, error) {
 	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(pl.owner, currentUser, "edit_inventory", pl.currentDomain.ID)
+	_, ok := currentUser.HasOn("edit_inventory", pl.currentInventory.UserID, pl.currentDomain.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDeniedErr
 	}

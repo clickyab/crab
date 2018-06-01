@@ -15,8 +15,6 @@ import (
 	orm2 "clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/mailer"
-	"clickyab.com/crab/modules/user/middleware/authz"
-	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 )
@@ -106,15 +104,9 @@ func sendChangeStatusMessage(sq []orm.ChangeStatusReq, campaignID int64) error {
 // 		url = /change-creatives-status/:id
 //		protected = true
 // 		method = put
-// 		resource = change_creatives_status:global
+// 		resource = change_creatives_status:superGlobal
 // }
 func (c *Controller) changeCreativesStatus(ctx context.Context, r *http.Request, p *changeStatusPayload) (*ChangeStatusResult, error) {
-	currentUser := authz.MustGetUser(ctx)
-	//check permission
-	_, ok := aaa.CheckPermOn(currentUser, currentUser, "change_creatives_status", p.currentDomain.ID, permission.ScopeGlobal)
-	if !ok {
-		return nil, errors.AccessDenied
-	}
 	m := orm.NewOrmManager()
 	// apply approve or reject
 	prob := m.ChangeCreativesStatus(p.CreativesStatus, p.currentCampaign.ID)

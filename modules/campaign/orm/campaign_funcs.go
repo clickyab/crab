@@ -119,7 +119,7 @@ func (m *Manager) FindCampaignByIDDomain(caID, dID int64) (*Campaign, error) {
 	var res Campaign
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=? AND domain_id=?", getSelectFields(CampaignTableFull, ""), CampaignTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=? AND domain_id=?", GetSelectFields(CampaignTableFull, ""), CampaignTableFull),
 		caID,
 		dID,
 	)

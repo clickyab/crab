@@ -51,7 +51,7 @@ func (m *Manager) ListInventoriesWithFilter(filter string, params ...interface{}
 	var res []Inventory
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(InventoryTableFull, ""), InventoryTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(InventoryTableFull, ""), InventoryTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListInventoriesWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(InventoryTableFull, ""), InventoryTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(InventoryTableFull, ""), InventoryTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindInventoryByID(id int64) (*Inventory, error) {
 	var res Inventory
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(InventoryTableFull, ""), InventoryTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(InventoryTableFull, ""), InventoryTableFull),
 		id,
 	)
 
@@ -162,7 +162,7 @@ func (m *Manager) ListInventoryPublishersWithFilter(filter string, params ...int
 	var res []InventoryPublisher
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(InventoryPublisherTableFull, ""), InventoryPublisherTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(InventoryPublisherTableFull, ""), InventoryPublisherTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -210,7 +210,7 @@ func (m *Manager) ListInventoryPublishersWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(InventoryPublisherTableFull, ""), InventoryPublisherTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(InventoryPublisherTableFull, ""), InventoryPublisherTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)

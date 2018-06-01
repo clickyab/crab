@@ -33,6 +33,8 @@ type listPublisherdetailsDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
+	CheckLevel  bool               `json:"checklevel"`
+	PreventSelf bool               `json:"preventself"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
 	Columns     permission.Columns `json:"columns"`
@@ -146,7 +148,7 @@ func (u *Controller) defPublisherdetails(ctx context.Context, w http.ResponseWri
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listPublisherdetailsDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, DateFilter: "daily_id", Hash: hash, Columns: listPublisherdetailsDefinition},
+		listPublisherdetailsDefResponse{Checkable: false, SearchKey: "q", Multiselect: false, CheckLevel: false, PreventSelf: false, DateFilter: "daily_id", Hash: hash, Columns: listPublisherdetailsDefinition},
 	)
 }
 

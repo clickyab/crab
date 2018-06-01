@@ -7,7 +7,6 @@ import (
 
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/xlog"
@@ -52,7 +51,7 @@ type campaignBase struct {
 }
 
 func (l *campaignBase) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	res, err := CheckUserCamapignDomain(ctx)
+	res, err := CheckUserCampaignDomain(ctx)
 	if err != nil {
 		return err
 	}
@@ -61,7 +60,7 @@ func (l *campaignBase) ValidateExtra(ctx context.Context, w http.ResponseWriter,
 	if l.StartAt.IsZero() {
 		return errors.CampaignStartTimeError
 	}
-	if l.EndAt.Valid && l.StartAt.Before(l.EndAt.Time) {
+	if l.EndAt.Valid && l.StartAt.Unix() > l.EndAt.Time.Unix() {
 		return errors.EndTimeError
 	}
 
@@ -87,7 +86,7 @@ func (c Controller) updateBase(ctx context.Context, r *http.Request, p *campaign
 	db := orm.NewOrmManager()
 	token := authz.MustGetToken(ctx)
 	// check access
-	uScope, ok := aaa.CheckPermOn(p.baseData.owner, p.baseData.currentUser, "edit_campaign", p.baseData.domain.ID)
+	uScope, ok := p.baseData.currentUser.HasOn("edit_campaign", p.baseData.owner.ID, p.baseData.domain.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

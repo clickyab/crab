@@ -52,7 +52,7 @@ func (m *Manager) ListManualCashChangesWithFilter(filter string, params ...inter
 	var res []ManualCashChange
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(ManualCashChangeTableFull, ""), ManualCashChangeTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(ManualCashChangeTableFull, ""), ManualCashChangeTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -100,7 +100,7 @@ func (m *Manager) ListManualCashChangesWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(ManualCashChangeTableFull, ""), ManualCashChangeTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(ManualCashChangeTableFull, ""), ManualCashChangeTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -118,7 +118,7 @@ func (m *Manager) FindManualCashChangeByID(id int64) (*ManualCashChange, error) 
 	var res ManualCashChange
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(ManualCashChangeTableFull, ""), ManualCashChangeTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(ManualCashChangeTableFull, ""), ManualCashChangeTableFull),
 		id,
 	)
 

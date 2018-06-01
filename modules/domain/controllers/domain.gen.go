@@ -38,15 +38,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "c",
 			"Payload": "changeDomainStatusPayload",
-			"Resource": "god",
-			"Scope": "global"
+			"Resource": "change_domain_status",
+			"Scope": "superGlobal"
 		} with key 0 */
 		m0 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("god", "god")
-		m0 = append(m0, authz.AuthorizeGenerator("god", "global"))
+		permission.Register("change_domain_status", "change_domain_status")
+		m0 = append(m0, authz.AuthorizeGenerator("change_domain_status", "superGlobal"))
 
 		// Make sure payload is the last middleware
 		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(changeDomainStatusPayload{}))
@@ -65,15 +65,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "c",
 			"Payload": "createDomainPayload",
-			"Resource": "god",
-			"Scope": "global"
+			"Resource": "create_domain",
+			"Scope": "superGlobal"
 		} with key 1 */
 		m1 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("god", "god")
-		m1 = append(m1, authz.AuthorizeGenerator("god", "global"))
+		permission.Register("create_domain", "create_domain")
+		m1 = append(m1, authz.AuthorizeGenerator("create_domain", "superGlobal"))
 
 		// Make sure payload is the last middleware
 		m1 = append(m1, middleware.PayloadUnMarshallerGenerator(createDomainPayload{}))
@@ -92,15 +92,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "c",
 			"Payload": "editDomainPayload",
-			"Resource": "god",
-			"Scope": "global"
+			"Resource": "edit_domain",
+			"Scope": "superGlobal"
 		} with key 2 */
 		m2 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("god", "god")
-		m2 = append(m2, authz.AuthorizeGenerator("god", "global"))
+		permission.Register("edit_domain", "edit_domain")
+		m2 = append(m2, authz.AuthorizeGenerator("edit_domain", "superGlobal"))
 
 		// Make sure payload is the last middleware
 		m2 = append(m2, middleware.PayloadUnMarshallerGenerator(editDomainPayload{}))

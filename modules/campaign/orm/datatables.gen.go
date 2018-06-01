@@ -86,19 +86,19 @@ func (cd CampaignDetails) Filter(u permission.Interface) CampaignDetails {
 
 	res.Actions = cd.Actions
 
-	if _, ok := u.HasOn("archive_campaign", cd.OwnerID, cd.ParentIDs, cd.DomainID, permission.ScopeSelf, permission.ScopeGlobal); ok {
+	if _, ok := u.HasOn("archive_campaign", cd.OwnerID, cd.DomainID, false, false, permission.ScopeSelf, permission.ScopeGlobal); ok {
 		action = append(action, "archive")
 	}
 
-	if _, ok := u.HasOn("copy_campaign", cd.OwnerID, cd.ParentIDs, cd.DomainID, permission.ScopeSelf, permission.ScopeGlobal); ok {
+	if _, ok := u.HasOn("copy_campaign", cd.OwnerID, cd.DomainID, false, false, permission.ScopeSelf, permission.ScopeGlobal); ok {
 		action = append(action, "copy")
 	}
 
-	if _, ok := u.HasOn("get_campaign", cd.OwnerID, cd.ParentIDs, cd.DomainID, permission.ScopeSelf, permission.ScopeGlobal); ok {
+	if _, ok := u.HasOn("get_campaign", cd.OwnerID, cd.DomainID, false, false, permission.ScopeSelf, permission.ScopeGlobal); ok {
 		action = append(action, "detail")
 	}
 
-	if _, ok := u.HasOn("edit_campaign", cd.OwnerID, cd.ParentIDs, cd.DomainID, permission.ScopeSelf, permission.ScopeGlobal); ok {
+	if _, ok := u.HasOn("edit_campaign", cd.OwnerID, cd.DomainID, false, false, permission.ScopeSelf, permission.ScopeGlobal); ok {
 		action = append(action, "edit")
 	}
 

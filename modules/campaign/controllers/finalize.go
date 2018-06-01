@@ -8,7 +8,6 @@ import (
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	inventoryOrm "clickyab.com/crab/modules/inventory/orm"
-	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/fatih/structs"
 )
@@ -27,14 +26,14 @@ type finalizeResult struct {
 // }
 func (c *Controller) finalize(ctx context.Context, r *http.Request) (*finalizeResult, error) {
 	token := authz.MustGetToken(ctx)
-	baseData, err := CheckUserCamapignDomain(ctx)
+	baseData, err := CheckUserCampaignDomain(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	db := orm.NewOrmManager()
 	// check access
-	uScope, ok := aaa.CheckPermOn(baseData.owner, baseData.currentUser, "edit_campaign", baseData.domain.ID)
+	uScope, ok := baseData.currentUser.HasOn("edit_campaign", baseData.owner.ID, baseData.domain.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

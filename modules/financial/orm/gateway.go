@@ -55,7 +55,7 @@ func (m *Manager) FindActiveGatewayByName(name string) (*Gateway, error) {
 	var res Gateway
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE name=? AND status=?", getSelectFields(GatewayTableFull, ""), GatewayTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=? AND status=?", GetSelectFields(GatewayTableFull, ""), GatewayTableFull),
 		name,
 		Enabled,
 	)

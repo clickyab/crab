@@ -51,7 +51,7 @@ func (m *Manager) ListPublishersWithFilter(filter string, params ...interface{})
 	var res []Publisher
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(PublisherTableFull, ""), PublisherTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(PublisherTableFull, ""), PublisherTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func (m *Manager) ListPublishersWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(PublisherTableFull, ""), PublisherTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(PublisherTableFull, ""), PublisherTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -117,7 +117,7 @@ func (m *Manager) FindPublisherByID(id int64) (*Publisher, error) {
 	var res Publisher
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(PublisherTableFull, ""), PublisherTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(PublisherTableFull, ""), PublisherTableFull),
 		id,
 	)
 

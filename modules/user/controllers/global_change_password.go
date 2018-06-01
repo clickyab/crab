@@ -13,7 +13,6 @@ import (
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/controller"
-	"github.com/clickyab/services/permission"
 	"github.com/rs/xmux"
 )
 
@@ -50,7 +49,7 @@ func (p *changePass) ValidateExtra(ctx context.Context, w http.ResponseWriter, r
 // }
 func (c *Controller) changeAdminPassword(ctx context.Context, r *http.Request, p *changePass) (*controller.NormalResponse, error) {
 	currentUser := authz.MustGetUser(ctx)
-	_, ok := aaa.CheckPermOn(p.targetUser, currentUser, "edit_user", p.currentDomain.ID, permission.ScopeGlobal)
+	_, ok := currentUser.HasOn("edit_user", p.targetUser.ID, p.currentDomain.ID, true, true)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

@@ -40,7 +40,7 @@ func (c Controller) getCampaignProgress(ctx context.Context, r *http.Request) (*
 	}
 
 	// check access
-	_, ok := aaa.CheckPermOn(owner, currentUser, "get_campaign", dm.ID)
+	_, ok := currentUser.HasOn("get_campaign", owner.ID, dm.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}

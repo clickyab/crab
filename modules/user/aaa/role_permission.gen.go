@@ -47,7 +47,7 @@ func (m *Manager) FindRolePermissionByID(id int64) (*RolePermission, error) {
 	var res RolePermission
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(RolePermissionTableFull, ""), RolePermissionTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(RolePermissionTableFull, ""), RolePermissionTableFull),
 		id,
 	)
 
@@ -56,33 +56,6 @@ func (m *Manager) FindRolePermissionByID(id int64) (*RolePermission, error) {
 	}
 
 	return &res, nil
-}
-
-// CreateRoleUser try to save a new RoleUser in database
-func (m *Manager) CreateRoleUser(ru *RoleUser) error {
-	now := time.Now()
-	ru.CreatedAt = now
-
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
-		}
-	}(ru)
-
-	return m.GetWDbMap().Insert(ru)
-}
-
-// UpdateRoleUser try to update RoleUser in database
-func (m *Manager) UpdateRoleUser(ru *RoleUser) error {
-
-	func(in interface{}) {
-		if ii, ok := in.(initializer.Simple); ok {
-			ii.Initialize()
-		}
-	}(ru)
-
-	_, err := m.GetWDbMap().Update(ru)
-	return err
 }
 
 // CreateRole try to save a new Role in database
@@ -123,7 +96,7 @@ func (m *Manager) ListRolesWithFilter(filter string, params ...interface{}) []Ro
 	var res []Role
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(RoleTableFull, ""), RoleTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(RoleTableFull, ""), RoleTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -171,7 +144,7 @@ func (m *Manager) ListRolesWithPaginationFilter(
 	// TODO : better pagination without offset and limit
 	_, err := m.GetRDbMap().Select(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s %s", getSelectFields(RoleTableFull, ""), RoleTableFull, filter),
+		fmt.Sprintf("SELECT %s FROM %s %s", GetSelectFields(RoleTableFull, ""), RoleTableFull, filter),
 		params...,
 	)
 	assert.Nil(err)
@@ -189,8 +162,24 @@ func (m *Manager) FindRoleByID(id int64) (*Role, error) {
 	var res Role
 	err := m.GetRDbMap().SelectOne(
 		&res,
-		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", getSelectFields(RoleTableFull, ""), RoleTableFull),
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(RoleTableFull, ""), RoleTableFull),
 		id,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
+
+// FindRoleByName return the Role base on its name
+func (m *Manager) FindRoleByName(n string) (*Role, error) {
+	var res Role
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT %s FROM %s WHERE name=?", GetSelectFields(RoleTableFull, ""), RoleTableFull),
+		n,
 	)
 
 	if err != nil {

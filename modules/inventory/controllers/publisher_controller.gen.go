@@ -33,6 +33,8 @@ type listPublisherDefResponse struct {
 	Hash        string             `json:"hash"`
 	Checkable   bool               `json:"checkable"`
 	Multiselect bool               `json:"multiselect"`
+	CheckLevel  bool               `json:"checklevel"`
+	PreventSelf bool               `json:"preventself"`
 	DateFilter  string             `json:"datefilter"`
 	SearchKey   string             `json:"searchkey"`
 	Columns     permission.Columns `json:"columns"`
@@ -51,7 +53,7 @@ var (
 //		_q_ = string , parameter for search
 //		_from_ = string , from date rfc3339 ex:2002-10-02T15:00:00.05Z
 //		_to_ = string , to date rfc3339 ex:2002-10-02T15:00:00.05Z
-//		resource = publisher_list:self
+//		resource = list_publisher:self
 //		_sort_ = string, the sort and order like id:asc or id:desc available column "id","created_at"
 //		_kind_ = string , filter the kind field valid values are "web","app"
 //		_status_ = string , filter the status field valid values are "accepted","pending","blocked"
@@ -131,7 +133,7 @@ func (u *Controller) listPublisher(ctx context.Context, w http.ResponseWriter, r
 		params[i.Name] = xmux.Param(ctx, i.Name)
 	}
 
-	pc := permission.NewInterfaceComplete(usr, usr.ID, "publisher_list", "self", domain.ID)
+	pc := permission.NewInterfaceComplete(usr, usr.ID, "list_publisher", "self", domain.ID)
 	dt, cnt, err := m.FillPublisherDataTableArray(pc, filter, from, to, search, params, sort, order, p, c)
 	if err != nil {
 		u.JSON(w, http.StatusBadRequest, err)
@@ -157,7 +159,7 @@ func (u *Controller) listPublisher(ctx context.Context, w http.ResponseWriter, r
 // @Route {
 // 		url = /publisher/list/definition
 //		method = get
-//		resource = publisher_list:self
+//		resource = list_publisher:self
 //		200 = listPublisherDefResponse
 // }
 func (u *Controller) defPublisher(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -166,7 +168,7 @@ func (u *Controller) defPublisher(ctx context.Context, w http.ResponseWriter, r 
 	hash := fmt.Sprintf("%x", h.Sum(nil))
 	u.OKResponse(
 		w,
-		listPublisherDefResponse{Checkable: true, SearchKey: "q", Multiselect: true, DateFilter: "created_at", Hash: hash, Columns: listPublisherDefinition},
+		listPublisherDefResponse{Checkable: true, SearchKey: "q", Multiselect: true, CheckLevel: false, PreventSelf: false, DateFilter: "created_at", Hash: hash, Columns: listPublisherDefinition},
 	)
 }
 

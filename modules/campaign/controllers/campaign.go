@@ -34,8 +34,8 @@ type BaseData struct {
 	currentUser *aaa.User
 }
 
-// CheckUserCamapignDomain func to check campaign exist and is for current user and domain and return base data
-func CheckUserCamapignDomain(ctx context.Context) (*BaseData, error) {
+// CheckUserCampaignDomain func to check campaign exist and is for current user and domain and return base data
+func CheckUserCampaignDomain(ctx context.Context) (*BaseData, error) {
 	caID, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 64)
 	if err != nil || caID < 1 {
 		return nil, errors.InvalidIDErr
@@ -50,7 +50,7 @@ func CheckUserCamapignDomain(ctx context.Context) (*BaseData, error) {
 	}
 
 	userManager := aaa.NewAaaManager()
-	owner, err := userManager.FindUserWithParentsByID(ca.UserID, d.ID)
+	owner, err := userManager.FindUserByID(ca.UserID)
 	if err != nil {
 		return nil, userError.NotFoundWithDomainError(d.DomainBase)
 	}

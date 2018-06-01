@@ -38,15 +38,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "u",
 			"Payload": "",
-			"Resource": "campaign_daily",
+			"Resource": "daily_campaign",
 			"Scope": "self"
 		} with key 0 */
 		m0 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("campaign_daily", "campaign_daily")
-		m0 = append(m0, authz.AuthorizeGenerator("campaign_daily", "self"))
+		permission.Register("daily_campaign", "daily_campaign")
+		m0 = append(m0, authz.AuthorizeGenerator("daily_campaign", "self"))
 
 		group.GET("controllers-Controller-listCampaigndaily", "/daily/:id", framework.Mix(c.listCampaigndaily, m0...))
 		// End route with key 0
@@ -63,15 +63,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "u",
 			"Payload": "",
-			"Resource": "campaign_daily",
+			"Resource": "daily_campaign",
 			"Scope": "self"
 		} with key 1 */
 		m1 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("campaign_daily", "campaign_daily")
-		m1 = append(m1, authz.AuthorizeGenerator("campaign_daily", "self"))
+		permission.Register("daily_campaign", "daily_campaign")
+		m1 = append(m1, authz.AuthorizeGenerator("daily_campaign", "self"))
 
 		group.GET("controllers-Controller-defCampaigndaily", "/daily/:id/definition", framework.Mix(c.defCampaigndaily, m1...))
 		// End route with key 1
@@ -138,15 +138,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "u",
 			"Payload": "",
-			"Resource": "campaign_list",
+			"Resource": "list_campaign",
 			"Scope": "self"
 		} with key 4 */
 		m4 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("campaign_list", "campaign_list")
-		m4 = append(m4, authz.AuthorizeGenerator("campaign_list", "self"))
+		permission.Register("list_campaign", "list_campaign")
+		m4 = append(m4, authz.AuthorizeGenerator("list_campaign", "self"))
 
 		group.GET("controllers-Controller-listCampaigns", "/list", framework.Mix(c.listCampaigns, m4...))
 		// End route with key 4
@@ -163,15 +163,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "u",
 			"Payload": "",
-			"Resource": "campaign_list",
+			"Resource": "list_campaign",
 			"Scope": "self"
 		} with key 5 */
 		m5 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("campaign_list", "campaign_list")
-		m5 = append(m5, authz.AuthorizeGenerator("campaign_list", "self"))
+		permission.Register("list_campaign", "list_campaign")
+		m5 = append(m5, authz.AuthorizeGenerator("list_campaign", "self"))
 
 		group.GET("controllers-Controller-defCampaigns", "/list/definition", framework.Mix(c.defCampaigns, m5...))
 		// End route with key 5
@@ -188,15 +188,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "ctrl",
 			"Payload": "",
-			"Resource": "campaign_graph",
+			"Resource": "graph_campaign",
 			"Scope": "self"
 		} with key 6 */
 		m6 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("campaign_graph", "campaign_graph")
-		m6 = append(m6, authz.AuthorizeGenerator("campaign_graph", "self"))
+		permission.Register("graph_campaign", "graph_campaign")
+		m6 = append(m6, authz.AuthorizeGenerator("graph_campaign", "self"))
 
 		group.GET("controllers-Controller-graphChartall", "/graph/all", framework.Mix(c.graphChartall, m6...))
 		// End route with key 6
@@ -213,15 +213,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "ctrl",
 			"Payload": "",
-			"Resource": "campaign_graph",
+			"Resource": "graph_daily_campaign",
 			"Scope": "self"
 		} with key 7 */
 		m7 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("campaign_graph", "campaign_graph")
-		m7 = append(m7, authz.AuthorizeGenerator("campaign_graph", "self"))
+		permission.Register("graph_daily_campaign", "graph_daily_campaign")
+		m7 = append(m7, authz.AuthorizeGenerator("graph_daily_campaign", "self"))
 
 		group.GET("controllers-Controller-graphChartdaily", "/graph/daily/:id", framework.Mix(c.graphChartdaily, m7...))
 		// End route with key 7
@@ -473,15 +473,15 @@ func (c *Controller) Routes(r framework.Mux) {
 			"RecType": "Controller",
 			"RecName": "c",
 			"Payload": "createCampaignPayload",
-			"Resource": "edit_campaign",
+			"Resource": "create_campaign",
 			"Scope": "self"
 		} with key 17 */
 		m17 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		permission.Register("edit_campaign", "edit_campaign")
-		m17 = append(m17, authz.AuthorizeGenerator("edit_campaign", "self"))
+		permission.Register("create_campaign", "create_campaign")
+		m17 = append(m17, authz.AuthorizeGenerator("create_campaign", "self"))
 
 		// Make sure payload is the last middleware
 		m17 = append(m17, middleware.PayloadUnMarshallerGenerator(createCampaignPayload{}))

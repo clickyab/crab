@@ -66,7 +66,7 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "user_list:global"
+			"resource": "list_user:self"
 		},
 		"tags": [
 			"user"

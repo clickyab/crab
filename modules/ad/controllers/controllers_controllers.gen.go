@@ -15,7 +15,7 @@ import (
 //		method = post
 //		payload = createNativePayload
 //		middleware = authz.Authenticate
-//		resource = add_creative:self
+//		resource = create_creative:self
 //		200 = orm.CreativeSaveResult
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
@@ -37,7 +37,7 @@ func (c Controller) addNativeCreativePost(ctx context.Context, w http.ResponseWr
 //		method = patch
 //		payload = changeStatus
 //		middleware = authz.Authenticate
-//		resource = change_creative_status:global
+//		resource = change_creative_status:superGlobal
 //		200 = CreativeStatusChangeResult
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
@@ -59,7 +59,7 @@ func (c Controller) changeCampaignCreativeStatusPatch(ctx context.Context, w htt
 //		method = put
 //		payload = changeStatusPayload
 //		middleware = authz.Authenticate
-//		resource = change_creatives_status:global
+//		resource = change_creatives_status:superGlobal
 //		200 = ChangeStatusResult
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
