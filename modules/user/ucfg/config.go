@@ -14,3 +14,6 @@ var DefaultRole = config.RegisterString("crab.modules.user.default_role", "Adver
 
 // DefaultAccountRole default account role
 var DefaultAccountRole = config.RegisterString("crab.modules.user.account.default_role", "Account", "default account role in system")
+
+// DefaultOwnerRole DefaultOwnerRole
+var DefaultOwnerRole = config.RegisterString("crab.modules.domain.default.owner.role", "Owner", "default domain role name")

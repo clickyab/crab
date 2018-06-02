@@ -12,11 +12,9 @@ import (
 
 	"clickyab.com/crab/modules/upload/model"
 	"clickyab.com/crab/modules/user/mailer"
+	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/config"
 )
-
-var defaultOwnerRole = config.RegisterString("crab.modules.domain.default.owner.role", "Owner", "default domain role name")
 
 // @Validate{
 //}
@@ -127,7 +125,7 @@ func (c *Controller) createDomain(ctx context.Context, r *http.Request, p *creat
 	corp := &aaa.Corporation{}
 	corp.LegalName = p.Company
 
-	role, err := aaa.NewAaaManager().FindRoleByName(defaultOwnerRole.String())
+	role, err := aaa.NewAaaManager().FindRoleByName(ucfg.DefaultOwnerRole.String())
 	if err != nil {
 		return nil, errors.OwnerRoleNotFound
 	}
