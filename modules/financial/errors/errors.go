@@ -57,6 +57,10 @@ var (
 	EditGatewayErr error = t9e.G("an error occurred when editing gateway")
 	// ApplyManualCashDbErr error in applying manual cash
 	ApplyManualCashDbErr error = t9e.G("database error occurred when applying manual cash")
+	// OwnerNotFoundErr owner not found err
+	OwnerNotFoundErr error = t9e.G("owner not found err")
+	// ChargeableErr only advertiser can be manually charged
+	ChargeableErr error = t9e.G("only advertiser can be manually charged")
 )
 
 // NotFoundError maker

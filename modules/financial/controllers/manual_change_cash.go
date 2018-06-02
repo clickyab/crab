@@ -11,6 +11,7 @@ import (
 	"clickyab.com/crab/modules/financial/orm"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
+	"clickyab.com/crab/modules/user/ucfg"
 	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
 )
@@ -24,6 +25,7 @@ type changeCashStatus struct {
 	Description   string                `json:"description"`
 	currentDomain *ormDomain.Domain     `json:"-"`
 	operatorUser  *aaa.User             `json:"-"`
+	ownerUser     *aaa.User             `json:"-"`
 	targetUser    *aaa.User             `json:"-"`
 }
 
@@ -42,15 +44,27 @@ func (p *changeCashStatus) ValidateExtra(ctx context.Context, w http.ResponseWri
 
 	dm := domain.MustGetDomain(ctx)
 	// check if user id is valid
-	userObject, err := aaa.NewAaaManager().FindUserWithParentsByID(p.UserID, dm.ID)
+	userObject, err := aaa.NewAaaManager().FindUserByID(p.UserID)
 	if err != nil {
 		return errors.InvalidIDErr
 	}
+	// only advertiser can be charged manually
+	userObject.SetUserRole(dm.ID)
+	if userObject.Role.Name != ucfg.DefaultRole.String() {
+		return errors.ChargeableErr
+	}
 	p.targetUser = userObject
+	//find domain owner
+	owner, err := aaa.NewAaaManager().FindDomainOwner(dm.ID)
+	if err != nil {
+		return errors.OwnerNotFoundErr
+	}
+	p.ownerUser = owner
+
 	// check if should inc the balance
 	if p.Amount > 0 {
 		// check if creator has enough money in her/his
-		if p.Amount > p.operatorUser.Balance {
+		if p.Amount > p.ownerUser.Balance {
 			return errors.NotEnoughBalance
 		}
 	} else {
@@ -72,7 +86,7 @@ func (p *changeCashStatus) ValidateExtra(ctx context.Context, w http.ResponseWri
 // }
 func (c *Controller) manualChangeCash(ctx context.Context, r *http.Request, p *changeCashStatus) (*ChangeCashResult, error) {
 	//check permission
-	_, ok := p.operatorUser.HasOn("manual_change_cash", p.targetUser.ID, p.currentDomain.ID, false, false, permission.ScopeGlobal)
+	_, ok := p.operatorUser.HasOn("manual_change_cash", p.targetUser.ID, p.currentDomain.ID, true, true, permission.ScopeGlobal)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
@@ -87,7 +101,7 @@ func (c *Controller) manualChangeCash(ctx context.Context, r *http.Request, p *c
 	}
 
 	m := orm.NewOrmManager()
-	err := m.ApplyManualCash(p.operatorUser, p.targetUser, manualCash)
+	err := m.ApplyManualCash(p.ownerUser, p.targetUser, manualCash)
 
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug("database error when applying manual cash:", err)

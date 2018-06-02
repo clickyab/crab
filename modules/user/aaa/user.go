@@ -514,3 +514,35 @@ func (u *User) FindUserActiveDomains() []domainOrm.Domain {
 	assert.Nil(err)
 	return res
 }
+
+// FindDomainOwner find domain owner by domain id
+func (m *Manager) FindDomainOwner(d int64) (*User, error) {
+	var res *User
+	q := fmt.Sprintf(`SELECT %s FROM %s AS u
+	INNER JOIN %s AS du ON (du.user_id=u.id)
+	INNER JOIN %s AS r ON (du.role_id=r.id)
+	WHERE du.domain_id=? AND r.name=?`,
+		GetSelectFields(UserTableFull, "u"),
+		UserTableFull,
+		domainOrm.DomainUserTableFull,
+		RoleTableFull,
+	)
+	err := m.GetRDbMap().SelectOne(&res, q, d, ucfg.DefaultOwnerRole.String())
+	return res, err
+}
+
+func (m *Manager) SearchAdvertiserByMailDomain(email string, d int64) []UserSearchResult {
+	var res []UserSearchResult
+	q := fmt.Sprintf(
+		`SELECT u.id,u.email FROM %s AS u
+				INNER JOIN %s AS du ON (du.user_id=u.id AND du.domain_id=? AND du.status=?)
+				INNER JOIN %s AS r ON (r.id=du.role_id)
+				WHERE u.email LIKE ? AND r.name=?`,
+		UserTableFull,
+		domainOrm.DomainUserTableFull,
+		RoleTableFull,
+	)
+	_, err := m.GetRDbMap().Select(&res, q, d, domainOrm.EnableDomainStatus, "%"+email+"%", ucfg.DefaultRole.String())
+	assert.Nil(err)
+	return res
+}

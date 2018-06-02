@@ -42,7 +42,7 @@ type ManualCashChange struct {
 	UpdatedAt   mysql.NullTime    `json:"updated_at" db:"updated_at"`
 }
 
-func addChangeToBilling(m *Manager, user *aaa.User, incomeID int64, domainID int64, balance int64, amount int64) error {
+func (m *Manager) addChangeToBilling(user *aaa.User, incomeID int64, domainID int64, balance int64, amount int64) error {
 	billingDetail := &Billing{
 		DomainID:  domainID,
 		UserID:    user.ID,
@@ -81,7 +81,7 @@ func (m *Manager) ApplyManualCash(fromUser *aaa.User, toUser *aaa.User, ch *Manu
 		return err
 	}
 	// insert creator billing
-	err = addChangeToBilling(m, fromUser, ch.ID, ch.DomainID, newCreatorBalance, operatorAmount)
+	err = m.addChangeToBilling(fromUser, ch.ID, ch.DomainID, newCreatorBalance, operatorAmount)
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func (m *Manager) ApplyManualCash(fromUser *aaa.User, toUser *aaa.User, ch *Manu
 		return err
 	}
 	// insert user billing
-	err = addChangeToBilling(m, toUser, ch.ID, ch.DomainID, newUserBalance, ch.Amount)
+	err = m.addChangeToBilling(toUser, ch.ID, ch.DomainID, newUserBalance, ch.Amount)
 	return err
 }
 
@@ -107,4 +107,31 @@ func (m *Manager) changeUserBalance(user *aaa.User, domainID int64, amount int64
 	userQ := fmt.Sprintf("UPDATE %s SET balance=? WHERE id=?", aaa.UserTableFull)
 	_, err = m.GetWDbMap().Exec(userQ, newBalance, user.ID)
 	return newBalance, err
+}
+
+// ApplyOwnerManualCash apply change cash for owner by superglobal
+func (m *Manager) ApplyOwnerManualCash(fromUser *aaa.User, toUser *aaa.User, ch *ManualCashChange) error {
+	err := m.Begin()
+	assert.Nil(err)
+	defer func() {
+		if err != nil {
+			assert.Nil(m.Rollback())
+		} else {
+			assert.Nil(m.Commit())
+		}
+	}()
+	// add amount to manual change cash
+	err = m.CreateManualCashChange(ch)
+	if err != nil {
+		return err
+	}
+	// inc/dec user balance
+	var newUserBalance int64
+	newUserBalance, err = m.changeUserBalance(toUser, ch.DomainID, ch.Amount)
+	if err != nil {
+		return err
+	}
+	// insert user billing
+	err = m.addChangeToBilling(toUser, ch.ID, ch.DomainID, newUserBalance, ch.Amount)
+	return err
 }
