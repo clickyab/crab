@@ -1,0 +1,73 @@
+{
+	"post": {
+		"description": "searchAdvertiserByMail search advertiser user by email",
+		"parameters": [
+			{
+				"description": "the security token, get it from login route",
+				"in": "header",
+				"name": "token",
+				"required": true,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "body",
+				"name": "payload_data",
+				"required": false,
+				"schema": {
+					"$ref": "#/definitions/user_searchUserPayload"
+				}
+			}
+		],
+		"responses": {
+			"200": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/user_userSearchResp"
+				}
+			},
+			"400": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			},
+			"401": {
+				"description": "",
+				"schema": {
+					"$ref": "#/definitions/controller_ErrorResponseSimple"
+				}
+			},
+			"403": {
+				"description": "forbidden, you have no access here",
+				"schema": {
+					"properties": {
+						"error": {
+							"properties": {
+								"params": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								},
+								"text": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						}
+					},
+					"title": "forbidden",
+					"type": "object"
+				}
+			}
+		},
+		"security": {
+			"protected": true,
+			"resource": ""
+		},
+		"tags": [
+			"user"
+		]
+	}
+}

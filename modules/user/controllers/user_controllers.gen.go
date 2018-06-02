@@ -383,7 +383,7 @@ func (c *Controller) registerPost(ctx context.Context, w http.ResponseWriter, r 
 
 // searchByMail search user by email
 // @Route {
-// 		url = /search/mail
+// 		url = /search/user/mail
 //		method = post
 //		payload = searchUserPayload
 //		middleware = authz.Authenticate
@@ -414,6 +414,26 @@ func (c *Controller) searchByMailPost(ctx context.Context, w http.ResponseWriter
 func (c *Controller) searchMangerByMailPost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := c.MustGetPayload(ctx).(*searchUserPayload)
 	res, err := c.searchMangerByMail(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
+// searchAdvertiserByMail search advertiser user by email
+// @Route {
+// 		url = /search/advertiser/mail
+//		method = post
+//		payload = searchUserPayload
+//		middleware = authz.Authenticate
+//		200 = userSearchResp
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+// }
+func (c *Controller) searchAdvertiserByMailPost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*searchUserPayload)
+	res, err := c.searchAdvertiserByMail(ctx, r, pl)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return

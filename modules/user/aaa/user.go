@@ -531,6 +531,7 @@ func (m *Manager) FindDomainOwner(d int64) (*User, error) {
 	return res, err
 }
 
+// SearchAdvertiserByMailDomain SearchAdvertiserByMailDomain
 func (m *Manager) SearchAdvertiserByMailDomain(email string, d int64) []UserSearchResult {
 	var res []UserSearchResult
 	q := fmt.Sprintf(
