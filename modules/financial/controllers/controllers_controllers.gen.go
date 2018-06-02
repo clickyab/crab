@@ -96,6 +96,28 @@ func (c *Controller) billingListGet(ctx context.Context, w http.ResponseWriter, 
 	framework.Write(w, res, http.StatusOK)
 }
 
+// chargeOwner charge owner by domain less user
+// @Route {
+// 		url = /charge/whitelabel/:id
+//		method = post
+//		payload = chargeOwner
+//		middleware = authz.Authenticate
+//		resource = charge_owner:superGlobal
+//		200 = payOrm.ManualCashChange
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) chargeOwnerPost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*chargeOwner)
+	res, err := c.chargeOwner(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // editGateway to financial
 // @Route {
 // 		url = /gateways/:id

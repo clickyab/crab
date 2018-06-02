@@ -1,0 +1,8 @@
+{
+	"properties": {
+		"amount": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}
