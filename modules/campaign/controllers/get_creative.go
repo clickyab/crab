@@ -9,11 +9,10 @@ import (
 	"clickyab.com/crab/modules/campaign/errors"
 	"clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/domain/middleware/domain"
+	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/rs/xmux"
 )
-
-type getCreativeResp []*adManager.CreativeSaveResult
 
 // getCreativeByCampaign to get creative by id
 // @Rest {
@@ -22,7 +21,7 @@ type getCreativeResp []*adManager.CreativeSaveResult
 // 		method = get
 // 		resource = get_creative:self
 // }
-func (c Controller) getCreativeByCampaign(ctx context.Context, r *http.Request) (getCreativeResp, error) {
+func (c Controller) getCreativeByCampaign(ctx context.Context, r *http.Request) (*adManager.CreativeCampaignResult, error) {
 	idInt, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 0)
 	if err != nil {
 		return nil, errors.InvalidIDErr
@@ -34,6 +33,11 @@ func (c Controller) getCreativeByCampaign(ctx context.Context, r *http.Request) 
 	currentCampaign, err := orm.NewOrmManager().FindCampaignByIDDomain(idInt, dm.ID)
 	if err != nil {
 		return nil, errors.NotFoundError(idInt)
+	}
+	// find owner
+	campaignOwner, err := aaa.NewAaaManager().FindUserByID(currentCampaign.UserID)
+	if err != nil {
+		return nil, errors.NotFoundError(currentCampaign.UserID)
 	}
 	_, ok := currentUser.HasOn("get_creative", currentCampaign.UserID, dm.ID, false, false)
 	if !ok {
@@ -52,5 +56,8 @@ func (c Controller) getCreativeByCampaign(ctx context.Context, r *http.Request) 
 		})
 	}
 
-	return getCreativeResp(res), nil
+	return &adManager.CreativeCampaignResult{
+		Creatives:          res,
+		CampaignOwnerEmail: campaignOwner.Email,
+	}, nil
 }
