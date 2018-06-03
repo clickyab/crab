@@ -1,0 +1,34 @@
+{
+	"properties": {
+		"Creatives": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		},
+		"campaign_owner_email": {
+			"type": "string"
+		},
+		"campaign_owner_mobile": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"kind": {
+			"type": "string"
+		},
+		"title": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

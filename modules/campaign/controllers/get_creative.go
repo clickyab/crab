@@ -57,7 +57,11 @@ func (c Controller) getCreativeByCampaign(ctx context.Context, r *http.Request) 
 	}
 
 	return &adManager.CreativeCampaignResult{
-		Creatives:          res,
-		CampaignOwnerEmail: campaignOwner.Email,
+		Creatives:           res,
+		ID:                  currentCampaign.ID,
+		CampaignOwnerEmail:  campaignOwner.Email,
+		Kind:                currentCampaign.Kind,
+		Title:               currentCampaign.Title,
+		CampaignOwnerMobile: campaignOwner.Cellphone,
 	}, nil
 }

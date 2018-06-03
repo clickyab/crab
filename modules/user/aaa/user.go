@@ -396,8 +396,8 @@ func (m *Manager) SearchAccountByMailDomain(mail string, d int64) []UserSearchRe
 }
 
 // FindManagersByIDsDomain find managers by ids and domains
-func (m *Manager) FindManagersByIDsDomain(ids []int64, d int64) []*ManagerUser {
-	var res []*ManagerUser
+func (m *Manager) FindManagersByIDsDomain(ids []int64, d int64) []ManagerUser {
+	var res []ManagerUser
 	var params []interface{}
 	q := fmt.Sprintf(`SELECT u.id,u.first_name,u.last_name,u.email FROM %s AS u 
 	INNER JOIN %s AS du ON (du.user_id=u.id AND du.domain_id=? AND du.status=?)
@@ -480,8 +480,8 @@ func (m *Manager) FindRolePermByName(name string, domain string) ([]RolePermissi
 }
 
 // FindUserManagers find managers of a user with user id and domain
-func (m *Manager) FindUserManagers(userID int64, domainID int64) ([]*ManagerUser, error) {
-	var res []*ManagerUser
+func (m *Manager) FindUserManagers(userID int64, domainID int64) ([]ManagerUser, error) {
+	var res []ManagerUser
 	q := fmt.Sprintf(`
 	select u.email, u.first_name, u.last_name, u.id from %s as u
 	inner join %s a on u.id = a.advisor_id

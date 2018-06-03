@@ -5,6 +5,7 @@
 	],
 	"definitions": {
 		"aaa_AccountType": "file://eeb727dfd6e8bde57d041bf998fb7a81a26f6fd2",
+		"aaa_ManagerUser": "file://181ccb832105d31a8794634aa0ba5c6bf425f8a3",
 		"aaa_Role": "file://1563f0570c8714875973ea80d2b5df8fd2c2d3e9",
 		"aaa_UserList": "file://b8de6a5099d4aba4e391c31ffd5283d346bde785",
 		"aaa_UserSearchResult": "file://5e14b24877e04042f3421f158e2215909bbe8890",
@@ -44,7 +45,6 @@
 		"controllers_editGatewayPayload": "file://30dbceef53b4b30aa5619f273ce85bd132f53b66",
 		"controllers_editNativePayload": "file://cd60cd0e30f6fad999bd2f5b04ef2b0f35a84cde",
 		"controllers_finalizeResult": "file://97b4d77ead983f8926b6e115d7a51b7c898340e0",
-		"controllers_getCreativeResp": "file://f95f33db4a8f3394981c562a1550ffa0985caad2",
 		"controllers_getGateResp": "file://b72b9451f04dfb55aa6751dc50ad696c414c1a71",
 		"controllers_getVideoResponse": "file://8dce5426a80462337cdfc71cf05390fb79b2d39a",
 		"controllers_graphBillinggraphreportData": "file://f1c7a4255ad1cf45460bd03a66299b1ffee530a6",
@@ -109,6 +109,7 @@
 		"orm_ChangeCashReasons": "file://861cf41486f7ee5eca387913bc194c9619346a6f",
 		"orm_ChangeStatusReq": "file://154ecdb3125e0a41915521136a6f1de3e38da3ac",
 		"orm_Creative": "file://35ab45c4d7cd5d957fccd8fb02432d9b3a4c30a5",
+		"orm_CreativeCampaignResult": "file://b8cb38c20b7f6836b0202e7781c52171901786d2",
 		"orm_CreativeDataTable": "file://88b1f3f156fd27224c138e7c5396a511420ff4d6",
 		"orm_CreativeRejectReasons": "file://9516320bb55b312e456272ceadcced6f475e035d",
 		"orm_CreativeSaveResult": "file://21d3e3de6e936c19002a5660b576cb5b9b118c77",

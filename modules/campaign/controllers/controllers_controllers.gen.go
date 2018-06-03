@@ -231,7 +231,7 @@ func (c *Controller) getGet(ctx context.Context, w http.ResponseWriter, r *http.
 //		method = get
 //		middleware = authz.Authenticate
 //		resource = get_creative:self
-//		200 = getCreativeResp
+//		200 = adManager.CreativeCampaignResult
 //		400 = controller.ErrorResponseSimple
 //		401 = controller.ErrorResponseSimple
 //		403 = controller.ErrorResponseSimple

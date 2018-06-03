@@ -21,7 +21,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_getCreativeResp"
+					"$ref": "#/definitions/orm_CreativeCampaignResult"
 				}
 			},
 			"400": {

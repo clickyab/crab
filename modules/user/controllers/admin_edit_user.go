@@ -26,7 +26,7 @@ type editUserPayload struct {
 	Managers      []int64 `json:"managers" validate:"omitempty"`
 	owner         *aaa.User
 	currentDomain *orm.Domain
-	managers      []*aaa.ManagerUser
+	managers      []aaa.ManagerUser
 }
 
 func (p *editUserPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
