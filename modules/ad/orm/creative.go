@@ -74,6 +74,12 @@ type CreativeSaveResult struct {
 	Assets   map[string][]interface{} `json:"assets"`
 }
 
+// CreativeCampaignResult CreativeCampaignResult
+type CreativeCampaignResult struct {
+	CampaignOwnerEmail string `json:"campaign_owner_email"`
+	Creatives          []*CreativeSaveResult
+}
+
 // AdUser creative user obj
 type AdUser struct {
 	Creative
