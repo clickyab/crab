@@ -9,6 +9,8 @@ import (
 )
 
 type (
+	CampaignCreativeStatusArray []CampaignCreativeStatus
+
 	CampaignDetailsArray []CampaignDetails
 
 	CampaignLogArray []CampaignLog
@@ -17,6 +19,56 @@ type (
 
 	CampaignDailyArray []CampaignDaily
 )
+
+func (ccsa CampaignCreativeStatusArray) Filter(u permission.Interface) CampaignCreativeStatusArray {
+	res := make(CampaignCreativeStatusArray, len(ccsa))
+	for i := range ccsa {
+		res[i] = ccsa[i].Filter(u)
+	}
+
+	return res
+}
+
+// Filter is for filtering base on permission
+func (ccs CampaignCreativeStatus) Filter(u permission.Interface) CampaignCreativeStatus {
+	action := []string{}
+	res := CampaignCreativeStatus{}
+
+	res.ID = ccs.ID
+
+	res.Title = ccs.Title
+
+	res.Kind = ccs.Kind
+
+	res.CreativeCount = ccs.CreativeCount
+
+	res.OwnerEmail = ccs.OwnerEmail
+
+	res.OwnerMobile = ccs.OwnerMobile
+
+	res.CreatedAt = ccs.CreatedAt
+
+	res.Actions = ccs.Actions
+
+	if _, ok := u.HasOn("change_creatives_status", ccs.OwnerID, ccs.DomainID, false, true); ok {
+		action = append(action, "accept_reject")
+	}
+
+	if _, ok := u.HasOn("change_creative_status", ccs.OwnerID, ccs.DomainID, false, true); ok {
+		action = append(action, "bulk_accept")
+	}
+
+	res.Actions = strings.Join(action, ",")
+	return res
+}
+
+func init() {
+
+	permission.Register("change_creatives_status", "change_creatives_status")
+
+	permission.Register("change_creative_status", "change_creative_status")
+
+}
 
 func (cda CampaignDetailsArray) Filter(u permission.Interface) CampaignDetailsArray {
 	res := make(CampaignDetailsArray, len(cda))

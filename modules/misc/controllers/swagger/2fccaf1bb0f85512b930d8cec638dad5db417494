@@ -1,0 +1,50 @@
+{
+	"properties": {
+		"data": {
+			"items": {
+				"properties": {
+					"_actions": {
+						"type": "string"
+					},
+					"created_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"creative_count": {
+						"type": "integer"
+					},
+					"id": {
+						"type": "integer"
+					},
+					"kind": {
+						"type": "string"
+					},
+					"owner_email": {
+						"type": "string"
+					},
+					"owner_mobile": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"hash": {
+			"type": "string"
+		},
+		"page": {
+			"type": "integer"
+		},
+		"per_page": {
+			"type": "integer"
+		},
+		"total": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}
