@@ -49,6 +49,8 @@ var (
 	CreateError error = t9e.G("db error! can't create new campaign")
 	// ChangeArchiveError can't manipulate in archive mode
 	ChangeArchiveError error = t9e.G("can't manipulate in archive mode")
+	// DBError to show when query has error
+	DBError = t9e.G("database error! please check request data and try again")
 )
 
 // NotFoundError maker
