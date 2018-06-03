@@ -3,62 +3,6 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": "",
-				"in": "path",
-				"name": "id",
-				"required": true,
-				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": "the security token, get it from login route",
 				"in": "header",
 				"name": "token",
@@ -70,7 +14,7 @@
 			"200": {
 				"description": "",
 				"schema": {
-					"$ref": "#/definitions/controllers_listPublisherdetailsResponse"
+					"$ref": "#/definitions/controllers_listCampaigns_creativeDefResponse"
 				}
 			},
 			"401": {
@@ -122,7 +66,7 @@
 		},
 		"security": {
 			"protected": true,
-			"resource": "campaign_publisher:self"
+			"resource": "list_campaign:superGlobal"
 		},
 		"tags": [
 			"controllers"

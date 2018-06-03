@@ -10,6 +10,9 @@ import (
 	"github.com/clickyab/services/permission"
 )
 
+// TODO added because of cycle error
+const creativePendingStatus = "pending"
+
 // CampaignCreativeStatus is the campaign creative status in data table
 // @DataTable {
 //		url = /status-list
@@ -24,7 +27,7 @@ import (
 //		_accept_reject = change_creatives_status:superGlobal
 // }
 type CampaignCreativeStatus struct {
-	ID            int64        `json:"id" db:"id" search:"true" visible:"true" type:"number"`
+	ID            int64        `sort:"true" map:"c.id" json:"id" db:"id" search:"true" visible:"true" type:"number"`
 	Title         string       `sort:"true" type:"string" search:"true" visible:"true" json:"title" db:"title"`
 	Kind          CampaignKind `sort:"true" type:"enum" filter:"true" visible:"true" json:"kind" db:"kind"`
 	CreativeCount int64        `sort:"true" type:"number" visible:"true" json:"creative_count" db:"creative_count"`
@@ -51,11 +54,10 @@ func (m *Manager) FillCampaignCreativeStatus(
 
 	// ORDER MATTER
 	var params = []interface{}{
-		"pending",
-		1,
+		creativePendingStatus,
 	}
 	var countParams = []interface{}{
-		"pending",
+		creativePendingStatus,
 	}
 
 	var where []string
@@ -86,7 +88,7 @@ func (m *Manager) FillCampaignCreativeStatus(
 		SELECT
 		c.user_id                                        AS owner_id,
 		c.domain_id                                      AS domain_id,
-		c.id                                             AS id,
+		c.id AS id,
     	c.title                                          AS title,
     	c.kind                                           AS kind,
     	COALESCE(COUNT(cr.id), 0)		                 AS creative_count,
@@ -96,10 +98,9 @@ func (m *Manager) FillCampaignCreativeStatus(
     	COALESCE(COUNT(cr.id), 0)					     AS pending_count
     	FROM %s AS c
     	JOIN %s u ON u.id = c.user_id
-    	LEFT JOIN %s cr ON (c.id = cr.campaign_id AND cr.status = ?)
+    	INNER JOIN %s cr ON (c.id = cr.campaign_id AND cr.status = ?)
     	%s
-    	GROUP BY c.id
-    	HAVING pending_count >=?`,
+    	GROUP BY c.id`,
 		CampaignTableFull,
 		aaa.UserTableFull,
 		creativeTableFull,
