@@ -64,11 +64,11 @@ type userResponse struct {
 	Balance       int64                  `json:"balance"`
 	Attributes    mysql.GenericJSONField `json:"attributes,omitempty"`
 	Role          *aaa.Role              `json:"role,omitempty"`
-	Managers      []*aaa.ManagerUser     `json:"managers,omitempty"`
+	Managers      []aaa.ManagerUser      `json:"managers,omitempty"`
 	Advantage     int                    `json:"advantage,omitempty"`
 }
 
-func (u Controller) createUserResponse(user *aaa.User, perms *[]string, managers []*aaa.ManagerUser) userResponse {
+func (u Controller) createUserResponse(user *aaa.User, perms *[]string, managers []aaa.ManagerUser) userResponse {
 	us := userResponse{}
 	us.ID = user.ID
 	us.Email = user.Email
