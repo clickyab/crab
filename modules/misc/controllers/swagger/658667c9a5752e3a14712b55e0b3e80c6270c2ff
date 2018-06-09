@@ -3,9 +3,9 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": "",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "sort",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},
@@ -17,16 +17,9 @@
 				"type": "string"
 			},
 			{
-				"description": " parameter for search",
+				"description": "",
 				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the supplier field",
-				"in": "query",
-				"name": "supplier",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
@@ -36,20 +29,6 @@
 				"name": "c",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the name field",
-				"in": "query",
-				"name": "name",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
@@ -78,6 +57,27 @@
 				"name": "p",
 				"required": false,
 				"type": "int"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the name field",
+				"in": "query",
+				"name": "name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the supplier field",
+				"in": "query",
+				"name": "supplier",
+				"required": false,
+				"type": "string"
 			},
 			{
 				"description": "the security token, get it from login route",
