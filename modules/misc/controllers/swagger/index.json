@@ -16,7 +16,6 @@
 		"controllers_ChangeStatusResult": "file://7104cfc3efc7cd5b0197e89b7bdf6f90d3f31de7",
 		"controllers_CreativeStatusChangeResult": "file://b20d1ce825358f02df4263f6db28f85e467dbfa5",
 		"controllers_NativeAssetPayload": "file://2d369e427be681497699a6b30114e67c345de42b",
-		"controllers_NotifyUserTypes": "file://84e968d600729a0014ccbd10cc38c6257e0a1f25",
 		"controllers_addGatewayPayload": "file://7649f79123951e78b1bde7a9207eb3cb058a0b91",
 		"controllers_addInventoryPayload": "file://c46778cc43cf2f6e8e1b9c8543fffa1deaf79a7d",
 		"controllers_assignInventoryPayload": "file://02b393112514d4af53a4a311a40f52235c0fc767",
