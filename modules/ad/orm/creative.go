@@ -81,7 +81,7 @@ type CreativeCampaignResult struct {
 	CampaignOwnerMobile string                   `json:"campaign_owner_mobile"`
 	Title               string                   `json:"title"`
 	Kind                campaignOrm.CampaignKind `json:"kind"`
-	Creatives           []*CreativeSaveResult
+	Creatives           []CreativeSaveResult
 }
 
 // AdUser creative user obj

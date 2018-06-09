@@ -44,13 +44,13 @@ func (c Controller) getCreativeByCampaign(ctx context.Context, r *http.Request) 
 		return nil, errors.AccessDenied
 	}
 
-	var res = make([]*adManager.CreativeSaveResult, 0)
+	var res = make([]adManager.CreativeSaveResult, 0)
 
 	// find creatives
 	currentCreatives := adManager.NewOrmManager().ListCreativesWithFilter("campaign_id=?", currentCampaign.ID)
 	for i := range currentCreatives {
 		assets := adManager.NewOrmManager().FindAssetsBeautyByCreativeID(currentCreatives[i].ID)
-		res = append(res, &adManager.CreativeSaveResult{
+		res = append(res, adManager.CreativeSaveResult{
 			Creative: &currentCreatives[i],
 			Assets:   assets,
 		})
