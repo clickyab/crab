@@ -62,6 +62,6 @@ func (c Controller) getCreativeByCampaign(ctx context.Context, r *http.Request) 
 		CampaignOwnerEmail:  campaignOwner.Email,
 		Kind:                currentCampaign.Kind,
 		Title:               currentCampaign.Title,
-		CampaignOwnerMobile: campaignOwner.Cellphone,
+		CampaignOwnerMobile: campaignOwner.Cellphone.String,
 	}, nil
 }

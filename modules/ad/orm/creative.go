@@ -78,7 +78,7 @@ type CreativeSaveResult struct {
 type CreativeCampaignResult struct {
 	CampaignOwnerEmail  string                   `json:"campaign_owner_email"`
 	ID                  int64                    `json:"id"`
-	CampaignOwnerMobile mysql.NullString         `json:"campaign_owner_mobile"`
+	CampaignOwnerMobile string                   `json:"campaign_owner_mobile"`
 	Title               string                   `json:"title"`
 	Kind                campaignOrm.CampaignKind `json:"kind"`
 	Creatives           []*CreativeSaveResult
