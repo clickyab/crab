@@ -13,15 +13,7 @@
 			"type": "integer"
 		},
 		"cid": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"created_at": {
 			"format": "dateTime",
@@ -48,15 +40,7 @@
 			"type": "integer"
 		},
 		"ref_num": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"res_num": {
 			"type": "string"
@@ -65,15 +49,7 @@
 			"type": "string"
 		},
 		"trace_number": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"updated_at": {
 			"format": "dateTime",

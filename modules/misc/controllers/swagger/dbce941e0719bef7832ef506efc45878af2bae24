@@ -16,15 +16,7 @@
 			"type": "number"
 		},
 		"domain": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"ecpc": {
 			"type": "number"
