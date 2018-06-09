@@ -91,9 +91,6 @@ func (p *changeStatus) Validate(ctx context.Context, w http.ResponseWriter, r *h
 	res := middleware.GroupError{}
 	for _, i := range errs.(validator.ValidationErrors) {
 		switch i.Field() {
-		case "Status":
-			res["status"] = trans.E("invalid value")
-
 		default:
 			logrus.Panicf("the field %s is not translated", i)
 		}
