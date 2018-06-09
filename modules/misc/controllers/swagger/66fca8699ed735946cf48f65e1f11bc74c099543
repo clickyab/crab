@@ -5,14 +5,7 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the domain_base field",
-				"in": "query",
-				"name": "domain_base",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
@@ -22,13 +15,6 @@
 				"name": "c",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": " page number",
@@ -41,6 +27,20 @@
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the owner_email field",
+				"in": "query",
+				"name": "owner_email",
 				"required": false,
 				"type": "string"
 			},
@@ -59,16 +59,16 @@
 				"type": "string"
 			},
 			{
-				"description": " search the owner_email field",
+				"description": " search the domain_base field",
 				"in": "query",
-				"name": "owner_email",
+				"name": "domain_base",
 				"required": false,
 				"type": "string"
 			},
 			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},

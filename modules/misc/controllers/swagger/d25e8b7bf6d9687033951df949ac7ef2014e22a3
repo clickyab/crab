@@ -3,23 +3,16 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " parameter for search",
+				"description": "",
 				"in": "query",
-				"name": "q",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the label field",
 				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
+				"name": "label",
 				"required": false,
 				"type": "string"
 			},
@@ -45,16 +38,23 @@
 				"type": "int"
 			},
 			{
-				"description": "",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "status",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the label field",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "label",
+				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
