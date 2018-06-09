@@ -9,6 +9,7 @@
 // db/20180526073308_domain_owner_perm.sql
 // db/20180526095729_adddefaults.sql
 // db/20180530123831_domainuser.sql
+// db/20180609052249_list_domain_perms.sql
 // DO NOT EDIT!
 
 package migrations
@@ -256,6 +257,26 @@ func db20180530123831_domainuserSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180609052249_list_domain_permsSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xb4\x90\x4f\x4b\xc3\x40\x14\xc4\xef\xf9\x14\x73\xdb\x04\xd3\x83\xe7\xe2\xa1\x90\x55\x03\x31\xc5\xfc\xd1\x63\x49\xb3\x8f\xf6\xe1\x26\xbb\x64\xb7\xd4\x8f\x2f\xdb\xa2\xb0\x88\x20\x88\xc7\x37\xcc\x1b\x66\x7e\xc9\x6a\x85\x9b\x89\x0f\xcb\xe0\x09\xbd\x0d\x67\xfb\x5c\x81\x67\x38\x1a\x3d\x9b\x19\xa2\xb7\x02\xec\x40\xef\x34\x9e\x3c\x29\x9c\x8f\x34\xc3\x1f\xd9\xe1\xfa\x17\x4c\xec\x30\x58\xab\x99\x54\x52\xd6\xad\x6c\x3a\x94\x75\xb7\xc5\x62\x34\xed\x2c\x2d\x13\x3b\x17\x6c\xe9\x45\x60\x95\x23\x88\x39\xdc\x68\x2c\x65\x78\xd9\x54\xbd\x6c\x91\xde\xe6\x42\xb3\xf3\x3b\x65\xa6\x81\x67\x91\x0b\x77\xb2\xb4\x3c\x68\xb3\x1f\xb4\xc8\xd6\x7f\x8c\x3e\xd0\x7f\x25\x93\xe2\x9f\xa3\x23\xc2\x85\x39\xcf\x9f\x8c\xbf\x00\x07\xf1\x57\x88\x17\xa3\x35\x29\xec\x87\xf1\x2d\x29\x64\x25\x3b\x89\xfb\x66\xfb\xf4\xad\xf1\xeb\xa3\x6c\xe4\xb5\xe7\x5d\x54\x07\x9b\xba\xb8\xac\x40\x59\x23\x8d\x61\x23\x02\x84\x68\x54\xb6\xfe\x08\x00\x00\xff\xff\x57\x6f\xa6\xc2\x28\x02\x00\x00"
+
+func db20180609052249_list_domain_permsSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180609052249_list_domain_permsSql,
+		"db/20180609052249_list_domain_perms.sql",
+	)
+}
+
+func db20180609052249_list_domain_permsSql() (*asset, error) {
+	bytes, err := db20180609052249_list_domain_permsSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180609052249_list_domain_perms.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -317,6 +338,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20180526073308_domain_owner_perm.sql":         db20180526073308_domain_owner_permSql,
 	"db/20180526095729_adddefaults.sql":               db20180526095729_adddefaultsSql,
 	"db/20180530123831_domainuser.sql":                db20180530123831_domainuserSql,
+	"db/20180609052249_list_domain_perms.sql":         db20180609052249_list_domain_permsSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -370,6 +392,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20180526073308_domain_owner_perm.sql":         &bintree{db20180526073308_domain_owner_permSql, map[string]*bintree{}},
 		"20180526095729_adddefaults.sql":               &bintree{db20180526095729_adddefaultsSql, map[string]*bintree{}},
 		"20180530123831_domainuser.sql":                &bintree{db20180530123831_domainuserSql, map[string]*bintree{}},
+		"20180609052249_list_domain_perms.sql":         &bintree{db20180609052249_list_domain_permsSql, map[string]*bintree{}},
 	}},
 }}
 
