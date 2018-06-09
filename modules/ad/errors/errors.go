@@ -56,6 +56,9 @@ var (
 
 	//SendNotifyEmailErr error when notify user for creative status change
 	SendNotifyEmailErr = t9e.G("error in sending notify email")
+
+	// CreativeNotFoundErr creative not found error
+	CreativeNotFoundErr = t9e.G("creative not found")
 )
 
 // AdNotFound maker

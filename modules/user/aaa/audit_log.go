@@ -173,6 +173,7 @@ func (data *AuditExtraData) SetAuditUserData(userID int64, token string, domainI
 	data.impersonatorID = impersonatorID
 	data.userPerm = uPerm
 	data.permScope = uScope
+	data.domainID = domainID
 	return nil
 }
 
@@ -228,12 +229,7 @@ func AddAuditLog(data *AuditExtraData, action string) error {
 		return errors.InalidAuditAction
 	}
 
-	impersonatorID := mysql.NullInt64{Int64: 0, Valid: false}
-	if data.impersonatorID > 0 {
-		impersonatorID.Int64 = data.impersonatorID
-		impersonatorID.Valid = true
-	}
-
+	impersonatorID := mysql.NullInt64{Int64: data.impersonatorID, Valid: data.impersonatorID > 0}
 	audit := AuditLog{
 		DomainID:       data.domainID,
 		UserID:         data.userID,

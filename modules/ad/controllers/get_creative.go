@@ -35,16 +35,6 @@ func (c Controller) getCreative(ctx context.Context, r *http.Request) (*orm.Crea
 	if err != nil {
 		return nil, errors.InvalidIDErr
 	}
-	currentOwner, err := aaa.NewAaaManager().FindUserWithParentsByID(currentCreative.UserID, dm.ID)
-	if err != nil {
-		return nil, errors.InvalidIDErr
-	}
-
-	_, ok := currentUser.HasOn("get_creative", currentOwner.ID, dm.ID, false, false)
-	if !ok {
-		return nil, errors.AccessDenied
-	}
-
 	//find campaign
 	currentCampaign, err := cManager.NewOrmManager().FindCampaignByIDDomain(currentCreative.CampaignID, dm.ID)
 	if err != nil {
@@ -54,7 +44,7 @@ func (c Controller) getCreative(ctx context.Context, r *http.Request) (*orm.Crea
 	if err != nil {
 		return nil, cErr.NotFoundError(currentCreative.CampaignID)
 	}
-	_, ok = currentUser.HasOn("get_creative", campaignOwner.ID, dm.ID, false, false)
+	_, ok := currentUser.HasOn("get_creative", campaignOwner.ID, dm.ID, false, false)
 	if !ok {
 		return nil, errors.AccessDenied
 	}
