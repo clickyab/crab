@@ -1,0 +1,57 @@
+{
+	"properties": {
+		"data": {
+			"items": {
+				"properties": {
+					"_actions": {
+						"type": "string"
+					},
+					"balance": {
+						"type": "integer"
+					},
+					"corporation_name": {
+						"properties": {
+							"String": {
+								"type": "string"
+							},
+							"Valid": {
+								"type": "boolean"
+							}
+						},
+						"type": "object"
+					},
+					"domain_base": {
+						"type": "string"
+					},
+					"id": {
+						"type": "integer"
+					},
+					"owner_email": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					}
+				},
+				"type": "object"
+			},
+			"type": "array"
+		},
+		"hash": {
+			"type": "string"
+		},
+		"page": {
+			"type": "integer"
+		},
+		"per_page": {
+			"type": "integer"
+		},
+		"total": {
+			"type": "integer"
+		}
+	},
+	"type": "object"
+}

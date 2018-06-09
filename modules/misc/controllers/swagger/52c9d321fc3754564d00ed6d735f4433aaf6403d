@@ -1,0 +1,37 @@
+{
+	"properties": {
+		"_actions": {
+			"type": "string"
+		},
+		"balance": {
+			"type": "integer"
+		},
+		"corporation_name": {
+			"properties": {
+				"String": {
+					"type": "string"
+				},
+				"Valid": {
+					"type": "boolean"
+				}
+			},
+			"type": "object"
+		},
+		"domain_base": {
+			"type": "string"
+		},
+		"id": {
+			"type": "integer"
+		},
+		"owner_email": {
+			"type": "string"
+		},
+		"status": {
+			"type": "string"
+		},
+		"title": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}
