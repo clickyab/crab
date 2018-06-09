@@ -8,9 +8,12 @@ import (
 
 	"clickyab.com/crab/modules/ad/errors"
 	"clickyab.com/crab/modules/ad/orm"
+	"clickyab.com/crab/modules/ad/services"
 	campOrm "clickyab.com/crab/modules/campaign/orm"
 	"clickyab.com/crab/modules/domain/middleware/domain"
 	orm2 "clickyab.com/crab/modules/domain/orm"
+	"clickyab.com/crab/modules/user/middleware/authz"
+	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 )
@@ -18,9 +21,9 @@ import (
 // @Validate{
 //}
 type changeStatus struct {
-	Status          orm.CreativeStatusType `json:"status" validate:"required"`
-	currentCampaign *campOrm.Campaign      `json:"-"`
-	currentDomain   *orm2.Domain           `json:"-"`
+	currentCampaign *campOrm.Campaign `json:"-"`
+	currentDomain   *orm2.Domain      `json:"-"`
+	creatives       []*orm.Creative   `json:"-"`
 }
 
 // CreativeStatusChangeResult to return number of changed creative {
@@ -30,9 +33,6 @@ type CreativeStatusChangeResult struct {
 }
 
 func (p *changeStatus) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	if !p.Status.IsValid() {
-		return errors.InvalidStatusErr
-	}
 	dm := domain.MustGetDomain(ctx)
 	p.currentDomain = dm
 	idInt, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 0)
@@ -43,6 +43,10 @@ func (p *changeStatus) ValidateExtra(ctx context.Context, w http.ResponseWriter,
 	currentCampaign, err := campOrm.NewOrmManager().FindCampaignByIDDomain(idInt, dm.ID)
 	if err != nil {
 		return errors.InvalidIDErr
+	}
+	p.creatives, err = orm.NewOrmManager().FindCreativesByCampaign(currentCampaign.ID)
+	if err != nil {
+		return errors.CreativeNotFoundErr
 	}
 	p.currentCampaign = currentCampaign
 	return nil
@@ -56,16 +60,26 @@ func (p *changeStatus) ValidateExtra(ctx context.Context, w http.ResponseWriter,
 // 		resource = change_creative_status:superGlobal
 // }
 func (c Controller) changeCampaignCreativeStatus(ctx context.Context, r *http.Request, p *changeStatus) (*CreativeStatusChangeResult, error) {
-	db := orm.NewOrmManager()
-	rowEffectedCount, err := db.SetCampaignCreativesStatus(p.currentCampaign.ID, p.Status)
+	currentUser := authz.MustGetUser(ctx)
+	token := authz.MustGetToken(ctx)
+	err := services.AcceptCreatives(p.creatives, currentUser.ID, p.currentDomain.ID, token, permission.ScopeSuperGlobal)
 	if err != nil {
-		xlog.GetWithError(ctx, err).Errorf("campaign creatives status update error from db: campaignId:%d, status:%s", p.currentCampaign.ID, p.Status)
+		xlog.GetWithError(ctx, err).Errorf("campaign creatives accept error from db: campaignId:%d", p.currentCampaign.ID)
 		return nil, errors.UpdateStatusDbErr
 	}
+	var ids []int64
+	for _, r := range p.creatives {
+		ids = append(ids, r.ID)
+	}
+	err = services.SendChangeStatusMessage(ids, p.currentCampaign.ID)
+	if err != nil {
+		xlog.GetWithError(ctx, err).Debug("send notify email for creative accept failed")
+		return nil, errors.SendNotifyEmailErr
+	}
+
 	res := &CreativeStatusChangeResult{
 		CampaignID:        p.currentCampaign.ID,
-		EffectedCreatives: rowEffectedCount,
+		EffectedCreatives: int64(len(p.creatives)),
 	}
 	return res, nil
-
 }

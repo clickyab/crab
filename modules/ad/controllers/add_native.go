@@ -22,6 +22,7 @@ import (
 	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/safe"
 	"github.com/clickyab/services/xlog"
+	"github.com/fatih/structs"
 )
 
 var creativeSeed = config.RegisterBoolean("crab.modules.creative.seed", true, "insert detail after creative created")
@@ -96,7 +97,7 @@ func (p *createNativePayload) ValidateExtra(ctx context.Context, w http.Response
 	p.CurrentDomain = dmn
 	targetCampaign, err := cpManager.FindCampaignByIDDomain(p.CampaignID, dmn.ID)
 	if err != nil {
-		return campignErr.NotFoundError(targetCampaign.ID)
+		return campignErr.NotFoundError(p.CampaignID)
 	}
 	p.CurrentCampaign = targetCampaign
 	campaignOwner, err := aaa.NewAaaManager().FindUserWithParentsByID(targetCampaign.UserID, dmn.ID)
@@ -171,6 +172,7 @@ func isValidSize(width, height int, kind string) bool {
 // }
 func (c Controller) addNativeCreative(ctx context.Context, r *http.Request, p *createNativePayload) (*orm.CreativeSaveResult, error) {
 	err := checkCreatePerm(ctx, p)
+	token := authz.MustGetToken(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -184,14 +186,29 @@ func (c Controller) addNativeCreative(ctx context.Context, r *http.Request, p *c
 		Attributes: p.Attributes,
 		Name:       p.Name,
 	}
-
+	err = creative.SetAuditDomainID(p.CurrentDomain.ID)
+	if err != nil {
+		return nil, err
+	}
+	err = creative.SetAuditOwnerID(p.CurrentUser.ID)
+	if err != nil {
+		return nil, err
+	}
+	d := structs.Map(creative)
+	err = creative.SetAuditDescribe(d, "add native creative")
+	if err != nil {
+		return nil, err
+	}
+	err = creative.SetAuditUserData(p.CurrentUser.ID, token, p.CurrentDomain.ID, "add_creative", permission.ScopeSelf)
+	if err != nil {
+		return nil, err
+	}
 	db := orm.NewOrmManager()
 	assets := generateNativeAssets(p.Assets, p.Images, p.Icons, p.Logos, p.Videos)
 	res, err := db.AddCreative(creative, assets)
 	if err != nil {
 		return res, errors.DBError
 	}
-
 	// only in development
 	if creativeSeed.Bool() {
 		safe.GoRoutine(ctx, func() {

@@ -6,9 +6,11 @@ import (
 	"fmt"
 
 	campaignOrm "clickyab.com/crab/modules/campaign/orm"
+	"clickyab.com/crab/modules/user/aaa"
 	as "github.com/clickyab/services/array"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
+	"gopkg.in/gorp.v2"
 )
 
 // CreativeStatusType is the creative active status
@@ -53,19 +55,38 @@ const (
 //		list = yes
 // }
 type Creative struct {
-	ID              int64                  `json:"id" db:"id"`
-	UserID          int64                  `json:"user_id" db:"user_id"`
-	CampaignID      int64                  `json:"campaign_id" db:"campaign_id"`
-	Status          CreativeStatusType     `json:"status" db:"status"`
-	Type            CreativeTypes          `json:"type" db:"type"`
-	URL             string                 `json:"url" db:"url"`
-	Name            string                 `json:"name" db:"name"`
-	MaxBid          mysql.NullInt64        `json:"max_bid" db:"max_bid"`
-	Attributes      mysql.GenericJSONField `json:"attributes" db:"attributes"`
-	RejectReasonsID mysql.NullInt64        `json:"reject_reason_id" db:"reject_reasons_id"`
-	CreatedAt       time.Time              `json:"created_at" db:"created_at"`
+	ID              int64                  `json:"id" db:"id" structs:"id"`
+	UserID          int64                  `json:"user_id" db:"user_id" structs:"user_id"`
+	CampaignID      int64                  `json:"campaign_id" db:"campaign_id" structs:"campaign_id"`
+	Status          CreativeStatusType     `json:"status" db:"status" structs:"status"`
+	Type            CreativeTypes          `json:"type" db:"type" structs:"type"`
+	URL             string                 `json:"url" db:"url" structs:"url"`
+	Name            string                 `json:"name" db:"name" structs:"name"`
+	MaxBid          mysql.NullInt64        `json:"max_bid" db:"max_bid" structs:"max_bid,string"`
+	Attributes      mysql.GenericJSONField `json:"attributes" db:"attributes" structs:"attributes"`
+	RejectReasonsID mysql.NullInt64        `json:"reject_reason_id" db:"reject_reasons_id" structs:"reject_reasons_id,string"`
+	CreatedAt       time.Time              `json:"created_at" db:"created_at" structs:"created_at"`
 	UpdatedAt       time.Time              `json:"updated_at" db:"updated_at"`
 	ArchivedAt      mysql.NullTime         `json:"archived_at" db:"archived_at"`
+	aaa.AuditExtraData
+}
+
+// PostInsert to set creative id in audit
+func (c *Creative) PostInsert(s gorp.SqlExecutor) error {
+	err := c.SetAuditEntity("creative", c.ID)
+	if err != nil {
+		return err
+	}
+	return c.AuditExtraData.PostInsert(s)
+}
+
+// PostUpdate to set creative id in audit
+func (c *Creative) PostUpdate(s gorp.SqlExecutor) error {
+	err := c.SetAuditEntity("creative", c.ID)
+	if err != nil {
+		return err
+	}
+	return c.AuditExtraData.PostUpdate(s)
 }
 
 // CreativeSaveResult to return creative and related assets after insert or update
@@ -103,7 +124,8 @@ type ToRejectRequest struct {
 type ChangeStatusReq struct {
 	Status         CreativeStatusType `json:"status"`
 	CreativeID     int64              `json:"creative_id"`
-	RejectReasonID int64              `json:"reject_reason_id"`
+	RejectReasonID int64              `json:"reject_reason_id,omitempty"`
+	Creative       *Creative          `json:"-"`
 }
 
 // CreativeWithRelation creative object with reject reasons and users
@@ -115,8 +137,8 @@ type CreativeWithRelation struct {
 	UserLastName       string             `db:"last_name"`
 	UserEmail          string             `db:"email"`
 	CreativeStatus     CreativeStatusType `db:"creative_status"`
-	RejectReasonID     int64              `db:"reject_reason_id"`
-	RejectReasonReason string             `db:"reason"`
+	RejectReasonID     mysql.NullInt64    `db:"reject_reason_id"`
+	RejectReasonReason mysql.NullString   `db:"reason"`
 	Message            string             `json:"-" db:"-"`
 }
 
@@ -238,6 +260,25 @@ func (m *Manager) FindCreativeByIDAndType(crID int64, cType CreativeTypes) (*Cre
 		return nil, err
 	}
 	return &res, nil
+}
+
+// FindCreativesByCampaign find creative by campaign id
+func (m *Manager) FindCreativesByCampaign(campaignID int64) ([]*Creative, error) {
+	var res []*Creative
+
+	_, err := m.GetRDbMap().Select(
+		&res,
+		fmt.Sprintf("SELECT %s FROM %s "+
+			"WHERE campaign_id=?",
+			GetSelectFields(CreativeTableFull, ""),
+			CreativeTableFull,
+		),
+		campaignID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 // SetCampaignCreativesStatus to Change status of all Creative with campaign id

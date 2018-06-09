@@ -16,6 +16,7 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/mysql"
+	"github.com/fatih/structs"
 	"github.com/rs/xmux"
 )
 
@@ -104,7 +105,10 @@ func (p *editNativePayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 // 		resource = edit_creative:self
 // }
 func (c Controller) editNativeCreative(ctx context.Context, r *http.Request, p *editNativePayload) (*orm.CreativeSaveResult, error) {
-	err := checkEditPerm(ctx, p)
+
+	userToken := authz.MustGetToken(ctx)
+	err := checkEditPerm(ctx, p, userToken)
+
 	if err != nil {
 		return nil, err
 	}
@@ -114,6 +118,23 @@ func (c Controller) editNativeCreative(ctx context.Context, r *http.Request, p *
 	p.CurrentCreative.MaxBid = mysql.NullInt64{Valid: p.MaxBid != 0, Int64: p.MaxBid}
 	p.CurrentCreative.Attributes = p.Attributes
 	p.CurrentCreative.Name = p.Name
+	err = p.CurrentCreative.SetAuditDomainID(p.CurrentDomain.ID)
+	if err != nil {
+		return nil, err
+	}
+	err = p.CurrentCreative.SetAuditOwnerID(p.CurrentCreative.UserID)
+	if err != nil {
+		return nil, err
+	}
+	d := structs.Map(p.CurrentCreative)
+	err = p.CurrentCreative.SetAuditDescribe(d, "edit creative")
+	if err != nil {
+		return nil, err
+	}
+	err = p.CurrentCreative.SetAuditEntity("creative", p.CurrentCreative.ID)
+	if err != nil {
+		return nil, err
+	}
 
 	db := orm.NewOrmManager()
 	assets := generateNativeAssets(p.Assets, p.Images, p.Icons, p.Logos, p.Videos)
@@ -121,20 +142,23 @@ func (c Controller) editNativeCreative(ctx context.Context, r *http.Request, p *
 	if err != nil {
 		return res, errors.DBError
 	}
-
 	return res, nil
 }
 
-func checkEditPerm(ctx context.Context, p *editNativePayload) error {
+func checkEditPerm(ctx context.Context, p *editNativePayload, userToken string) error {
 	// check creative perm
 	_, ok := p.CurrentUser.HasOn("edit_creative", p.CreativeOwner.ID, p.CurrentDomain.ID, false, false)
 	if !ok {
 		return errors.AccessDenied
 	}
 	// check campaign perm
-	_, ok = p.CurrentUser.HasOn("edit_campaign", p.CampaignOwner.ID, p.CurrentDomain.ID, false, false)
+	uScope, ok := p.CurrentUser.HasOn("edit_campaign", p.CampaignOwner.ID, p.CurrentDomain.ID, false, false)
 	if !ok {
 		return errors.AccessDenied
+	}
+	err := p.CurrentCreative.SetAuditUserData(p.CurrentUser.ID, userToken, p.CurrentDomain.ID, "edit_creative,edit_campaign", uScope)
+	if err != nil {
+		return err
 	}
 
 	return checkFilePerm(ctx, p)
