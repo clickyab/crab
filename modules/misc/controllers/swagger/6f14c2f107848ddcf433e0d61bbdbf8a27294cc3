@@ -23,43 +23,19 @@
 			"type": "string"
 		},
 		"impersonator_email": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"kind": {
 			"type": "string"
 		},
 		"manipulator_email": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"max_bid": {
 			"type": "number"
 		},
 		"owner_email": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"start_at": {
 			"type": "string"

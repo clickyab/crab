@@ -17,9 +17,51 @@
 				"type": "string"
 			},
 			{
+				"description": " search the ssn field",
+				"in": "query",
+				"name": "ssn",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the land_line field",
+				"in": "query",
+				"name": "land_line",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the full_name field",
+				"in": "query",
+				"name": "full_name",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the email field",
 				"in": "query",
 				"name": "email",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
@@ -38,51 +80,9 @@
 				"type": "int"
 			},
 			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the land_line field",
-				"in": "query",
-				"name": "land_line",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the ssn field",
-				"in": "query",
-				"name": "ssn",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the full_name field",
-				"in": "query",
-				"name": "full_name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "from",
 				"required": false,
 				"type": "string"
 			},

@@ -53,268 +53,76 @@
 					"type": "integer"
 				},
 				"h00": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h01": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h02": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h03": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h04": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h05": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h06": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h07": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h08": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h09": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h10": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h11": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h12": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h13": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h14": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h15": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h16": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h17": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h18": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h19": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h20": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h21": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h22": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"h23": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"id": {
 					"type": "integer"
@@ -340,15 +148,7 @@
 			"type": "string"
 		},
 		"tld": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"today_spend": {
 			"type": "integer"

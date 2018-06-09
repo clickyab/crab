@@ -102,15 +102,7 @@
 					"type": "string"
 				},
 				"description": {
-					"properties": {
-						"String": {
-							"type": "string"
-						},
-						"Valid": {
-							"type": "boolean"
-						}
-					},
-					"type": "object"
+					"type": "string"
 				},
 				"id": {
 					"type": "integer"

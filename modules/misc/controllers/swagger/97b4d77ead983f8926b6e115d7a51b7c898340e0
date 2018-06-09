@@ -61,15 +61,7 @@
 			"type": "string"
 		},
 		"tld": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"today_spend": {
 			"type": "integer"

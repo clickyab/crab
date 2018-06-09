@@ -14,15 +14,7 @@
 			"type": "string"
 		},
 		"description": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"domain_base": {
 			"type": "string"
@@ -31,15 +23,7 @@
 			"type": "integer"
 		},
 		"logo": {
-			"properties": {
-				"String": {
-					"type": "string"
-				},
-				"Valid": {
-					"type": "boolean"
-				}
-			},
-			"type": "object"
+			"type": "string"
 		},
 		"min_app_banner_cpc": {
 			"type": "integer"
