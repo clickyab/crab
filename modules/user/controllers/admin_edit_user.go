@@ -13,10 +13,10 @@ import (
 	"clickyab.com/crab/modules/user/errors"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"clickyab.com/crab/modules/user/services"
+	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
-	"github.com/sirupsen/logrus"
 )
 
 // @Validate {
@@ -27,6 +27,7 @@ type editUserPayload struct {
 	owner         *aaa.User
 	currentDomain *orm.Domain
 	managers      []aaa.ManagerUser
+	Advantage     int64 `json:"advantage"`
 }
 
 func (p *editUserPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
@@ -46,7 +47,6 @@ func (p *editUserPayload) ValidateExtra(ctx context.Context, w http.ResponseWrit
 	}
 	p.owner = owner
 	ownerScope, ok := owner.Has(permission.ScopeSelf, "can_have_account", dm.ID)
-	logrus.Warn(ok)
 	if len(p.Managers) > 0 && ok && ownerScope == permission.ScopeSelf {
 		managers := m.FindManagersByIDsDomain(p.Managers, dm.ID)
 		p.managers = managers
@@ -98,6 +98,10 @@ func (c *Controller) adminEdit(ctx context.Context, r *http.Request, p *editUser
 	p.owner.LastName = p.LastName
 	p.owner.Address = stringToNullString(p.Address)
 	p.owner.SSN = stringToNullString(p.SSN)
+
+	if !p.owner.Advantage.Valid {
+		p.owner.Advantage = mysql.NullInt64{Valid: p.Advantage != 0, Int64: p.Advantage}
+	}
 
 	var managerIDs []int64
 	for i := range p.managers {
