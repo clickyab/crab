@@ -19,14 +19,7 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
@@ -45,9 +38,9 @@
 				"type": "int"
 			},
 			{
-				"description": " parameter for search",
+				"description": "",
 				"in": "query",
-				"name": "q",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
@@ -59,16 +52,9 @@
 				"type": "string"
 			},
 			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
-				"required": false,
-				"type": "string"
-			},
-			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
@@ -85,6 +71,20 @@
 				"name": "c",
 				"required": false,
 				"type": "int"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the domain field",
+				"in": "query",
+				"name": "domain",
+				"required": false,
+				"type": "string"
 			},
 			{
 				"description": "the security token, get it from login route",

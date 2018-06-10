@@ -3,6 +3,9 @@
 		"address": {
 			"type": "string"
 		},
+		"advantage": {
+			"type": "integer"
+		},
 		"cell_phone": {
 			"type": "string"
 		},
