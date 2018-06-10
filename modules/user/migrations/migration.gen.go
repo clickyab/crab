@@ -21,6 +21,7 @@
 // db/20180530130551_roleseed.sql
 // db/20180530131001_permseed.sql
 // db/20180530141920_role.sql
+// db/20180610081523_advantage.sql
 // DO NOT EDIT!
 
 package migrations
@@ -508,6 +509,26 @@ func db20180530141920_roleSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180610081523_advantageSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xcd\x31\x6b\xc3\x30\x14\x04\xe0\x5d\xbf\xe2\x36\x0f\xc5\xd0\xdd\x93\x8b\x5d\x28\xb8\x94\xb6\xf6\xd0\x51\xb5\x5e\xec\x47\x94\x27\x61\x3d\xc5\xf9\xf9\xc1\x84\x04\xb2\x79\xbc\xe3\x8e\xcf\x94\x25\x5e\x4e\x3c\x2d\x56\x09\x43\xdc\xe2\xef\x77\x07\x16\x24\x1a\x95\x83\xa0\x18\x62\x01\x4e\xa0\x0b\x8d\x59\xc9\x61\x9d\x49\xa0\x33\x27\xdc\x7e\xdb\x88\x13\x6c\x8c\x9e\xc9\x99\xba\xeb\xdb\x1f\xf4\xf5\x5b\xd7\x22\x27\x5a\x12\x3e\xbf\x9a\x8f\xf7\x3f\x58\x77\xb6\xa2\x76\x22\xb0\x68\x65\x9e\xe4\x26\xac\x72\xb7\x1f\xf0\x56\xee\xa2\x97\xe0\x3d\x39\xfc\xdb\xf1\xb8\x93\x87\x04\x85\x64\xef\xe1\xe8\x60\xb3\x57\xbc\x56\xc6\x5c\x03\x00\x00\xff\xff\x6c\x6a\x6f\x7e\x0d\x01\x00\x00"
+
+func db20180610081523_advantageSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180610081523_advantageSql,
+		"db/20180610081523_advantage.sql",
+	)
+}
+
+func db20180610081523_advantageSql() (*asset, error) {
+	bytes, err := db20180610081523_advantageSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180610081523_advantage.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -581,6 +602,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20180530130551_roleseed.sql":                    db20180530130551_roleseedSql,
 	"db/20180530131001_permseed.sql":                    db20180530131001_permseedSql,
 	"db/20180530141920_role.sql":                        db20180530141920_roleSql,
+	"db/20180610081523_advantage.sql":                   db20180610081523_advantageSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -646,6 +668,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20180530130551_roleseed.sql":                    &bintree{db20180530130551_roleseedSql, map[string]*bintree{}},
 		"20180530131001_permseed.sql":                    &bintree{db20180530131001_permseedSql, map[string]*bintree{}},
 		"20180530141920_role.sql":                        &bintree{db20180530141920_roleSql, map[string]*bintree{}},
+		"20180610081523_advantage.sql":                   &bintree{db20180610081523_advantageSql, map[string]*bintree{}},
 	}},
 }}
 
