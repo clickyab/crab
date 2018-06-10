@@ -96,7 +96,7 @@ type User struct {
 	SSN         mysql.NullString                         `json:"ssn" db:"ssn"`
 	Balance     int64                                    `json:"balance" db:"balance"`
 	Attributes  mysql.GenericJSONField                   `json:"attributes" db:"attributes"`
-	Advantage   int                                      `json:"advantage" db:"advantage"`
+	Advantage   mysql.NullInt64                          `json:"advantage" db:"advantage"`
 	DomainLess  bool                                     `json:"domain_less" db:"domain_less"`
 	Corporation *Corporation                             `json:"corporation, omitempty" db:"-"`
 	Parents     []int64                                  `json:"-" db:"-"`
@@ -319,8 +319,8 @@ func (u *User) getUserParents(d int64) []int64 {
 // CalcUserConfig calculate user config for domain
 func (u *User) CalcUserConfig(domain *domainOrm.Domain) domainOrm.UserConfig {
 	var ua float64
-	if u.Advantage > 0 {
-		ua = 1 + (float64(u.Advantage) / float64(100))
+	if u.Advantage.Int64 > 0 {
+		ua = 1 + (float64(u.Advantage.Int64) / float64(100))
 	}
 	uc := domainOrm.UserConfig{
 		MinTotalBudget:  int64(float64(domain.MinTotalBudget) * ua),

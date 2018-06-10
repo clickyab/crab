@@ -67,7 +67,7 @@ type userResponse struct {
 	Attributes    mysql.GenericJSONField `json:"attributes,omitempty"`
 	Role          *aaa.Role              `json:"role,omitempty"`
 	Managers      []aaa.ManagerUser      `json:"managers,omitempty"`
-	Advantage     int                    `json:"advantage,omitempty"`
+	Advantage     mysql.NullInt64        `json:"advantage,omitempty"`
 }
 
 func (u Controller) createUserResponse(user *aaa.User, perms *[]string, managers []aaa.ManagerUser) userResponse {

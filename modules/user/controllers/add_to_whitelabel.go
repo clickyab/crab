@@ -27,7 +27,7 @@ type addUserToWhitelabelPayload struct {
 	Mobile          string               `json:"mobile" validate:"omitempty"`
 	AccountType     aaa.AccountType      `json:"account_type" validate:"required"`
 	NotifyUser      bool                 `json:"notify_user"`
-	Advantage       int                  `json:"advantage" validate:"max=99,min=0" error:"should be in 0-99"`
+	Advantage       int64                `json:"advantage" validate:"max=99,min=0" error:"should be in 0-99"`
 	CorporationInfo *CorporationInfoType `json:"corporation_info" validate:"omitempty"`
 
 	role          *aaa.Role
@@ -89,7 +89,7 @@ func (c *Controller) registerToWhitelabel(ctx context.Context, r *http.Request, 
 		Password:   p.Password,
 		FirstName:  p.FirstName,
 		LastName:   p.LastName,
-		Advantage:  p.Advantage,
+		Advantage:  mysql.NullInt64{Valid: p.Advantage != 0, Int64: p.Advantage},
 		DomainLess: false,
 		Status:     aaa.ActiveUserStatus,
 		Cellphone:  mysql.NullString{String: p.Mobile, Valid: true},
