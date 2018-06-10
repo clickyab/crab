@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"clickyab.com/crab/modules/domain/middleware/domain"
+	"clickyab.com/crab/modules/domain/orm"
 	"clickyab.com/crab/modules/location/location"
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
@@ -22,10 +23,11 @@ type Controller struct {
 
 // ResponseLoginOK login or ping or other response
 type ResponseLoginOK struct {
-	Token             string       `json:"token"`
-	Account           userResponse `json:"account"`
-	Perms             *[]string    `json:"perms,omitempty"`
-	ImpersonatorToken string       `json:"impersonator_token,omitempty"`
+	Token             string         `json:"token"`
+	Account           userResponse   `json:"account"`
+	Perms             *[]string      `json:"perms,omitempty"`
+	ImpersonatorToken string         `json:"impersonator_token,omitempty"`
+	UserConfig        orm.UserConfig `json:"user_config,omitempty"`
 }
 
 var (

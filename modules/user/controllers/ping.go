@@ -27,9 +27,12 @@ func (c *Controller) ping(ctx context.Context, r *http.Request) (*ResponseLoginO
 		xlog.GetWithError(ctx, err).Debug("database error on get user permissions")
 		return nil, errors.GetUserPermsDbErr
 	}
+	uc := user.CalcUserConfig(domain)
+
 	res := &ResponseLoginOK{
-		Token:   authz.MustGetToken(ctx),
-		Account: c.createUserResponse(user, userPerms, nil),
+		Token:      authz.MustGetToken(ctx),
+		Account:    c.createUserResponse(user, userPerms, nil),
+		UserConfig: uc,
 	}
 	if impersonatorToken != "" {
 		res.ImpersonatorToken = impersonatorToken

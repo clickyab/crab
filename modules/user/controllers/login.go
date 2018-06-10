@@ -55,9 +55,12 @@ func (c *Controller) login(ctx context.Context, r *http.Request, p *loginPayload
 		return nil, t9e.G("get user permissions error")
 	}
 
+	uc := currentUser.CalcUserConfig(uDomain)
+
 	token := aaa.GetNewToken(currentUser)
 	return &ResponseLoginOK{
-		Token:   token,
-		Account: c.createUserResponse(currentUser, userPerms, nil),
+		Token:      token,
+		Account:    c.createUserResponse(currentUser, userPerms, nil),
+		UserConfig: uc,
 	}, nil
 }
