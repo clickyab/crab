@@ -244,6 +244,7 @@
 		"/domain/get/{id}": "file://01dcdc4f7ea82dc6eb00ef8c53c2d027c1c8545a",
 		"/domain/list": "file://66fca8699ed735946cf48f65e1f11bc74c099543",
 		"/domain/list/definition": "file://24e39727ff04e18a20dd125b34ab9dcd36b83eef",
+		"/domain/super-global-config": "file://67eafe5d37c3ac17ddff9b63e1917a4878688c21",
 		"/financial/": "file://91b69905c1d0c3ec891f07e5ac21cab364a2f1fd",
 		"/financial/add": "file://a7fb70e0dbfa56ec0417d95a2de17c781f2da6bf",
 		"/financial/billing": "file://aa46e64fb96b4585b78aea21331a16e830f2ecee",

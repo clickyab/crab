@@ -10,6 +10,20 @@
 				"type": "string"
 			},
 			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
@@ -36,20 +50,6 @@
 				"name": "sort",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",
