@@ -26,7 +26,7 @@ func GetSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case DomainTableFull:
-		return fmt.Sprintf(`%[1]sid,%[1]sdomain_base,%[1]stitle,%[1]slogo,%[1]stheme,%[1]sdescription,%[1]sattributes,%[1]sstatus,%[1]smin_total_budget,%[1]smin_daily_budget,%[1]smin_web_native_cpc,%[1]smin_web_banner_cpc,%[1]smin_web_vast_cpc,%[1]smin_app_native_cpc,%[1]smin_app_banner_cpc,%[1]smin_app_vast_cpc,%[1]smin_web_cpc,%[1]smin_app_cpc,%[1]smin_web_native_cpm,%[1]smin_web_banner_cpm,%[1]smin_web_vast_cpm,%[1]smin_app_native_cpm,%[1]smin_app_banner_cpm,%[1]smin_app_vast_cpm,%[1]smin_web_cpm,%[1]smin_app_cpm,%[1]sadvantage,%[1]screated_at,%[1]supdated_at`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]sdomain_base,%[1]stitle,%[1]slogo,%[1]stheme,%[1]sdescription,%[1]sattributes,%[1]sstatus,%[1]sadvantage,%[1]screated_at,%[1]supdated_at,min_total_budget,min_daily_budget,min_web_native_cpc,min_web_banner_cpc,min_web_vast_cpc,min_app_native_cpc,min_app_banner_cpc,min_app_vast_cpc,min_web_cpc,min_app_cpc,min_web_native_cpm,min_web_banner_cpm,min_web_vast_cpm,min_app_native_cpm,min_app_banner_cpm,min_app_vast_cpm,min_web_cpm,min_app_cpm`, alias)
 
 	case DomainUserTableFull:
 		return fmt.Sprintf(`%[1]sid,%[1]srole_id,%[1]sdomain_id,%[1]sstatus,%[1]suser_id`, alias)
