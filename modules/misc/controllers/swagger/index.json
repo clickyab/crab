@@ -151,6 +151,7 @@
 		"orm_SinglePublisherDataTable": "file://456c7c73cc3dafc71250c75af0c93de6684a3168",
 		"orm_Status": "file://3df80573c7f36241a6530c1863c60c4dcfef21c6",
 		"orm_Strategy": "file://cc91a496f69184de17d6b0edebe8ffb0691c70da",
+		"orm_UserConfig": "file://ebe0045440e5d190b574d9ce57b4246d8b3b744f",
 		"payment_InitPaymentResp": "file://173fe5398a9d5d2e60eae6a1cf1d097c7d957d06",
 		"permission_Column": "file://6ad059cea5e9ec238ed7bdd54d1b2c61950308b1",
 		"trans_t9Base": "file://c7c628362ddca9cd288d4bb42b1d98c3070b9da6",
