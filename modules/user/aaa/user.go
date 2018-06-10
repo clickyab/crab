@@ -316,6 +316,35 @@ func (u *User) getUserParents(d int64) []int64 {
 	return res
 }
 
+// CalcUserConfig calculate user config for domain
+func (u *User) CalcUserConfig(domain *domainOrm.Domain) domainOrm.UserConfig {
+	var ua float64
+	if u.Advantage > 0 {
+		ua = 1 + (float64(u.Advantage) / float64(100))
+	}
+	uc := domainOrm.UserConfig{
+		MinTotalBudget:  int64(float64(domain.MinTotalBudget) * ua),
+		MinDailyBudget:  int64(float64(domain.MinDailyBudget) * ua),
+		MinWebNativeCPC: int64(float64(domain.MinWebNativeCPC) * ua),
+		MinWebBannerCPC: int64(float64(domain.MinWebBannerCPC) * ua),
+		MinWebVastCPC:   int64(float64(domain.MinWebVastCPC) * ua),
+		MinAppNativeCPC: int64(float64(domain.MinAppNativeCPC) * ua),
+		MinAppBannerCPC: int64(float64(domain.MinAppBannerCPC) * ua),
+		MinAppVastCPC:   int64(float64(domain.MinAppVastCPC) * ua),
+		MinWebCPC:       int64(float64(domain.MinWebCPC) * ua),
+		MinAppCPC:       int64(float64(domain.MinAppCPC) * ua),
+		MinWebNativeCPM: int64(float64(domain.MinWebNativeCPM) * ua),
+		MinWebBannerCPM: int64(float64(domain.MinWebBannerCPM) * ua),
+		MinWebVastCPM:   int64(float64(domain.MinWebVastCPM) * ua),
+		MinAppNativeCPM: int64(float64(domain.MinAppNativeCPM) * ua),
+		MinAppBannerCPM: int64(float64(domain.MinAppBannerCPM) * ua),
+		MinAppVastCPM:   int64(float64(domain.MinAppVastCPM) * ua),
+		MinWebCPM:       int64(float64(domain.MinWebCPM) * ua),
+		MinAppCPM:       int64(float64(domain.MinAppCPM) * ua),
+	}
+	return uc
+}
+
 // FindUserWithParentsByID return the User with parent base on its id
 func (m *Manager) FindUserWithParentsByID(id, d int64) (*User, error) {
 	var res User

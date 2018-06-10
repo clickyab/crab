@@ -41,6 +41,14 @@ type Domain struct {
 	Attributes  mysql.GenericJSONField `json:"attributes" db:"attributes"`
 	Status      DomainStatus           `json:"status" db:"status"`
 
+	UserConfig
+	Advantage int       `json:"advantage" db:"advantage"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+}
+
+// UserConfig UserConfig
+type UserConfig struct {
 	MinTotalBudget  int64 `json:"min_total_budget" db:"min_total_budget"`
 	MinDailyBudget  int64 `json:"min_daily_budget" db:"min_daily_budget"`
 	MinWebNativeCPC int64 `json:"min_web_native_cpc" db:"min_web_native_cpc"`
@@ -59,11 +67,6 @@ type Domain struct {
 	MinAppVastCPM   int64 `json:"min_app_vast_cpm" db:"min_app_vast_cpm"`
 	MinWebCPM       int64 `json:"min_web_cpm" db:"min_web_cpm"`
 	MinAppCPM       int64 `json:"min_app_cpm" db:"min_app_cpm"`
-
-	Advantage int `json:"advantage" db:"advantage"`
-
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 }
 
 // DomainUser domain_user model in database
