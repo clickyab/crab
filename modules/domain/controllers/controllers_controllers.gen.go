@@ -112,3 +112,24 @@ func (c *Controller) getDomainConfigGet(ctx context.Context, w http.ResponseWrit
 	}
 	framework.Write(w, res, http.StatusOK)
 }
+
+// getGlobalConfig get global config
+// @Route {
+// 		url = /super-global-config
+//		method = get
+//		middleware = authz.Authenticate
+//		resource = get_global_config:superGlobal
+//		200 = orm.UserConfig
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) getGlobalConfigGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.getGlobalConfig(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}

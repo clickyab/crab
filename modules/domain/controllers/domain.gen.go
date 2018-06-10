@@ -200,6 +200,31 @@ func (c *Controller) Routes(r framework.Mux) {
 		group.GET("controllers-Controller-getDomainConfigGet", "/config/:name", framework.Mix(c.getDomainConfigGet, m6...))
 		// End route with key 6
 
+		/* Route {
+			"Route": "/super-global-config",
+			"Method": "GET",
+			"Function": "Controller.getGlobalConfigGet",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "",
+			"Resource": "get_global_config",
+			"Scope": "superGlobal"
+		} with key 7 */
+		m7 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("get_global_config", "get_global_config")
+		m7 = append(m7, authz.AuthorizeGenerator("get_global_config", "superGlobal"))
+
+		group.GET("controllers-Controller-getGlobalConfigGet", "/super-global-config", framework.Mix(c.getGlobalConfigGet, m7...))
+		// End route with key 7
+
 		initializer.DoInitialize(c)
 	})
 }

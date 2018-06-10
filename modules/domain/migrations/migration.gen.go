@@ -10,6 +10,7 @@
 // db/20180526095729_adddefaults.sql
 // db/20180530123831_domainuser.sql
 // db/20180609052249_list_domain_perms.sql
+// db/20180609132413_get_global_config.sql
 // DO NOT EDIT!
 
 package migrations
@@ -277,6 +278,26 @@ func db20180609052249_list_domain_permsSql() (*asset, error) {
 	return a, nil
 }
 
+var _db20180609132413_get_global_configSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\x8f\x4d\x4b\xc3\x40\x18\x84\xef\xfb\x2b\x86\x5c\xb6\xc5\xf4\xd0\x73\xc9\xa1\x90\x55\x0b\x31\xc5\x7c\xe8\x31\xa4\xc9\x6b\xfa\xe2\x36\xbb\x64\xb7\xd4\x9f\x2f\x9b\xaa\x28\xbd\x78\x9c\x87\x19\x78\x46\xac\x56\xb8\x3b\xf1\x30\xb5\x9e\x50\xdb\x10\xcb\xe7\x0c\x3c\xc2\x51\xe7\xd9\x8c\x90\xb5\x95\x60\x07\xfa\xa0\xee\xec\xa9\xc7\xe5\x48\x23\xfc\x91\x1d\xae\xbb\x50\x62\x87\xd6\x5a\xcd\xd4\x8b\x5d\x5e\xaa\xa2\xc2\x2e\xaf\xf6\x98\x8c\xa6\xc6\xd2\x74\x62\xe7\x42\x6d\x31\x03\xee\x63\x04\x18\xc3\x75\xc6\xd2\x12\x2f\xdb\xac\x56\x25\x16\xeb\x58\x0e\xe4\x9b\x41\x9b\x43\xab\x9b\xce\x8c\x6f\x3c\xc8\x58\xba\xb3\xa5\xe9\x61\x86\x72\xb9\x11\x7f\x94\x53\x73\x19\xbf\xa5\x7f\x8c\x03\xfc\x97\xf3\x64\xb4\xa6\x1e\x87\xb6\x7b\x17\xa9\xca\x54\xa5\x70\x5f\xec\x9f\x6e\xbc\x5f\x1f\x55\xa1\xae\xb6\x49\xf4\x4b\x27\xc2\x36\x4f\xf1\x75\x2a\x59\xcf\x29\xcc\x92\xe8\xe6\x47\xb4\x11\xe2\x33\x00\x00\xff\xff\x18\xb8\x89\x7e\x6d\x01\x00\x00"
+
+func db20180609132413_get_global_configSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_db20180609132413_get_global_configSql,
+		"db/20180609132413_get_global_config.sql",
+	)
+}
+
+func db20180609132413_get_global_configSql() (*asset, error) {
+	bytes, err := db20180609132413_get_global_configSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/20180609132413_get_global_config.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -339,6 +360,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/20180526095729_adddefaults.sql":               db20180526095729_adddefaultsSql,
 	"db/20180530123831_domainuser.sql":                db20180530123831_domainuserSql,
 	"db/20180609052249_list_domain_perms.sql":         db20180609052249_list_domain_permsSql,
+	"db/20180609132413_get_global_config.sql":         db20180609132413_get_global_configSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -393,6 +415,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		"20180526095729_adddefaults.sql":               &bintree{db20180526095729_adddefaultsSql, map[string]*bintree{}},
 		"20180530123831_domainuser.sql":                &bintree{db20180530123831_domainuserSql, map[string]*bintree{}},
 		"20180609052249_list_domain_perms.sql":         &bintree{db20180609052249_list_domain_permsSql, map[string]*bintree{}},
+		"20180609132413_get_global_config.sql":         &bintree{db20180609132413_get_global_configSql, map[string]*bintree{}},
 	}},
 }}
 
