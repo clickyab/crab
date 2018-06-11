@@ -26,8 +26,8 @@ func (v *ValidatorAd) Check(i InputData) error {
 }
 
 func checkDuration(v *ValidatorAd, i InputData) error {
-	if v.Dur != nil {
-		if i.Duration > v.Dur.Dur {
+	if v.Duration != 0 {
+		if i.Duration > v.Duration {
 			return errors.AdDurationErr
 		}
 	}
@@ -110,22 +110,17 @@ type WebNative struct {
 
 // ValidatorAd ValidatorAd
 type ValidatorAd struct {
-	Rate  float64     `json:"rate,omitempty"`
-	Min   *Dimension  `json:"min,omitempty"`
-	Max   *Dimension  `json:"max,omitempty"`
-	Exact []Dimension `json:"exact,omitempty"`
-	Ext   []string    `json:"ext,omitempty"`
-	Dur   *Duration   `json:"dur,omitempty"`
-	Size  int64       `json:"size,omitempty"`
+	Rate     float64     `json:"rate,omitempty"`
+	Min      *Dimension  `json:"min,omitempty"`
+	Max      *Dimension  `json:"max,omitempty"`
+	Exact    []Dimension `json:"exact,omitempty"`
+	Ext      []string    `json:"ext,omitempty"`
+	Duration int64       `json:"duration,omitempty"`
+	Size     int64       `json:"size,omitempty"`
 }
 
 // Dimension Dimension
 type Dimension struct {
 	Width  float64 `json:"width,omitempty"`
 	Height float64 `json:"height,omitempty"`
-}
-
-// Duration Duration
-type Duration struct {
-	Dur int64 `json:"dur,omitempty"`
 }
