@@ -3,23 +3,9 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " parameter for search",
+				"description": " search the cellphone field",
 				"in": "query",
-				"name": "q",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the email field",
-				"in": "query",
-				"name": "email",
+				"name": "cellphone",
 				"required": false,
 				"type": "string"
 			},
@@ -31,6 +17,13 @@
 				"type": "string"
 			},
 			{
+				"description": " search the ssn field",
+				"in": "query",
+				"name": "ssn",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": " search the full_name field",
 				"in": "query",
 				"name": "full_name",
@@ -38,11 +31,11 @@
 				"type": "string"
 			},
 			{
-				"description": " search the cellphone field",
+				"description": " page number",
 				"in": "query",
-				"name": "cellphone",
+				"name": "p",
 				"required": false,
-				"type": "string"
+				"type": "int"
 			},
 			{
 				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
@@ -59,9 +52,9 @@
 				"type": "string"
 			},
 			{
-				"description": " search the ssn field",
+				"description": " search the email field",
 				"in": "query",
-				"name": "ssn",
+				"name": "email",
 				"required": false,
 				"type": "string"
 			},
@@ -73,11 +66,18 @@
 				"type": "int"
 			},
 			{
-				"description": " page number",
+				"description": "",
 				"in": "query",
-				"name": "p",
+				"name": "sort",
 				"required": false,
-				"type": "int"
+				"type": "string"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
 			},
 			{
 				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
