@@ -9,6 +9,28 @@ import (
 	"github.com/clickyab/services/framework"
 )
 
+// acceptCampaignCreativeStatus to campaign
+// @Route {
+// 		url = /accept-campaign-creative/:id
+//		method = patch
+//		payload = changeStatus
+//		middleware = authz.Authenticate
+//		resource = change_creative_status:superGlobal
+//		200 = CreativeStatusChangeResult
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) acceptCampaignCreativeStatusPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*changeStatus)
+	res, err := c.acceptCampaignCreativeStatus(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // addBannerCreative to campaign
 // @Route {
 // 		url = /banner
@@ -53,33 +75,11 @@ func (c Controller) addNativeCreativePost(ctx context.Context, w http.ResponseWr
 	framework.Write(w, res, http.StatusOK)
 }
 
-// changeCampaignCreativeStatus to campaign
-// @Route {
-// 		url = /campaign-creative-status/:id
-//		method = patch
-//		payload = changeStatus
-//		middleware = authz.Authenticate
-//		resource = change_creative_status:superGlobal
-//		200 = CreativeStatusChangeResult
-//		400 = controller.ErrorResponseSimple
-//		401 = controller.ErrorResponseSimple
-//		403 = controller.ErrorResponseSimple
-// }
-func (c Controller) changeCampaignCreativeStatusPatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := c.MustGetPayload(ctx).(*changeStatus)
-	res, err := c.changeCampaignCreativeStatus(ctx, r, pl)
-	if err != nil {
-		framework.Write(w, err, http.StatusBadRequest)
-		return
-	}
-	framework.Write(w, res, http.StatusOK)
-}
-
 // changeCreativesStatus bulk approve reject creatives status of a campaign
 // @Route {
 // 		url = /change-creatives-status/:id
 //		method = put
-//		payload = changeStatusPayload
+//		payload = creativesStatusPayload
 //		middleware = authz.Authenticate
 //		resource = change_creatives_status:superGlobal
 //		200 = ChangeStatusResult
@@ -88,7 +88,7 @@ func (c Controller) changeCampaignCreativeStatusPatch(ctx context.Context, w htt
 //		403 = controller.ErrorResponseSimple
 // }
 func (c *Controller) changeCreativesStatusPut(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	pl := c.MustGetPayload(ctx).(*changeStatusPayload)
+	pl := c.MustGetPayload(ctx).(*creativesStatusPayload)
 	res, err := c.changeCreativesStatus(ctx, r, pl)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
