@@ -20,8 +20,8 @@ import (
 
 // @Validate{
 //}
-type changeStatusPayload struct {
-	CreativesStatus []adOrm.ChangeStatusReq `json:"creatives_status" validation:"required"`
+type creativesStatusPayload struct {
+	NewStatus       []adOrm.ChangeStatusReq `json:"new_status" validate:"required"`
 	currentDomain   *orm2.Domain            `json:"-"`
 	currentCampaign *orm3.Campaign          `json:"-"`
 }
@@ -31,7 +31,7 @@ type ChangeStatusResult struct {
 	CreativesStatus []adOrm.ChangeStatusReq `json:"creatives_status"`
 }
 
-func (p *changeStatusPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+func (p *creativesStatusPayload) ValidateExtra(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	idInt, err := strconv.ParseInt(xmux.Param(ctx, "id"), 10, 0)
 	if err != nil {
 		return errors.InvalidIDErr
@@ -44,8 +44,8 @@ func (p *changeStatusPayload) ValidateExtra(ctx context.Context, w http.Response
 		return errors.InvalidIDErr
 	}
 	orm := adOrm.NewOrmManager()
-	for i := range p.CreativesStatus {
-		p.CreativesStatus[i].Creative, err = orm.FindCreativeByID(p.CreativesStatus[i].CreativeID)
+	for i := range p.NewStatus {
+		p.NewStatus[i].Creative, err = orm.FindCreativeByID(p.NewStatus[i].CreativeID)
 		if err != nil {
 			return errors.CreativeNotFoundErr
 		}
@@ -61,21 +61,21 @@ func (p *changeStatusPayload) ValidateExtra(ctx context.Context, w http.Response
 // 		method = put
 // 		resource = change_creatives_status:superGlobal
 // }
-func (c *Controller) changeCreativesStatus(ctx context.Context, r *http.Request, p *changeStatusPayload) (*ChangeStatusResult, error) {
+func (c *Controller) changeCreativesStatus(ctx context.Context, r *http.Request, p *creativesStatusPayload) (*ChangeStatusResult, error) {
 	currentUser := authz.MustGetUser(ctx)
 	token := authz.MustGetToken(ctx)
 	// apply approve or reject
-	prob := services.ChangeCreativesStatus(p.CreativesStatus, currentUser.ID, p.currentDomain.ID, token, permission.ScopeSuperGlobal)
+	prob := services.ChangeCreativesStatus(p.NewStatus, currentUser.ID, p.currentDomain.ID, token, permission.ScopeSuperGlobal)
 	if prob != nil {
 		xlog.GetWithError(ctx, prob).Debug("database error when change creatives status")
 		return nil, errors.UpdateStatusDbErr
 	}
 	result := ChangeStatusResult{
-		CreativesStatus: p.CreativesStatus,
+		CreativesStatus: p.NewStatus,
 	}
 
 	var ids []int64
-	for _, r := range p.CreativesStatus {
+	for _, r := range p.NewStatus {
 		ids = append(ids, r.CreativeID)
 	}
 	err := services.SendChangeStatusMessage(ids, p.currentCampaign.ID)

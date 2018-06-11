@@ -52,14 +52,14 @@ func (p *changeStatus) ValidateExtra(ctx context.Context, w http.ResponseWriter,
 	return nil
 }
 
-// changeCampaignCreativeStatus to campaign
+// acceptCampaignCreativeStatus to campaign
 // @Rest {
-// 		url = /campaign-creative-status/:id
+// 		url = /accept-campaign-creative/:id
 //		protected = true
 // 		method = patch
 // 		resource = change_creative_status:superGlobal
 // }
-func (c Controller) changeCampaignCreativeStatus(ctx context.Context, r *http.Request, p *changeStatus) (*CreativeStatusChangeResult, error) {
+func (c Controller) acceptCampaignCreativeStatus(ctx context.Context, r *http.Request, p *changeStatus) (*CreativeStatusChangeResult, error) {
 	currentUser := authz.MustGetUser(ctx)
 	token := authz.MustGetToken(ctx)
 	err := services.AcceptCreatives(p.creatives, currentUser.ID, p.currentDomain.ID, token, permission.ScopeSuperGlobal)
