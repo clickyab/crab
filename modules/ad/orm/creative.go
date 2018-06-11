@@ -120,10 +120,12 @@ type ToRejectRequest struct {
 	RejectReasonID int64 `json:"reject_reason_id"`
 }
 
-// ChangeStatusReq user request struct to reject a creative
+// ChangeStatusReq user request struct
+// @Validate{
+//}
 type ChangeStatusReq struct {
-	Status         CreativeStatusType `json:"status"`
-	CreativeID     int64              `json:"creative_id"`
+	Status         CreativeStatusType `json:"status" validate:"required"`
+	CreativeID     int64              `json:"creative_id" validate:"required"`
 	RejectReasonID int64              `json:"reject_reason_id,omitempty"`
 	Creative       *Creative          `json:"-"`
 }
