@@ -44,7 +44,7 @@
 					},
 					"type": "array"
 				},
-				"icon": {
+				"h_image": {
 					"items": {
 						"properties": {
 							"label": {
@@ -58,7 +58,7 @@
 					},
 					"type": "array"
 				},
-				"images": {
+				"icon": {
 					"items": {
 						"properties": {
 							"label": {
@@ -143,6 +143,20 @@
 					"type": "array"
 				},
 				"title": {
+					"items": {
+						"properties": {
+							"label": {
+								"type": "string"
+							},
+							"val": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					},
+					"type": "array"
+				},
+				"v_image": {
 					"items": {
 						"properties": {
 							"label": {
