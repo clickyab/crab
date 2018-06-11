@@ -1,6 +1,6 @@
 {
 	"patch": {
-		"description": "changeCampaignCreativeStatus to campaign",
+		"description": "acceptCampaignCreativeStatus to campaign",
 		"parameters": [
 			{
 				"description": "",

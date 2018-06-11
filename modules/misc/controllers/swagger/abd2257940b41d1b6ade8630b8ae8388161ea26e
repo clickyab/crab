@@ -22,7 +22,7 @@
 				"name": "payload_data",
 				"required": false,
 				"schema": {
-					"$ref": "#/definitions/controllers_changeStatusPayload"
+					"$ref": "#/definitions/controllers_creativesStatusPayload"
 				}
 			}
 		],
