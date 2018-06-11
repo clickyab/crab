@@ -89,9 +89,6 @@ func (p *editNativePayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 		if len(p.Assets.CTAs) == 0 {
 			return errors.CtaRequiredErr
 		}
-		if len(p.Assets.Videos) == 0 {
-			return errors.VideoRequiredErr
-		}
 	}
 
 	return nil
