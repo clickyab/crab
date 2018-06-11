@@ -22,7 +22,7 @@ type Controller struct {
 // Important: only add here shared func that use in other package routes
 
 // generateNativeAssets generate a slice of native assets
-func generateNativeAssets(data NativeAssetPayload, images, icons, logos, videos []*model.Upload) []*orm.Asset {
+func generateNativeAssets(data *NativeAssetPayload, vImages, hImages, icons, logos, videos []*model.Upload) []*orm.Asset {
 	var assets []*orm.Asset
 
 	assets = append(assets, generateNativeString(data.Titles, orm.AssetTextType, "title")...)
@@ -30,8 +30,11 @@ func generateNativeAssets(data NativeAssetPayload, images, icons, logos, videos 
 	if len(icons) > 0 {
 		assets = append(assets, generateNativeMedia(icons, orm.AssetImageType, "icon")...)
 	}
-	if len(images) > 0 {
-		assets = append(assets, generateNativeMedia(images, orm.AssetImageType, "image")...)
+	if len(vImages) > 0 {
+		assets = append(assets, generateNativeMedia(vImages, orm.AssetImageType, "v_image")...)
+	}
+	if len(hImages) > 0 {
+		assets = append(assets, generateNativeMedia(hImages, orm.AssetImageType, "h_image")...)
 	}
 	if len(videos) > 0 {
 		assets = append(assets, generateNativeMedia(videos, orm.AssetVideoType, "video")...)
@@ -124,7 +127,7 @@ func generateNativeMedia(assets []*model.Upload, typ orm.AssetTypes, key string)
 			AssetType: typ,
 			Property: func() map[string]interface{} {
 				if key == "video" {
-					return map[string]interface{}{"label": val.Label}
+					return map[string]interface{}{"label": val.Label, "duration": val.Attr.Video.Duration}
 				}
 				return map[string]interface{}{"width": val.Attr.Native.Width, "height": val.Attr.Native.Height, "label": val.Label}
 			}(),
