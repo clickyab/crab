@@ -30,8 +30,11 @@ var (
 	// InvalideImageSize when width or height of image is not correct
 	InvalideImageSize = t9e.G("invalid image size! please check request uploaded image width and height")
 
-	// ImageRequiredErr image required in app native
-	ImageRequiredErr = t9e.G("image required in app native")
+	// VerticalImageRequiredErr image required in app native
+	VerticalImageRequiredErr = t9e.G("vertical image required in app native")
+
+	// HorizontalImageRequiredErr image required in app native
+	HorizontalImageRequiredErr = t9e.G("horizontal image required in app native")
 
 	// VideoRequiredErr video required in app native
 	VideoRequiredErr = t9e.G("video required in app native")
