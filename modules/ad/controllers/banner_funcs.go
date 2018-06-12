@@ -157,19 +157,19 @@ func validateBannerVideos(ctx context.Context, assets *BannerAssetPayload, campa
 	return nil
 }
 
-func checkBannerCreatePerm(ctx context.Context, p *createBannerPayload) error {
+func checkBannerCreatePerm(ctx context.Context, p *createBannerPayload) (permission.UserScope, error) {
 	// check campaign perm
-	_, ok := p.currentUser.HasOn("edit_campaign", p.campaignOwner.ID, p.currentDomain.ID, false, false, permission.ScopeSelf, permission.ScopeGlobal)
+	grantedScope, ok := p.currentUser.HasOn("edit_campaign", p.campaignOwner.ID, p.currentDomain.ID, false, false, permission.ScopeSelf, permission.ScopeGlobal)
 	if !ok {
-		return errors.AccessDenied
+		return grantedScope, errors.AccessDenied
 	}
 
 	for i := range p.Creative {
 		if err := validateCreateBannerFiles(ctx, p.Creative[i], p.currentCampaign, p.currentDomain, p.currentUser); err != nil {
-			return err
+			return grantedScope, err
 		}
 	}
-	return nil
+	return grantedScope, nil
 }
 
 func generateBannerString(asset orm.CreativeString, typ orm.AssetTypes, key string) *orm.Asset {

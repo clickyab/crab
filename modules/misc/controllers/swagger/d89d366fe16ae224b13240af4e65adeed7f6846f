@@ -1,0 +1,67 @@
+{
+	"items": {
+		"properties": {
+			"assets": {
+				"additionalProperties": {
+					"items": {
+						"type": "string"
+					},
+					"type": "array"
+				},
+				"type": "object"
+			},
+			"creative": {
+				"properties": {
+					"archived_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"attributes": {
+						"additionalProperties": {
+							"type": "string"
+						},
+						"type": "object"
+					},
+					"campaign_id": {
+						"type": "integer"
+					},
+					"created_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"id": {
+						"type": "integer"
+					},
+					"max_bid": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					},
+					"reject_reason_id": {
+						"type": "integer"
+					},
+					"status": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"updated_at": {
+						"format": "dateTime",
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"user_id": {
+						"type": "integer"
+					}
+				},
+				"type": "object"
+			}
+		},
+		"type": "object"
+	},
+	"type": "array"
+}

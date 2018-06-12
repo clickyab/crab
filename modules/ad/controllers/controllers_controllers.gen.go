@@ -9,6 +9,28 @@ import (
 	"github.com/clickyab/services/framework"
 )
 
+// addBannerCreative to campaign
+// @Route {
+// 		url = /banner
+//		method = post
+//		payload = createBannerPayload
+//		middleware = authz.Authenticate
+//		resource = create_creative:self
+//		200 = createBannerResponse
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) addBannerCreativePost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*createBannerPayload)
+	res, err := c.addBannerCreative(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // addNativeCreative to campaign
 // @Route {
 // 		url = /native
