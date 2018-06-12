@@ -31,6 +31,28 @@ func (c Controller) addNativeCreativePost(ctx context.Context, w http.ResponseWr
 	framework.Write(w, res, http.StatusOK)
 }
 
+// archiveCreative archive creative with creative id
+// @Route {
+// 		url = /archive/:id
+//		method = patch
+//		payload = archiveCreativePayload
+//		middleware = authz.Authenticate
+//		resource = archive_creative:self
+//		200 = adOrm.Creative
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) archiveCreativePatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*archiveCreativePayload)
+	res, err := c.archiveCreative(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // changeCampaignCreativeStatus to campaign
 // @Route {
 // 		url = /campaign-creative-status/:id

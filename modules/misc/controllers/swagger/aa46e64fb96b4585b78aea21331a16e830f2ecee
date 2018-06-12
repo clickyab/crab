@@ -3,9 +3,30 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " search the user_id field",
+				"description": " page number",
 				"in": "query",
-				"name": "user_id",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " search the last_name field",
+				"in": "query",
+				"name": "last_name",
 				"required": false,
 				"type": "string"
 			},
@@ -17,18 +38,18 @@
 				"type": "string"
 			},
 			{
-				"description": " search the first_name field",
+				"description": "",
 				"in": "query",
-				"name": "first_name",
+				"name": "pay_model",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": " search the email field",
 				"in": "query",
-				"name": "c",
+				"name": "email",
 				"required": false,
-				"type": "int"
+				"type": "string"
 			},
 			{
 				"description": " parameter for search",
@@ -45,37 +66,16 @@
 				"type": "string"
 			},
 			{
-				"description": " search the email field",
+				"description": " search the user_id field",
 				"in": "query",
-				"name": "email",
+				"name": "user_id",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": " search the first_name field",
 				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "pay_model",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the last_name field",
-				"in": "query",
-				"name": "last_name",
+				"name": "first_name",
 				"required": false,
 				"type": "string"
 			},
