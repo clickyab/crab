@@ -60,8 +60,8 @@ func (m *Manager) DeleteAllCreativeAssets(crID int64) error {
 	return err
 }
 
-// NativeString native string payload
-type NativeString struct {
+// CreativeString native string payload
+type CreativeString struct {
 	Label string `json:"label,omitempty"`
 	Val   string `json:"val"`
 }
@@ -93,7 +93,7 @@ func beautyAsset(assets []Asset) map[string][]interface{} {
 			}
 			bAssets[asset.AssetKey] = append(bAssets[asset.AssetKey], tmp)
 		} else {
-			tmp := NativeString{
+			tmp := CreativeString{
 				Val:   asset.AssetValue,
 				Label: asset.Property["label"].(string),
 			}

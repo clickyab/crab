@@ -25,20 +25,20 @@ const (
 //}
 type NativeAssetPayload struct {
 	//Required assets
-	Titles       []orm.NativeString `json:"title" validate:"required"`
-	Descriptions []orm.NativeString `json:"description"`
-	CTAs         []orm.NativeString `json:"cta"`
+	Titles       []orm.CreativeString `json:"title" validate:"required"`
+	Descriptions []orm.CreativeString `json:"description"`
+	CTAs         []orm.CreativeString `json:"cta"`
 	//Optional assets
-	Icons      []orm.NativeString `json:"icon" validate:"omitempty"`
-	HImages    []orm.NativeString `json:"h_image" validate:"omitempty"`
-	VImages    []orm.NativeString `json:"v_image" validate:"omitempty"`
-	Videos     []orm.NativeString `json:"video" validate:"omitempty"`
-	Logos      []orm.NativeString `json:"logo" validate:"omitempty"`
-	Ratings    []orm.NativeFloat  `json:"rating" validate:"omitempty"`
-	Prices     []orm.NativeFloat  `json:"price" validate:"omitempty"`
-	SalePrices []orm.NativeFloat  `json:"sale_price" validate:"omitempty"`
-	Downloads  []orm.NativeInt    `json:"downloads" validate:"omitempty"`
-	Phones     []orm.NativeString `json:"phone" validate:"omitempty"`
+	Icons      []orm.CreativeString `json:"icon" validate:"omitempty"`
+	HImages    []orm.CreativeString `json:"h_image" validate:"omitempty"`
+	VImages    []orm.CreativeString `json:"v_image" validate:"omitempty"`
+	Videos     []orm.CreativeString `json:"video" validate:"omitempty"`
+	Logos      []orm.CreativeString `json:"logo" validate:"omitempty"`
+	Ratings    []orm.NativeFloat    `json:"rating" validate:"omitempty"`
+	Prices     []orm.NativeFloat    `json:"price" validate:"omitempty"`
+	SalePrices []orm.NativeFloat    `json:"sale_price" validate:"omitempty"`
+	Downloads  []orm.NativeInt      `json:"downloads" validate:"omitempty"`
+	Phones     []orm.CreativeString `json:"phone" validate:"omitempty"`
 
 	vImages []*uploadOrm.Upload `json:"-"`
 	hImages []*uploadOrm.Upload `json:"-"`
@@ -100,7 +100,7 @@ func emptyNativeValNotPermitted(payload *NativeAssetPayload) error {
 	return err
 }
 
-func emptyNativeStringNotAllowed(data []orm.NativeString) error {
+func emptyNativeStringNotAllowed(data []orm.CreativeString) error {
 	for _, v := range data {
 		if v.Val == "" {
 			return errors.EmptyValErr
@@ -301,7 +301,7 @@ func validateNativeImage(kind string, image string, campaignKind campaignOrm.Cam
 		return nil, errors.FileNotFound("image")
 	}
 	if uploadFile.Attr.Native == nil {
-		return nil, errors.InvalideImageSize
+		return nil, errors.InvalidImageSize
 	}
 	if kind == nativeVerticalImage || kind == nativeIcon || kind == nativeHorizontalImage || kind == nativeLogo {
 		width, height := uploadFile.Attr.Native.Width, uploadFile.Attr.Native.Height

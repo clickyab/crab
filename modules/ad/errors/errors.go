@@ -27,8 +27,8 @@ var (
 	DBError = t9e.G("database error! please check request data and try again")
 	// EmptyValErr native asset should not have empty value
 	EmptyValErr = t9e.G("native asset should not have empty value")
-	// InvalideImageSize when width or height of image is not correct
-	InvalideImageSize = t9e.G("invalid image size! please check request uploaded image width and height")
+	// InvalidImageSize when width or height of image is not correct
+	InvalidImageSize = t9e.G("invalid image dimension db! please check request uploaded image width and height")
 
 	// VerticalImageRequiredErr image required in app native
 	VerticalImageRequiredErr = t9e.G("vertical image required in app native")
@@ -62,6 +62,14 @@ var (
 
 	// CreativeNotFoundErr creative not found error
 	CreativeNotFoundErr = t9e.G("creative not found")
+	// InvalidBannerTypeErr InvalidBannerTypeErr
+	InvalidBannerTypeErr = t9e.G("banner type should be image/video")
+	// InvalidBannerImage InvalidBannerImage
+	InvalidBannerImage = t9e.G("banner image required")
+	// InvalidBannerVideo InvalidBannerVideo
+	InvalidBannerVideo = t9e.G("banner video required")
+	// InvalidCTA InvalidCTA
+	InvalidCTA = t9e.G("cta required")
 )
 
 // AdNotFound maker

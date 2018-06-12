@@ -197,6 +197,50 @@ func (m *Manager) AddCreative(cr *Creative, assets []*Asset) (*CreativeSaveResul
 	}, nil
 }
 
+// MultiCreative MultiCreative
+type MultiCreative struct {
+	Creative *Creative
+	Assets   []*Asset
+}
+
+// AddMultiCreative insert new creative with related native assets
+func (m *Manager) AddMultiCreative(cr []MultiCreative) ([]CreativeSaveResult, error) {
+	err := m.Begin()
+	assert.Nil(err)
+	defer func() {
+		if err != nil {
+			assert.Nil(m.Rollback())
+		} else {
+			assert.Nil(m.Commit())
+		}
+	}()
+
+	var creativeResult = make([]CreativeSaveResult, 0)
+
+	for i := range cr {
+		err = m.CreateCreative(cr[i].Creative)
+		if err != nil {
+			return nil, err
+		}
+		var finalAsset = make([]Asset, 0)
+
+		for j := range cr[i].Assets {
+			cr[i].Assets[j].CreativeID = cr[i].Creative.ID
+			err = m.CreateAsset(cr[i].Assets[j])
+			if err != nil {
+				return nil, err
+			}
+			finalAsset = append(finalAsset, *cr[i].Assets[j])
+		}
+		creativeResult = append(creativeResult, CreativeSaveResult{
+			Creative: cr[i].Creative,
+			Assets:   beautyAsset(finalAsset),
+		})
+	}
+
+	return creativeResult, nil
+}
+
 // EditCreative update creative and its assets
 func (m *Manager) EditCreative(cr *Creative, assets []*Asset) (*CreativeSaveResult, error) {
 	err := m.Begin()
