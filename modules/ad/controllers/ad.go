@@ -149,8 +149,8 @@ func validateVastMedia(image string) (*uploadOrm.Upload, orm.AssetTypes, error) 
 	if err != nil {
 		return nil, "", errors.FileNotFound(image)
 	}
-	if uploadFile.Section != "vast-image" && uploadFile.Section != "vast-video"{
-		return nil, "",  errors.InvalidUploadSectionErr
+	if uploadFile.Section != "vast-image" && uploadFile.Section != "vast-video" {
+		return nil, "", errors.InvalidUploadSectionErr
 	}
 	if uploadFile.MIME == string(uploadOrm.VideoMime) {
 		width, height := uploadFile.Attr.Video.Width, uploadFile.Attr.Video.Height

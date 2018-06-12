@@ -1,0 +1,53 @@
+{
+	"properties": {
+		"assets": {
+			"properties": {
+				"cta": {
+					"properties": {
+						"label": {
+							"type": "string"
+						},
+						"val": {
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
+				"media": {
+					"properties": {
+						"label": {
+							"type": "string"
+						},
+						"val": {
+							"type": "string"
+						}
+					},
+					"type": "object"
+				}
+			},
+			"type": "object"
+		},
+		"attributes": {
+			"additionalProperties": {
+				"type": "string"
+			},
+			"type": "object"
+		},
+		"campaign_id": {
+			"type": "integer"
+		},
+		"max_bid": {
+			"type": "integer"
+		},
+		"media_kind": {
+			"type": "string"
+		},
+		"name": {
+			"type": "string"
+		},
+		"url": {
+			"type": "string"
+		}
+	},
+	"type": "object"
+}

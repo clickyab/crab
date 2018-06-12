@@ -31,6 +31,28 @@ func (c Controller) addNativeCreativePost(ctx context.Context, w http.ResponseWr
 	framework.Write(w, res, http.StatusOK)
 }
 
+// addVastCreative to campaign
+// @Route {
+// 		url = /vast
+//		method = post
+//		payload = createVastPayLoad
+//		middleware = authz.Authenticate
+//		resource = create_vast_creative:self
+//		200 = orm.CreativeSaveResult
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c Controller) addVastCreativePost(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	pl := c.MustGetPayload(ctx).(*createVastPayLoad)
+	res, err := c.addVastCreative(ctx, r, pl)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // changeCampaignCreativeStatus to campaign
 // @Route {
 // 		url = /campaign-creative-status/:id
