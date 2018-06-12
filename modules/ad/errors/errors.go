@@ -62,6 +62,11 @@ var (
 
 	// CreativeNotFoundErr creative not found error
 	CreativeNotFoundErr = t9e.G("creative not found")
+	//NotImplementedVastAppErr vast app not implemented error
+	NotImplementedVastAppErr = t9e.G("vast app not implemented error")
+
+	//InvalidUploadSectionErr InvalidUploadSectionErr
+	InvalidUploadSectionErr = t9e.G("upload section is not valid for this creative type")
 )
 
 // AdNotFound maker

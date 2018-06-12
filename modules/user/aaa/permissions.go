@@ -77,13 +77,11 @@ func (u *User) HasOn(
 	}
 	owner, err := NewAaaManager().FindUserByIDSetParentPerm(ownerID, DomainID)
 	assert.Nil(err)
-
 	if self {
 		if u.checkHasOnSelf(owner, perm, checkLevel) {
 			return permission.ScopeSelf, true
 		}
 	}
-
 	if global {
 		if u.checkHasOnGlobal(owner, perm, checkLevel, DomainID) {
 			return permission.ScopeGlobal, true
