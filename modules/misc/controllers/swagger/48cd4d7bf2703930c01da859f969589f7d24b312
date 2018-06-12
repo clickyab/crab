@@ -1,0 +1,17 @@
+{
+	"properties": {
+		"banner_type": {
+			"type": "string"
+		},
+		"campaign_id": {
+			"type": "integer"
+		},
+		"creative": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
+		}
+	},
+	"type": "object"
+}
