@@ -14,7 +14,6 @@ import (
 	"clickyab.com/crab/modules/user/aaa"
 	"clickyab.com/crab/modules/user/middleware/authz"
 	"github.com/clickyab/services/mysql"
-	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/safe"
 	"github.com/fatih/structs"
 )
@@ -128,7 +127,7 @@ type createBannerResponse []orm.CreativeSaveResult
 // }
 func (c Controller) addBannerCreative(ctx context.Context, r *http.Request, p *createBannerPayload) (*createBannerResponse, error) {
 	token := authz.MustGetToken(ctx)
-	err := checkBannerCreatePerm(ctx, p)
+	grantedScope, err := checkBannerCreatePerm(ctx, p)
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +160,7 @@ func (c Controller) addBannerCreative(ctx context.Context, r *http.Request, p *c
 		if err != nil {
 			return nil, err
 		}
-		err = creative.SetAuditUserData(p.currentUser.ID, token, p.currentDomain.ID, "add_creative", permission.ScopeSelf)
+		err = creative.SetAuditUserData(p.currentUser.ID, token, p.currentDomain.ID, "create_creative", grantedScope)
 		if err != nil {
 			return nil, err
 		}
