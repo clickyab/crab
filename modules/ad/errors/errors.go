@@ -62,6 +62,12 @@ var (
 
 	// CreativeNotFoundErr creative not found error
 	CreativeNotFoundErr = t9e.G("creative not found")
+
+	// ArchiveCreativeDbErr error when archive creative from db
+	ArchiveCreativeDbErr = t9e.G("database error when archive creative")
+
+	// AlReadyArchivedErr creative that you try to archive is already archived
+	AlReadyArchivedErr = t9e.G("creative that you try to archive is already archived")
 )
 
 // AdNotFound maker
