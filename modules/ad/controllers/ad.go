@@ -102,7 +102,7 @@ func generateNativeInt(assets []orm.NativeInt, typ orm.AssetTypes, key string) [
 	return res
 }
 
-func generateNativeString(assets []orm.NativeString, typ orm.AssetTypes, key string) []*orm.Asset {
+func generateNativeString(assets []orm.CreativeString, typ orm.AssetTypes, key string) []*orm.Asset {
 	var res []*orm.Asset
 	for _, val := range assets {
 		tmp := map[string]interface{}{

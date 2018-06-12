@@ -88,6 +88,8 @@ func checkDimension(v *ValidatorAd, i InputData) error {
 type AdTotalValidationRule struct {
 	FAppNative *AppNative `json:"app_native,omitempty"`
 	FWebNative *WebNative `json:"web_native,omitempty"`
+	FAppBanner *AppBanner `json:"app_banner,omitempty"`
+	FWebBanner *WebBanner `json:"web_banner,omitempty"`
 }
 
 // AppNative AppNative
@@ -97,6 +99,20 @@ type AppNative struct {
 	VImage ValidatorAd `json:"v_image,omitempty"`
 	HImage ValidatorAd `json:"h_image,omitempty"`
 	Video  ValidatorAd `json:"video,omitempty"`
+}
+
+// AppBanner AppBanner
+type AppBanner struct {
+	Video      ValidatorAd `json:"video,omitempty"`
+	Image      ValidatorAd `json:"image,omitempty"`
+	VideoImage ValidatorAd `json:"video_image,omitempty"`
+}
+
+// WebBanner WebBanner
+type WebBanner struct {
+	Video      ValidatorAd `json:"video,omitempty"`
+	Image      ValidatorAd `json:"image,omitempty"`
+	VideoImage ValidatorAd `json:"video_image,omitempty"`
 }
 
 // WebNative WebNative
