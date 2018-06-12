@@ -40,7 +40,7 @@ func (p *archiveCreativePayload) ValidateExtra(ctx context.Context, w http.Respo
 	if err != nil {
 		return errors.InvalidIDErr
 	}
-	if p.targetCreative.ArchivedAt.Valid{
+	if p.targetCreative.ArchivedAt.Valid {
 		return errors.AlReadyArchivedErr
 	}
 	return nil

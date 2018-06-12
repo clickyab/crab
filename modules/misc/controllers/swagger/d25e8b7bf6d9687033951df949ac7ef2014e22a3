@@ -3,16 +3,16 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "to",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "sort",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -24,16 +24,23 @@
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "p",
+				"name": "from",
 				"required": false,
-				"type": "int"
+				"type": "string"
 			},
 			{
-				"description": " parameter for search",
+				"description": "",
 				"in": "query",
-				"name": "q",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the label field",
+				"in": "query",
+				"name": "label",
 				"required": false,
 				"type": "string"
 			},
@@ -45,18 +52,11 @@
 				"type": "int"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " page number",
 				"in": "query",
-				"name": "from",
+				"name": "p",
 				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the label field",
-				"in": "query",
-				"name": "label",
-				"required": false,
-				"type": "string"
+				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",

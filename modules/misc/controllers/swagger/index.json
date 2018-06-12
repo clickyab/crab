@@ -18,6 +18,7 @@
 		"controllers_NativeAssetPayload": "file://2d369e427be681497699a6b30114e67c345de42b",
 		"controllers_addGatewayPayload": "file://7649f79123951e78b1bde7a9207eb3cb058a0b91",
 		"controllers_addInventoryPayload": "file://c46778cc43cf2f6e8e1b9c8543fffa1deaf79a7d",
+		"controllers_archiveCreativePayload": "file://f10f1d0aa3cfe66a6fd3613f11decdd9362c2578",
 		"controllers_assignInventoryPayload": "file://02b393112514d4af53a4a311a40f52235c0fc767",
 		"controllers_attributesPayload": "file://ec4e8d41a863a66e4f458537d9296853657d80ce",
 		"controllers_attributesResult": "file://7134fab86306c154434f896032014522595643d7",
@@ -192,6 +193,7 @@
 		"version": "\"0.0.1-pre-alpha\""
 	},
 	"paths": {
+		"/ad/archive/{id}": "file://8a004d44b3c9561fafdccf276fc2fda0744e2c67",
 		"/ad/campaign-creative-status/{id}": "file://b345e1d28a6e5b7b5c7650cf8bee31a058d53b3c",
 		"/ad/campaign/{id}": "file://315bf236a45f84221cd72c51acf72c387ea48f92",
 		"/ad/campaign/{id}/definition": "file://549f1390ae096984285c10b92bb5b8158499e9fe",
