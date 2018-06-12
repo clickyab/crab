@@ -104,6 +104,33 @@ func (c *Controller) Routes(r framework.Mux) {
 		// End route with key 2
 
 		/* Route {
+			"Route": "/vast",
+			"Method": "POST",
+			"Function": "Controller.addVastCreativePost",
+			"RoutePkg": "controllers",
+			"RouteMiddleware": [
+				"authz.Authenticate"
+			],
+			"RouteFuncMiddleware": "",
+			"RecType": "Controller",
+			"RecName": "c",
+			"Payload": "createVastPayLoad",
+			"Resource": "create_vast_creative",
+			"Scope": "self"
+		} with key 3 */
+		m3 := append(groupMiddleware, []framework.Middleware{
+			authz.Authenticate,
+		}...)
+
+		permission.Register("create_vast_creative", "create_vast_creative")
+		m3 = append(m3, authz.AuthorizeGenerator("create_vast_creative", "self"))
+
+		// Make sure payload is the last middleware
+		m3 = append(m3, middleware.PayloadUnMarshallerGenerator(createVastPayLoad{}))
+		group.POST("controllers-Controller-addVastCreativePost", "/vast", framework.Mix(c.addVastCreativePost, m3...))
+		// End route with key 3
+
+		/* Route {
 			"Route": "/campaign-creative-status/:id",
 			"Method": "PATCH",
 			"Function": "Controller.changeCampaignCreativeStatusPatch",
@@ -117,18 +144,18 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "changeStatus",
 			"Resource": "change_creative_status",
 			"Scope": "superGlobal"
-		} with key 3 */
-		m3 := append(groupMiddleware, []framework.Middleware{
+		} with key 4 */
+		m4 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("change_creative_status", "change_creative_status")
-		m3 = append(m3, authz.AuthorizeGenerator("change_creative_status", "superGlobal"))
+		m4 = append(m4, authz.AuthorizeGenerator("change_creative_status", "superGlobal"))
 
 		// Make sure payload is the last middleware
-		m3 = append(m3, middleware.PayloadUnMarshallerGenerator(changeStatus{}))
-		group.PATCH("controllers-Controller-changeCampaignCreativeStatusPatch", "/campaign-creative-status/:id", framework.Mix(c.changeCampaignCreativeStatusPatch, m3...))
-		// End route with key 3
+		m4 = append(m4, middleware.PayloadUnMarshallerGenerator(changeStatus{}))
+		group.PATCH("controllers-Controller-changeCampaignCreativeStatusPatch", "/campaign-creative-status/:id", framework.Mix(c.changeCampaignCreativeStatusPatch, m4...))
+		// End route with key 4
 
 		/* Route {
 			"Route": "/change-creatives-status/:id",
@@ -144,18 +171,18 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "changeStatusPayload",
 			"Resource": "change_creatives_status",
 			"Scope": "superGlobal"
-		} with key 4 */
-		m4 := append(groupMiddleware, []framework.Middleware{
+		} with key 5 */
+		m5 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("change_creatives_status", "change_creatives_status")
-		m4 = append(m4, authz.AuthorizeGenerator("change_creatives_status", "superGlobal"))
+		m5 = append(m5, authz.AuthorizeGenerator("change_creatives_status", "superGlobal"))
 
 		// Make sure payload is the last middleware
-		m4 = append(m4, middleware.PayloadUnMarshallerGenerator(changeStatusPayload{}))
-		group.PUT("controllers-Controller-changeCreativesStatusPut", "/change-creatives-status/:id", framework.Mix(c.changeCreativesStatusPut, m4...))
-		// End route with key 4
+		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(changeStatusPayload{}))
+		group.PUT("controllers-Controller-changeCreativesStatusPut", "/change-creatives-status/:id", framework.Mix(c.changeCreativesStatusPut, m5...))
+		// End route with key 5
 
 		/* Route {
 			"Route": "/native/:id",
@@ -171,18 +198,18 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "editNativePayload",
 			"Resource": "edit_creative",
 			"Scope": "self"
-		} with key 5 */
-		m5 := append(groupMiddleware, []framework.Middleware{
+		} with key 6 */
+		m6 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("edit_creative", "edit_creative")
-		m5 = append(m5, authz.AuthorizeGenerator("edit_creative", "self"))
+		m6 = append(m6, authz.AuthorizeGenerator("edit_creative", "self"))
 
 		// Make sure payload is the last middleware
-		m5 = append(m5, middleware.PayloadUnMarshallerGenerator(editNativePayload{}))
-		group.PUT("controllers-Controller-editNativeCreativePut", "/native/:id", framework.Mix(c.editNativeCreativePut, m5...))
-		// End route with key 5
+		m6 = append(m6, middleware.PayloadUnMarshallerGenerator(editNativePayload{}))
+		group.PUT("controllers-Controller-editNativeCreativePut", "/native/:id", framework.Mix(c.editNativeCreativePut, m6...))
+		// End route with key 6
 
 		/* Route {
 			"Route": "/creative/:id",
@@ -198,16 +225,16 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "get_creative",
 			"Scope": "self"
-		} with key 6 */
-		m6 := append(groupMiddleware, []framework.Middleware{
+		} with key 7 */
+		m7 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("get_creative", "get_creative")
-		m6 = append(m6, authz.AuthorizeGenerator("get_creative", "self"))
+		m7 = append(m7, authz.AuthorizeGenerator("get_creative", "self"))
 
-		group.GET("controllers-Controller-getCreativeGet", "/creative/:id", framework.Mix(c.getCreativeGet, m6...))
-		// End route with key 6
+		group.GET("controllers-Controller-getCreativeGet", "/creative/:id", framework.Mix(c.getCreativeGet, m7...))
+		// End route with key 7
 
 		/* Route {
 			"Route": "/creative-reject-reasons",
@@ -223,16 +250,16 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "get_creative_reject_reason",
 			"Scope": "self"
-		} with key 7 */
-		m7 := append(groupMiddleware, []framework.Middleware{
+		} with key 8 */
+		m8 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
 		permission.Register("get_creative_reject_reason", "get_creative_reject_reason")
-		m7 = append(m7, authz.AuthorizeGenerator("get_creative_reject_reason", "self"))
+		m8 = append(m8, authz.AuthorizeGenerator("get_creative_reject_reason", "self"))
 
-		group.GET("controllers-Controller-getCreativeRejectReasonsGet", "/creative-reject-reasons", framework.Mix(c.getCreativeRejectReasonsGet, m7...))
-		// End route with key 7
+		group.GET("controllers-Controller-getCreativeRejectReasonsGet", "/creative-reject-reasons", framework.Mix(c.getCreativeRejectReasonsGet, m8...))
+		// End route with key 8
 
 		initializer.DoInitialize(c)
 	})

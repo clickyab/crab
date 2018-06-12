@@ -5,6 +5,10 @@ import (
 
 	"unicode/utf8"
 
+	uploadOrm "clickyab.com/crab/modules/upload/model"
+
+	"clickyab.com/crab/modules/ad/controllers/advalidator"
+	"clickyab.com/crab/modules/ad/errors"
 	"clickyab.com/crab/modules/ad/orm"
 	"clickyab.com/crab/modules/upload/model"
 	"github.com/clickyab/services/framework/controller"
@@ -127,7 +131,7 @@ func generateNativeMedia(assets []*model.Upload, typ orm.AssetTypes, key string)
 			AssetType: typ,
 			Property: func() map[string]interface{} {
 				if key == "video" {
-					return map[string]interface{}{"label": val.Label, "duration": val.Attr.Video.Duration}
+					return map[string]interface{}{"width": val.Attr.Video.Width, "height": val.Attr.Video.Height, "label": val.Label}
 				}
 				return map[string]interface{}{"width": val.Attr.Native.Width, "height": val.Attr.Native.Height, "label": val.Label}
 			}(),
@@ -135,6 +139,99 @@ func generateNativeMedia(assets []*model.Upload, typ orm.AssetTypes, key string)
 			AssetValue: val.ID,
 		}
 		res = append(res, &tmp)
+	}
+	return res
+}
+
+func validateVastMedia(image string) (*uploadOrm.Upload, orm.AssetTypes, error) {
+	uploadDBM := uploadOrm.NewModelManager()
+	uploadFile, err := uploadDBM.FindUploadByID(image)
+	if err != nil {
+		return nil, "", errors.FileNotFound(image)
+	}
+	if uploadFile.Section != "vast-image" && uploadFile.Section != "vast-video" {
+		return nil, "", errors.InvalidUploadSectionErr
+	}
+	if uploadFile.MIME == string(uploadOrm.VideoMime) {
+		width, height := uploadFile.Attr.Video.Width, uploadFile.Attr.Video.Height
+		input := advalidator.InputData{
+			Width:    float64(width),
+			Height:   float64(height),
+			Size:     uploadFile.Size,
+			Duration: int64(uploadFile.Attr.Video.Duration),
+			Ext:      uploadFile.MIME,
+		}
+		rule := &advalidator.AdValidationConf.FWebVast.Video
+		return uploadFile, orm.AssetVideoType, rule.Check(input)
+	}
+	if uploadFile.Attr.Banner == nil {
+		return nil, orm.AssetImageType, errors.InvalideImageSize
+	}
+	width, height := uploadFile.Attr.Banner.Width, uploadFile.Attr.Banner.Height
+	input := advalidator.InputData{
+		Width:    float64(width),
+		Height:   float64(height),
+		Size:     uploadFile.Size,
+		Duration: 0,
+		Ext:      uploadFile.MIME,
+	}
+	rule := &advalidator.AdValidationConf.FWebVast.Image
+	return uploadFile, orm.AssetImageType, rule.Check(input)
+}
+
+func checkVastAssetsPerm(p *createVastPayLoad) error {
+
+	if p.Assets.Media.Val != "" {
+		image, kind, err := validateVastMedia(p.Assets.Media.Val)
+		if err != nil {
+			return err
+		}
+		p.Media = image
+		p.MediaKind = kind
+	}
+	return nil
+}
+
+func generateVastAssets(p *createVastPayLoad) []*orm.Asset {
+
+	var assets []*orm.Asset
+	if p.MediaKind == orm.AssetVideoType {
+		assets = append(assets, generateVastMedia(p.Media, orm.AssetVideoType, "video"))
+	}
+	if p.MediaKind == orm.AssetImageType {
+		assets = append(assets, generateVastMedia(p.Media, orm.AssetImageType, "image"))
+	}
+	if p.Assets.Cta.Val != "" {
+		assets = append(assets, generateVastString(p.Assets.Cta, orm.AssetTextType, "cta"))
+	}
+	return assets
+}
+
+func generateVastMedia(asset *uploadOrm.Upload, typ orm.AssetTypes, key string) *orm.Asset {
+	a := &orm.Asset{
+		AssetType: typ,
+		Property: func() map[string]interface{} {
+			if key == "video" {
+				return map[string]interface{}{"width": asset.Attr.Video.Width, "height": asset.Attr.Video.Height, "label": asset.Label}
+			}
+			return map[string]interface{}{"width": asset.Attr.Banner.Width, "height": asset.Attr.Banner.Height, "label": asset.Label}
+		}(),
+		AssetKey:   key,
+		AssetValue: asset.ID,
+	}
+	return a
+}
+
+func generateVastString(asset orm.NativeString, typ orm.AssetTypes, key string) *orm.Asset {
+	tmp := map[string]interface{}{
+		"len":   utf8.RuneCountInString(asset.Val),
+		"label": asset.Label,
+	}
+	res := &orm.Asset{
+		AssetValue: asset.Val,
+		AssetType:  typ,
+		AssetKey:   key,
+		Property:   tmp,
 	}
 	return res
 }
