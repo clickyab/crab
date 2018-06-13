@@ -10,37 +10,16 @@
 				"type": "string"
 			},
 			{
-				"description": " search the domain field",
+				"description": "",
 				"in": "query",
-				"name": "domain",
+				"name": "status",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": "",
 				"in": "query",
 				"name": "sort",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the name field",
-				"in": "query",
-				"name": "name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the supplier field",
-				"in": "query",
-				"name": "supplier",
 				"required": false,
 				"type": "string"
 			},
@@ -52,16 +31,30 @@
 				"type": "int"
 			},
 			{
-				"description": "",
+				"description": " page number",
 				"in": "query",
-				"name": "status",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the supplier field",
 				"in": "query",
-				"name": "to",
+				"name": "supplier",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the name field",
+				"in": "query",
+				"name": "name",
 				"required": false,
 				"type": "string"
 			},
@@ -73,9 +66,16 @@
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "from",
+				"name": "to",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the domain field",
+				"in": "query",
+				"name": "domain",
 				"required": false,
 				"type": "string"
 			},

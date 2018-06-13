@@ -3,16 +3,23 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": " parameter for search",
+				"description": " page number",
 				"in": "query",
-				"name": "q",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "exchange",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " search the owner_email field",
 				"in": "query",
-				"name": "from",
+				"name": "owner_email",
 				"required": false,
 				"type": "string"
 			},
@@ -26,21 +33,7 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": " search the title field",
-				"in": "query",
-				"name": "title",
+				"name": "strategy",
 				"required": false,
 				"type": "string"
 			},
@@ -52,6 +45,34 @@
 				"type": "string"
 			},
 			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
+			},
+			{
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"in": "query",
+				"name": "from",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " parameter for search",
+				"in": "query",
+				"name": "q",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "status",
+				"required": false,
+				"type": "string"
+			},
+			{
 				"description": "",
 				"in": "query",
 				"name": "kind",
@@ -59,30 +80,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the title field",
 				"in": "query",
-				"name": "exchange",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
-				"required": false,
-				"type": "int"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "strategy",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the owner_email field",
-				"in": "query",
-				"name": "owner_email",
+				"name": "title",
 				"required": false,
 				"type": "string"
 			},
