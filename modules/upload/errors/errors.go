@@ -23,6 +23,8 @@ var (
 	FileNotReadableError = t9e.G("uploaded file  is not readable")
 	// FileFormatNotReadableError uploaded file format is not readable
 	FileFormatNotReadableError = t9e.G("uploaded file format is not readable")
+	// FileStreamsNotReadableError uploaded file streams is not readable
+	FileStreamsNotReadableError = t9e.G("uploaded file streams is not readable")
 	// FileDurationError cant get duration from file
 	FileDurationError = t9e.G("cant get duration from file")
 	// FileDurationLimitError file is too long

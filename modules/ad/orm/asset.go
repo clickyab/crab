@@ -66,6 +66,18 @@ type CreativeString struct {
 	Val   string `json:"val"`
 }
 
+// VastString vast string payload
+type VastString struct {
+	Label string `json:"label,omitempty"`
+	Val   string `json:"val"`
+}
+
+// NativeString native string payload
+type NativeString struct {
+	Label string `json:"label,omitempty"`
+	Val   string `json:"val"`
+}
+
 // NativeFloat native float payload
 type NativeFloat struct {
 	Label string  `json:"label,omitempty"`

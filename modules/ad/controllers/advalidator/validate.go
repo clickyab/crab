@@ -90,6 +90,7 @@ type AdTotalValidationRule struct {
 	FWebNative *WebNative `json:"web_native,omitempty"`
 	FAppBanner *AppBanner `json:"app_banner,omitempty"`
 	FWebBanner *WebBanner `json:"web_banner,omitempty"`
+	FWebVast   *WebVast   `json:"web_vast,omitempty"`
 }
 
 // AppNative AppNative
@@ -122,6 +123,12 @@ type WebNative struct {
 	VImage ValidatorAd `json:"v_image,omitempty"`
 	HImage ValidatorAd `json:"h_image,omitempty"`
 	Video  ValidatorAd `json:"video,omitempty"`
+}
+
+// WebVast WebVast
+type WebVast struct {
+	Image ValidatorAd `json:"image,omitempty"`
+	Video ValidatorAd `json:"video,omitempty"`
 }
 
 // ValidatorAd ValidatorAd

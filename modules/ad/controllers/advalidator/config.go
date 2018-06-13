@@ -10,6 +10,7 @@ import (
 
 var (
 	adValidation = config.RegisterString("", `{
+  "web_vast":{"image":{"exact":[{"width":800,"height":440}],"ext":["image/png","image/gif","image/jpeg"]},"video":{"ext":["video/mp4"],"exact":[{"width":800,"height":440}],"size":2000}},
   "app_native": {
     "logo": {
       "rate": 1,
