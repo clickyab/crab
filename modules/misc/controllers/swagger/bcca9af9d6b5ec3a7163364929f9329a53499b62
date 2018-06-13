@@ -19,14 +19,14 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "kind",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the id field",
+				"description": "",
 				"in": "query",
-				"name": "id",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
@@ -52,9 +52,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the id field",
 				"in": "query",
-				"name": "sort",
+				"name": "id",
 				"required": false,
 				"type": "string"
 			},

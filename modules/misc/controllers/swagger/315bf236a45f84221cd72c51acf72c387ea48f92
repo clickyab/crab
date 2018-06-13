@@ -10,16 +10,16 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " search the name field",
 				"in": "query",
-				"name": "status",
+				"name": "name",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " count per page",
+				"description": " page number",
 				"in": "query",
-				"name": "c",
+				"name": "p",
 				"required": false,
 				"type": "int"
 			},
@@ -47,21 +47,21 @@
 			{
 				"description": "",
 				"in": "query",
+				"name": "status",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": "",
+				"in": "query",
 				"name": "type",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the name field",
+				"description": " count per page",
 				"in": "query",
-				"name": "name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " page number",
-				"in": "query",
-				"name": "p",
+				"name": "c",
 				"required": false,
 				"type": "int"
 			},

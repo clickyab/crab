@@ -1,0 +1,27 @@
+{
+	"properties": {
+		"cta": {
+			"properties": {
+				"label": {
+					"type": "string"
+				},
+				"val": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"media": {
+			"properties": {
+				"label": {
+					"type": "string"
+				},
+				"val": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		}
+	},
+	"type": "object"
+}
