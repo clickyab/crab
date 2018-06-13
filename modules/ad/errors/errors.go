@@ -77,6 +77,10 @@ var (
 
 	//InvalidUploadSectionErr InvalidUploadSectionErr
 	InvalidUploadSectionErr = t9e.G("upload section is not valid for this creative type")
+	// ArchiveCreativeDbErr error when archive creative from db
+	ArchiveCreativeDbErr = t9e.G("database error when archive creative")
+	// AlReadyArchivedErr creative that you try to archive is already archived
+	AlReadyArchivedErr = t9e.G("creative that you try to archive is already archived")
 )
 
 // AdNotFound maker
