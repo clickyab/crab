@@ -29,6 +29,8 @@ var (
 	EmptyValErr = t9e.G("native asset should not have empty value")
 	// InvalidImageSize when width or height of image is not correct
 	InvalidImageSize = t9e.G("invalid image dimension db! please check request uploaded image width and height")
+	// InvalidVideoSize when width or height of image is not correct
+	InvalidVideoSize = t9e.G("invalid video size! please check request uploaded video width and height")
 
 	// VerticalImageRequiredErr image required in app native
 	VerticalImageRequiredErr = t9e.G("vertical image required in app native")
@@ -70,6 +72,11 @@ var (
 	InvalidBannerVideo = t9e.G("banner video required")
 	// InvalidCTA InvalidCTA
 	InvalidCTA = t9e.G("cta required")
+	//NotImplementedVastAppErr vast app not implemented error
+	NotImplementedVastAppErr = t9e.G("vast app not implemented error")
+
+	//InvalidUploadSectionErr InvalidUploadSectionErr
+	InvalidUploadSectionErr = t9e.G("upload section is not valid for this creative type")
 )
 
 // AdNotFound maker

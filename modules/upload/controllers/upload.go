@@ -169,6 +169,21 @@ func (c *Controller) upload(ctx context.Context, r *http.Request) (*uploadRespon
 	return &uploadResponse{Src: g.ID}, nil
 }
 
+func getVideoDimensions(streams []interface{}) (int, int, error) {
+	for i := range streams {
+		streamsMap, ok := streams[i].(map[string]interface{})
+		if !ok {
+			return 0, 0, errors.FileStreamsNotReadableError
+		}
+		if streamsMap["codec_type"] == "video" {
+			w := streamsMap["width"].(float64)
+			h := streamsMap["height"].(float64)
+			return int(w), int(h), nil
+		}
+	}
+	return 0, 0, errors.FileDimensionError
+}
+
 func videoUploadHandler(ctx context.Context, file, chunkPathDir, rawExtension string, f *os.File, attr *model.FileAttr, fileInfo os.FileInfo, maxSize int64) (*model.FileAttr, error) {
 	info, err := getVideoInfo(file)
 	if err != nil {
@@ -181,7 +196,18 @@ func videoUploadHandler(ctx context.Context, file, chunkPathDir, rawExtension st
 	if err != nil {
 		return attr, errors.FileDurationError
 	}
-
+	streams, ok := info["streams"]
+	if !ok {
+		return attr, errors.FileStreamsNotReadableError
+	}
+	streamInterface, ok := streams.([]interface{})
+	if !ok {
+		return attr, errors.FileStreamsNotReadableError
+	}
+	width, height, err := getVideoDimensions(streamInterface)
+	if err != nil {
+		return attr, err
+	}
 	err = validateVideo(info["format"].(map[string]interface{}), fileInfo, maxSize, duration)
 	if err != nil {
 		return attr, err
@@ -197,6 +223,8 @@ func videoUploadHandler(ctx context.Context, file, chunkPathDir, rawExtension st
 	})
 	attr.Video = &model.VideoAttr{
 		Duration: int(duration),
+		Width:    width,
+		Height:   height,
 	}
 	return attr, nil
 }

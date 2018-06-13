@@ -61,6 +61,8 @@ type AvatarAttr struct {
 // VideoAttr video ad type attr
 type VideoAttr struct {
 	Duration int `json:"duration"`
+	Width    int `json:"width"`
+	Height   int `json:"height"`
 }
 
 // NativeAttr native ad type attr

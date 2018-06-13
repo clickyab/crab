@@ -196,7 +196,7 @@ func allChunksUploaded(tempDir string, ngfd ngFlowData) bool {
 }
 
 func getVideoInfo(path string) (map[string]interface{}, error) {
-	cmd := exec.Command(ffprobe.String(), "-v", "quiet", "-print_format", "json", "-show_format", ""+path+"")
+	cmd := exec.Command(ffprobe.String(), "-v", "quiet", "-print_format", "json", "-show_format", "-show_streams", ""+path+"")
 	var info map[string]interface{}
 	data, err := cmd.Output()
 	if err != nil {
