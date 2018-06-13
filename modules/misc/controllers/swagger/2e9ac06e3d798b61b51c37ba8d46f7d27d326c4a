@@ -10,9 +10,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "kind",
+				"name": "to",
 				"required": false,
 				"type": "string"
 			},
@@ -24,9 +24,9 @@
 				"type": "string"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "to",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},

@@ -97,6 +97,27 @@ func (c Controller) addVastCreativePost(ctx context.Context, w http.ResponseWrit
 	framework.Write(w, res, http.StatusOK)
 }
 
+// archiveCreative archive creative with creative id
+// @Route {
+// 		url = /archive/:id
+//		method = patch
+//		middleware = authz.Authenticate
+//		resource = archive_creative:self
+//		200 = adOrm.Creative
+//		400 = controller.ErrorResponseSimple
+//		401 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+// }
+func (c *Controller) archiveCreativePatch(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
+	res, err := c.archiveCreative(ctx, r)
+	if err != nil {
+		framework.Write(w, err, http.StatusBadRequest)
+		return
+	}
+	framework.Write(w, res, http.StatusOK)
+}
+
 // changeCreativesStatus bulk approve reject creatives status of a campaign
 // @Route {
 // 		url = /change-creatives-status/:id

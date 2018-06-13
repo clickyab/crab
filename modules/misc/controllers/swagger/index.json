@@ -199,6 +199,7 @@
 	},
 	"paths": {
 		"/ad/accept-campaign-creative/{id}": "file://19c919ee6adcf3a761e98fd0e49fc47aaa02a14e",
+		"/ad/archive/{id}": "file://8a004d44b3c9561fafdccf276fc2fda0744e2c67",
 		"/ad/banner": "file://62fdaac28ae46b2f8a1bb4e1111f827182bab4f2",
 		"/ad/campaign/{id}": "file://315bf236a45f84221cd72c51acf72c387ea48f92",
 		"/ad/campaign/{id}/definition": "file://549f1390ae096984285c10b92bb5b8158499e9fe",

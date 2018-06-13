@@ -3,23 +3,16 @@
 		"description": "",
 		"parameters": [
 			{
-				"description": "",
+				"description": " page number",
 				"in": "query",
-				"name": "sort",
+				"name": "p",
 				"required": false,
-				"type": "string"
+				"type": "int"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "from",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},
@@ -38,23 +31,23 @@
 				"type": "string"
 			},
 			{
-				"description": " parameter for search",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "q",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " search the owner_email field",
+				"description": "",
 				"in": "query",
-				"name": "owner_email",
+				"name": "sort",
 				"required": false,
 				"type": "string"
 			},
 			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": "",
 				"in": "query",
-				"name": "to",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
@@ -66,11 +59,18 @@
 				"type": "int"
 			},
 			{
-				"description": " page number",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "p",
+				"name": "to",
 				"required": false,
-				"type": "int"
+				"type": "string"
+			},
+			{
+				"description": " search the owner_email field",
+				"in": "query",
+				"name": "owner_email",
+				"required": false,
+				"type": "string"
 			},
 			{
 				"description": "the security token, get it from login route",
