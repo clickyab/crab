@@ -5,7 +5,14 @@
 			{
 				"description": "",
 				"in": "query",
-				"name": "sort",
+				"name": "kind",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the domain field",
+				"in": "query",
+				"name": "domain",
 				"required": false,
 				"type": "string"
 			},
@@ -15,6 +22,20 @@
 				"name": "p",
 				"required": false,
 				"type": "int"
+			},
+			{
+				"description": "",
+				"in": "query",
+				"name": "sort",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the name field",
+				"in": "query",
+				"name": "name",
+				"required": false,
+				"type": "string"
 			},
 			{
 				"description": " search the supplier field",
@@ -31,9 +52,9 @@
 				"type": "int"
 			},
 			{
-				"description": " parameter for search",
+				"description": "",
 				"in": "query",
-				"name": "q",
+				"name": "status",
 				"required": false,
 				"type": "string"
 			},
@@ -45,30 +66,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "kind",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": "",
-				"in": "query",
-				"name": "status",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the name field",
-				"in": "query",
-				"name": "name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the domain field",
-				"in": "query",
-				"name": "domain",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},

@@ -17,9 +17,9 @@
 				"type": "int"
 			},
 			{
-				"description": " search the user_id field",
+				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "user_id",
+				"name": "from",
 				"required": false,
 				"type": "string"
 			},
@@ -36,20 +36,6 @@
 				"name": "c",
 				"required": false,
 				"type": "int"
-			},
-			{
-				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
-				"in": "query",
-				"name": "to",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " search the first_name field",
-				"in": "query",
-				"name": "first_name",
-				"required": false,
-				"type": "string"
 			},
 			{
 				"description": " parameter for search",
@@ -73,9 +59,23 @@
 				"type": "string"
 			},
 			{
-				"description": " from date rfc3339 ex:2002-10-02T15:00:00.05Z",
+				"description": " to date rfc3339 ex:2002-10-02T15:00:00.05Z",
 				"in": "query",
-				"name": "from",
+				"name": "to",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the first_name field",
+				"in": "query",
+				"name": "first_name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " search the user_id field",
+				"in": "query",
+				"name": "user_id",
 				"required": false,
 				"type": "string"
 			},
