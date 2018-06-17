@@ -24,6 +24,9 @@ const (
 	// ManufacturerTableFull is the Manufacturer table name
 	ManufacturerTableFull = "manufacturers"
 
+	// OSBrowserTableFull is the OSBrowser table name
+	OSBrowserTableFull = "os_browser"
+
 	// OSTableFull is the OS table name
 	OSTableFull = "oses"
 
@@ -38,7 +41,7 @@ func GetSelectFields(tb string, alias string) string {
 	switch tb {
 
 	case BrowserTableFull:
-		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sdeleted_at,%[1]sname`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]screated_at,%[1]supdated_at,%[1]sdeleted_at,%[1]sname,%[1]smobile,%[1]sdesktop,%[1]stablet,%[1]sother`, alias)
 
 	case CategoryTableFull:
 		return fmt.Sprintf(`%[1]sname,%[1]sdescription,%[1]sdeleted_at`, alias)
@@ -49,8 +52,11 @@ func GetSelectFields(tb string, alias string) string {
 	case ManufacturerTableFull:
 		return fmt.Sprintf(`%[1]screated_at,%[1]supdated_at,%[1]sstatus,%[1]sname`, alias)
 
+	case OSBrowserTableFull:
+		return fmt.Sprintf(`%[1]sbrowser_id,%[1]sos_id`, alias)
+
 	case OSTableFull:
-		return fmt.Sprintf(`%[1]sname,%[1]sstatus,%[1]screated_at,%[1]supdated_at`, alias)
+		return fmt.Sprintf(`%[1]sid,%[1]sname,%[1]sstatus,%[1]smobile,%[1]sdesktop,%[1]stablet,%[1]sother,%[1]screated_at,%[1]supdated_at`, alias)
 
 	case PlatformTableFull:
 		return fmt.Sprintf(`%[1]sname,%[1]sstatus,%[1]screated_at,%[1]supdated_at`, alias)
@@ -87,8 +93,8 @@ func (m *Manager) Initialize() {
 		Browser{},
 		BrowserTableFull,
 	).SetKeys(
-		false,
-		"Name",
+		true,
+		"ID",
 	)
 
 	m.AddTableWithName(
@@ -116,11 +122,20 @@ func (m *Manager) Initialize() {
 	)
 
 	m.AddTableWithName(
+		OSBrowser{},
+		OSBrowserTableFull,
+	).SetKeys(
+		false,
+		"BrowserID",
+		"OSID",
+	)
+
+	m.AddTableWithName(
 		OS{},
 		OSTableFull,
 	).SetKeys(
-		false,
-		"Name",
+		true,
+		"ID",
 	)
 
 	m.AddTableWithName(

@@ -9,8 +9,23 @@
 				"format": "dateTime",
 				"type": "string"
 			},
+			"desktop": {
+				"type": "boolean"
+			},
+			"id": {
+				"type": "integer"
+			},
+			"mobile": {
+				"type": "boolean"
+			},
 			"name": {
 				"type": "string"
+			},
+			"other": {
+				"type": "boolean"
+			},
+			"tablet": {
+				"type": "boolean"
 			},
 			"updated_at": {
 				"format": "dateTime",

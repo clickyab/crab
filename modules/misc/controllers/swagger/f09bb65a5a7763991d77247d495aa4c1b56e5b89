@@ -4,10 +4,6 @@
 			"format": "dateTime",
 			"type": "string"
 		},
-		"deleted_at": {
-			"format": "dateTime",
-			"type": "string"
-		},
 		"desktop": {
 			"type": "boolean"
 		},
@@ -23,12 +19,21 @@
 		"other": {
 			"type": "boolean"
 		},
+		"status": {
+			"type": "string"
+		},
 		"tablet": {
 			"type": "boolean"
 		},
 		"updated_at": {
 			"format": "dateTime",
 			"type": "string"
+		},
+		"valid_browsers": {
+			"items": {
+				"type": "string"
+			},
+			"type": "array"
 		}
 	},
 	"type": "object"

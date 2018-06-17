@@ -127,3 +127,19 @@ func (m *Manager) FindBrowserByName(n string) (*Browser, error) {
 
 	return &res, nil
 }
+
+// FindBrowserByID return the Browser base on its id
+func (m *Manager) FindBrowserByID(id int64) (*Browser, error) {
+	var res Browser
+	err := m.GetRDbMap().SelectOne(
+		&res,
+		fmt.Sprintf("SELECT %s FROM %s WHERE id=?", GetSelectFields(BrowserTableFull, ""), BrowserTableFull),
+		id,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}

@@ -113,7 +113,7 @@ func (c *Controller) Routes(r framework.Mux) {
 		// End route with key 3
 
 		/* Route {
-			"Route": "/os/:kind",
+			"Route": "/os",
 			"Method": "GET",
 			"Function": "Controller.osGet",
 			"RoutePkg": "controllers",
@@ -131,30 +131,8 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-osGet", "/os/:kind", framework.Mix(c.osGet, m4...))
+		group.GET("controllers-Controller-osGet", "/os", framework.Mix(c.osGet, m4...))
 		// End route with key 4
-
-		/* Route {
-			"Route": "/os",
-			"Method": "GET",
-			"Function": "Controller.allOsGet",
-			"RoutePkg": "controllers",
-			"RouteMiddleware": [
-				"authz.Authenticate"
-			],
-			"RouteFuncMiddleware": "",
-			"RecType": "Controller",
-			"RecName": "c",
-			"Payload": "",
-			"Resource": "",
-			"Scope": ""
-		} with key 5 */
-		m5 := append(groupMiddleware, []framework.Middleware{
-			authz.Authenticate,
-		}...)
-
-		group.GET("controllers-Controller-allOsGet", "/os", framework.Mix(c.allOsGet, m5...))
-		// End route with key 5
 
 		/* Route {
 			"Route": "/platform/:kind",
@@ -170,13 +148,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "",
 			"Scope": ""
-		} with key 6 */
-		m6 := append(groupMiddleware, []framework.Middleware{
+		} with key 5 */
+		m5 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-platformGet", "/platform/:kind", framework.Mix(c.platformGet, m6...))
-		// End route with key 6
+		group.GET("controllers-Controller-platformGet", "/platform/:kind", framework.Mix(c.platformGet, m5...))
+		// End route with key 5
 
 		/* Route {
 			"Route": "/platform",
@@ -192,13 +170,13 @@ func (c *Controller) Routes(r framework.Mux) {
 			"Payload": "",
 			"Resource": "",
 			"Scope": ""
-		} with key 7 */
-		m7 := append(groupMiddleware, []framework.Middleware{
+		} with key 6 */
+		m6 := append(groupMiddleware, []framework.Middleware{
 			authz.Authenticate,
 		}...)
 
-		group.GET("controllers-Controller-allPlatformGet", "/platform", framework.Mix(c.allPlatformGet, m7...))
-		// End route with key 7
+		group.GET("controllers-Controller-allPlatformGet", "/platform", framework.Mix(c.allPlatformGet, m6...))
+		// End route with key 6
 
 		initializer.DoInitialize(c)
 	})

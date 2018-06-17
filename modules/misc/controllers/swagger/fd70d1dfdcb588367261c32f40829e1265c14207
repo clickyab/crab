@@ -5,15 +5,36 @@
 				"format": "dateTime",
 				"type": "string"
 			},
+			"desktop": {
+				"type": "boolean"
+			},
+			"id": {
+				"type": "integer"
+			},
+			"mobile": {
+				"type": "boolean"
+			},
 			"name": {
 				"type": "string"
+			},
+			"other": {
+				"type": "boolean"
 			},
 			"status": {
 				"type": "string"
 			},
+			"tablet": {
+				"type": "boolean"
+			},
 			"updated_at": {
 				"format": "dateTime",
 				"type": "string"
+			},
+			"valid_browsers": {
+				"items": {
+					"type": "string"
+				},
+				"type": "array"
 			}
 		},
 		"type": "object"
