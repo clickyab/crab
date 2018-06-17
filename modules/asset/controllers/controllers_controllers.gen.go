@@ -87,7 +87,7 @@ func (c *Controller) manufacturerGet(ctx context.Context, w http.ResponseWriter,
 
 // os return list all is (e.g. linux, ...)
 // @Route {
-// 		url = /os/:kind
+// 		url = /os
 //		method = get
 //		middleware = authz.Authenticate
 //		200 = osResponse
@@ -97,25 +97,6 @@ func (c *Controller) manufacturerGet(ctx context.Context, w http.ResponseWriter,
 func (c *Controller) osGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	res, err := c.os(ctx, r)
-	if err != nil {
-		framework.Write(w, err, http.StatusBadRequest)
-		return
-	}
-	framework.Write(w, res, http.StatusOK)
-}
-
-// os return list all is (e.g. linux, ...)
-// @Route {
-// 		url = /os
-//		method = get
-//		middleware = authz.Authenticate
-//		200 = osResponse
-//		400 = controller.ErrorResponseSimple
-//		401 = controller.ErrorResponseSimple
-// }
-func (c *Controller) allOsGet(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-
-	res, err := c.allOs(ctx, r)
 	if err != nil {
 		framework.Write(w, err, http.StatusBadRequest)
 		return

@@ -10,13 +10,6 @@
 				"type": "string"
 			},
 			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
-			},
-			{
 				"description": " parameter for search",
 				"in": "query",
 				"name": "q",
@@ -57,6 +50,13 @@
 				"name": "name",
 				"required": false,
 				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
+				"required": false,
+				"type": "int"
 			},
 			{
 				"description": " page number",

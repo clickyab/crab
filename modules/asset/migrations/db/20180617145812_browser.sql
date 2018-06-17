@@ -14,7 +14,7 @@ CREATE TABLE `browsers` (
   `other` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `browsers_name_uindex` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO browsers (id, name, desktop, mobile, tablet, other) VALUES (1,"Google Chrome",true ,false ,false ,true);
 INSERT INTO browsers (id, name, desktop, mobile, tablet, other) VALUES (2,"Firefox",true ,false ,false ,true);
