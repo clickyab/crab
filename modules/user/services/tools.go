@@ -25,7 +25,7 @@ func WhiteLabelEditUser(ctx context.Context, user *aaa.User, corp *aaa.Corporati
 
 	err = m.UpdateUser(user)
 	if err != nil {
-		return errors.UserUpdateErr
+		return err
 	}
 
 	//update corporation

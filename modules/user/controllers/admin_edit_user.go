@@ -16,6 +16,7 @@ import (
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/permission"
 	"github.com/clickyab/services/xlog"
+	gom "github.com/go-sql-driver/mysql"
 	"github.com/rs/xmux"
 )
 
@@ -110,7 +111,16 @@ func (c *Controller) adminEdit(ctx context.Context, r *http.Request, p *editUser
 
 	err := services.WhiteLabelEditUser(ctx, p.owner, p.userPayload.corporation, p.currentDomain.ID, managerIDs)
 	if err != nil {
-		return nil, err
+		mysqlError, ok := err.(*gom.MySQLError)
+		if !ok {
+			xlog.GetWithError(ctx, err).Debug("can't update user")
+			return nil, errors.UpdateUserErr
+		}
+		if mysqlError.Number == 1062 {
+			return nil, errors.UserDuplicateError(err.Error())
+		}
+		xlog.GetWithError(ctx, err).Debug("can't update user")
+		return nil, errors.UpdateUserErr
 	}
 
 	res := c.createUserResponse(p.owner, nil, p.managers)

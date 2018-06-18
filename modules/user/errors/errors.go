@@ -1,6 +1,10 @@
 package errors
 
-import "github.com/clickyab/services/gettext/t9e"
+import (
+	"strings"
+
+	"github.com/clickyab/services/gettext/t9e"
+)
 
 var (
 	// AccessDenied error
@@ -119,4 +123,15 @@ func NotFoundRoleOfDomain(rName string, dID int64) error {
 	}
 
 	return t9e.G("user not found, please check your request data.")
+}
+
+// UserDuplicateError maker
+func UserDuplicateError(msg string) error {
+	if msg != "" {
+		if strings.Contains(msg, ":") {
+			msg = strings.TrimLeft(strings.Split(msg, ":")[1], " ")
+		}
+		return t9e.G("edit user failed with error : %s", msg)
+	}
+	return t9e.G("edit user failed because of duplicate data")
 }
