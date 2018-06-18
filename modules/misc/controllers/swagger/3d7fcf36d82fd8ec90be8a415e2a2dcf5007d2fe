@@ -10,9 +10,16 @@
 				"type": "string"
 			},
 			{
-				"description": " page number",
+				"description": " search the name field",
 				"in": "query",
-				"name": "p",
+				"name": "name",
+				"required": false,
+				"type": "string"
+			},
+			{
+				"description": " count per page",
+				"in": "query",
+				"name": "c",
 				"required": false,
 				"type": "int"
 			},
@@ -31,16 +38,9 @@
 				"type": "string"
 			},
 			{
-				"description": " search the name field",
+				"description": "",
 				"in": "query",
-				"name": "name",
-				"required": false,
-				"type": "string"
-			},
-			{
-				"description": " parameter for search",
-				"in": "query",
-				"name": "q",
+				"name": "kind",
 				"required": false,
 				"type": "string"
 			},
@@ -52,9 +52,9 @@
 				"type": "string"
 			},
 			{
-				"description": "",
+				"description": " parameter for search",
 				"in": "query",
-				"name": "kind",
+				"name": "q",
 				"required": false,
 				"type": "string"
 			},
@@ -73,18 +73,18 @@
 				"type": "string"
 			},
 			{
+				"description": " page number",
+				"in": "query",
+				"name": "p",
+				"required": false,
+				"type": "int"
+			},
+			{
 				"description": " search the supplier field",
 				"in": "query",
 				"name": "supplier",
 				"required": false,
 				"type": "string"
-			},
-			{
-				"description": " count per page",
-				"in": "query",
-				"name": "c",
-				"required": false,
-				"type": "int"
 			},
 			{
 				"description": "the security token, get it from login route",

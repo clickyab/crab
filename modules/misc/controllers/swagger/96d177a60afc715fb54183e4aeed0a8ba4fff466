@@ -1,0 +1,49 @@
+{
+	"properties": {
+		"banner_image": {
+			"properties": {
+				"label": {
+					"type": "string"
+				},
+				"val": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"cta": {
+			"properties": {
+				"label": {
+					"type": "string"
+				},
+				"val": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"video": {
+			"properties": {
+				"label": {
+					"type": "string"
+				},
+				"val": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		},
+		"video_image": {
+			"properties": {
+				"label": {
+					"type": "string"
+				},
+				"val": {
+					"type": "string"
+				}
+			},
+			"type": "object"
+		}
+	},
+	"type": "object"
+}
