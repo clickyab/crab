@@ -75,10 +75,10 @@ func (p *editNativePayload) ValidateExtra(ctx context.Context, w http.ResponseWr
 	// extra fields required for app campaigns required
 	if targetCampaign.Kind == campaignOrm.AppCampaign {
 		if len(p.Assets.VImages) == 0 {
-			return errors.InvalidIDErr
+			return errors.VerticalImageRequiredErr
 		}
 		if len(p.Assets.HImages) == 0 {
-			return errors.InvalidIDErr
+			return errors.HorizontalImageRequiredErr
 		}
 		if len(p.Assets.Icons) == 0 {
 			return errors.IconRequiredErr
