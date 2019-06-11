@@ -47,9 +47,9 @@ type CreateBannerCreative struct {
 // @Validate{
 //}
 type createBannerPayload struct {
-	CampaignID int64                   `json:"campaign_id" validate:"required"`
-	Creative   []*CreateBannerCreative `json:"creative" validate:"required"`
-	Type       BannerType              `json:"banner_type" validate:"required"`
+	CampaignID int64                  `json:"campaign_id" validate:"required"`
+	Creative   []CreateBannerCreative `json:"creative" validate:"required"`
+	Type       BannerType             `json:"banner_type" validate:"required"`
 
 	currentUser     *aaa.User             `json:"-"`
 	currentDomain   *domainOrm.Domain     `json:"-"`

@@ -8,7 +8,73 @@
 		},
 		"creative": {
 			"items": {
-				"type": "string"
+				"properties": {
+					"assets": {
+						"properties": {
+							"banner_image": {
+								"properties": {
+									"label": {
+										"type": "string"
+									},
+									"val": {
+										"type": "string"
+									}
+								},
+								"type": "object"
+							},
+							"cta": {
+								"properties": {
+									"label": {
+										"type": "string"
+									},
+									"val": {
+										"type": "string"
+									}
+								},
+								"type": "object"
+							},
+							"video": {
+								"properties": {
+									"label": {
+										"type": "string"
+									},
+									"val": {
+										"type": "string"
+									}
+								},
+								"type": "object"
+							},
+							"video_image": {
+								"properties": {
+									"label": {
+										"type": "string"
+									},
+									"val": {
+										"type": "string"
+									}
+								},
+								"type": "object"
+							}
+						},
+						"type": "object"
+					},
+					"attributes": {
+						"additionalProperties": {
+							"type": "string"
+						},
+						"type": "object"
+					},
+					"max_bid": {
+						"type": "integer"
+					},
+					"name": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					}
+				},
+				"type": "object"
 			},
 			"type": "array"
 		}

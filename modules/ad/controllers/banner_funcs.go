@@ -107,7 +107,7 @@ func validateBannerImages(ctx context.Context, assets *BannerAssetPayload, campa
 	return nil
 }
 
-func validateCreateBannerFiles(ctx context.Context, p *CreateBannerCreative, campaign *campaignOrm.Campaign, domain *domainOrm.Domain, user *aaa.User) error {
+func validateCreateBannerFiles(ctx context.Context, p CreateBannerCreative, campaign *campaignOrm.Campaign, domain *domainOrm.Domain, user *aaa.User) error {
 	err := validateBannerImages(ctx, p.Assets, campaign, domain, user)
 	if err != nil {
 		return err
